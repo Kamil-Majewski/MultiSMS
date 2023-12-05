@@ -1,18 +1,23 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using MultiSMS.MVC.Data;
+using MultiSMS.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+var multiSMSConnectionString = builder.Configuration.GetConnectionString("MultiSMSConnectionString") ?? throw new InvalidOperationException($"Could not get connection string for parliament election");
+builder.Services.AddDbContext<MultiSMSDbContext>(options =>
+    options.UseSqlServer(multiSMSConnectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddEntityFrameworkStores<MultiSMSDbContext>();
 builder.Services.AddControllersWithViews();
+
+var configuration = new ConfigurationBuilder()
+   .SetBasePath(builder.Environment.ContentRootPath)
+   .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true)
+.Build();
 
 var app = builder.Build();
 

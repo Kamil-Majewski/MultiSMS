@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiSMS.MVC", "MultiSMS.MVC\MultiSMS.MVC.csproj", "{5618801B-DC0E-49A5-9C37-E57D5985B958}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiSMS.MVC", "MultiSMS.MVC\MultiSMS.MVC.csproj", "{5618801B-DC0E-49A5-9C37-E57D5985B958}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiSMS.Interface", "MultiSMS.Interface\MultiSMS.Interface.csproj", "{8030B6EE-690A-4CEA-85E1-01B386AAFF82}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiSMS.BusinessLogic", "MultiSMS.BusinessLogic\MultiSMS.BusinessLogic.csproj", "{256881EB-9F0A-4365-8DEE-8CC1CEF1A14F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{5618801B-DC0E-49A5-9C37-E57D5985B958}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5618801B-DC0E-49A5-9C37-E57D5985B958}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5618801B-DC0E-49A5-9C37-E57D5985B958}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8030B6EE-690A-4CEA-85E1-01B386AAFF82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8030B6EE-690A-4CEA-85E1-01B386AAFF82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8030B6EE-690A-4CEA-85E1-01B386AAFF82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8030B6EE-690A-4CEA-85E1-01B386AAFF82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{256881EB-9F0A-4365-8DEE-8CC1CEF1A14F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{256881EB-9F0A-4365-8DEE-8CC1CEF1A14F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{256881EB-9F0A-4365-8DEE-8CC1CEF1A14F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{256881EB-9F0A-4365-8DEE-8CC1CEF1A14F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
