@@ -9,6 +9,6 @@ namespace MultiSMS.Interface.Entities
         public string? Department {  get; set; } = default!;
         public int? DepartmentNumber { get; set; }
         public string? HQAddress { get; set; }
-        public string? Role { get; set; }
+        public EmployeeRole EmployeeRole { get; set; } = default!;
     }
 }

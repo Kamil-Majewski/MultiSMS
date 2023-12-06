@@ -9,5 +9,6 @@ namespace MultiSMS.Interface
     {
         public MultiSMSDbContext(DbContextOptions<MultiSMSDbContext> options) : base(options) { }
         public virtual DbSet<UsersGroup> Groups { get; set; }
+        public virtual DbSet<EmployeeRole> EmployeeRoles{  get; set; }
     }
 }

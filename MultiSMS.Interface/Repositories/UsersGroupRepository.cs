@@ -23,6 +23,11 @@ namespace MultiSMS.Interface.Repositories
             return await _dbContext.Groups.FirstOrDefaultAsync(g => g.GroupName == groupName) ?? throw new Exception("Could not find group with given ID");
         }
 
+        public async Task<IQueryable<UsersGroup>> GetAllGroupsAsync()
+        {
+            return await Task.FromResult(_dbContext.Groups);
+        }
+
         public async Task<UsersGroup> CreateGroupAsync(UsersGroup group)
         {
             await _dbContext.AddAsync(group);
