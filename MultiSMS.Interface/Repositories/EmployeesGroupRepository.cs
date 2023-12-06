@@ -45,7 +45,7 @@ namespace MultiSMS.Interface.Repositories
 
         public async Task DeleteGroupAsync(EmployeesGroup group)
         {
-            _dbContext.Groups.Remove(group);
+            _dbContext.EmployeeGroups.Remove(group);
             await _dbContext.SaveChangesAsync();
         }
 

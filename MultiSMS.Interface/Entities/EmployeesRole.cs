@@ -1,5 +1,8 @@
-﻿namespace MultiSMS.Interface.Entities
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace MultiSMS.Interface.Entities
 {
+    [PrimaryKey("RoleId")]
     public class EmployeesRole
     {
         public int RoleId { get; set; }

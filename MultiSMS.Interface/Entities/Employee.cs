@@ -9,6 +9,7 @@
         public string? Department { get; set; }
         public int? DepartmentNumber { get; set; }
         public string? HQAddress { get; set; }
-        public EmployeesRole EmployeeRole { get; set; } = default!;
+        public bool IsActive { get; set; }
+        public ICollection<EmployeesRole> EmployeeRole { get; set; } = default!;
     }
 }
