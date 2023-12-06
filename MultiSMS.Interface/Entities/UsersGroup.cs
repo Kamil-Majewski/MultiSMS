@@ -1,10 +1,11 @@
 ﻿namespace MultiSMS.Interface.Entities
 {
-    public class Group
+    public class UsersGroup
     {
         public int GroupId { get; set; }
         public string GroupName { get; set; } = default!;
-        public ICollection<User>? Users { get; set; }
+        public string? GroupDescription { get; set; }
+        public ICollection<User> Users { get; set; } = new List<User>();
 
     }
 }
