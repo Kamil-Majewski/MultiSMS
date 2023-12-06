@@ -98,6 +98,10 @@
             $(".navbar-toggler").click(function () {
                 $("#nav-left").modal("show");
             });  
+
+            $(".close").click(function () {
+                $("#nav-left").modal("hide");
+            });
         });
     </script>
 </head>
@@ -190,7 +194,7 @@
                     <button class="navbar-toggler" type="button" data-toggle="modal" data-target="#nav-left">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <span class="navbar-brand" style="padding-left:20px;">MultiSMS</span>
+                    <span class="navbar-brand" style="padding-left:20px; padding-top:5px;">MultiSMS</span>
                 </div>
                 <div class="account-settings d-sm-inline-flex justify-content-between">
                  <partial name="_LoginPartial" />
