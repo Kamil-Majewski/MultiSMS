@@ -18,13 +18,13 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account.Manage
 {
     public class EmailModel : PageModel
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<Administrator> _userManager;
+        private readonly SignInManager<Administrator> _signInManager;
         private readonly IEmailSender _emailSender;
 
         public EmailModel(
-            UserManager<User> userManager,
-            SignInManager<User> signInManager,
+            UserManager<Administrator> userManager,
+            SignInManager<Administrator> signInManager,
             IEmailSender emailSender)
         {
             _userManager = userManager;
@@ -74,7 +74,7 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account.Manage
             public string NewEmail { get; set; }
         }
 
-        private async Task LoadAsync(User user)
+        private async Task LoadAsync(Administrator user)
         {
             var email = await _userManager.GetEmailAsync(user);
             Email = email;

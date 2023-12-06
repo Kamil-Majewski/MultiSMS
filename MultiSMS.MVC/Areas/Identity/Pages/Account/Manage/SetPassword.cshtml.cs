@@ -14,12 +14,12 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account.Manage
 {
     public class SetPasswordModel : PageModel
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<Administrator> _userManager;
+        private readonly SignInManager<Administrator> _signInManager;
 
         public SetPasswordModel(
-            UserManager<User> userManager,
-            SignInManager<User> signInManager)
+            UserManager<Administrator> userManager,
+            SignInManager<Administrator> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;

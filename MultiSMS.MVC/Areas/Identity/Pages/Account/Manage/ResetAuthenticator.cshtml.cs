@@ -14,13 +14,13 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account.Manage
 {
     public class ResetAuthenticatorModel : PageModel
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<Administrator> _userManager;
+        private readonly SignInManager<Administrator> _signInManager;
         private readonly ILogger<ResetAuthenticatorModel> _logger;
 
         public ResetAuthenticatorModel(
-            UserManager<User> userManager,
-            SignInManager<User> signInManager,
+            UserManager<Administrator> userManager,
+            SignInManager<Administrator> signInManager,
             ILogger<ResetAuthenticatorModel> logger)
         {
             _userManager = userManager;

@@ -12,11 +12,11 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account.Manage
 {
     public class PersonalDataModel : PageModel
     {
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<Administrator> _userManager;
         private readonly ILogger<PersonalDataModel> _logger;
 
         public PersonalDataModel(
-            UserManager<User> userManager,
+            UserManager<Administrator> userManager,
             ILogger<PersonalDataModel> logger)
         {
             _userManager = userManager;

@@ -15,13 +15,13 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account.Manage
 {
     public class DeletePersonalDataModel : PageModel
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<Administrator> _userManager;
+        private readonly SignInManager<Administrator> _signInManager;
         private readonly ILogger<DeletePersonalDataModel> _logger;
 
         public DeletePersonalDataModel(
-            UserManager<User> userManager,
-            SignInManager<User> signInManager,
+            UserManager<Administrator> userManager,
+            SignInManager<Administrator> signInManager,
             ILogger<DeletePersonalDataModel> logger)
         {
             _userManager = userManager;

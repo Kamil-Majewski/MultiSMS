@@ -15,13 +15,13 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account.Manage
 {
     public class ChangePasswordModel : PageModel
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<Administrator> _userManager;
+        private readonly SignInManager<Administrator> _signInManager;
         private readonly ILogger<ChangePasswordModel> _logger;
 
         public ChangePasswordModel(
-            UserManager<User> userManager,
-            SignInManager<User> signInManager,
+            UserManager<Administrator> userManager,
+            SignInManager<Administrator> signInManager,
             ILogger<ChangePasswordModel> logger)
         {
             _userManager = userManager;

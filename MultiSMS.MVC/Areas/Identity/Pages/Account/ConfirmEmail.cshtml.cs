@@ -17,9 +17,9 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account
 {
     public class ConfirmEmailModel : PageModel
     {
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<Administrator> _userManager;
 
-        public ConfirmEmailModel(UserManager<User> userManager)
+        public ConfirmEmailModel(UserManager<Administrator> userManager)
         {
             _userManager = userManager;
         }

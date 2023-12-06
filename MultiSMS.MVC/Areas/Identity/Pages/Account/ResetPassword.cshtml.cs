@@ -17,9 +17,9 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account
 {
     public class ResetPasswordModel : PageModel
     {
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<Administrator> _userManager;
 
-        public ResetPasswordModel(UserManager<User> userManager)
+        public ResetPasswordModel(UserManager<Administrator> userManager)
         {
             _userManager = userManager;
         }

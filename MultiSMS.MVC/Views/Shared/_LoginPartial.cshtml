@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using MultiSMS.Interface.Entities;
-@inject SignInManager<User> SignInManager
-@inject UserManager<User> UserManager
+@inject SignInManager<Administrator> SignInManager
+@inject UserManager<Administrator> UserManager
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))

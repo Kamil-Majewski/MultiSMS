@@ -20,10 +20,10 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class ResendEmailConfirmationModel : PageModel
     {
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<Administrator> _userManager;
         private readonly IEmailSender _emailSender;
 
-        public ResendEmailConfirmationModel(UserManager<User> userManager, IEmailSender emailSender)
+        public ResendEmailConfirmationModel(UserManager<Administrator> userManager, IEmailSender emailSender)
         {
             _userManager = userManager;
             _emailSender = emailSender;

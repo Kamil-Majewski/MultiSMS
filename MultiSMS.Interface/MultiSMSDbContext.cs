@@ -5,10 +5,11 @@ using MultiSMS.Interface.Entities;
 
 namespace MultiSMS.Interface
 {
-    public class MultiSMSDbContext : IdentityDbContext<User, IdentityRole<int>, int>
+    public class MultiSMSDbContext : IdentityDbContext<Administrator, IdentityRole<int>, int>
     {
         public MultiSMSDbContext(DbContextOptions<MultiSMSDbContext> options) : base(options) { }
-        public virtual DbSet<UsersGroup> Groups { get; set; }
-        public virtual DbSet<EmployeeRole> EmployeeRoles{  get; set; }
+        public virtual DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<EmployeesGroup> EmployeeGroups { get; set; }
+        public virtual DbSet<EmployeesRole> EmployeeRoles{  get; set; }
     }
 }

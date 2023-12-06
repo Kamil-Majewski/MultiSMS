@@ -17,13 +17,13 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account
 {
     public class LoginWith2faModel : PageModel
     {
-        private readonly SignInManager<User> _signInManager;
-        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<Administrator> _signInManager;
+        private readonly UserManager<Administrator> _userManager;
         private readonly ILogger<LoginWith2faModel> _logger;
 
         public LoginWith2faModel(
-            SignInManager<User> signInManager,
-            UserManager<User> userManager,
+            SignInManager<Administrator> signInManager,
+            UserManager<Administrator> userManager,
             ILogger<LoginWith2faModel> logger)
         {
             _signInManager = signInManager;

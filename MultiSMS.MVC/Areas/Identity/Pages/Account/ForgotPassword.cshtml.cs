@@ -19,10 +19,10 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account
 {
     public class ForgotPasswordModel : PageModel
     {
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<Administrator> _userManager;
         private readonly IEmailSender _emailSender;
 
-        public ForgotPasswordModel(UserManager<User> userManager, IEmailSender emailSender)
+        public ForgotPasswordModel(UserManager<Administrator> userManager, IEmailSender emailSender)
         {
             _userManager = userManager;
             _emailSender = emailSender;

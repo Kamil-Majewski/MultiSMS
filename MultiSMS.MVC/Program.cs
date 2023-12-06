@@ -16,7 +16,7 @@ var multiSMSConnectionString = builder.Configuration.GetConnectionString("MultiS
 builder.Services.AddDbContext<MultiSMSDbContext>(options =>
     options.UseSqlServer(multiSMSConnectionString));
 
-builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
+builder.Services.AddDefaultIdentity<Administrator>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<MultiSMSDbContext>()
     .AddDefaultTokenProviders();
 

@@ -8,9 +8,9 @@ namespace MultiSMS.Interface.Initialization
     {
         public static void InitializeElectionResultsInfrastructureDependencies(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IUsersGroupRepository, UsersGroupRepository>();
-            serviceCollection.AddScoped<IUserRepository, UserRepository>();
-            serviceCollection.AddScoped<IEmployeeRoleRepository, EmployeeRoleRepository>();
+            serviceCollection.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            serviceCollection.AddScoped<IEmployeesGroupRepository, EmployeesGroupRepository>();
+            serviceCollection.AddScoped<IEmployeesRoleRepository, EmployeesRoleRepository>();
         }
     }
 }
