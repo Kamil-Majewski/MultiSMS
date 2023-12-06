@@ -39,6 +39,14 @@
         .options-list-left{
             list-style-type: none;
         }
+        .dropdown-list{
+            list-style-type: none;
+            padding-left: 0px;
+        }
+        .dropdown-toggle{
+            padding:3px;
+        }
+
         .link{
             width:100%;
         }
@@ -67,10 +75,6 @@
             text-decoration:none;
         }
 
-        .dropdown-menu {
-            border: none;
-        }
-
 
         /* Add margin to move remaining elements down when dropdown is open */
         .options-list-left.show-dropdown .option-list-item {
@@ -89,6 +93,7 @@
                     optionsList.classList.toggle('show-dropdown');
                 });
             });
+            
 
             $(".navbar-toggler").click(function () {
                 $("#nav-left").modal("show");
@@ -113,34 +118,65 @@
                             </a>
                         </li>
 
-                        <li class="option-list-dropdown dropdown">
-                            <a class="dropdown-toggle" id="users-dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <li class="option-list-dropdown">
+                            <a class="dropdown-toggle" id="users-dropdown-toggle" href="#" role="button" aria-expanded="false">
                                 <span class="icon" id="users-icon"><img src="" /></span>
                                 <span class="text" id="users-text">Użytkownicy</span>
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="users-dropdown-toggle">
+                            <ul class="dropdown-list">
                                 <li>
                                     <a class="dropdown-item" id="users-dropdown-item">
-                                        <span class="icon" id="users-icon"><img src="" /></span>
-                                        <span class="text" id="users-text">Panel sterowania</span>
+                                        <span class="icon"><img src="" /></span>
+                                        <span class="text">Panel sterowania</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item" id="users-dropdown-item">
-                                        <span class="icon" id="users-icon"><img src="" /></span>
-                                        <span class="text" id="users-text">Zarządzaj użytkownikami</span>
+                                        <span class="icon"><img src="" /></span>
+                                        <span class="text">Zarządzaj użytkownikami</span>
                                     </a>
                                 </li>
                             </ul>
                         </li>
-                        <li class="option-list-item">
-                            <a class="link" id="home" href="#">
-                                <span class="icon" id="home-icon"><img src="" /></span>
-                                <span class="text" id="home-text">Strona startowa</span>
+                        <li class="option-list-dropdown">
+                            <a class="dropdown-toggle" id="group-dropdown-toggle" href="#" role="button" aria-expanded="false">
+                                <span class="icon" id="group-icon"><img src="" /></span>
+                                <span class="text" id="group-text">Grupy</span>
                             </a>
+                            <ul class="dropdown-list">
+                                <li>
+                                    <a class="dropdown-item" id="group-dropdown-item">
+                                        <span class="icon" ><img src="" /></span>
+                                        <span class="text" >Panel sterowania</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" id="group-dropdown-item">
+                                        <span class="icon" ><img src="" /></span>
+                                        <span class="text" >Zarządzaj grupami</span>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
-                        <li class="option-list-item">
-                            
+                        <li class="option-list-dropdown">
+                            <a class="dropdown-toggle" id="role-dropdown-toggle" href="#" role="button" aria-expanded="false">
+                                <span class="icon" id="role-icon"><img src="" /></span>
+                                <span class="text" id="role-text">Role</span>
+                            </a>
+                            <ul class="dropdown-list">
+                                <li>
+                                    <a class="dropdown-item" id="group-dropdown-item">
+                                        <span class="icon"><img src="" /></span>
+                                        <span class="text">Panel sterowania</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" id="group-dropdown-item">
+                                        <span class="icon"><img src="" /></span>
+                                        <span class="text">Zarządzaj Rolami</span>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </div>
