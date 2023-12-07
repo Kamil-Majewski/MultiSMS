@@ -1,5 +1,8 @@
-﻿namespace MultiSMS.Interface.Entities
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace MultiSMS.Interface.Entities
 {
+    [PrimaryKey("TemplateId")]
     public class SMSMessageTemplate
     {
         public int TemplateId { get; set; }

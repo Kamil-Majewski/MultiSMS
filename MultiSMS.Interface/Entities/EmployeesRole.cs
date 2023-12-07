@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace MultiSMS.Interface.Entities
 {
@@ -7,6 +8,9 @@ namespace MultiSMS.Interface.Entities
     {
         public int RoleId { get; set; }
         public string RoleName { get; set; } = default!;
+
+        public int EmployeeId { get; set; }
+        public Employee Employee { get; set; } = default!;
 
     }
 }

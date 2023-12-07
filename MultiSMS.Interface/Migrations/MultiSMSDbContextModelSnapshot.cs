@@ -170,6 +170,9 @@ namespace MultiSMS.Interface.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<int>("AdministratorId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -180,9 +183,6 @@ namespace MultiSMS.Interface.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<int?>("EmployeesGroupGroupId")
-                        .HasColumnType("int");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -227,8 +227,6 @@ namespace MultiSMS.Interface.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeesGroupGroupId");
-
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -254,6 +252,12 @@ namespace MultiSMS.Interface.Migrations
                     b.Property<int?>("DepartmentNumber")
                         .HasColumnType("int");
 
+                    b.Property<int>("EmployeesGroupGroupId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GroupId")
+                        .HasColumnType("int");
+
                     b.Property<string>("HQAddress")
                         .HasColumnType("nvarchar(max)");
 
@@ -264,7 +268,7 @@ namespace MultiSMS.Interface.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PhoneNumber")
+                    b.Property<int?>("SMSMessageSMSId")
                         .HasColumnType("int");
 
                     b.Property<string>("Surname")
@@ -272,6 +276,10 @@ namespace MultiSMS.Interface.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("EmployeeId");
+
+                    b.HasIndex("EmployeesGroupGroupId");
+
+                    b.HasIndex("SMSMessageSMSId");
 
                     b.ToTable("Employees");
                 });
@@ -304,7 +312,7 @@ namespace MultiSMS.Interface.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleId"));
 
-                    b.Property<int?>("EmployeeId")
+                    b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
                     b.Property<string>("RoleName")
@@ -316,6 +324,79 @@ namespace MultiSMS.Interface.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.ToTable("EmployeeRoles");
+                });
+
+            modelBuilder.Entity("MultiSMS.Interface.Entities.PhoneNumber", b =>
+                {
+                    b.Property<int>("PhoneNumberId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PhoneNumberId"));
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Number")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PhoneNumberId");
+
+                    b.HasIndex("EmployeeId")
+                        .IsUnique();
+
+                    b.ToTable("PhoneNumber");
+                });
+
+            modelBuilder.Entity("MultiSMS.Interface.Entities.SMSMessage", b =>
+                {
+                    b.Property<int>("SMSId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SMSId"));
+
+                    b.Property<int>("ChosenGroupGroupId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Issuer")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("MessageSentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SMSContent")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("SMSId");
+
+                    b.HasIndex("ChosenGroupGroupId");
+
+                    b.ToTable("SMSMessageLogs");
+                });
+
+            modelBuilder.Entity("MultiSMS.Interface.Entities.SMSMessageTemplate", b =>
+                {
+                    b.Property<int>("TemplateId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TemplateId"));
+
+                    b.Property<string>("SMSContent")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TemplateName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TemplateId");
+
+                    b.ToTable("SMSMessageTemplates");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -369,28 +450,70 @@ namespace MultiSMS.Interface.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MultiSMS.Interface.Entities.Administrator", b =>
+            modelBuilder.Entity("MultiSMS.Interface.Entities.Employee", b =>
                 {
-                    b.HasOne("MultiSMS.Interface.Entities.EmployeesGroup", null)
+                    b.HasOne("MultiSMS.Interface.Entities.EmployeesGroup", "EmployeesGroup")
                         .WithMany("GroupMembers")
-                        .HasForeignKey("EmployeesGroupGroupId");
+                        .HasForeignKey("EmployeesGroupGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MultiSMS.Interface.Entities.SMSMessage", null)
+                        .WithMany("AdditionalEmployees")
+                        .HasForeignKey("SMSMessageSMSId");
+
+                    b.Navigation("EmployeesGroup");
                 });
 
             modelBuilder.Entity("MultiSMS.Interface.Entities.EmployeesRole", b =>
                 {
-                    b.HasOne("MultiSMS.Interface.Entities.Employee", null)
+                    b.HasOne("MultiSMS.Interface.Entities.Employee", "Employee")
                         .WithMany("EmployeeRole")
-                        .HasForeignKey("EmployeeId");
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("MultiSMS.Interface.Entities.PhoneNumber", b =>
+                {
+                    b.HasOne("MultiSMS.Interface.Entities.Employee", "Employee")
+                        .WithOne("PhoneNumber")
+                        .HasForeignKey("MultiSMS.Interface.Entities.PhoneNumber", "EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("MultiSMS.Interface.Entities.SMSMessage", b =>
+                {
+                    b.HasOne("MultiSMS.Interface.Entities.EmployeesGroup", "ChosenGroup")
+                        .WithMany()
+                        .HasForeignKey("ChosenGroupGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ChosenGroup");
                 });
 
             modelBuilder.Entity("MultiSMS.Interface.Entities.Employee", b =>
                 {
                     b.Navigation("EmployeeRole");
+
+                    b.Navigation("PhoneNumber")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("MultiSMS.Interface.Entities.EmployeesGroup", b =>
                 {
                     b.Navigation("GroupMembers");
+                });
+
+            modelBuilder.Entity("MultiSMS.Interface.Entities.SMSMessage", b =>
+                {
+                    b.Navigation("AdditionalEmployees");
                 });
 #pragma warning restore 612, 618
         }

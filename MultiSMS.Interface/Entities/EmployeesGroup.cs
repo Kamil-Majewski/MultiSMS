@@ -8,7 +8,7 @@ namespace MultiSMS.Interface.Entities
         public int GroupId { get; set; }
         public string GroupName { get; set; } = default!;
         public string? GroupDescription { get; set; }
-        public ICollection<Administrator> GroupMembers { get; set; } = new List<Administrator>();
+        public ICollection<Employee> GroupMembers { get; set; } = new List<Employee>();
 
     }
 }
