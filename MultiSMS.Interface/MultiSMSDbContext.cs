@@ -11,5 +11,7 @@ namespace MultiSMS.Interface
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<EmployeesGroup> EmployeeGroups { get; set; }
         public virtual DbSet<EmployeesRole> EmployeeRoles{  get; set; }
+        public virtual DbSet<SMSMessage> SMSMessageLogs{  get; set; }
+        public virtual DbSet<SMSMessageTemplate> SMSMessageTemplates{  get; set; }
     }
 }
