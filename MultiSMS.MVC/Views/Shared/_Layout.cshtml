@@ -43,10 +43,16 @@
             list-style-type: none;
             padding-left: 0px;
         }
-        .dropdown-toggle{
-            padding:3px;
+        .dropdown-toggle:hover{
+            text-decoration: none;
+            border: 1px solid black;
         }
-
+        .dropdown-toggle{
+            border: 1px solid transparent;
+            width:100%;
+            padding: 3px;
+            display: block;
+        }
         .link{
             width:100%;
         }
@@ -74,26 +80,60 @@
         .link:hover{
             text-decoration:none;
         }
-
-
-        /* Add margin to move remaining elements down when dropdown is open */
-        .options-list-left.show-dropdown .option-list-item {
-            margin-top: 40px; /* Adjust the value as needed */
+        .option-list-dropdown{
+            padding: 3px;
         }
 
     </style>
     <script defer>
+
+        function isElementVisible(element) {
+            var style = window.getComputedStyle(element);
+            return style.display !== 'none' && style.visibility !== 'hidden';
+        }
+
         $(document).ready(function () {
-
-            document.addEventListener('DOMContentLoaded', function () {
-                var dropdownToggle = document.querySelector('.options-list-dropdown .dropdown-toggle');
-                var optionsList = document.querySelector('.options-list-item');
-
-                dropdownToggle.addEventListener('click', function () {
-                    optionsList.classList.toggle('show-dropdown');
-                });
-            });
+            $(".dropdown-list").hide();
             
+            $("#sms-dropdown-toggle").click(function () {
+                var element = document.getElementById("dropdown-list-sms")
+                if (isElementVisible(element)){
+                    $("#dropdown-list-sms").hide();
+                }
+                else{
+                    $("#dropdown-list-sms").show();
+                }
+            });
+
+            $("#contacts-dropdown-toggle").click(function () {
+                var element = document.getElementById("dropdown-list-contacts")
+                if (isElementVisible(element)) {
+                    $("#dropdown-list-contacts").hide();
+                }
+                else {
+                    $("#dropdown-list-contacts").show();
+                }
+            });
+
+            $("#group-dropdown-toggle").click(function () {
+                var element = document.getElementById("dropdown-list-group")
+                if (isElementVisible(element)) {
+                    $("#dropdown-list-group").hide();
+                }
+                else {
+                    $("#dropdown-list-group").show();
+                }
+            });
+
+            $("#role-dropdown-toggle").click(function () {
+                var element = document.getElementById("dropdown-list-role")
+                if (isElementVisible(element)) {
+                    $("#dropdown-list-role").hide();
+                }
+                else {
+                    $("#dropdown-list-role").show();
+                }
+            });
 
             $(".navbar-toggler").click(function () {
                 $("#nav-left").modal("show");
@@ -106,7 +146,7 @@
     </script>
 </head>
 <body>
-    <div class="modal left fade" id="nav-left" tabindex="-1" role="dialog" aria-labelledby="leftNavbar">
+    <div class="modal fade left" id="nav-left" tabindex="-1" role="dialog" aria-labelledby="leftNavbar">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -126,21 +166,21 @@
                                 <span class="icon" id="sms-icon"><img src="" /></span>
                                 <span class="text" id="sms-text">Wiadomości SMS</span>
                             </a>
-                            <ul class="dropdown-list">
+                            <ul class="dropdown-list" id="dropdown-list-sms">
                                 <li>
-                                    <a class="dropdown-item" id="sms-dropdown-item">
+                                    <a class="dropdown-item">
                                         <span class="icon"><img src="" /></span>
                                         <span class="text">Wyślij wiadomość SMS</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" id="sms-dropdown-item">
+                                    <a class="dropdown-item">
                                         <span class="icon"><img src="" /></span>
                                         <span class="text">Zarządzaj templatkami</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" id="sms-dropdown-item">
+                                    <a class="dropdown-item">
                                         <span class="icon"><img src="" /></span>
                                         <span class="text">Przeglądaj logi</span>
                                     </a>
@@ -148,19 +188,19 @@
                             </ul>
                         </li>
                         <li class="option-list-dropdown">
-                            <a class="dropdown-toggle" id="users-dropdown-toggle" href="#" role="button" aria-expanded="false">
-                                <span class="icon" id="users-icon"><img src="" /></span>
-                                <span class="text" id="users-text">Użytkownicy</span>
+                            <a class="dropdown-toggle" id="contacts-dropdown-toggle" onclick="" href="#" role="button" aria-expanded="false">
+                                <span class="icon" id="contacts-icon"><img src="" /></span>
+                                <span class="text" id="contacts-text">Listy kontaktów</span>
                             </a>
-                            <ul class="dropdown-list">
+                            <ul class="dropdown-list" id="dropdown-list-contacts">
                                 <li>
-                                    <a class="dropdown-item" id="users-dropdown-item">
+                                    <a class="dropdown-item">
                                         <span class="icon"><img src="" /></span>
                                         <span class="text">Panel sterowania</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" id="users-dropdown-item">
+                                    <a class="dropdown-item">
                                         <span class="icon"><img src="" /></span>
                                         <span class="text">Zarządzaj użytkownikami</span>
                                     </a>
@@ -172,15 +212,15 @@
                                 <span class="icon" id="group-icon"><img src="" /></span>
                                 <span class="text" id="group-text">Grupy</span>
                             </a>
-                            <ul class="dropdown-list">
+                            <ul class="dropdown-list" id="dropdown-list-group">
                                 <li>
-                                    <a class="dropdown-item" id="group-dropdown-item">
+                                    <a class="dropdown-item">
                                         <span class="icon" ><img src="" /></span>
                                         <span class="text" >Panel sterowania</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" id="group-dropdown-item">
+                                    <a class="dropdown-item">
                                         <span class="icon" ><img src="" /></span>
                                         <span class="text" >Zarządzaj grupami</span>
                                     </a>
@@ -189,18 +229,18 @@
                         </li>
                         <li class="option-list-dropdown">
                             <a class="dropdown-toggle" id="role-dropdown-toggle" href="#" role="button" aria-expanded="false">
-                                <span class="icon" id="role-icon"><img src="" /></span>
-                                <span class="text" id="role-text">Role</span>
+                                <span class="icon"><img src="" /></span>
+                                <span class="text">Role</span>
                             </a>
-                            <ul class="dropdown-list">
+                            <ul class="dropdown-list" id="dropdown-list-role">
                                 <li>
-                                    <a class="dropdown-item" id="group-dropdown-item">
+                                    <a class="dropdown-item">
                                         <span class="icon"><img src="" /></span>
                                         <span class="text">Panel sterowania</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" id="group-dropdown-item">
+                                    <a class="dropdown-item">
                                         <span class="icon"><img src="" /></span>
                                         <span class="text">Zarządzaj Rolami</span>
                                     </a>
