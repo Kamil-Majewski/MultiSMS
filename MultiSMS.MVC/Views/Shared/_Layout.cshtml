@@ -51,13 +51,24 @@
             border: 1px solid transparent;
             width:100%;
             padding: 3px;
+            padding-left:0px;
             display: block;
         }
         .link{
             width:100%;
         }
-        .text{
+        .text-nav{
             color:black;
+            font-weight: 600;
+            font-size: 20px;
+            font-family: 'Noto Sans'
+        }
+        .text-nav-dropdown{
+            color: black;
+            font-family: sans-serif;
+            font-weight: 500;
+            font-size: 18px;
+            
         }
         .link:link{
             text-decoration: none;
@@ -158,31 +169,49 @@
                         <li class="option-list-item">
                             <a class="link" id="home" href="#">
                                 <span class="icon" id="home-icon"><img src="" /></span>
-                                <span class="text" id="home-text">Strona startowa</span>
+                                <span class="text-nav" id="home-text">Strona startowa</span>
                             </a>
                         </li>
                         <li class="option-list-dropdown">
                             <a class="dropdown-toggle" id="sms-dropdown-toggle" href="#" role="button" aria-expanded="false">
                                 <span class="icon" id="sms-icon"><img src="" /></span>
-                                <span class="text" id="sms-text">Wiadomości SMS</span>
+                                <span class="text-nav" id="sms-text">SMS</span>
                             </a>
                             <ul class="dropdown-list" id="dropdown-list-sms">
                                 <li>
                                     <a class="dropdown-item">
                                         <span class="icon"><img src="" /></span>
-                                        <span class="text">Wyślij wiadomość SMS</span>
+                                        <span class="text-nav-dropdown">Wyślij wiadomość SMS</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item">
                                         <span class="icon"><img src="" /></span>
-                                        <span class="text">Zarządzaj templatkami</span>
+                                        <span class="text-nav-dropdown">Przeglądaj logi</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item">
                                         <span class="icon"><img src="" /></span>
-                                        <span class="text">Przeglądaj logi</span>
+                                        <span class="text-nav-dropdown">Przeglądaj szablony</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item">
+                                        <span class="icon"><img src="" /></span>
+                                        <span class="text-nav-dropdown">Dodaj szablon</span>
+                                    </a>
+                                </li>
+                                 <li>
+                                    <a class="dropdown-item">
+                                        <span class="icon"><img src="" /></span>
+                                        <span class="text-nav-dropdown">Edytuj szablon</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item">
+                                        <span class="icon"><img src="" /></span>
+                                        <span class="text-nav-dropdown">Usuń szablon</span>
                                     </a>
                                 </li>
                             </ul>
@@ -190,19 +219,19 @@
                         <li class="option-list-dropdown">
                             <a class="dropdown-toggle" id="contacts-dropdown-toggle" onclick="" href="#" role="button" aria-expanded="false">
                                 <span class="icon" id="contacts-icon"><img src="" /></span>
-                                <span class="text" id="contacts-text">Listy kontaktów</span>
+                                <span class="text-nav" id="contacts-text">Listy kontaktów</span>
                             </a>
                             <ul class="dropdown-list" id="dropdown-list-contacts">
                                 <li>
                                     <a class="dropdown-item">
                                         <span class="icon"><img src="" /></span>
-                                        <span class="text">Panel sterowania</span>
+                                        <span class="text-nav-dropdown">Panel sterowania</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item">
                                         <span class="icon"><img src="" /></span>
-                                        <span class="text">Zarządzaj użytkownikami</span>
+                                        <span class="text-nav-dropdown">Zarządzaj użytkownikami</span>
                                     </a>
                                 </li>
                             </ul>
@@ -210,19 +239,19 @@
                         <li class="option-list-dropdown">
                             <a class="dropdown-toggle" id="group-dropdown-toggle" href="#" role="button" aria-expanded="false">
                                 <span class="icon" id="group-icon"><img src="" /></span>
-                                <span class="text" id="group-text">Grupy</span>
+                                <span class="text-nav" id="group-text">Grupy</span>
                             </a>
                             <ul class="dropdown-list" id="dropdown-list-group">
                                 <li>
                                     <a class="dropdown-item">
                                         <span class="icon" ><img src="" /></span>
-                                        <span class="text" >Panel sterowania</span>
+                                        <span class="text-nav-dropdown" >Panel sterowania</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item">
                                         <span class="icon" ><img src="" /></span>
-                                        <span class="text" >Zarządzaj grupami</span>
+                                        <span class="text-nav-dropdown">Zarządzaj grupami</span>
                                     </a>
                                 </li>
                             </ul>
@@ -230,19 +259,19 @@
                         <li class="option-list-dropdown">
                             <a class="dropdown-toggle" id="role-dropdown-toggle" href="#" role="button" aria-expanded="false">
                                 <span class="icon"><img src="" /></span>
-                                <span class="text">Role</span>
+                                <span class="text-nav">Role</span>
                             </a>
                             <ul class="dropdown-list" id="dropdown-list-role">
                                 <li>
                                     <a class="dropdown-item">
                                         <span class="icon"><img src="" /></span>
-                                        <span class="text">Panel sterowania</span>
+                                        <span class="text-nav-dropdown">Panel sterowania</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item">
                                         <span class="icon"><img src="" /></span>
-                                        <span class="text">Zarządzaj Rolami</span>
+                                        <span class="text-nav-dropdown">Zarządzaj Rolami</span>
                                     </a>
                                 </li>
                             </ul>

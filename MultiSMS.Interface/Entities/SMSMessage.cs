@@ -5,6 +5,7 @@ namespace MultiSMS.Interface.Entities
     public class SMSMessage
     {
         public int SMSId { get; set; }
+        public string Issuer { get; set; } = default!;
         public string SMSContent { get; set; } = default!;
         public Group ChosenGroup { get; set; } = default!;
         public int DutyOfficersPhoneNumber { get; set; }
