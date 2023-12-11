@@ -18,49 +18,52 @@
         </li>
     </ul>
     <div class="tab-content" id="category-tab-content">
-        <div class="tab-pane" id="sms" aria-labelledby="sms-tab" style="display: flex;">
-            <div class="card text-center card-options-sms" id="sms-options">
-                <ul class="options-list" id="sms-options-list">
-                    <li class="sms-options-item">
-                        <a>
-                            <span class="icon" src=""></span>
-                            <span class="text">Wyślij wiadomość SMS</span>
-                        </a>
-                    </li>
-                    <li class="sms-options-item">
-                        <a>
-                            <span class="icon" src=""></span>
-                            <span class="text">Przeglądaj logi</span>
-                        </a>
-                    </li>
-                    <li class="sms-options-item">
-                        <a>
-                            <span class="icon" src=""></span>
-                            <span class="text">Przeglądaj szablony</span>
-                        </a>
-                    </li>
-                    <li class="sms-options-item">
-                        <a>
-                            <span class="icon" src=""></span>
-                            <span class="text">Dodaj szablon</span>
-                        </a>
-                    </li>
-                    <li class="sms-options-item">
-                        <a>
-                            <span class="icon" src=""></span>
-                            <span class="text">Edytuj szablon</span>
-                        </a>
-                    </li>
-                    <li class="sms-options-item">
-                        <a>
-                            <span class="icon" src=""></span>
-                            <span class="text">Usuń szablon</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <div class="card" id="sms-option-content" style="width:100%;">
-                <h1>content baby</h1>
+        <div class="tab-pane show active d-flex" id="sms" aria-labelledby="sms-tab">
+            <ul class="options-list nav" id="sms-options-list" role="list">
+                <li class="sms-options-item nav-item send-sms-item">
+                    <a id="send-sms-tab nav-link" href="#send-sms">
+                        <span class="icon" src=""></span>
+                        <span class="text">Wyślij wiadomość SMS</span>
+                    </a>
+                </li>
+                <li class="sms-options-item nav-item">
+                    <a id="check-sms-logs-tab nav-link" href="#check-sms-logs">
+                        <span class="icon" src=""></span>
+                        <span class="text">Przeglądaj logi</span>
+                    </a>
+                </li>
+                <li class="sms-options-item">
+                    <a id="browse-sms-templates-tab" href="#browse-sms-templates">
+                        <span class="icon" src=""></span>
+                        <span class="text">Przeglądaj szablony</span>
+                    </a>
+                </li>
+                <li class="sms-options-item">
+                    <a id="add-sms-template-tab" href="#add-sms-template">
+                        <span class="icon" src=""></span>
+                        <span class="text">Dodaj szablon</span>
+                    </a>
+                </li>
+                <li class="sms-options-item">
+                    <a id="edit-sms-template-tab" href="#edit-sms-template">
+                        <span class="icon" src=""></span>
+                        <span class="text">Edytuj szablon</span>
+                    </a>
+                </li>
+                <li class="sms-options-item">
+                    <a id="delete-sms-template-tab" href="#delete-sms-template">
+                        <span class="icon" src=""></span>
+                        <span class="text">Usuń szablon</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content" id="sms-tab-content">
+                <div class="tab-pane show active" id="send-sms">
+                    Kalinka
+                </div>
+                <div class="tab-pane" id="check-sms-logs">
+                    Maja
+                </div>
             </div>
         </div>
     </div>
@@ -74,27 +77,36 @@
             e.preventDefault();
             $(this).tab('show');
         });
+
+        $('#sms-options-list a').on('click', function (e) {
+            $(".selected").removeClass("selected");
+            e.preventDefault();
+            $(this).tab('show');
+            $(this).parent().toggleClass('selected');
+        });
     });
 </script>
 
 <style>
-    .tab-pane{
-        display: flex;
+    .selected{
+        background-color:white!important;
+        border-right:none!important;
+    }
+    .sms-option-list-container{
+        width:275px;
     }
     .options-list{
         padding: 5px;
         list-style-type: none;
         margin-bottom: 0px;
         text-align: left;
+        width: 275px;
     }
     .sms-options-item{
         padding: 15px;
         border: thin solid #dfdfdf;
         width: 100%;
         background-color: #fafafa;
-    }
-    .card-options-sms{
-        width: 300px;
     }
     .text{
         font-weight: bold ;
