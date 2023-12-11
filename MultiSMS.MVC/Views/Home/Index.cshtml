@@ -21,7 +21,7 @@
         <div class="tab-pane show active" id="sms" aria-labelledby="sms-tab">
             <div class="d-flex sms-container">
                 <ul class="options-list nav" id="sms-options-list" role="list">
-                    <li class="sms-options-item nav-item selected send-sms-item">
+                    <li class="sms-options-item nav-item selected-groups send-sms-item">
                         <a id="send-sms-tab nav-link" href="#send-sms">
                             <span class="option-icon"><img src="icons/message-arrow-up-right.png"/></span>
                             <span class="text">Wyślij wiadomość SMS</span>
@@ -82,8 +82,8 @@
          </div>
         <div class="tab-pane" id="contacts">
             <div class="d-flex contacts-container">
-                <ul class="options-list nav" id="sms-options-list" role="list">
-                    <li class="sms-options-item nav-item selected browse-contacts-item">
+                <ul class="options-list nav" id="contacts-options-list" role="list">
+                    <li class="sms-options-item nav-item selected-contacts browse-contacts-item">
                         <a id="send-sms-tab nav-link" href="#browse-contacts">
                             <span class="option-icon"><img src="icons/file-user.png"/></span>
                             <span class="text">Przeglądaj kontakty</span>
@@ -126,8 +126,8 @@
         </div>
         <div class="tab-pane" id="groups">
             <div class="d-flex groups-container">
-                <ul class="options-list nav" id="sms-options-list" role="list">
-                    <li class="sms-options-item nav-item selected browse-groups-item">
+                <ul class="options-list nav" id="groups-options-list" role="list">
+                    <li class="sms-options-item nav-item selected-groups browse-groups-item">
                         <a id="browse-groups-tab nav-link" href="#browse-groups">
                             <span class="option-icon"><img src="icons/recruitment.png" /></span>
                             <span class="text">Przeglądaj grupy</span>
@@ -181,19 +181,54 @@
         });
 
         $('#sms-options-list a').on('click', function (e) {
-            $(".selected").removeClass("selected");
+            $(".selected-sms").removeClass("selected-sms");
             e.preventDefault();
             $(this).tab('show');
-            $(this).parent().toggleClass('selected');
+            $(this).parent().toggleClass('selected-sms');
+        });
+        $('#contacts-options-list a').on('click', function (e) {
+            $(".selected-contacts").removeClass("selected-contacts");
+            e.preventDefault();
+            $(this).tab('show');
+            $(this).parent().toggleClass('selected-contacts');
+        });
+        $('#groups-options-list a').on('click', function (e) {
+            $(".selected-groups").removeClass("selected-groups");
+            e.preventDefault();
+            $(this).tab('show');
+            $(this).parent().toggleClass('selected-groups');
+        });
+        $('#roles-options-list a').on('click', function (e) {
+            $(".selected-roles").removeClass("selected-roles");
+            e.preventDefault();
+            $(this).tab('show');
+            $(this).parent().toggleClass('selected-roles');
         });
     });
 </script>
 
 <style>
-    .selected{
+    .selected-sms{
         border:thin inset black!important;
         background-color:white!important;
         border-right:none!important;
+    }
+
+    .selected-contacts {
+        border: thin inset black !important;
+        background-color: white !important;
+        border-right: none !important;
+    }
+    .selected-groups{
+        border:thin inset black!important;
+        background-color:white!important;
+        border-right:none!important;
+    }
+
+    .selected-roles {
+        border: thin inset black !important;
+        background-color: white !important;
+        border-right: none !important;
     }
     .options-list{
         list-style-type: none;
