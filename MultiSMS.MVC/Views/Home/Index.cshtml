@@ -5,7 +5,7 @@
 <div class="card text-center">
     <ul class="nav nav-tabs" id="master-card-header-tabs" role="list">
         <li class="nav-item">
-            <a class="nav-link" id="sms-tab" href="#sms" aria-controls="sms" aria-selected="true">SMS</a>
+            <a class="nav-link active" id="sms-tab" href="#sms" aria-controls="sms" aria-selected="true">SMS</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="contacts-tab" href="#contacts" aria-controls="contacts" aria-selected="false">Kontakty</a>
@@ -20,7 +20,7 @@
     <div class="tab-content" id="category-tab-content">
         <div class="tab-pane show active d-flex" id="sms" aria-labelledby="sms-tab">
             <ul class="options-list nav" id="sms-options-list" role="list">
-                <li class="sms-options-item nav-item send-sms-item">
+                <li class="sms-options-item nav-item selected send-sms-item">
                     <a id="send-sms-tab nav-link" href="#send-sms">
                         <span class="icon" src=""></span>
                         <span class="text">Wyślij wiadomość SMS</span>
@@ -57,8 +57,8 @@
                     </a>
                 </li>
             </ul>
-            <div class="tab-content" id="sms-tab-content">
-                <div class="tab-pane show active" id="send-sms">
+            <div class="tab-content content" id="sms-tab-content">
+                <div class="tab-pane active" id="send-sms">
                     Kalinka
                 </div>
                 <div class="tab-pane" id="check-sms-logs">
@@ -89,18 +89,15 @@
 
 <style>
     .selected{
+        border:thin inset black!important;
         background-color:white!important;
         border-right:none!important;
     }
-    .sms-option-list-container{
-        width:275px;
-    }
     .options-list{
-        padding: 5px;
         list-style-type: none;
         margin-bottom: 0px;
         text-align: left;
-        width: 275px;
+        width: 325px;
     }
     .sms-options-item{
         padding: 15px;
@@ -111,5 +108,11 @@
     .text{
         font-weight: bold ;
         font-family: sans-serif
+    }
+    .tab-pane{
+        padding: 10px;
+    }
+    .content{
+        width: 100%;
     }
 </style>
