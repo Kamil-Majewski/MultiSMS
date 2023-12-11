@@ -18,51 +18,109 @@
         </li>
     </ul>
     <div class="tab-content" id="category-tab-content">
-        <div class="tab-pane show active d-flex" id="sms" aria-labelledby="sms-tab">
-            <ul class="options-list nav" id="sms-options-list" role="list">
-                <li class="sms-options-item nav-item selected send-sms-item">
-                    <a id="send-sms-tab nav-link" href="#send-sms">
-                        <span class="icon" src=""></span>
-                        <span class="text">Wyślij wiadomość SMS</span>
-                    </a>
-                </li>
-                <li class="sms-options-item nav-item">
-                    <a id="check-sms-logs-tab nav-link" href="#check-sms-logs">
-                        <span class="icon" src=""></span>
-                        <span class="text">Przeglądaj logi</span>
-                    </a>
-                </li>
-                <li class="sms-options-item">
-                    <a id="browse-sms-templates-tab" href="#browse-sms-templates">
-                        <span class="icon" src=""></span>
-                        <span class="text">Przeglądaj szablony</span>
-                    </a>
-                </li>
-                <li class="sms-options-item">
-                    <a id="add-sms-template-tab" href="#add-sms-template">
-                        <span class="icon" src=""></span>
-                        <span class="text">Dodaj szablon</span>
-                    </a>
-                </li>
-                <li class="sms-options-item">
-                    <a id="edit-sms-template-tab" href="#edit-sms-template">
-                        <span class="icon" src=""></span>
-                        <span class="text">Edytuj szablon</span>
-                    </a>
-                </li>
-                <li class="sms-options-item">
-                    <a id="delete-sms-template-tab" href="#delete-sms-template">
-                        <span class="icon" src=""></span>
-                        <span class="text">Usuń szablon</span>
-                    </a>
-                </li>
-            </ul>
-            <div class="tab-content content" id="sms-tab-content">
-                <div class="tab-pane active" id="send-sms">
-                    Kalinka
+        <div class="tab-pane show active" id="sms" aria-labelledby="sms-tab">
+            <div class="d-flex sms-container">
+                <ul class="options-list nav" id="sms-options-list" role="list">
+                    <li class="sms-options-item nav-item selected send-sms-item">
+                        <a id="send-sms-tab nav-link" href="#send-sms">
+                            <span class="option-icon"><img src="icons/message-arrow-up-right.png"/></span>
+                            <span class="text">Wyślij wiadomość SMS</span>
+                        </a>
+                    </li>
+                    <li class="sms-options-item nav-item">
+                        <a id="check-sms-logs-tab nav-link" href="#check-sms-logs">
+                            <span class="option-icon"><img src="icons/search-alt.png"/></span>
+                            <span class="text">Przeglądaj logi</span>
+                        </a>
+                    </li>
+                    <li class="sms-options-item">
+                        <a id="browse-sms-templates-tab" href="#browse-sms-templates">
+                            <span class="option-icon"> <img src="icons/template.png"/></span>
+                            <span class="text">Przeglądaj szablony</span>
+                        </a>
+                    </li>
+                    <li class="sms-options-item">
+                        <a id="add-sms-template-tab" href="#add-sms-template">
+                            <span class="option-icon"> <img src="icons/add-document.png"/></span>
+                            <span class="text">Dodaj szablon</span>
+                        </a>
+                    </li>
+                    <li class="sms-options-item">
+                        <a id="edit-sms-template-tab" href="#edit-sms-template">
+                            <span class="option-icon"><img src="icons/file-edit.png"/></span>
+                            <span class="text">Edytuj szablon</span>
+                        </a>
+                    </li>
+                    <li class="sms-options-item">
+                        <a id="delete-sms-template-tab" href="#delete-sms-template">
+                            <span class="option-icon"><img src="icons/delete-document.png"/></span>
+                            <span class="text">Usuń szablon</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content content" id="sms-tab-content">
+                    <div class="tab-pane active" id="send-sms">
+                        Wyślij SMS
+                    </div>
+                    <div class="tab-pane" id="check-sms-logs">
+                        Przeglądaj Logi
+                    </div>
+                    <div class="tab-pane" id="browse-sms-templates">
+                        Przeglądaj szablony
+                    </div>
+                    <div class="tab-pane" id="add-sms-template">
+                        Dodaj szablon
+                    </div>
+                    <div class="tab-pane" id="edit-sms-template">
+                        Edytuj szablon
+                    </div>
+                    <div class="tab-pane" id="delete-sms-template">
+                        Usuń szablon
+                    </div>
                 </div>
-                <div class="tab-pane" id="check-sms-logs">
-                    Maja
+            </div>
+         </div>
+        <div class="tab-pane" id="contacts">
+            <div class="d-flex contacts-container">
+                <ul class="options-list nav" id="sms-options-list" role="list">
+                    <li class="sms-options-item nav-item selected browse-contacts-item">
+                        <a id="send-sms-tab nav-link" href="#browse-contacts">
+                            <span class="option-icon"><img src="icons/file-user.png"/></span>
+                            <span class="text">Przeglądaj kontakty</span>
+                        </a>
+                    </li>
+                    <li class="sms-options-item nav-item">
+                        <a id="check-sms-logs-tab nav-link" href="#add-contact">
+                            <span class="option-icon"><img src="icons/user-add.png"/></span>
+                            <span class="text">Dodaj kontakt</span>
+                        </a>
+                    </li>
+                    <li class="sms-options-item">
+                        <a id="browse-sms-templates-tab" href="#edit-contact">
+                            <span class="option-icon"> <img src="icons/user-pen.png" /></span>
+                            <span class="text">Edytuj kontakt</span>
+                        </a>
+                    </li>
+                    <li class="sms-options-item">
+                        <a id="add-sms-template-tab" href="#delete-contact">
+                            <span class="option-icon"> <img src="icons/delete-user.png" /></span>
+                            <span class="text">Usuń kontakt</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content content" id="contacts-tab-content">
+                    <div class="tab-pane active" id="browse-contacts">
+                        Przeglądaj kontakty
+                    </div>
+                    <div class="tab-pane" id="add-contact">
+                        Dodaj kontakt
+                    </div>
+                    <div class="tab-pane" id="edit-contact">
+                        Edytuj kontakt
+                    </div>
+                    <div class="tab-pane" id="delete-contact">
+                        Usuń kontakt
+                    </div>
                 </div>
             </div>
         </div>
@@ -97,7 +155,7 @@
         list-style-type: none;
         margin-bottom: 0px;
         text-align: left;
-        width: 325px;
+        max-width: 275px;
     }
     .sms-options-item{
         padding: 15px;
@@ -111,8 +169,14 @@
     }
     .tab-pane{
         padding: 10px;
+        min-width:400px;
     }
     .content{
         width: 100%;
+    }
+    .option-icon{
+        max-width: 37px;
+        display: inline-block;
+        padding: 5px;
     }
 </style>
