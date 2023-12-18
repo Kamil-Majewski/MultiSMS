@@ -21,14 +21,14 @@
         <div class="tab-pane show active" id="sms" aria-labelledby="sms-tab">
             <div class="d-flex sms-container">
                 <ul class="options-list nav" id="sms-options-list" role="list">
-                    <li class="sms-options-item nav-item selected-groups send-sms-item">
-                        <a id="send-sms-tab nav-link" href="#send-sms">
+                    <li class="sms-options-item nav-item selected-sms send-sms-item">
+                        <a id="send-sms-tab" href="#send-sms">
                             <span class="option-icon"><img src="icons/message-arrow-up-right.png"/></span>
                             <span class="text">Wyślij wiadomość SMS</span>
                         </a>
                     </li>
                     <li class="sms-options-item nav-item">
-                        <a id="check-sms-logs-tab nav-link" href="#check-sms-logs">
+                        <a id="check-sms-logs-tab" href="#check-sms-logs">
                             <span class="option-icon"><img src="icons/search-alt.png"/></span>
                             <span class="text">Przeglądaj logi</span>
                         </a>
@@ -135,19 +135,19 @@
                     </li>
                     <li class="sms-options-item nav-item">
                         <a id="add-group-tab nav-link" href="#add-group">
-                            <span class="option-icon"><img src="icons/add.png" /></span>
+                            <span class="option-icon"><img src="icons/users-medical.png" /></span>
                             <span class="text">Dodaj grupę</span>
                         </a>
                     </li>
                     <li class="sms-options-item">
                         <a id="edit-group-tab" href="#edit-group">
-                            <span class="option-icon"> <img src="icons/pen-circle.png" /></span>
+                            <span class="option-icon"> <img src="icons/exchange.png" /></span>
                             <span class="text">Edytuj grupę</span>
                         </a>
                     </li>
                     <li class="sms-options-item">
                         <a id="remove-group-tab" href="#delete-group">
-                            <span class="option-icon"> <img src="icons/minus-circle.png" /></span>
+                            <span class="option-icon"> <img src="icons/users-slash.png" /></span>
                             <span class="text">Usuń grupę</span>
                         </a>
                     </li>
@@ -164,6 +164,50 @@
                     </div>
                     <div class="tab-pane" id="delete-group">
                         Usuń group
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" id="role">
+            <div class="d-flex groups-container">
+                <ul class="options-list nav" id="roles-options-list" role="list">
+                    <li class="sms-options-item nav-item selected-roles browse-roles-item">
+                        <a id="browse-roles-tab nav-link" href="#browse-roles">
+                            <span class="option-icon"><img src="icons/id-card.png" /></span>
+                            <span class="text">Przeglądaj role</span>
+                        </a>
+                    </li>
+                    <li class="sms-options-item nav-item">
+                        <a id="add-group-tab nav-link" href="#add-role">
+                            <span class="option-icon"><img src="icons/add.png" /></span>
+                            <span class="text">Dodaj rolę</span>
+                        </a>
+                    </li>
+                    <li class="sms-options-item">
+                        <a id="edit-group-tab" href="#edit-role">
+                            <span class="option-icon"> <img src="icons/pen-circle.png" /></span>
+                            <span class="text">Edytuj rolę</span>
+                        </a>
+                    </li>
+                    <li class="sms-options-item">
+                        <a id="remove-group-tab" href="#delete-role">
+                            <span class="option-icon"> <img src="icons/minus-circle.png" /></span>
+                            <span class="text">Usuń rolę</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content content" id="roles-tab-content">
+                    <div class="tab-pane active" id="browse-roles">
+                        Przeglądaj role
+                    </div>
+                    <div class="tab-pane" id="add-role">
+                        Dodaj rolę
+                    </div>
+                    <div class="tab-pane" id="edit-role">
+                        Edytuj rolę
+                    </div>
+                    <div class="tab-pane" id="delete-role">
+                        Usuń rolę
                     </div>
                 </div>
             </div>
@@ -208,6 +252,10 @@
 </script>
 
 <style>
+    .text{
+        color:black;
+
+    }
     .selected-sms{
         border:thin inset black!important;
         background-color:white!important;
