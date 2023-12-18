@@ -69,7 +69,7 @@
                         Przeglądaj szablony
                     </div>
                     <div class="tab-pane" id="add-sms-template">
-                        <form>
+                        <form id="createNewTemplateForm">
                             <div class="form-group">
                                 <label for="TemplateName">Nazwa szablonu</label>
                                 <input type="text" class="form-control" id="templateNameInput" placeholder="Przykładowy Szablon" required />
@@ -238,10 +238,6 @@
         let name = $("#templateNameInput").val();
         let description = $("#templateDescriptionInput").val();
         let content = $("#templateContentInput").val();
-        console.log(name);
-        console.log(description);
-        console.log(content);
-
 
         $.ajax({
             url: '@Url.Action("CreateNewTemplate", "Home")',
@@ -249,7 +245,7 @@
             contentType: 'application/json',
             data: {templateName: name, templateDescription: description, templateContent: content},
             success: function (templateEnitity) {
-
+                console.log("Successfully added new template")
             },
             error: function (error) {
                 console.error(error);
@@ -259,9 +255,18 @@
 
     $(document).ready(function () {
 
-        $("#createNewTemplateSubmitButton").click(function (e) {
+        let form = document.getElementById("createNewTemplateForm");
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            console.log(form.checkValidity());
+            if (form.checkValidity() === false) {
+                form.reportValidity()
+                return
+            }
+
             CreateNewTemplate();
-        });
+        })
 
         const messageEle = document.getElementById('templateContentInput');
         const counterEle = document.getElementById('symbolCounter');
@@ -341,8 +346,11 @@
         margin-bottom: 0px;
         text-align: left;
         max-width: 275px;
+        max-height: 500px;
     }
     .sms-options-item{
+        display: flex;
+        align-items: center;
         padding: 15px;
         border: thin solid #dfdfdf;
         width: 100%;
