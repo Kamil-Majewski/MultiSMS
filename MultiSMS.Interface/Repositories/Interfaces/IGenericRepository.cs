@@ -2,7 +2,7 @@
 {
     public interface IGenericRepository<T> where T : class
     {
-        Task<T> AddEntityToDatabase(T entity);
+        Task<T> AddEntityToDatabaseAsync(T entity);
         Task DeleteEntity(int id);
         IQueryable<T> GetAllEntries();
         Task<T> GetByIdAsync(int id);

@@ -24,7 +24,7 @@ namespace MultiSMS.Interface.Repositories
             return await _dbSet.FindAsync(id) ?? throw new Exception($"Could not find entity {nameof(T)} with given Id");
         }
 
-        public async Task<T> AddEntityToDatabase(T entity)
+        public async Task<T> AddEntityToDatabaseAsync(T entity)
         {
             if (entity is null)
             {
@@ -32,6 +32,7 @@ namespace MultiSMS.Interface.Repositories
             }
 
             await _dbSet.AddAsync(entity);
+            await _dbContext.SaveChangesAsync();
             return entity;
         }
 

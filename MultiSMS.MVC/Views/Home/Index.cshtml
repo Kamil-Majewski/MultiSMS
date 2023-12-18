@@ -84,7 +84,7 @@
                                 <div style="margin-top: 0.25rem; text-align: right" id="symbolCounter">0/255</div>
                             </div>
                             <div class="justify-content-center d-flex">
-                                <button type="submit" class="btn btn-success" id="createNewTemplateSubmitButton">Utwórz nowy szablon</button>
+                                <button type="submit" class="btn btn-primary" id="createNewTemplateSubmitButton">Utwórz nowy szablon</button>
                             </div>
                         </form>
                     </div>
@@ -234,8 +234,34 @@
 
 <script defer>
 
+    function CreateNewTemplate() {
+        let name = $("#templateNameInput").val();
+        let description = $("#templateDescriptionInput").val();
+        let content = $("#templateContentInput").val();
+        console.log(name);
+        console.log(description);
+        console.log(content);
+
+
+        $.ajax({
+            url: '@Url.Action("CreateNewTemplate", "Home")',
+            type: 'GET',
+            contentType: 'application/json',
+            data: {templateName: name, templateDescription: description, templateContent: content},
+            success: function (templateEnitity) {
+
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        })
+    }
 
     $(document).ready(function () {
+
+        $("#createNewTemplateSubmitButton").click(function (e) {
+            CreateNewTemplate();
+        });
 
         const messageEle = document.getElementById('templateContentInput');
         const counterEle = document.getElementById('symbolCounter');

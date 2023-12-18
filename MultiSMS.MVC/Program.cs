@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MultiSMS.Interface;
 using MultiSMS.Interface.Entities;
+using MultiSMS.Interface.Initialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,8 @@ builder.Services.AddDbContext<MultiSMSDbContext>(options =>
 builder.Services.AddDefaultIdentity<Administrator>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<MultiSMSDbContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.InitializeMultiSMSInfrastructureDependencies();
 
 builder.Services.AddControllersWithViews();
 
