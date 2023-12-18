@@ -2,7 +2,7 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="card text-center">
+<div class="card">
     <ul class="nav nav-tabs" id="master-card-header-tabs" role="list">
         <li class="nav-item">
             <a class="nav-link active" id="sms-tab" href="#sms" aria-controls="sms" aria-selected="true">SMS</a>
@@ -69,7 +69,24 @@
                         Przeglądaj szablony
                     </div>
                     <div class="tab-pane" id="add-sms-template">
-                        Dodaj szablon
+                        <form>
+                            <div class="form-group">
+                                <label for="TemplateName">Nazwa szablonu</label>
+                                <input type="text" class="form-control" id="templateNameInput" placeholder="Przykładowy Szablon" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="TemplateDescription">Opis</label>
+                                <input type="text" class="form-control" id="templateDescriptionInput" placeholder="Szablon przeznaczony jest dla..." />
+                            </div>
+                            <div class="form-group">
+                                <label for="TemplateContent">Treść wiadomości</label>
+                                <textarea class="form-control" id="templateContentInput" rows="5" maxlength="255" placeholder="W związku z przygotowaniami do..." required></textarea>
+                                <div style="margin-top: 0.25rem; text-align: right" id="symbolCounter">0/255</div>
+                            </div>
+                            <div class="justify-content-center d-flex">
+                                <button type="submit" class="btn btn-success" id="createNewTemplateSubmitButton">Utwórz nowy szablon</button>
+                            </div>
+                        </form>
                     </div>
                     <div class="tab-pane" id="edit-sms-template">
                         Edytuj szablon
@@ -79,19 +96,19 @@
                     </div>
                 </div>
             </div>
-         </div>
+        </div>
         <div class="tab-pane" id="contacts">
             <div class="d-flex contacts-container">
                 <ul class="options-list nav" id="contacts-options-list" role="list">
                     <li class="sms-options-item nav-item selected-contacts browse-contacts-item">
                         <a id="send-sms-tab nav-link" href="#browse-contacts">
-                            <span class="option-icon"><img src="icons/file-user.png"/></span>
+                            <span class="option-icon"><img src="icons/file-user.png" /></span>
                             <span class="text">Przeglądaj kontakty</span>
                         </a>
                     </li>
                     <li class="sms-options-item nav-item">
                         <a id="check-sms-logs-tab nav-link" href="#add-contact">
-                            <span class="option-icon"><img src="icons/user-add.png"/></span>
+                            <span class="option-icon"><img src="icons/user-add.png" /></span>
                             <span class="text">Dodaj kontakt</span>
                         </a>
                     </li>
@@ -217,7 +234,19 @@
 
 <script defer>
 
+
     $(document).ready(function () {
+
+        const messageEle = document.getElementById('templateContentInput');
+        const counterEle = document.getElementById('symbolCounter');
+
+        messageEle.addEventListener('input', function (e) {
+            const target = e.target;
+            const maxLength = target.getAttribute('maxlength');
+            const currentLength = target.value.length;
+
+            counterEle.innerHTML = `${currentLength}/${maxLength}`;
+        });
 
         $('#master-card-header-tabs a').on('click', function (e) {
             e.preventDefault();
@@ -252,6 +281,9 @@
 </script>
 
 <style>
+    .content{
+        padding-left: 20px;
+    }
     .text{
         color:black;
 
@@ -288,7 +320,7 @@
         padding: 15px;
         border: thin solid #dfdfdf;
         width: 100%;
-        background-color: #fafafa;
+        background-color: #00000003;
     }
     .text{
         font-weight: bold ;
@@ -305,5 +337,14 @@
         max-width: 37px;
         display: inline-block;
         padding: 5px;
+    }
+    .form-row{
+        width:100%;
+    }
+    label{
+        font-weight: 600;
+    }
+    .form-control{
+        background-color: #00000003;
     }
 </style>

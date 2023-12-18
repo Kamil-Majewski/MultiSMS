@@ -7,6 +7,7 @@ namespace MultiSMS.Interface.Entities
     {
         public int TemplateId { get; set; }
         public string TemplateName { get; set; } = default!;
+        public string? TemplateDescription { get; set; }
         public string TemplateContent { get; set; } = default!;
     }
 }
