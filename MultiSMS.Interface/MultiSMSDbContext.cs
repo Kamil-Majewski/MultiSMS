@@ -14,6 +14,9 @@ namespace MultiSMS.Interface
         public virtual DbSet<SMSMessage> SMSMessageLogs { get; set; }
         public virtual DbSet<SMSMessageTemplate> SMSMessageTemplates { get; set; }
 
+        public MultiSMSDbContext(DbContextOptions options) : base(options)
+        {
+        }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

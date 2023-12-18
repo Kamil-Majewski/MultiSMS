@@ -10,7 +10,6 @@ namespace MultiSMS.Interface.Initialization
         {
             serviceCollection.AddScoped<IEmployeeRepository, EmployeeRepository>();
             serviceCollection.AddScoped<IEmployeesGroupRepository, EmployeesGroupRepository>();
-            serviceCollection.AddScoped<IEmployeesRoleRepository, EmployeesRoleRepository>();
         }
     }
 }
