@@ -4,50 +4,15 @@ using MultiSMS.Interface.Repositories.Interfaces;
 
 namespace MultiSMS.Interface.Repositories
 {
-    public class EmployeeRepository : IEmployeeRepository
+    public class EmployeeRepository : GenericRepository<Employee>, IEmployeeRepository
     {
-        private readonly MultiSMSDbContext _dbContext;
-
-        public EmployeeRepository(MultiSMSDbContext dbContext)
+        public EmployeeRepository(MultiSMSDbContext context) : base(context)
         {
-            _dbContext = dbContext;
         }
 
-        public async Task<Employee> GetEmployeeByIdAsync(int employeeId)
+        public async Task<Employee> GetByNameAsync(string name)
         {
-            return await _dbContext.Employees.FirstOrDefaultAsync(u => u.EmployeeId == employeeId) ?? throw new Exception("Could not find employee with given ID");
+            return await GetAllEntries().FirstOrDefaultAsync(e => e.Name == name) ?? throw new Exception($"Could not find employee with provided name: {name}");
         }
-
-        public async Task<IQueryable<Employee>> GetEmployeeBySurnameAsync(string surname)
-        {
-            return await Task.FromResult(_dbContext.Employees.Where(u => u.Surname == surname));
-        }
-
-        public async Task<IQueryable<Employee>> GetAllEmployeesAsync()
-        {
-            return await Task.FromResult(_dbContext.Employees);
-        }
-
-        public async Task<Employee> CreateEmployeeAsync(Employee employee)
-        {
-            await _dbContext.Employees.AddAsync(employee);
-            await _dbContext.SaveChangesAsync();
-            return employee;
-        }
-
-        public async Task<Employee> UpdateEmployeeAsync(Employee employee)
-        {
-            var employeeFromDb = await GetEmployeeByIdAsync(employee.EmployeeId);
-            employeeFromDb = employee;
-            await _dbContext.SaveChangesAsync();
-            return employeeFromDb;
-        }
-
-        public async Task DeleteEmployeeAsync(Employee employee)
-        {
-            await Task.FromResult(_dbContext.Employees.Remove(employee));
-            await _dbContext.SaveChangesAsync();
-        }
-
     }
 }
