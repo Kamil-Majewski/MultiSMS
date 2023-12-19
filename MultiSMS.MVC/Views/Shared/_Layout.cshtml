@@ -13,25 +13,7 @@
     
 
     <style>
-		.modal.left .modal-dialog{
-			position: fixed;
-			margin: auto;
-			width: 320px;
-			height: 100%;
-		}
-
-		.modal.left .modal-content{
-			height: 100%;
-			overflow-y: auto;
-		}
-
-		.modal.left .modal-body{
-			padding: 15px 15px 15px;
-		}
-
-		.modal.left.fade.in .modal-dialog {
-			left: 0;
-		}
+		
         .options-list-left{
             list-style-type: none;
         }
@@ -66,8 +48,7 @@
             width:100%;
         }
         .text-nav{
-            color:black;
-            font-weight: 600;
+            color:white;
             font-size: 20px;
             font-family: 'Noto Sans';
             display: inline-block;
@@ -124,6 +105,33 @@
         img {
             max-width: 100%;
             height: auto;
+        }
+        .main-window{
+            width: 100%;
+            height: 100%;
+            margin: 20px;
+            
+        }
+        .layout-header{
+            width:100%;
+            display: flex;
+            justify-content: center;
+        }
+        .toolbar-left{
+            width: 30vh;
+            background-color: #6f5cc4;
+        }
+        .layout-render-body{
+            width: 120vh;
+        }
+        .layout-content{
+            display: flex;
+            width: 100%;
+            justify-content: center;
+        }
+        header{
+            width: 150vh;
+            background-color: #504190;
         }
         
 
@@ -189,7 +197,7 @@
     </script>
 </head>
 <body>
-    <div class="modal fade left" id="nav-left" tabindex="-1" role="dialog" aria-labelledby="leftNavbar">
+    @* <div class="modal fade left" id="nav-left" tabindex="-1" role="dialog" aria-labelledby="leftNavbar">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -348,22 +356,189 @@
                 </div>
             </div>
         </div>
-    </div>
-    <header class="app-header">
-        <nav class="navbar navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <div class="nav-left-toggle">
-                    <button class="navbar-toggler" type="button" data-toggle="modal" data-target="#nav-left">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <span class="navbar-brand" style="padding-left:20px; padding-top:5px;">MultiSMS</span>
-                </div>
-                <div class="account-settings d-sm-inline-flex justify-content-between">
-                 <partial name="_LoginPartial" />
+    </div> *@
+
+    <div class="container-fluid main-window">
+        <div class="layout-header">
+            <header class="app-header">
+                <nav class="navbar navbar-light bg-white border box-shadow">
+                    <div class="container-fluid">
+                        <div class="nav-left-toggle">
+                            <button class="navbar-toggler" type="button" data-toggle="modal" data-target="#nav-left">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <span class="navbar-brand" style="padding-left:20px; padding-top:5px;">MultiSMS</span>
+                        </div>
+                        <div class="account-settings d-sm-inline-flex justify-content-between">
+                            <partial name="_LoginPartial" />
+                        </div>
+                    </div>
+                </nav>
+            </header>
+        </div>
+        <div class="layout-content">
+            <div class="toolbar-left">
+                <div class="modal-body">
+                    <ul class="options-list-left" style="padding-left:0px;">
+                        <li class="option-list-item">
+                            <a class="link" id="home" href="#">
+                                <span class="icon" id="home-icon"><img src="~/icons/home.png" /></span>
+                                <span class="text-nav" id="home-text">Strona startowa</span>
+                            </a>
+                        </li>
+                        <li class="option-list-dropdown">
+                            <a class="dropdown-toggle" id="sms-dropdown-toggle" href="#" role="button" aria-expanded="false">
+                                <span class="icon" id="sms-icon"><img src="icons/envelope.png" /></span>
+                                <span class="text-nav" id="sms-text">SMS</span>
+                            </a>
+                            <ul class="dropdown-list" id="dropdown-list-sms">
+                                <li>
+                                    <a class="dropdown-item">
+                                        <span class="icon"><img src="~/icons/message-arrow-up-right.png" /></span>
+                                        <span class="text-nav-dropdown">Wyślij wiadomość SMS</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item">
+                                        <span class="icon"><img src="~/icons/search-alt.png" /></span>
+                                        <span class="text-nav-dropdown">Przeglądaj logi</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item">
+                                        <span class="icon"><img src="~/icons/template.png" /></span>
+                                        <span class="text-nav-dropdown">Przeglądaj szablony</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item">
+                                        <span class="icon"><img src="~/icons/add-document.png" /></span>
+                                        <span class="text-nav-dropdown">Dodaj szablon</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item">
+                                        <span class="icon"><img src="~/icons/file-edit.png" /></span>
+                                        <span class="text-nav-dropdown">Edytuj szablon</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item">
+                                        <span class="icon"><img src="~/icons/delete-document.png" /></span>
+                                        <span class="text-nav-dropdown">Usuń szablon</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="option-list-dropdown">
+                            <a class="dropdown-toggle" id="contacts-dropdown-toggle" href="#" role="button" aria-expanded="false">
+                                <div class="icon" id="contacts-icon"><img src="icons/book-bookmark.png" /></div>
+                                <span class="text-nav" id="contacts-text">Listy kontaktów</span>
+                            </a>
+                            <ul class="dropdown-list" id="dropdown-list-contacts">
+                                <li>
+                                    <a class="dropdown-item">
+                                        <span class="icon"><img src="icons/file-user.png" /></span>
+                                        <span class="text-nav-dropdown">Przeglądaj kontakty</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item">
+                                        <span class="icon"><img src="icons/user-add.png" /></span>
+                                        <span class="text-nav-dropdown">Dodaj kontakt</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item">
+                                        <span class="icon"><img src="icons/user-pen.png" /></span>
+                                        <span class="text-nav-dropdown">Edytuj kontakt</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item">
+                                        <span class="icon"><img src="~/icons/delete-user.png" /></span>
+                                        <span class="text-nav-dropdown">Usuń kontakt</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="option-list-dropdown">
+                            <a class="dropdown-toggle" id="group-dropdown-toggle" href="#" role="button" aria-expanded="false">
+                                <div class="icon" id="group-icon"><img src="icons/group.png" /></div>
+                                <span class="text-nav" id="group-text">Grupy</span>
+                            </a>
+                            <ul class="dropdown-list" id="dropdown-list-group">
+                                <li>
+                                    <a class="dropdown-item">
+                                        <span class="icon"><img src="icons/recruitment.png" /></span>
+                                        <span class="text-nav-dropdown">Przeglądaj grupy</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item">
+                                        <span class="icon"><img src="~/icons/users-medical.png" /></span>
+                                        <span class="text-nav-dropdown">Dodaj grupę</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item">
+                                        <span class="icon"><img src="icons/exchange.png" /></span>
+                                        <span class="text-nav-dropdown">Edytuj grupę</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item">
+                                        <span class="icon"><img src="icons/users-slash.png" /></span>
+                                        <span class="text-nav-dropdown">Usuń grupę</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="option-list-dropdown">
+                            <a class="dropdown-toggle" id="role-dropdown-toggle" href="#" role="button" aria-expanded="false">
+                                <div class="icon"><img src="~/icons/briefcase.png" /></div>
+                                <span class="text-nav">Role</span>
+                            </a>
+                            <ul class="dropdown-list" id="dropdown-list-role">
+                                <li>
+                                    <a class="dropdown-item">
+                                        <span class="icon"><img src="icons/id-card.png"></span>
+                                        <span class="text-nav-dropdown">Przeglądaj role</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item">
+                                        <span class="icon"><img src="icons/add.png" /></span>
+                                        <span class="text-nav-dropdown">Dodaj role</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item">
+                                        <span class="icon"><img src="icons/pen-circle.png" /></span>
+                                        <span class="text-nav-dropdown">Edytuj role</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item">
+                                        <span class="icon"><img src="icons/minus-circle.png" /></span>
+                                        <span class="text-nav-dropdown">Usuń role</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        </nav>
-    </header>
+            <div class="layout-render-body">
+                <main role="main">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+    </div>
+
+
+    
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
