@@ -49,6 +49,14 @@ namespace MultiSMS.MVC.Controllers
             return Json(template);
         }
 
+        [HttpGet]
+        public async Task DeleteTemplate(int id)
+        {
+            await _smsTemplateRepository.DeleteEntityAsync(id);
+
+
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

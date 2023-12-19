@@ -81,10 +81,10 @@
                             <div class="form-group">
                                 <label for="TemplateContent">Treść wiadomości</label>
                                 <textarea class="form-control" id="templateContentInputAdd" rows="5" maxlength="255" placeholder="W związku z przygotowaniami do..." required></textarea>
-                                <div style="margin-top: 0.25rem; text-align: right" id="symbolCounterAdd">0/255</div>
+                                <div style="margin-top: 0.25rem; text-align: right" id="symbolCounterAdd">&nbsp</div>
                             </div>
                             <div class="justify-content-center d-flex">
-                                <button type="submit" class="btn btn-primary" id="createNewTemplateSubmitButton">Utwórz nowy szablon</button>
+                                <button type="submit" class="btn btn-success" id="createNewTemplateSubmitButton">Utwórz nowy szablon</button>
                             </div>
                         </form>
                     </div>
@@ -96,24 +96,42 @@
                         <form id="editTemplateForm">
                             <div class="form-group">
                                 <label for="TemplateName">Nazwa szablonu</label>
-                                <input readonly type="text" class="form-control" id="templateNameInputEdit" placeholder="Przykładowy Szablon" required />
+                                <input readonly type="text" class="form-control" id="templateNameInputEdit" placeholder="Szablon do edycji" required />
                             </div>
                             <div class="form-group">
                                 <label for="TemplateDescription">Opis</label>
-                                <input readonly type="text" class="form-control" id="templateDescriptionInputEdit" placeholder="Szablon przeznaczony jest dla..." />
+                                <input readonly type="text" class="form-control" id="templateDescriptionInputEdit" placeholder="Opis edytowanego szablonu" />
                             </div>
                             <div class="form-group">
                                 <label for="TemplateContent">Treść wiadomości</label>
-                                <textarea readonly class="form-control" id="templateContentInputEdit" rows="5" maxlength="255" placeholder="W związku z przygotowaniami do..." required></textarea>
-                                <div style="margin-top: 0.25rem; text-align: right" id="symbolCounterEdit">0/255</div>
+                                <textarea readonly class="form-control" id="templateContentInputEdit" rows="5" maxlength="255" placeholder="Treść edytowanego szablonu" required></textarea>
+                                <div style="margin-top: 0.25rem; text-align: right" id="symbolCounterEdit">&nbsp</div>
                             </div>
                             <div class="justify-content-center d-flex">
-                                <button type="submit" class="btn btn-primary" id="editNewTemplateSubmitButton" disabled>Zapisz edycję</button>
+                                <button type="submit" class="btn btn-success" id="editNewTemplateSubmitButton" disabled>Zapisz edycję</button>
                             </div>
                         </form>
                     </div>
                     <div class="tab-pane" id="delete-sms-template">
-                        <select class="custom-select" id="templateSelectDelete" title="Wybierz szablon"></select>
+                        <select class="custom-select" id="templateSelectDelete" title="Wybierz szablon" style="margin-bottom: 10px;"></select>
+                        <form id="deleteTemplateForm">
+                            <div class="form-group">
+                                <label for="TemplateName">Nazwa szablonu</label>
+                                <input readonly type="text" class="form-control" id="templateNameInputDelete" placeholder="Szablon do usunięcia" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="TemplateDescription">Opis</label>
+                                <input readonly type="text" class="form-control" id="templateDescriptionInputDelete" placeholder="Opis usuwanego szablonu" />
+                            </div>
+                            <div class="form-group">
+                                <label for="TemplateContent">Treść wiadomości</label>
+                                <textarea readonly class="form-control" id="templateContentInputDelete" rows="5" maxlength="255" placeholder="Treść usuwanego szablonu" required></textarea>
+                                <div style="margin-top: 0.25rem; text-align: right" id="symbolCounterDelete">&nbsp</div>
+                            </div>
+                            <div class="justify-content-center d-flex">
+                                <button type="submit" class="btn btn-danger" id="deleteTemplateSubmitButton" disable>Usuń szablon</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -260,7 +278,29 @@
         $("#templateDescriptionInputEdit").prop('readonly', false);
         $("#templateContentInputEdit").prop('readonly', false);
         $("#editNewTemplateSubmitButton").prop('disabled', false);
+        $("#enableTemplateEditing").prop('disabled', true);
 
+
+
+    }
+
+    function DeleteTemplate() {
+        var templateId = $("#templateSelectDelete").val();
+
+        $.ajax({
+            url: '@Url.Action("DeleteTemplate", "Home")',
+            type: 'GET',
+            contentType: 'application/json',
+            data: { id: templateId},
+            success: function (template) {
+                console.log("Successfully deleted template")
+                FetchAllTemplatesAndPopulateSelects();
+
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
     }
 
     function EditTemplate() {
@@ -357,11 +397,13 @@
 
     $(document).ready(function () {
         $("#editTemplateForm").hide();
+        $("#deleteTemplateForm").hide();
 
         FetchAllTemplatesAndPopulateSelects();
 
         let addForm = document.getElementById("createNewTemplateForm");
         let editForm = document.getElementById("editTemplateForm");
+        let deleteForm = document.getElementById("deleteTemplateForm");
 
         addForm.addEventListener('submit', function (event) {
             event.preventDefault();
@@ -383,6 +425,17 @@
             }
 
             EditTemplate();
+        });
+
+        deleteForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            if (editForm.checkValidity() === false) {
+                editForm.reportValidity()
+                return
+            }
+
+            DeleteTemplate();
         });
 
         const messageEleForAdd = document.getElementById('templateContentInputAdd');
@@ -444,6 +497,13 @@
             $("#templateContentInputEdit").prop('readonly', true);
             $("#editNewTemplateSubmitButton").prop('disabled', true);
         });
+
+        $("#templateSelectDelete").change(function () {
+            $("#deleteTemplateForm").show();
+            var templateId = $(this).val();
+            GetTemplateByIdAndFillInputFields(templateId, "Delete");
+            $("#deleteTemplateSubmitButton").prop('disabled', false);
+        });
     });
 
 
@@ -451,7 +511,7 @@
 
 <style>
     .content{
-        padding-left: 20px;
+        padding-left: 15px;
     }
     .text{
         color:black;
@@ -479,12 +539,12 @@
         background-color: white !important;
         border-right: none !important;
     }
-    .options-list{
+    #sms-options-list{
         list-style-type: none;
         margin-bottom: 0px;
         text-align: left;
-        max-width: 275px;
-        max-height: 500px;
+        height: 62vh;
+        width: 39vh;
         overflow: auto;
     }
     .sms-options-item{
@@ -507,9 +567,10 @@
         min-width: 250px;
     }
     .option-icon{
-        max-width: 37px;
+        width: 3vh;
+        height: 3vh;
         display: inline-block;
-        padding: 5px;
+        margin-right: 4px;
     }
     .form-row{
         width:100%;
