@@ -320,24 +320,24 @@
 
     }
     .selected-sms{
-        border:thin inset black!important;
+        border: thin inset #60abfc !important;
         background-color:white!important;
         border-right:none!important;
     }
 
     .selected-contacts {
         border: thin inset black !important;
-        background-color: white !important;
+        background-color: #60abfc !important;
         border-right: none !important;
     }
     .selected-groups{
-        border:thin inset black!important;
+        border: thin inset #60abfc !important;
         background-color:white!important;
         border-right:none!important;
     }
 
     .selected-roles {
-        border: thin inset black !important;
+        border: thin inset #60abfc !important;
         background-color: white !important;
         border-right: none !important;
     }
@@ -347,6 +347,7 @@
         text-align: left;
         max-width: 275px;
         max-height: 500px;
+        overflow: hidden;
     }
     .sms-options-item{
         display: flex;
@@ -362,10 +363,10 @@
     }
     .tab-pane{
         padding: 10px;
-        min-width:400px;
     }
     .content{
         width: 100%;
+        min-width: 250px;
     }
     .option-icon{
         max-width: 37px;
@@ -380,5 +381,8 @@
     }
     .form-control{
         background-color: #00000003;
+    }
+    form{
+        width: inherit;
     }
 </style>
