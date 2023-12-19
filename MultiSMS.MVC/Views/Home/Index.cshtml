@@ -72,16 +72,16 @@
                         <form id="createNewTemplateForm">
                             <div class="form-group">
                                 <label for="TemplateName">Nazwa szablonu</label>
-                                <input type="text" class="form-control" id="templateNameInput" placeholder="Przykładowy Szablon" required />
+                                <input type="text" class="form-control" id="templateNameInputAdd" placeholder="Przykładowy Szablon" required />
                             </div>
                             <div class="form-group">
                                 <label for="TemplateDescription">Opis</label>
-                                <input type="text" class="form-control" id="templateDescriptionInput" placeholder="Szablon przeznaczony jest dla..." />
+                                <input type="text" class="form-control" id="templateDescriptionInputAdd" placeholder="Szablon przeznaczony jest dla..." />
                             </div>
                             <div class="form-group">
                                 <label for="TemplateContent">Treść wiadomości</label>
-                                <textarea class="form-control" id="templateContentInput" rows="5" maxlength="255" placeholder="W związku z przygotowaniami do..." required></textarea>
-                                <div style="margin-top: 0.25rem; text-align: right" id="symbolCounter">0/255</div>
+                                <textarea class="form-control" id="templateContentInputAdd" rows="5" maxlength="255" placeholder="W związku z przygotowaniami do..." required></textarea>
+                                <div style="margin-top: 0.25rem; text-align: right" id="symbolCounterAdd">0/255</div>
                             </div>
                             <div class="justify-content-center d-flex">
                                 <button type="submit" class="btn btn-primary" id="createNewTemplateSubmitButton">Utwórz nowy szablon</button>
@@ -89,10 +89,28 @@
                         </form>
                     </div>
                     <div class="tab-pane" id="edit-sms-template">
-                        Edytuj szablon
+                        <select class="custom-select" id="templateSelectEdit"></select>
+                        <form id="editTemplateForm">
+                            <div class="form-group">
+                                <label for="TemplateName">Nazwa szablonu</label>
+                                <input readonly type="text" class="form-control" id="templateNameInputEdit" placeholder="Przykładowy Szablon" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="TemplateDescription">Opis</label>
+                                <input readonly type="text" class="form-control" id="templateDescriptionInputEdit" placeholder="Szablon przeznaczony jest dla..." />
+                            </div>
+                            <div class="form-group">
+                                <label for="TemplateContent">Treść wiadomości</label>
+                                <textarea readonly class="form-control" id="templateContentInputEdit" rows="5" maxlength="255" placeholder="W związku z przygotowaniami do..." required></textarea>
+                                <div style="margin-top: 0.25rem; text-align: right" id="symbolCounterEdit">0/255</div>
+                            </div>
+                            <div class="justify-content-center d-flex">
+                                <button type="submit" class="btn btn-primary" id="createNewTemplateSubmitButton">Zapisz edycję</button>
+                            </div>
+                        </form>
                     </div>
                     <div class="tab-pane" id="delete-sms-template">
-                        Usuń szablon
+                        <select class="custom-select" id="templateSelectDelete"></select>
                     </div>
                 </div>
             </div>
@@ -234,10 +252,40 @@
 
 <script defer>
 
+    function FetchAllTemplatesAndPopulateSelects() {
+        $.ajax({
+            url: '@Url.Action("FetchAllTemplates", "Home")',
+            type: 'GET',
+            contentType: 'application/json',
+            success: function (listOfTemplates) {
+                console.log("Successfully retrieved templates")
+
+                var selectElements = $('.custom-select');
+
+                selectElements.each(function () {
+                    PopulateTemplateSelect($(this), listOfTemplates);
+                })
+                console.log("Populated options with templates successfully");
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        })
+    }
+
+    function PopulateTemplateSelect(element, listOfTemplates){
+        element.empty();
+        element.append('<option selected disabled>Wybierz szablon</option>');
+
+        listOfTemplates.forEach(function (template) {
+            element.append('<option value="' + template.templateName + '">' + template.templateName + '</option>');
+        });
+    }
+
     function CreateNewTemplate() {
-        let name = $("#templateNameInput").val();
-        let description = $("#templateDescriptionInput").val();
-        let content = $("#templateContentInput").val();
+        let name = $("#templateNameInputAdd").val();
+        let description = $("#templateDescriptionInputAdd").val();
+        let content = $("#templateContentInputAdd").val();
 
         $.ajax({
             url: '@Url.Action("CreateNewTemplate", "Home")',
@@ -254,6 +302,9 @@
     }
 
     $(document).ready(function () {
+        $("#editTemplateForm").hide();
+
+        FetchAllTemplatesAndPopulateSelects();
 
         let form = document.getElementById("createNewTemplateForm");
         form.addEventListener('submit', function (event) {
@@ -268,8 +319,8 @@
             CreateNewTemplate();
         })
 
-        const messageEle = document.getElementById('templateContentInput');
-        const counterEle = document.getElementById('symbolCounter');
+        const messageEle = document.getElementById('templateContentInputAdd');
+        const counterEle = document.getElementById('symbolCounterAdd');
 
         messageEle.addEventListener('input', function (e) {
             const target = e.target;
@@ -326,8 +377,8 @@
     }
 
     .selected-contacts {
-        border: thin inset black !important;
-        background-color: #60abfc !important;
+        border: thin inset #60abfc !important;
+        background-color: white !important;
         border-right: none !important;
     }
     .selected-groups{
@@ -347,7 +398,7 @@
         text-align: left;
         max-width: 275px;
         max-height: 500px;
-        overflow: hidden;
+        overflow: auto;
     }
     .sms-options-item{
         display: flex;
@@ -381,8 +432,5 @@
     }
     .form-control{
         background-color: #00000003;
-    }
-    form{
-        width: inherit;
     }
 </style>

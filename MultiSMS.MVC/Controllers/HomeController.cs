@@ -27,6 +27,13 @@ namespace MultiSMS.MVC.Controllers
             return Json(template);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> FetchAllTemplates()
+        {
+            var templates = await Task.FromResult(_smsTemplateRepository.GetAllEntries());
+            return Json(templates);
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
