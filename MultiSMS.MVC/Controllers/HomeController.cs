@@ -33,10 +33,19 @@ namespace MultiSMS.MVC.Controllers
             var templates = await Task.FromResult(_smsTemplateRepository.GetAllEntries());
             return Json(templates);
         }
+
         [HttpGet]
         public async Task<IActionResult> GetTemplateById(int id)
         {
             var template = await _smsTemplateRepository.GetByIdAsync(id);
+            return Json(template);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditTemplate(int id, string name, string description, string content)
+        {
+            var template = new SMSMessageTemplate { TemplateId = id, TemplateName = name, TemplateDescription = description, TemplateContent = content };
+            await _smsTemplateRepository.UpdateEntityAsync(template);
             return Json(template);
         }
 

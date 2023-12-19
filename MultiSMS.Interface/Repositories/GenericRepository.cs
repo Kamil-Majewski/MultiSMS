@@ -36,7 +36,7 @@ namespace MultiSMS.Interface.Repositories
             return entity;
         }
 
-        public async Task<T> UpdateEntity(T entity)
+        public async Task<T> UpdateEntityAsync(T entity)
         {
             if (entity is null)
             {
@@ -48,7 +48,7 @@ namespace MultiSMS.Interface.Repositories
             return entity;
         }
 
-        public async Task DeleteEntity(int id)
+        public async Task DeleteEntityAsync(int id)
         {
             T entity = await _dbSet.FindAsync(id) ?? throw new Exception($"Could not find entity {nameof(T)} with given Id");
             _dbSet.Remove(entity);

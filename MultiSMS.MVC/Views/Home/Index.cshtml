@@ -89,8 +89,9 @@
                         </form>
                     </div>
                     <div class="tab-pane" id="edit-sms-template">
-                        <div class="select-template-containter">
+                        <div class="select-template-containter d-flex">
                             <select class="custom-select" id="templateSelectEdit" title="Wybierz szablon"></select>
+                            <button type="button" class="btn btn-primary" id="enableTemplateEditing" onclick="EnableTemplateEditing()" disabled>Edytuj</button>
                         </div>
                         <form id="editTemplateForm">
                             <div class="form-group">
@@ -107,7 +108,7 @@
                                 <div style="margin-top: 0.25rem; text-align: right" id="symbolCounterEdit">0/255</div>
                             </div>
                             <div class="justify-content-center d-flex">
-                                <button type="submit" class="btn btn-primary" id="createNewTemplateSubmitButton">Zapisz edycję</button>
+                                <button type="submit" class="btn btn-primary" id="editNewTemplateSubmitButton" disabled>Zapisz edycję</button>
                             </div>
                         </form>
                     </div>
@@ -254,6 +255,35 @@
 
 <script defer>
 
+    function EnableTemplateEditing() {
+        $("#templateNameInputEdit").prop('readonly', false);
+        $("#templateDescriptionInputEdit").prop('readonly', false);
+        $("#templateContentInputEdit").prop('readonly', false);
+        $("#editNewTemplateSubmitButton").prop('disabled', false);
+
+    }
+
+    function EditTemplate() {
+        var templateId = $("#templateSelectEdit").val();
+        var templateName = $("#templateNameInputEdit").val();
+        var templateContent = $("#templateContentInputEdit").val();
+        var templateDescription = $("#templateDescriptionInputEdit").val();
+        $.ajax({
+            url: '@Url.Action("EditTemplate", "Home")',
+            type: 'GET',
+            contentType: 'application/json',
+            data: { id: templateId, name: templateName, description: templateDescription, content: templateContent },
+            success: function (template) {
+                console.log("Successfully edited template " + template.templateName)
+                FetchAllTemplatesAndPopulateSelects();
+                
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+
     function FetchAllTemplatesAndPopulateSelects() {
         $.ajax({
             url: '@Url.Action("FetchAllTemplates", "Home")',
@@ -297,7 +327,7 @@
 
                 nameInputField.value = template.templateName;
                 descriptionInputField.value = template.templateDescription;
-                contentInputField.innerHTML = template.templateContent;
+                contentInputField.value = template.templateContent;
             },
             error: function (error) {
                 console.error(error);
@@ -316,6 +346,7 @@
             contentType: 'application/json',
             data: {templateName: name, templateDescription: description, templateContent: content},
             success: function (templateEnitity) {
+                FetchAllTemplatesAndPopulateSelects();
                 console.log("Successfully added new template")
             },
             error: function (error) {
@@ -329,27 +360,47 @@
 
         FetchAllTemplatesAndPopulateSelects();
 
-        let form = document.getElementById("createNewTemplateForm");
-        form.addEventListener('submit', function (event) {
+        let addForm = document.getElementById("createNewTemplateForm");
+        let editForm = document.getElementById("editTemplateForm");
+
+        addForm.addEventListener('submit', function (event) {
             event.preventDefault();
 
-            console.log(form.checkValidity());
-            if (form.checkValidity() === false) {
-                form.reportValidity()
+            if (addForm.checkValidity() === false) {
+                addForm.reportValidity()
                 return
             }
 
             CreateNewTemplate();
-        })
+        });
 
-        const messageEle = document.getElementById('templateContentInputAdd');
-        const counterEle = document.getElementById('symbolCounterAdd');
+        editForm.addEventListener('submit', function (event) {
+            event.preventDefault();
 
-        messageEle.addEventListener('input', function (e) {
+            if (editForm.checkValidity() === false) {
+                editForm.reportValidity()
+                return
+            }
+
+            EditTemplate();
+        });
+
+        const messageEleForAdd = document.getElementById('templateContentInputAdd');
+        const messageEleForEdit = document.getElementById("templateContentInputEdit");
+        
+        messageEleForAdd.addEventListener('input', function (e) {
             const target = e.target;
             const maxLength = target.getAttribute('maxlength');
             const currentLength = target.value.length;
+            const counterEle = document.getElementById('symbolCounterAdd');
+            counterEle.innerHTML = `${currentLength}/${maxLength}`;
+        });
 
+        messageEleForEdit.addEventListener('input', function (e) {
+            const target = e.target;
+            const maxLength = target.getAttribute('maxlength');
+            const currentLength = target.value.length;
+            const counterEle = document.getElementById('symbolCounterEdit');
             counterEle.innerHTML = `${currentLength}/${maxLength}`;
         });
 
@@ -386,11 +437,16 @@
         $("#templateSelectEdit").change(function () {
             $("#editTemplateForm").show();
             var templateId = $(this).val();
-
+            $("#enableTemplateEditing").prop("disabled", false);
             GetTemplateByIdAndFillInputFields(templateId, "Edit");
-
+            $("#templateNameInputEdit").prop('readonly', true);
+            $("#templateDescriptionInputEdit").prop('readonly', true);
+            $("#templateContentInputEdit").prop('readonly', true);
+            $("#editNewTemplateSubmitButton").prop('disabled', true);
         });
     });
+
+
 </script>
 
 <style>
@@ -467,5 +523,9 @@
 
     .select-template-containter{
         padding-bottom: 10px;
+    }
+    #templateSelectEdit{
+        width: 89%;
+        margin-right: 18px;
     }
 </style>
