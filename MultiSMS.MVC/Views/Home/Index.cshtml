@@ -89,7 +89,9 @@
                         </form>
                     </div>
                     <div class="tab-pane" id="edit-sms-template">
-                        <select class="custom-select" id="templateSelectEdit"></select>
+                        <div class="select-template-containter">
+                            <select class="custom-select" id="templateSelectEdit" title="Wybierz szablon"></select>
+                        </div>
                         <form id="editTemplateForm">
                             <div class="form-group">
                                 <label for="TemplateName">Nazwa szablonu</label>
@@ -110,7 +112,7 @@
                         </form>
                     </div>
                     <div class="tab-pane" id="delete-sms-template">
-                        <select class="custom-select" id="templateSelectDelete"></select>
+                        <select class="custom-select" id="templateSelectDelete" title="Wybierz szablon"></select>
                     </div>
                 </div>
             </div>
@@ -278,7 +280,28 @@
         element.append('<option selected disabled>Wybierz szablon</option>');
 
         listOfTemplates.forEach(function (template) {
-            element.append('<option value="' + template.templateName + '">' + template.templateName + '</option>');
+            element.append('<option value="' + template.templateId + '">' + template.templateName + '</option>');
+        });
+    }
+
+    function GetTemplateByIdAndFillInputFields(id, type){
+        $.ajax({
+            url: '@Url.Action("GetTemplateById", "Home")',
+            type: 'GET',
+            contentType: 'application/json',
+            data: { id: id },
+            success: function (template) {
+                let nameInputField = document.getElementById("templateNameInput" + type);
+                let descriptionInputField = document.getElementById("templateDescriptionInput" + type);
+                let contentInputField = document.getElementById("templateContentInput" + type);
+
+                nameInputField.value = template.templateName;
+                descriptionInputField.value = template.templateDescription;
+                contentInputField.innerHTML = template.templateContent;
+            },
+            error: function (error) {
+                console.error(error);
+            }
         });
     }
 
@@ -359,6 +382,14 @@
             $(this).tab('show');
             $(this).parent().toggleClass('selected-roles');
         });
+
+        $("#templateSelectEdit").change(function () {
+            $("#editTemplateForm").show();
+            var templateId = $(this).val();
+
+            GetTemplateByIdAndFillInputFields(templateId, "Edit");
+
+        });
     });
 </script>
 
@@ -432,5 +463,9 @@
     }
     .form-control{
         background-color: #00000003;
+    }
+
+    .select-template-containter{
+        padding-bottom: 10px;
     }
 </style>
