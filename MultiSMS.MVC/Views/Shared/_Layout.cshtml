@@ -11,8 +11,15 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 
-    <script>
-
+    <script defer>
+        $(document).ready(function () {
+            $('#master-card-headers a').on('click', function (e) {
+                $(".active-tab").removeClass("active-tab");
+                e.preventDefault();
+                $(this).tab('show');
+                $(this).parent().toggleClass("active-tab")
+            });
+        });
     </script>
 
 </head>
@@ -39,7 +46,7 @@
                     <ul class="options-list-left nav" id="master-card-headers" role="list">
                         <li class="option-list-item active-tab">
                             <a class="link show active" id="sendSms" href="#send-sms">
-                                <span class="icon" id="sms-icon"><img src="icons/envelope.png" /></span>
+                                <span class="icon" id="sms-icon"><img src="~/icons/send-sms.png" /></span>
                                 <span class="text-nav" id="sms-text">Wyslij SMS</span>
                             </a>
                         </li>
@@ -51,25 +58,25 @@
                         </li>
                         <li class="option-list-item">
                             <a class="link" id="contacts-tab" href="#contacts">
-                                <span class="icon"><img src="icons/book-bookmark.png" /></span>
+                                <span class="icon"><img src="icons/contacts.png" /></span>
                                 <span class="text-nav">Kontakty</span>
                             </a>
                         </li>
                         <li class="option-list-item">
                             <a class="link" id="groups-tab" href="#groups">
-                                <span class="icon"><img src="icons/group.png" /></span>
+                                <span class="icon"><img src="icons/groups.png" /></span>
                                 <span class="text-nav">Grupy</span>
                             </a>
                         </li>
                         <li class="option-list-item">
                             <a class="link" id="roles-tab" href="#roles">
-                                <div class="icon"><img src="~/icons/briefcase.png" /></div>
+                                <div class="icon"><img src="~/icons/roles.png" /></div>
                                 <span class="text-nav">Role</span>
                             </a>
                         </li>
                         <li class="option-list-item">
                             <a class="link" id="logs-tab" href="#logs">
-                                <span class="icon"><img src="~/icons/search-alt.png" /></span>
+                                <span class="icon"><img src="~/icons/logs.png" /></span>
                                 <span class="text-nav">Logi</span>
                             </a>
                         </li>

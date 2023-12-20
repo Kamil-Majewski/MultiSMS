@@ -27,6 +27,7 @@ body {
     list-style-type: none;
     padding-left: 0px;
     margin-top: 15px;
+    margin-bottom: 15px;
 }
 
 .option-list-item {
@@ -87,6 +88,10 @@ body {
     cursor: default;
 }
 
+svg {
+    max-width: 32px;
+    max-height:32px;
+}
 .icon {
     max-width: 32px;
     display: inline-block;
@@ -114,12 +119,12 @@ img {
 
 .toolbar-left {
     min-width: 175px;
-    width: 15vw;
+    width: 13vw;
     background-color: #6f5cc4;
 } 
 
 .layout-render-body {
-    width: 70vw;
+    width: 65vw;
     background-color: white;
 }
 
@@ -129,8 +134,9 @@ img {
     justify-content: center;
 }
 
-header {
-    width: 85vw;
+.navbar {
+    width: 78vw;
+    height: 7vh;
     background-color: #504190;
 }
 
@@ -139,58 +145,6 @@ header {
     font-size: 20px;
     font-weight: 700;
     font-family: 'Open Sans', sans-serif;
-}
-
-
-.text {
-    color: black;
-}
-
-.selected-sms {
-    border: thin inset #60abfc !important;
-    background-color: white !important;
-    border-right: none !important;
-}
-
-.selected-contacts {
-    border: thin inset #60abfc !important;
-    background-color: white !important;
-    border-right: none !important;
-}
-
-.selected-groups {
-    border: thin inset #60abfc !important;
-    background-color: white !important;
-    border-right: none !important;
-}
-
-.selected-roles {
-    border: thin inset #60abfc !important;
-    background-color: white !important;
-    border-right: none !important;
-}
-
-#sms-options-list {
-    list-style-type: none;
-    margin-bottom: 0px;
-    text-align: left;
-    height: 62vh;
-    width: 39vh;
-    overflow: auto;
-}
-
-.sms-options-item {
-    display: flex;
-    align-items: center;
-    padding: 15px;
-    border: thin solid #dfdfdf;
-    width: 100%;
-    background-color: #00000003;
-}
-
-.text {
-    font-weight: bold;
-    font-family: sans-serif
 }
 
 .tab-pane {
@@ -203,24 +157,11 @@ header {
     padding-left: 15px;
 }
 
-.option-icon {
-    width: 3vh;
-    height: 3vh;
-    display: inline-block;
-    margin-right: 4px;
-}
 
 .form-row {
     width: 100%;
 }
 
-label {
-    font-weight: 600;
-}
-
-.form-control {
-    background-color: #00000003;
-}
 
 .select-template-containter {
     padding-bottom: 10px;
