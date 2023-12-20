@@ -78,12 +78,24 @@
     <div class="tab-content" id="category-tab-content">
         <div class="tab-pane show active" id="send-sms" aria-labelledby="sms-tab">
             <div class="d-flex sms-container">
-                Wyślij SMS
+                Wyślij sms
             </div>
         </div>
         <div class="tab-pane" id="templates">
-            <div class="d-flex templates-container">
-                szablony
+            <div class="templates-container">
+                <div class="list-header">
+                    <div class="list-header-left">
+                        <button class="add-new-button">Dodaj nowy</button>
+                    </div>
+                    <div class="list-search-bar">
+                        <input class="search-for" placeholder="Wyszukaj szablon" />
+                        <button class="search-for-button" type="button">Wyszukaj</button>
+                    </div>
+                </div>
+                <div class="list-content">
+                    <table class="template-list"></table>
+                    tu będzie lista
+                </div>
             </div>
         </div>
         <div class="tab-pane" id="contacts">
