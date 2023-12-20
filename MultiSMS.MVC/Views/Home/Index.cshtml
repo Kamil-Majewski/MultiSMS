@@ -2,15 +2,8 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="content-container">
-    <div class="tab-content" id="category-tab-content">
-        <div class="tab-pane show active" id="sms" aria-labelledby="sms-tab">
-            <div class="d-flex sms-container">
-                <div class="tab-content content" id="sms-tab-content">
-                    <div class="tab-pane active" id="send-sms">
-                        Wyślij SMS
-                    </div>
-                    <div class="tab-pane" id="check-sms-logs">
+
+                    @* <div class="tab-pane" id="check-sms-logs">
                         Przeglądaj Logi
                     </div>
                     <div class="tab-pane" id="browse-sms-templates">
@@ -80,140 +73,37 @@
                                 <button type="submit" class="btn btn-danger" id="deleteTemplateSubmitButton" disable>Usuń szablon</button>
                             </div>
                         </form>
-                    </div>
-                </div>
+                    </div> *@
+<div class="content-container">
+    <div class="tab-content" id="category-tab-content">
+        <div class="tab-pane show active" id="send-sms" aria-labelledby="sms-tab">
+            <div class="d-flex sms-container">
+                Wyślij SMS
+            </div>
+        </div>
+        <div class="tab-pane" id="templates">
+            <div class="d-flex templates-container">
+                szablony
             </div>
         </div>
         <div class="tab-pane" id="contacts">
             <div class="d-flex contacts-container">
-                <ul class="options-list nav" id="contacts-options-list" role="list">
-                    <li class="sms-options-item nav-item selected-contacts browse-contacts-item">
-                        <a id="send-sms-tab nav-link" href="#browse-contacts">
-                            <span class="option-icon"><img src="icons/file-user.png" /></span>
-                            <span class="text">Przeglądaj kontakty</span>
-                        </a>
-                    </li>
-                    <li class="sms-options-item nav-item">
-                        <a id="check-sms-logs-tab nav-link" href="#add-contact">
-                            <span class="option-icon"><img src="icons/user-add.png" /></span>
-                            <span class="text">Dodaj kontakt</span>
-                        </a>
-                    </li>
-                    <li class="sms-options-item">
-                        <a id="browse-sms-templates-tab" href="#edit-contact">
-                            <span class="option-icon"> <img src="icons/user-pen.png" /></span>
-                            <span class="text">Edytuj kontakt</span>
-                        </a>
-                    </li>
-                    <li class="sms-options-item">
-                        <a id="add-sms-template-tab" href="#delete-contact">
-                            <span class="option-icon"> <img src="icons/delete-user.png" /></span>
-                            <span class="text">Usuń kontakt</span>
-                        </a>
-                    </li>
-                </ul>
-                <div class="tab-content content" id="contacts-tab-content">
-                    <div class="tab-pane active" id="browse-contacts">
-                        Przeglądaj kontakty
-                    </div>
-                    <div class="tab-pane" id="add-contact">
-                        Dodaj kontakt
-                    </div>
-                    <div class="tab-pane" id="edit-contact">
-                        Edytuj kontakt
-                    </div>
-                    <div class="tab-pane" id="delete-contact">
-                        Usuń kontakt
-                    </div>
-                </div>
+                kontakty
             </div>
         </div>
         <div class="tab-pane" id="groups">
             <div class="d-flex groups-container">
-                <ul class="options-list nav" id="groups-options-list" role="list">
-                    <li class="sms-options-item nav-item selected-groups browse-groups-item">
-                        <a id="browse-groups-tab nav-link" href="#browse-groups">
-                            <span class="option-icon"><img src="icons/recruitment.png" /></span>
-                            <span class="text">Przeglądaj grupy</span>
-                        </a>
-                    </li>
-                    <li class="sms-options-item nav-item">
-                        <a id="add-group-tab nav-link" href="#add-group">
-                            <span class="option-icon"><img src="icons/users-medical.png" /></span>
-                            <span class="text">Dodaj grupę</span>
-                        </a>
-                    </li>
-                    <li class="sms-options-item">
-                        <a id="edit-group-tab" href="#edit-group">
-                            <span class="option-icon"> <img src="icons/exchange.png" /></span>
-                            <span class="text">Edytuj grupę</span>
-                        </a>
-                    </li>
-                    <li class="sms-options-item">
-                        <a id="remove-group-tab" href="#delete-group">
-                            <span class="option-icon"> <img src="icons/users-slash.png" /></span>
-                            <span class="text">Usuń grupę</span>
-                        </a>
-                    </li>
-                </ul>
-                <div class="tab-content content" id="groups-tab-content">
-                    <div class="tab-pane active" id="browse-groups">
-                        Przeglądaj grupy
-                    </div>
-                    <div class="tab-pane" id="add-group">
-                        Dodaj grupę
-                    </div>
-                    <div class="tab-pane" id="edit-group">
-                        Edytuj grupę
-                    </div>
-                    <div class="tab-pane" id="delete-group">
-                        Usuń group
-                    </div>
-                </div>
+                grupy
             </div>
         </div>
-        <div class="tab-pane" id="role">
-            <div class="d-flex groups-container">
-                <ul class="options-list nav" id="roles-options-list" role="list">
-                    <li class="sms-options-item nav-item selected-roles browse-roles-item">
-                        <a id="browse-roles-tab nav-link" href="#browse-roles">
-                            <span class="option-icon"><img src="icons/id-card.png" /></span>
-                            <span class="text">Przeglądaj role</span>
-                        </a>
-                    </li>
-                    <li class="sms-options-item nav-item">
-                        <a id="add-group-tab nav-link" href="#add-role">
-                            <span class="option-icon"><img src="icons/add.png" /></span>
-                            <span class="text">Dodaj rolę</span>
-                        </a>
-                    </li>
-                    <li class="sms-options-item">
-                        <a id="edit-group-tab" href="#edit-role">
-                            <span class="option-icon"> <img src="icons/pen-circle.png" /></span>
-                            <span class="text">Edytuj rolę</span>
-                        </a>
-                    </li>
-                    <li class="sms-options-item">
-                        <a id="remove-group-tab" href="#delete-role">
-                            <span class="option-icon"> <img src="icons/minus-circle.png" /></span>
-                            <span class="text">Usuń rolę</span>
-                        </a>
-                    </li>
-                </ul>
-                <div class="tab-content content" id="roles-tab-content">
-                    <div class="tab-pane active" id="browse-roles">
-                        Przeglądaj role
-                    </div>
-                    <div class="tab-pane" id="add-role">
-                        Dodaj rolę
-                    </div>
-                    <div class="tab-pane" id="edit-role">
-                        Edytuj rolę
-                    </div>
-                    <div class="tab-pane" id="delete-role">
-                        Usuń rolę
-                    </div>
-                </div>
+        <div class="tab-pane" id="roles">
+            <div class="d-flex role-container">
+                role
+            </div>
+        </div>
+        <div class="tab-pane" id="logs">
+            <div class="d-flex logs-container">
+                logi
             </div>
         </div>
     </div>
@@ -227,9 +117,6 @@
         $("#templateContentInputEdit").prop('readonly', false);
         $("#editNewTemplateSubmitButton").prop('disabled', false);
         $("#enableTemplateEditing").prop('disabled', true);
-
-
-
     }
 
     function DeleteTemplate() {
@@ -344,114 +231,115 @@
     }
 
     $(document).ready(function () {
-        $("#editTemplateForm").hide();
-        $("#deleteTemplateForm").hide();
+        // $("#editTemplateForm").hide();
+        // $("#deleteTemplateForm").hide();
 
-        FetchAllTemplatesAndPopulateSelects();
+        // FetchAllTemplatesAndPopulateSelects();
 
-        let addForm = document.getElementById("createNewTemplateForm");
-        let editForm = document.getElementById("editTemplateForm");
-        let deleteForm = document.getElementById("deleteTemplateForm");
+        // let addForm = document.getElementById("createNewTemplateForm");
+        // let editForm = document.getElementById("editTemplateForm");
+        // let deleteForm = document.getElementById("deleteTemplateForm");
 
-        addForm.addEventListener('submit', function (event) {
-            event.preventDefault();
+        // addForm.addEventListener('submit', function (event) {
+        //     event.preventDefault();
 
-            if (addForm.checkValidity() === false) {
-                addForm.reportValidity()
-                return
-            }
+        //     if (addForm.checkValidity() === false) {
+        //         addForm.reportValidity()
+        //         return
+        //     }
 
-            CreateNewTemplate();
-        });
+        //     CreateNewTemplate();
+        // });
 
-        editForm.addEventListener('submit', function (event) {
-            event.preventDefault();
+        // editForm.addEventListener('submit', function (event) {
+        //     event.preventDefault();
 
-            if (editForm.checkValidity() === false) {
-                editForm.reportValidity()
-                return
-            }
+        //     if (editForm.checkValidity() === false) {
+        //         editForm.reportValidity()
+        //         return
+        //     }
 
-            EditTemplate();
-        });
+        //     EditTemplate();
+        // });
 
-        deleteForm.addEventListener('submit', function (event) {
-            event.preventDefault();
+        // deleteForm.addEventListener('submit', function (event) {
+        //     event.preventDefault();
 
-            if (editForm.checkValidity() === false) {
-                editForm.reportValidity()
-                return
-            }
+        //     if (editForm.checkValidity() === false) {
+        //         editForm.reportValidity()
+        //         return
+        //     }
 
-            DeleteTemplate();
-        });
+        //     DeleteTemplate();
+        // });
 
-        const messageEleForAdd = document.getElementById('templateContentInputAdd');
-        const messageEleForEdit = document.getElementById("templateContentInputEdit");
+        // const messageEleForAdd = document.getElementById('templateContentInputAdd');
+        // const messageEleForEdit = document.getElementById("templateContentInputEdit");
         
-        messageEleForAdd.addEventListener('input', function (e) {
-            const target = e.target;
-            const maxLength = target.getAttribute('maxlength');
-            const currentLength = target.value.length;
-            const counterEle = document.getElementById('symbolCounterAdd');
-            counterEle.innerHTML = `${currentLength}/${maxLength}`;
-        });
+        // messageEleForAdd.addEventListener('input', function (e) {
+        //     const target = e.target;
+        //     const maxLength = target.getAttribute('maxlength');
+        //     const currentLength = target.value.length;
+        //     const counterEle = document.getElementById('symbolCounterAdd');
+        //     counterEle.innerHTML = `${currentLength}/${maxLength}`;
+        // });
 
-        messageEleForEdit.addEventListener('input', function (e) {
-            const target = e.target;
-            const maxLength = target.getAttribute('maxlength');
-            const currentLength = target.value.length;
-            const counterEle = document.getElementById('symbolCounterEdit');
-            counterEle.innerHTML = `${currentLength}/${maxLength}`;
-        });
+        // messageEleForEdit.addEventListener('input', function (e) {
+        //     const target = e.target;
+        //     const maxLength = target.getAttribute('maxlength');
+        //     const currentLength = target.value.length;
+        //     const counterEle = document.getElementById('symbolCounterEdit');
+        //     counterEle.innerHTML = `${currentLength}/${maxLength}`;
+        // });
 
-        $('#master-card-header-tabs a').on('click', function (e) {
+        $('#master-card-headers a').on('click', function (e) {
+            $(".selected-tab").removeClass("selected-tab");
             e.preventDefault();
             $(this).tab('show');
         });
 
-        $('#sms-options-list a').on('click', function (e) {
-            $(".selected-sms").removeClass("selected-sms");
-            e.preventDefault();
-            $(this).tab('show');
-            $(this).parent().toggleClass('selected-sms');
-        });
-        $('#contacts-options-list a').on('click', function (e) {
-            $(".selected-contacts").removeClass("selected-contacts");
-            e.preventDefault();
-            $(this).tab('show');
-            $(this).parent().toggleClass('selected-contacts');
-        });
-        $('#groups-options-list a').on('click', function (e) {
-            $(".selected-groups").removeClass("selected-groups");
-            e.preventDefault();
-            $(this).tab('show');
-            $(this).parent().toggleClass('selected-groups');
-        });
-        $('#roles-options-list a').on('click', function (e) {
-            $(".selected-roles").removeClass("selected-roles");
-            e.preventDefault();
-            $(this).tab('show');
-            $(this).parent().toggleClass('selected-roles');
-        });
+        // $('#sms-options-list a').on('click', function (e) {
+        //     $(".selected-sms").removeClass("selected-sms");
+        //     e.preventDefault();
+        //     $(this).tab('show');
+        //     $(this).parent().toggleClass('selected-sms');
+        // });
+        // $('#contacts-options-list a').on('click', function (e) {
+        //     $(".selected-contacts").removeClass("selected-contacts");
+        //     e.preventDefault();
+        //     $(this).tab('show');
+        //     $(this).parent().toggleClass('selected-contacts');
+        // });
+        // $('#groups-options-list a').on('click', function (e) {
+        //     $(".selected-groups").removeClass("selected-groups");
+        //     e.preventDefault();
+        //     $(this).tab('show');
+        //     $(this).parent().toggleClass('selected-groups');
+        // });
+        // $('#roles-options-list a').on('click', function (e) {
+        //     $(".selected-roles").removeClass("selected-roles");
+        //     e.preventDefault();
+        //     $(this).tab('show');
+        //     $(this).parent().toggleClass('selected-roles');
+        // });
 
-        $("#templateSelectEdit").change(function () {
-            $("#editTemplateForm").show();
-            var templateId = $(this).val();
-            $("#enableTemplateEditing").prop("disabled", false);
-            GetTemplateByIdAndFillInputFields(templateId, "Edit");
-            $("#templateNameInputEdit").prop('readonly', true);
-            $("#templateDescriptionInputEdit").prop('readonly', true);
-            $("#templateContentInputEdit").prop('readonly', true);
-            $("#editNewTemplateSubmitButton").prop('disabled', true);
-        });
+        // $("#templateSelectEdit").change(function () {
+        //     $("#editTemplateForm").show();
+        //     var templateId = $(this).val();
+        //     $("#enableTemplateEditing").prop("disabled", false);
+        //     GetTemplateByIdAndFillInputFields(templateId, "Edit");
+        //     $("#templateNameInputEdit").prop('readonly', true);
+        //     $("#templateDescriptionInputEdit").prop('readonly', true);
+        //     $("#templateContentInputEdit").prop('readonly', true);
+        //     $("#editNewTemplateSubmitButton").prop('disabled', true);
+        // });
 
-        $("#templateSelectDelete").change(function () {
-            $("#deleteTemplateForm").show();
-            var templateId = $(this).val();
-            GetTemplateByIdAndFillInputFields(templateId, "Delete");
-            $("#deleteTemplateSubmitButton").prop('disabled', false);
-        });
+        // $("#templateSelectDelete").change(function () {
+        //     $("#deleteTemplateForm").show();
+        //     var templateId = $(this).val();
+        //     GetTemplateByIdAndFillInputFields(templateId, "Delete");
+        //     $("#deleteTemplateSubmitButton").prop('disabled', false);
+        // });
     });
 
 

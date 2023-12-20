@@ -11,67 +11,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 
-    
-  
-    <script defer>
+    <script>
 
-        function isElementVisible(element) {
-            var style = window.getComputedStyle(element);
-            return style.display !== 'none' && style.visibility !== 'hidden';
-        }
-
-        $(document).ready(function () {
-            $(".dropdown-list").hide();
-            
-            $("#sms-dropdown-toggle").click(function () {
-                var element = document.getElementById("dropdown-list-sms")
-                if (isElementVisible(element)){
-                    $("#dropdown-list-sms").hide();
-                }
-                else{
-                    $("#dropdown-list-sms").show();
-                }
-            });
-
-            $("#contacts-dropdown-toggle").click(function () {
-                var element = document.getElementById("dropdown-list-contacts")
-                if (isElementVisible(element)) {
-                    $("#dropdown-list-contacts").hide();
-                }
-                else {
-                    $("#dropdown-list-contacts").show();
-                }
-            });
-
-            $("#group-dropdown-toggle").click(function () {
-                var element = document.getElementById("dropdown-list-group")
-                if (isElementVisible(element)) {
-                    $("#dropdown-list-group").hide();
-                }
-                else {
-                    $("#dropdown-list-group").show();
-                }
-            });
-
-            $("#role-dropdown-toggle").click(function () {
-                var element = document.getElementById("dropdown-list-role")
-                if (isElementVisible(element)) {
-                    $("#dropdown-list-role").hide();
-                }
-                else {
-                    $("#dropdown-list-role").show();
-                }
-            });
-
-            $(".navbar-toggler").click(function () {
-                $("#nav-left").modal("show");
-            });  
-
-            $(".close").click(function () {
-                $("#nav-left").modal("hide");
-            });
-        });
     </script>
+
 </head>
 <body>
     <div class="container-fluid main-window">
@@ -93,39 +36,39 @@
         <div class="layout-content">
             <div class="toolbar-left">
                 <div class="toolbar-body">
-                    <ul class="options-list-left" id="master-card-header" role="list">
+                    <ul class="options-list-left nav" id="master-card-headers" role="list">
                         <li class="option-list-item active-tab">
-                            <a class="link active" id="sendSms" href="#send-sms">
+                            <a class="link show active" id="sendSms" href="#send-sms">
                                 <span class="icon" id="sms-icon"><img src="icons/envelope.png" /></span>
                                 <span class="text-nav" id="sms-text">Wyslij SMS</span>
                             </a>
                         </li>
                         <li class="option-list-item">
-                            <a class="link" id="templates" href="#templates">
+                            <a class="link" id="templates-tab" href="#templates">
                                 <span class="icon"><img src="~/icons/template.png" /></span>
                                 <span class="text-nav">Szablony</span>
                             </a>
                         </li>
                         <li class="option-list-item">
-                            <a class="link" id="contacts" href="#contacts">
+                            <a class="link" id="contacts-tab" href="#contacts">
                                 <span class="icon"><img src="icons/book-bookmark.png" /></span>
                                 <span class="text-nav">Kontakty</span>
                             </a>
                         </li>
                         <li class="option-list-item">
-                            <a class="link" id="groups" href="#groups">
+                            <a class="link" id="groups-tab" href="#groups">
                                 <span class="icon"><img src="icons/group.png" /></span>
                                 <span class="text-nav">Grupy</span>
                             </a>
                         </li>
                         <li class="option-list-item">
-                            <a class="link" id="roles" href="#roles">
+                            <a class="link" id="roles-tab" href="#roles">
                                 <div class="icon"><img src="~/icons/briefcase.png" /></div>
                                 <span class="text-nav">Role</span>
                             </a>
                         </li>
                         <li class="option-list-item">
-                            <a class="link" id="logs" href="#logs">
+                            <a class="link" id="logs-tab" href="#logs">
                                 <span class="icon"><img src="~/icons/search-alt.png" /></span>
                                 <span class="text-nav">Logi</span>
                             </a>
