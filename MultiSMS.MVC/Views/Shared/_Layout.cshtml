@@ -7,8 +7,10 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/MultiSMS.MVC.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@500;700&display=swap">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
     
     
 
@@ -16,53 +18,33 @@
 		
         .options-list-left{
             list-style-type: none;
-        }
-        .dropdown-list{
-            list-style-type: none;
             padding-left: 0px;
         }
-        .dropdown-toggle:hover{
-            text-decoration: none;
-            border: 1px solid black;
-            background-color: #f8f9fa;
-        }
-        .dropdown-toggle:active{
-            background-color: #a5eaff;
-        }    
+   
         .option-list-item:hover{
-            border: 1px solid black;
-            background-color: #f8f9fa;
+            background-color: #7e6cca;
         }
 
         .option-list-item:active{
-            background-color: #a5eaff;
+            border-left:thick solid white 
         }
-        .dropdown-toggle{
-            border: 1px solid transparent;
-            width:100%;
-            padding: 3px;
-            padding-left:0px;
-            display: block;
-        }
+
         .link{
             width:100%;
         }
         .text-nav{
             color:white;
-            font-size: 20px;
-            font-family: 'Noto Sans';
+            font-size: 16px;
+            font-weight: 400;
+            font-family: 'Open Sans', sans-serif;
             display: inline-block;
             vertical-align: middle;
         }
-        .text-nav-dropdown{
-            color: black;
-            font-family: sans-serif;
-            font-weight: 500;
-            font-size: 18px;
-            display: inline-block;
-            vertical-align: middle;
-            
+        .text-nav:hover{
+            cursor:default;
+            text-decoration:none;
         }
+
         .link:link{
             text-decoration: none;
         }
@@ -71,12 +53,11 @@
         }
         .option-list-item:hover{
             text-decoration: none;
-            border: 1px solid black;
-            padding: 3px;
         }
         .option-list-item{
-            border: 1px solid transparent;
-            padding: 3px;
+            padding-left: 25px;
+            padding-top: 10px;
+            padding-bottom: 10px;
         }
         .link:active{
             text-decoration:none;
@@ -84,23 +65,12 @@
         .link:hover{
             text-decoration:none;
         }
-        .option-list-dropdown{
-            padding: 3px;
-        }
-        .dropdown-item:hover{
-            text-decoration:none;
-            border: 1px solid black;
-        }
-        .dropdown-item{
-            border: 1px solid transparent;
-        }
-        .dropdown-item:active {
-            background-color: #a5eaff;
-        }
+
         .icon{
             max-width:32px;
             display: inline-block;
             padding: 5px;
+            margin-right: 5px;
         }
         img {
             max-width: 100%;
@@ -110,6 +80,7 @@
             width: 100%;
             height: 100%;
             margin: 20px;
+            margin-top: 60px;
             
         }
         .layout-header{
@@ -118,11 +89,11 @@
             justify-content: center;
         }
         .toolbar-left{
-            width: 30vh;
+            width: 15vw;
             background-color: #6f5cc4;
         }
         .layout-render-body{
-            width: 120vh;
+            width: 70vw;
         }
         .layout-content{
             display: flex;
@@ -130,8 +101,15 @@
             justify-content: center;
         }
         header{
-            width: 150vh;
+            width: 85vw;
             background-color: #504190;
+        }
+        .logo-text{
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+            font-family: 'Open Sans', sans-serif;
+
         }
         
 
@@ -197,177 +175,14 @@
     </script>
 </head>
 <body>
-    @* <div class="modal fade left" id="nav-left" tabindex="-1" role="dialog" aria-labelledby="leftNavbar">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="nodal-title" id="nav-left-header-title" style="margin: 0">MultiSMS</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                </div>
-                <div class="modal-body">
-                    <ul class="options-list-left" style="padding-left:0px;">
-                        <li class="option-list-item">
-                            <a class="link" id="home" href="#">
-                                <span class="icon" id="home-icon"><img src="~/icons/home.png" /></span>
-                                <span class="text-nav" id="home-text">Strona startowa</span>
-                            </a>
-                        </li>
-                        <li class="option-list-dropdown">
-                            <a class="dropdown-toggle" id="sms-dropdown-toggle" href="#" role="button" aria-expanded="false">
-                                <span class="icon" id="sms-icon"><img src="icons/envelope.png" /></span>
-                                <span class="text-nav" id="sms-text">SMS</span>
-                            </a>
-                            <ul class="dropdown-list" id="dropdown-list-sms">
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="~/icons/message-arrow-up-right.png" /></span>
-                                        <span class="text-nav-dropdown">Wyślij wiadomość SMS</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="~/icons/search-alt.png" /></span>
-                                        <span class="text-nav-dropdown">Przeglądaj logi</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="~/icons/template.png" /></span>
-                                        <span class="text-nav-dropdown">Przeglądaj szablony</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="~/icons/add-document.png" /></span>
-                                        <span class="text-nav-dropdown">Dodaj szablon</span>
-                                    </a>
-                                </li>
-                                 <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="~/icons/file-edit.png" /></span>
-                                        <span class="text-nav-dropdown">Edytuj szablon</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="~/icons/delete-document.png" /></span>
-                                        <span class="text-nav-dropdown">Usuń szablon</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="option-list-dropdown">
-                            <a class="dropdown-toggle" id="contacts-dropdown-toggle" href="#" role="button" aria-expanded="false">
-                                <div class="icon" id="contacts-icon"><img src="icons/book-bookmark.png" /></div>
-                                <span class="text-nav" id="contacts-text">Listy kontaktów</span>
-                            </a>
-                            <ul class="dropdown-list" id="dropdown-list-contacts">
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="icons/file-user.png" /></span>
-                                        <span class="text-nav-dropdown">Przeglądaj kontakty</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="icons/user-add.png" /></span>
-                                        <span class="text-nav-dropdown">Dodaj kontakt</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="icons/user-pen.png" /></span>
-                                        <span class="text-nav-dropdown">Edytuj kontakt</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="~/icons/delete-user.png" /></span>
-                                        <span class="text-nav-dropdown">Usuń kontakt</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="option-list-dropdown">
-                            <a class="dropdown-toggle" id="group-dropdown-toggle" href="#" role="button" aria-expanded="false">
-                                <div class="icon" id="group-icon"><img src="icons/group.png" /></div>
-                                <span class="text-nav" id="group-text">Grupy</span>
-                            </a>
-                            <ul class="dropdown-list" id="dropdown-list-group">
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon" ><img src="icons/recruitment.png" /></span>
-                                        <span class="text-nav-dropdown" >Przeglądaj grupy</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon" ><img src="~/icons/users-medical.png" /></span>
-                                        <span class="text-nav-dropdown">Dodaj grupę</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon" ><img src="icons/exchange.png" /></span>
-                                        <span class="text-nav-dropdown">Edytuj grupę</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon" ><img src="icons/users-slash.png" /></span>
-                                        <span class="text-nav-dropdown">Usuń grupę</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="option-list-dropdown">
-                            <a class="dropdown-toggle" id="role-dropdown-toggle" href="#" role="button" aria-expanded="false">
-                                <div class="icon"><img src="~/icons/briefcase.png" /></div>
-                                <span class="text-nav">Role</span>
-                            </a>
-                            <ul class="dropdown-list" id="dropdown-list-role">
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="icons/id-card.png"></span>
-                                        <span class="text-nav-dropdown">Przeglądaj role</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="icons/add.png" /></span>
-                                        <span class="text-nav-dropdown">Dodaj role</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="icons/pen-circle.png" /></span>
-                                        <span class="text-nav-dropdown">Edytuj role</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="icons/minus-circle.png" /></span>
-                                        <span class="text-nav-dropdown">Usuń role</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div> *@
-
     <div class="container-fluid main-window">
         <div class="layout-header">
             <header class="app-header">
-                <nav class="navbar navbar-light bg-white border box-shadow">
+                <nav class="navbar navbar-light box-shadow">
                     <div class="container-fluid">
-                        <div class="nav-left-toggle">
-                            <button class="navbar-toggler" type="button" data-toggle="modal" data-target="#nav-left">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                            <span class="navbar-brand" style="padding-left:20px; padding-top:5px;">MultiSMS</span>
+                        <div class="nav-left-logo">
+                            <span class="logo-icon"><img src="" /></span>
+                            <span class="logo-text" style="padding-left:20px;">Multi-SMS</span>
                         </div>
                         <div class="account-settings d-sm-inline-flex justify-content-between">
                             <partial name="_LoginPartial" />
@@ -378,153 +193,43 @@
         </div>
         <div class="layout-content">
             <div class="toolbar-left">
-                <div class="modal-body">
-                    <ul class="options-list-left" style="padding-left:0px;">
+                <div class="toolbar-body">
+                    <ul class="options-list-left">
                         <li class="option-list-item">
-                            <a class="link" id="home" href="#">
-                                <span class="icon" id="home-icon"><img src="~/icons/home.png" /></span>
-                                <span class="text-nav" id="home-text">Strona startowa</span>
-                            </a>
-                        </li>
-                        <li class="option-list-dropdown">
-                            <a class="dropdown-toggle" id="sms-dropdown-toggle" href="#" role="button" aria-expanded="false">
+                            <a class="link" id="sendSms" href="#">
                                 <span class="icon" id="sms-icon"><img src="icons/envelope.png" /></span>
-                                <span class="text-nav" id="sms-text">SMS</span>
+                                <span class="text-nav" id="sms-text">Wyslij SMS</span>
                             </a>
-                            <ul class="dropdown-list" id="dropdown-list-sms">
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="~/icons/message-arrow-up-right.png" /></span>
-                                        <span class="text-nav-dropdown">Wyślij wiadomość SMS</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="~/icons/search-alt.png" /></span>
-                                        <span class="text-nav-dropdown">Przeglądaj logi</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="~/icons/template.png" /></span>
-                                        <span class="text-nav-dropdown">Przeglądaj szablony</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="~/icons/add-document.png" /></span>
-                                        <span class="text-nav-dropdown">Dodaj szablon</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="~/icons/file-edit.png" /></span>
-                                        <span class="text-nav-dropdown">Edytuj szablon</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="~/icons/delete-document.png" /></span>
-                                        <span class="text-nav-dropdown">Usuń szablon</span>
-                                    </a>
-                                </li>
-                            </ul>
                         </li>
-                        <li class="option-list-dropdown">
-                            <a class="dropdown-toggle" id="contacts-dropdown-toggle" href="#" role="button" aria-expanded="false">
-                                <div class="icon" id="contacts-icon"><img src="icons/book-bookmark.png" /></div>
-                                <span class="text-nav" id="contacts-text">Listy kontaktów</span>
+                        <li class="option-list-item">
+                            <a class="link" id="templates" href="#">
+                                <span class="icon"><img src="~/icons/template.png" /></span>
+                                <span class="text-nav">Szablony</span>
                             </a>
-                            <ul class="dropdown-list" id="dropdown-list-contacts">
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="icons/file-user.png" /></span>
-                                        <span class="text-nav-dropdown">Przeglądaj kontakty</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="icons/user-add.png" /></span>
-                                        <span class="text-nav-dropdown">Dodaj kontakt</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="icons/user-pen.png" /></span>
-                                        <span class="text-nav-dropdown">Edytuj kontakt</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="~/icons/delete-user.png" /></span>
-                                        <span class="text-nav-dropdown">Usuń kontakt</span>
-                                    </a>
-                                </li>
-                            </ul>
                         </li>
-                        <li class="option-list-dropdown">
-                            <a class="dropdown-toggle" id="group-dropdown-toggle" href="#" role="button" aria-expanded="false">
-                                <div class="icon" id="group-icon"><img src="icons/group.png" /></div>
-                                <span class="text-nav" id="group-text">Grupy</span>
+                        <li class="option-list-item">
+                            <a class="link" id="contacts" href="#">
+                                <span class="icon"><img src="icons/book-bookmark.png" /></span>
+                                <span class="text-nav">Kontakty</span>
                             </a>
-                            <ul class="dropdown-list" id="dropdown-list-group">
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="icons/recruitment.png" /></span>
-                                        <span class="text-nav-dropdown">Przeglądaj grupy</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="~/icons/users-medical.png" /></span>
-                                        <span class="text-nav-dropdown">Dodaj grupę</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="icons/exchange.png" /></span>
-                                        <span class="text-nav-dropdown">Edytuj grupę</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="icons/users-slash.png" /></span>
-                                        <span class="text-nav-dropdown">Usuń grupę</span>
-                                    </a>
-                                </li>
-                            </ul>
                         </li>
-                        <li class="option-list-dropdown">
-                            <a class="dropdown-toggle" id="role-dropdown-toggle" href="#" role="button" aria-expanded="false">
+                        <li class="option-list-item">
+                            <a class="link" id="groups" href="#">
+                                <span class="icon"><img src="icons/group.png" /></span>
+                                <span class="text-nav">Grupy</span>
+                            </a>
+                        </li>
+                        <li class="option-list-item">
+                            <a class="link" id="roles" href="#">
                                 <div class="icon"><img src="~/icons/briefcase.png" /></div>
                                 <span class="text-nav">Role</span>
                             </a>
-                            <ul class="dropdown-list" id="dropdown-list-role">
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="icons/id-card.png"></span>
-                                        <span class="text-nav-dropdown">Przeglądaj role</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="icons/add.png" /></span>
-                                        <span class="text-nav-dropdown">Dodaj role</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="icons/pen-circle.png" /></span>
-                                        <span class="text-nav-dropdown">Edytuj role</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item">
-                                        <span class="icon"><img src="icons/minus-circle.png" /></span>
-                                        <span class="text-nav-dropdown">Usuń role</span>
-                                    </a>
-                                </li>
-                            </ul>
+                        </li>
+                        <li class="option-list-item">
+                            <a class="link" id="logs" href="#">
+                                <span class="icon"><img src="~/icons/search-alt.png" /></span>
+                                <span class="text-nav">Logi</span>
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -535,14 +240,6 @@
                 </main>
             </div>
         </div>
-    </div>
-
-
-    
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
     </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
