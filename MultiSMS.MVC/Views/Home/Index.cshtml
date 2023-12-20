@@ -2,62 +2,10 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="card">
-    <ul class="nav nav-tabs" id="master-card-header-tabs" role="list">
-        <li class="nav-item">
-            <a class="nav-link active" id="sms-tab" href="#sms" aria-controls="sms" aria-selected="true">SMS</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="contacts-tab" href="#contacts" aria-controls="contacts" aria-selected="false">Kontakty</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="groups-tab" href="#groups" aria-controls="groups" aria-selected="false">Grupy kontaktów</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="role-tab" href="#role" aria-controls="role" aria-selected="false">Role kontaktów</a>
-        </li>
-    </ul>
+<div class="content-container">
     <div class="tab-content" id="category-tab-content">
         <div class="tab-pane show active" id="sms" aria-labelledby="sms-tab">
             <div class="d-flex sms-container">
-                <ul class="options-list nav" id="sms-options-list" role="list">
-                    <li class="sms-options-item nav-item selected-sms send-sms-item">
-                        <a id="send-sms-tab" href="#send-sms">
-                            <span class="option-icon"><img src="icons/message-arrow-up-right.png"/></span>
-                            <span class="text">Wyślij wiadomość SMS</span>
-                        </a>
-                    </li>
-                    <li class="sms-options-item nav-item">
-                        <a id="check-sms-logs-tab" href="#check-sms-logs">
-                            <span class="option-icon"><img src="icons/search-alt.png"/></span>
-                            <span class="text">Przeglądaj logi</span>
-                        </a>
-                    </li>
-                    <li class="sms-options-item">
-                        <a id="browse-sms-templates-tab" href="#browse-sms-templates">
-                            <span class="option-icon"> <img src="icons/template.png"/></span>
-                            <span class="text">Przeglądaj szablony</span>
-                        </a>
-                    </li>
-                    <li class="sms-options-item">
-                        <a id="add-sms-template-tab" href="#add-sms-template">
-                            <span class="option-icon"> <img src="icons/add-document.png"/></span>
-                            <span class="text">Dodaj szablon</span>
-                        </a>
-                    </li>
-                    <li class="sms-options-item">
-                        <a id="edit-sms-template-tab" href="#edit-sms-template">
-                            <span class="option-icon"><img src="icons/file-edit.png"/></span>
-                            <span class="text">Edytuj szablon</span>
-                        </a>
-                    </li>
-                    <li class="sms-options-item">
-                        <a id="delete-sms-template-tab" href="#delete-sms-template">
-                            <span class="option-icon"><img src="icons/delete-document.png"/></span>
-                            <span class="text">Usuń szablon</span>
-                        </a>
-                    </li>
-                </ul>
                 <div class="tab-content content" id="sms-tab-content">
                     <div class="tab-pane active" id="send-sms">
                         Wyślij SMS
@@ -508,85 +456,3 @@
 
 
 </script>
-
-<style>
-    .content{
-        padding-left: 15px;
-    }
-    .text{
-        color:black;
-
-    }
-    .selected-sms{
-        border: thin inset #60abfc !important;
-        background-color:white!important;
-        border-right:none!important;
-    }
-
-    .selected-contacts {
-        border: thin inset #60abfc !important;
-        background-color: white !important;
-        border-right: none !important;
-    }
-    .selected-groups{
-        border: thin inset #60abfc !important;
-        background-color:white!important;
-        border-right:none!important;
-    }
-
-    .selected-roles {
-        border: thin inset #60abfc !important;
-        background-color: white !important;
-        border-right: none !important;
-    }
-    #sms-options-list{
-        list-style-type: none;
-        margin-bottom: 0px;
-        text-align: left;
-        height: 62vh;
-        width: 39vh;
-        overflow: auto;
-    }
-    .sms-options-item{
-        display: flex;
-        align-items: center;
-        padding: 15px;
-        border: thin solid #dfdfdf;
-        width: 100%;
-        background-color: #00000003;
-    }
-    .text{
-        font-weight: bold ;
-        font-family: sans-serif
-    }
-    .tab-pane{
-        padding: 10px;
-    }
-    .content{
-        width: 100%;
-        min-width: 250px;
-    }
-    .option-icon{
-        width: 3vh;
-        height: 3vh;
-        display: inline-block;
-        margin-right: 4px;
-    }
-    .form-row{
-        width:100%;
-    }
-    label{
-        font-weight: 600;
-    }
-    .form-control{
-        background-color: #00000003;
-    }
-
-    .select-template-containter{
-        padding-bottom: 10px;
-    }
-    #templateSelectEdit{
-        width: 89%;
-        margin-right: 18px;
-    }
-</style>

@@ -12,108 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 
     
-    
-
-    <style>
-		
-        .options-list-left{
-            list-style-type: none;
-            padding-left: 0px;
-        }
-   
-        .option-list-item:hover{
-            background-color: #7e6cca;
-        }
-
-        .option-list-item:active{
-            border-left:thick solid white 
-        }
-
-        .link{
-            width:100%;
-        }
-        .text-nav{
-            color:white;
-            font-size: 16px;
-            font-weight: 400;
-            font-family: 'Open Sans', sans-serif;
-            display: inline-block;
-            vertical-align: middle;
-        }
-        .text-nav:hover{
-            cursor:default;
-            text-decoration:none;
-        }
-
-        .link:link{
-            text-decoration: none;
-        }
-        .link:visited{
-            text-decoration: none;
-        }
-        .option-list-item:hover{
-            text-decoration: none;
-        }
-        .option-list-item{
-            padding-left: 25px;
-            padding-top: 10px;
-            padding-bottom: 10px;
-        }
-        .link:active{
-            text-decoration:none;
-        }
-        .link:hover{
-            text-decoration:none;
-        }
-
-        .icon{
-            max-width:32px;
-            display: inline-block;
-            padding: 5px;
-            margin-right: 5px;
-        }
-        img {
-            max-width: 100%;
-            height: auto;
-        }
-        .main-window{
-            width: 100%;
-            height: 100%;
-            margin: 20px;
-            margin-top: 60px;
-            
-        }
-        .layout-header{
-            width:100%;
-            display: flex;
-            justify-content: center;
-        }
-        .toolbar-left{
-            width: 15vw;
-            background-color: #6f5cc4;
-        }
-        .layout-render-body{
-            width: 70vw;
-        }
-        .layout-content{
-            display: flex;
-            width: 100%;
-            justify-content: center;
-        }
-        header{
-            width: 85vw;
-            background-color: #504190;
-        }
-        .logo-text{
-            color: white;
-            font-size: 20px;
-            font-weight: 700;
-            font-family: 'Open Sans', sans-serif;
-
-        }
-        
-
-    </style>
+  
     <script defer>
 
         function isElementVisible(element) {
@@ -194,39 +93,39 @@
         <div class="layout-content">
             <div class="toolbar-left">
                 <div class="toolbar-body">
-                    <ul class="options-list-left">
-                        <li class="option-list-item">
-                            <a class="link" id="sendSms" href="#">
+                    <ul class="options-list-left" id="master-card-header" role="list">
+                        <li class="option-list-item active-tab">
+                            <a class="link active" id="sendSms" href="#send-sms">
                                 <span class="icon" id="sms-icon"><img src="icons/envelope.png" /></span>
                                 <span class="text-nav" id="sms-text">Wyslij SMS</span>
                             </a>
                         </li>
                         <li class="option-list-item">
-                            <a class="link" id="templates" href="#">
+                            <a class="link" id="templates" href="#templates">
                                 <span class="icon"><img src="~/icons/template.png" /></span>
                                 <span class="text-nav">Szablony</span>
                             </a>
                         </li>
                         <li class="option-list-item">
-                            <a class="link" id="contacts" href="#">
+                            <a class="link" id="contacts" href="#contacts">
                                 <span class="icon"><img src="icons/book-bookmark.png" /></span>
                                 <span class="text-nav">Kontakty</span>
                             </a>
                         </li>
                         <li class="option-list-item">
-                            <a class="link" id="groups" href="#">
+                            <a class="link" id="groups" href="#groups">
                                 <span class="icon"><img src="icons/group.png" /></span>
                                 <span class="text-nav">Grupy</span>
                             </a>
                         </li>
                         <li class="option-list-item">
-                            <a class="link" id="roles" href="#">
+                            <a class="link" id="roles" href="#roles">
                                 <div class="icon"><img src="~/icons/briefcase.png" /></div>
                                 <span class="text-nav">Role</span>
                             </a>
                         </li>
                         <li class="option-list-item">
-                            <a class="link" id="logs" href="#">
+                            <a class="link" id="logs" href="#logs">
                                 <span class="icon"><img src="~/icons/search-alt.png" /></span>
                                 <span class="text-nav">Logi</span>
                             </a>

@@ -23,3 +23,221 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+body {
+    background-color: transparent;
+}
+
+.options-list-left {
+    list-style-type: none;
+    padding-left: 0px;
+    margin-top: 15px;
+}
+
+.option-list-item {
+    border-left: thick solid transparent;
+}
+
+.active-tab {
+    border-left: thick solid white;
+    background-color: #7e6cca;
+}
+
+.option-list-item:hover {
+    background-color: #7e6cca;
+}
+
+.option-list-item:active {
+    border-left: thick solid white;
+    background-color: #7e6cca;
+}
+
+.link {
+    width: 100%;
+}
+
+.text-nav {
+    color: white;
+    font-size: 16px;
+    font-weight: 400;
+    font-family: 'Open Sans', sans-serif;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+    .text-nav:hover {
+        cursor: default;
+        text-decoration: none;
+    }
+
+.link:link {
+    text-decoration: none;
+}
+
+.link:visited {
+    text-decoration: none;
+}
+
+.option-list-item:hover {
+    text-decoration: none;
+}
+
+.option-list-item {
+    padding-left: 25px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.link:active {
+    text-decoration: none;
+}
+
+.link:hover {
+    text-decoration: none;
+}
+
+.icon {
+    max-width: 32px;
+    display: inline-block;
+    padding: 5px;
+    margin-right: 5px;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.main-window {
+    width: 100%;
+    height: 100%;
+    margin: 20px;
+    margin-top: 60px;
+}
+
+.layout-header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.toolbar-left {
+    min-width: 175px;
+    width: 15vw;
+    background-color: #6f5cc4;
+}
+
+.layout-render-body {
+    width: 70vw;
+    background-color: white;
+}
+
+.layout-content {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+header {
+    width: 85vw;
+    background-color: #504190;
+}
+
+.logo-text {
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.content {
+    padding-left: 15px;
+}
+
+.text {
+    color: black;
+}
+
+.selected-sms {
+    border: thin inset #60abfc !important;
+    background-color: white !important;
+    border-right: none !important;
+}
+
+.selected-contacts {
+    border: thin inset #60abfc !important;
+    background-color: white !important;
+    border-right: none !important;
+}
+
+.selected-groups {
+    border: thin inset #60abfc !important;
+    background-color: white !important;
+    border-right: none !important;
+}
+
+.selected-roles {
+    border: thin inset #60abfc !important;
+    background-color: white !important;
+    border-right: none !important;
+}
+
+#sms-options-list {
+    list-style-type: none;
+    margin-bottom: 0px;
+    text-align: left;
+    height: 62vh;
+    width: 39vh;
+    overflow: auto;
+}
+
+.sms-options-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border: thin solid #dfdfdf;
+    width: 100%;
+    background-color: #00000003;
+}
+
+.text {
+    font-weight: bold;
+    font-family: sans-serif
+}
+
+.tab-pane {
+    padding: 10px;
+}
+
+.content {
+    width: 100%;
+    min-width: 250px;
+}
+
+.option-icon {
+    width: 3vh;
+    height: 3vh;
+    display: inline-block;
+    margin-right: 4px;
+}
+
+.form-row {
+    width: 100%;
+}
+
+label {
+    font-weight: 600;
+}
+
+.form-control {
+    background-color: #00000003;
+}
+
+.select-template-containter {
+    padding-bottom: 10px;
+}
+
+#templateSelectEdit {
+    width: 89%;
+    margin-right: 18px;
+}
