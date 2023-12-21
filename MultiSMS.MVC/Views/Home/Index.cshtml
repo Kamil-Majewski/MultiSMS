@@ -213,34 +213,36 @@
         });
     }
 
-    function FetchAllTemplatesAndPopulateSelects() {
+    function FetchAllTemplatesAndPopulateTables() {
         $.ajax({
             url: '@Url.Action("FetchAllTemplates", "Home")',
             type: 'GET',
             contentType: 'application/json',
             success: function (listOfTemplates) {
                 console.log("Successfully retrieved templates")
+                $('.template-list tbody').empty();
 
-                var selectElements = $('.custom-select');
+                $.each(listOfTemplates, function (index, item) {
+                    var newRow = '<tr>' +
+                        '<td class="small-cell">' + item.templateName + '</td>' +
+                        '<td class="medium-cell">' + item.templateDescription + '</td>' +
+                        '<td class="big-cell">' + item.templateContent + '</td>' +
+                        '<td class="centered-cell">' +
+                        '<a href="#details-' + item.templateName + '" class="icon"><img src="/icons/view-doc.png" /></a>' +
+                        '<a href="#edit-' + item.templateName + '" class="icon"><img src="/icons/edit.png" /></a>' +
+                        '<a href="#delete-' + item.templateName + '" class="icon"><img src="/icons/trash.png" /></a>' +
+                        '</td>' +
+                        '</tr>';
 
-                selectElements.each(function () {
-                    PopulateTemplateSelect($(this), listOfTemplates);
-                })
-                console.log("Populated options with templates successfully");
+
+                    $('.template-list tbody').append(newRow);
+                });
+                
             },
             error: function (error) {
                 console.error(error);
             }
         })
-    }
-
-    function PopulateTemplateSelect(element, listOfTemplates){
-        element.empty();
-        element.append('<option selected disabled>Wybierz szablon</option>');
-
-        listOfTemplates.forEach(function (template) {
-            element.append('<option value="' + template.templateId + '">' + template.templateName + '</option>');
-        });
     }
 
     function GetTemplateByIdAndFillInputFields(id, type){
@@ -273,7 +275,7 @@
             url: '@Url.Action("CreateNewTemplate", "Home")',
             type: 'GET',
             contentType: 'application/json',
-            data: {templateName: name, templateDescription: description, templateContent: content},
+            data: { templateName: name, templateDescription: description, templateContent: content },
             success: function (templateEnitity) {
                 FetchAllTemplatesAndPopulateSelects();
                 console.log("Successfully added new template")
@@ -281,10 +283,11 @@
             error: function (error) {
                 console.error(error);
             }
-        })
+        });
     }
 
     $(document).ready(function () {
+        //FetchAllTemplatesAndPopulateTables();
         // $("#editTemplateForm").hide();
         // $("#deleteTemplateForm").hide();
 
