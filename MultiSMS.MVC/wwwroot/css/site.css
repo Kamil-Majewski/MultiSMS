@@ -22,7 +22,17 @@ html {
 
 .list-content {
     background-color: white;
-    border-radius: 25px;
+    border-radius: 10px;
+    border: 3px solid #f0f1f1;
+}
+
+tr td{
+    border-top: none;
+    border-bottom: none;
+}
+
+.table td{
+    vertical-align: middle;
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
@@ -73,6 +83,43 @@ body {
     align-items: center;
 }
 
+.list-icon {
+    max-width: 34px;
+    display: inline-block;
+    padding: 5px;
+    margin-right: 3px;
+}
+
+.centered-cell{
+    max-width: 4vw;
+    text-align:center;
+    min-width: 91px;
+}
+
+.small-cell {
+    max-width: 6vw;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    min-width: 150px;
+}
+
+.medium-cell {
+    max-width: 10vw;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    min-width: 200px;
+}
+
+.big-cell {
+    max-width: 15vw;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    min-width: 250px;
+}
+
 .text-nav {
     color: white;
     font-size: 16px;
@@ -80,6 +127,16 @@ body {
     font-family: 'Open Sans', sans-serif;
     display: inline-block;
     vertical-align: middle;
+}
+
+table{
+
+}
+
+.table thead th {
+    color: #abb3c0;
+    font-weight: 400;
+    font-family: 'Open Sans', sans-serif;
 }
 
 .text-nav:hover {
