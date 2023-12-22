@@ -13,7 +13,7 @@ var configuration = new ConfigurationBuilder()
 
 builder.Services.AddOptions();
 
-var multiSMSConnectionString = builder.Configuration.GetConnectionString("MultiSMSConnectionString") ?? throw new InvalidOperationException($"Could not get connection string for parliament election");
+var multiSMSConnectionString = builder.Configuration.GetConnectionString("MultiSMSConnectionString") ?? throw new InvalidOperationException($"Could not get database connection string");
 builder.Services.AddDbContext<MultiSMSDbContext>(options =>
     options.UseSqlServer(multiSMSConnectionString));
 

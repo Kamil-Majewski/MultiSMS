@@ -18,7 +18,7 @@ html {
     align-items:center;
 }
 
-.templates-container {
+.templates-list-container {
     margin: 20px;
 }
 
@@ -97,12 +97,13 @@ body {
     background-size: 18px;
     background-repeat: no-repeat;
     padding-left: 35px;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
-.search-for:focus {
-    border: 3px solid #6f5cc4;
-    outline:none;
-}
+    .search-for:focus {
+        border: 3px solid #6f5cc4;
+        outline: none;
+    }
 
 .violet-button {
     border: none;
@@ -119,7 +120,7 @@ body {
 .centered-cell{
     max-width: 4vw;
     text-align:center;
-    min-width: 144px;
+    min-width: 150px;
 }
 
 .small-cell {
@@ -195,7 +196,14 @@ svg {
     max-width: 32px;
     display: inline-block;
     padding: 5px;
-    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.icon-list {
+    max-width: 32px;
+    display: inline-block;
+    padding: 5px;
+    margin-left: 10px;
 }
 
 img {

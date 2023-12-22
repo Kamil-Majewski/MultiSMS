@@ -82,7 +82,7 @@
             </div>
         </div>
         <div class="tab-pane" id="templates">
-            <div class="templates-container">
+            <div class="templates-list-container">
                 <div class="list-header">
                     <div class="list-header-left">
                         <button class="add-new-button violet-button">Dodaj nowy</button>
@@ -109,34 +109,49 @@
                                     <td class="medium-cell">Alert pogodowy informujący o zagrożeniach atmosferycznych</td>
                                     <td class="big-cell">Dot zdarzenia 56a z sądu okręgowego. Nie wiem co tu wpisać więc będę bełkotał - bla elb ble</td>
                                     <td class="centered-cell">
-                                        <a href="#leadMe" class="icon"><img src="~/icons/view-doc.png" /></a>
-                                        <a href="#leadMe" class="icon"><img src="~/icons//edit.png" /></a>
-                                        <a href="#leadMe" class="icon"><img src="~/icons/trash.png" /></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="small-cell">Alert cośtam synek</td>
-                                    <td class="medium-cell">To już nie jest alert pogodowy, a jakieś bzdury, bo tak sobie wymyśliłem</td>
-                                    <td class="big-cell">Wiadomość testowa</td>
-                                    <td class="centered-cell">
-                                        <a href="#leadMe" class="icon"><img src="~/icons/view-doc.png" /></a>
-                                        <a href="#leadMe" class="icon"><img src="~/icons//edit.png" /></a>
-                                        <a href="#leadMe" class="icon"><img src="~/icons/trash.png" /></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="small-cell">Kiedy byłem maly lubiłem katary</td>
-                                    <td class="medium-cell">Katar męczył mi nos</td>
-                                    <td class="big-cell">Moim najlepszym przyjacielem była aspiryna, a stos husteczek piętrzył się na 28 metrów</td>
-                                    <td class="centered-cell">
-                                        <a href="#leadMe" class="icon"><img src="~/icons/view-doc.png" title="Szczegóły"/></a>
-                                        <a href="#leadMe" class="icon"><img src="~/icons//edit.png" title="Edytuj"/></a>
-                                        <a href="#leadMe" class="icon"><img src="~/icons/trash.png" title="Usuń"/></a>
+                                        <a href="#leadMe" class="icon-list"><img src="~/icons/view-doc.png" /></a>
+                                        <a href="#leadMe" class="icon-list"><img src="~/icons//edit.png" /></a>
+                                        <a href="#leadMe" class="icon-list"><img src="~/icons/trash.png" /></a>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
+                </div>
+            </div>
+            <div class="templates-options-container" style="margin:20px;">
+                <div class="options-header">
+                    <div class="previous-page">
+                        <button class="violet-button" id="templates-previous-button" type="button" style="display: flex; align-items:center; ">
+                            <span style="max-width:24px;"><img src="~/icons/previous.png" /></span>
+                            <span>Powrót</span>
+                        </button>
+                    </div>
+                    <div class="option-name">
+                        <span class="opion-name-placeholder">Nowy szablon</span>
+                    </div>
+                </div>
+                <div class="list-content">
+                    <form id="template-options-form">
+                        <div class="form-group">
+                            <label for="TemplateName">Nazwa szablonu</label>
+                            <input type="text" class="form-control" id="templateNameInputAdd" placeholder="Przykładowy Szablon" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="TemplateDescription">Opis</label>
+                            <input type="text" class="form-control" id="templateDescriptionInputAdd" placeholder="Szablon przeznaczony jest dla..." />
+                        </div>
+                        <div class="form-group">
+                            <label for="TemplateContent">Treść wiadomości</label>
+                            <textarea class="form-control" id="templateContentInputAdd" rows="5" maxlength="255" placeholder="W związku z przygotowaniami do..." required></textarea>
+                            <div style="margin-top: 0.25rem; text-align: right" id="symbolCounterAdd">&nbsp</div>
+                        </div>
+                        <div class="justify-content-center d-flex">
+                            <button type="submit" class="violet-button" id="createNewTemplateSubmitButton">Utwórz</button>
+                            <button type="submit" class="violet-button" id="editTemplateSubmitButton">Zatwierdź edycję</button>
+
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -213,7 +228,7 @@
         });
     }
 
-    function FetchAllTemplatesAndPopulateTables() {
+    function FetchAllTemplatesAndPopulateTable() {
         $.ajax({
             url: '@Url.Action("FetchAllTemplates", "Home")',
             type: 'GET',
@@ -228,9 +243,9 @@
                         '<td class="medium-cell">' + item.templateDescription + '</td>' +
                         '<td class="big-cell">' + item.templateContent + '</td>' +
                         '<td class="centered-cell">' +
-                        '<a href="#details-' + item.templateName + '" class="icon"><img src="/icons/view-doc.png" /></a>' +
-                        '<a href="#edit-' + item.templateName + '" class="icon"><img src="/icons/edit.png" /></a>' +
-                        '<a href="#delete-' + item.templateName + '" class="icon"><img src="/icons/trash.png" /></a>' +
+                        '<a href="#details-' + item.templateName + '" class="icon-list"><img src="/icons/view-doc.png" title="Szczegóły"/></a>' +
+                        '<a href="#edit-' + item.templateName + '" class="icon-list"><img src="/icons/edit.png" title="Edytuj"/></a>' +
+                        '<a href="#delete-' + item.templateName + '" class="icon-list"><img src="/icons/trash.png" title="Usuń"/></a>' +
                         '</td>' +
                         '</tr>';
 
@@ -287,7 +302,8 @@
     }
 
     $(document).ready(function () {
-        //FetchAllTemplatesAndPopulateTables();
+        $(".templates-list-container").hide();
+        FetchAllTemplatesAndPopulateTable();
         // $("#editTemplateForm").hide();
         // $("#deleteTemplateForm").hide();
 
