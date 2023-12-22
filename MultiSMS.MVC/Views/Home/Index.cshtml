@@ -17,12 +17,12 @@
                     </div>
                     <div class="list-search-bar d-flex">
                         <input class="search-for" placeholder="Wyszukaj szablon" />
-                        <button class="search-for-button violet-button" type="button">Wyszukaj</button>
+                        @* <button class="search-for-button violet-button" type="button">Wyszukaj</button> *@
                     </div>
                 </div>
                 <div class="list-content">
                     <div class="table-responsive">
-                        <table class="template-list table table-borderless">
+                        <table class="template-list table table-borderless" id="template-table">
                             <thead>
                                 <tr>
                                     <th scope="col">Nazwa</th>
@@ -230,7 +230,6 @@
         $("#createOrEditButton").html("Utwórz");
         $(".templates-list-container").hide();
         $(".templates-options-container").show();
-        $("#editTemplateSubmitButton").show();
     }
 
     function GoBackToList() {
@@ -241,7 +240,7 @@
     }
 
     $(document).ready(function () {
-        
+        $(".templates-options-container").hide();
         FetchAllTemplatesAndPopulateTable();
 
         $(document).on('click', '.template-delete', function (e) {
@@ -263,6 +262,24 @@
             $(".template-options-form :input").val('');
 
         });
+
+        $(".search-for").on('input', function () {
+
+            var filterText = $(this).val().toLowerCase();
+
+            $('#template-table tbody tr').each(function () {
+                var rowHit = false;
+                $(this).find('td').each(function () {
+                    if ($(this).text().toLowerCase().includes(filterText)) {
+                        rowHit = true;
+                        return false;
+                    }
+                });
+
+                $(this).toggle(rowHit);
+            });
+        });
+
         // $("#editTemplateForm").hide();
         // $("#deleteTemplateForm").hide();
 
