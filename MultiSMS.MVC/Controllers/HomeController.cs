@@ -44,16 +44,16 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> EditTemplate(int id, string name, string description, string content)
         {
-            var template = new SMSMessageTemplate { TemplateId = id, TemplateName = name, TemplateDescription = description, TemplateContent = content };
+            var template = new SMSMessageTemplate { TemplateId = id, TemplateName = name, TemplateDescription = description, TemplateContent = content};
+            
             await _smsTemplateRepository.UpdateEntityAsync(template);
             return Json(template);
         }
 
         [HttpGet]
-        public async Task DeleteTemplate(string name)
+        public async Task DeleteTemplate(int id)
         {
-            var template = await _smsTemplateRepository.GetTemplateByNameAsync(name);
-            await _smsTemplateRepository.DeleteEntityAsync(template.TemplateId);
+            await _smsTemplateRepository.DeleteEntityAsync(id);
 
 
         }

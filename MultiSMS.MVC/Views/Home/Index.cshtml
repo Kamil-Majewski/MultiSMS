@@ -56,7 +56,7 @@
                         </button>
                     </div>
                     <div class="option-name">
-                        <span class="opion-name-placeholder">Nowy szablon</span>
+                        <span class="opion-name-placeholder" id="template-input-window-title">Nowy szablon</span>
                     </div>
                 </div>
                 <div class="list-content">
@@ -114,13 +114,13 @@
         $("#enableTemplateEditing").prop('disabled', true);
     }
 
-    function DeleteTemplate(templateName) {
+    function DeleteTemplate(templateId) {
 
         $.ajax({
             url: '@Url.Action("DeleteTemplate", "Home")',
             type: 'GET',
             contentType: 'application/json',
-            data: { name: templateName},
+            data: { id: templateId},
             success: function (template) {
                 console.log("Successfully deleted template")
                 FetchAllTemplatesAndPopulateTable();
@@ -132,18 +132,18 @@
     }
 
     function EditTemplate() {
-        var templateId = $("#templateSelectEdit").val();
-        var templateName = $("#templateNameInputEdit").val();
-        var templateContent = $("#templateContentInputEdit").val();
-        var templateDescription = $("#templateDescriptionInputEdit").val();
+        var templateId = $("#createOrEditButton").attr('data-id');
+        var templateName = $("#templateNameInput").val();
+        var templateContent = $("#templateContentInput").val();
+        var templateDescription = $("#templateDescriptionInput").val();
         $.ajax({
             url: '@Url.Action("EditTemplate", "Home")',
             type: 'GET',
             contentType: 'application/json',
-            data: { id: templateId, name: templateName, description: templateDescription, content: templateContent },
+            data: { id: templateId ,name: templateName, description: templateDescription, content: templateContent },
             success: function (template) {
                 console.log("Successfully edited template " + template.templateName)
-                FetchAllTemplatesAndPopulateSelects();
+                FetchAllTemplatesAndPopulateTable();
                 
             },
             error: function (error) {
@@ -167,9 +167,9 @@
                         '<td class="medium-cell">' + item.templateDescription + '</td>' +
                         '<td class="big-cell">' + item.templateContent + '</td>' +
                         '<td class="centered-cell">' +
-                        '<a href="#details-' + item.templateName + '" class="icon-list template-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>' +
-                        '<a href="#edit-' + item.templateName + '" class="icon-list template-edit"><img src="/icons/edit.png" title="Edytuj"/></a>' +
-                        '<a href="#delete-' + item.templateName + '" class="icon-list template-delete"><img src="/icons/trash.png" title="Usuń"/></a>' +
+                        '<a href="#details-' + item.templateId + '" class="icon-list template-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>' +
+                        '<a href="#edit-' + item.templateId + '" class="icon-list template-edit"><img src="/icons/edit.png" title="Edytuj"/></a>' +
+                        '<a href="#delete-' + item.templateId + '" class="icon-list template-delete"><img src="/icons/trash.png" title="Usuń"/></a>' +
                         '</td>' +
                         '</tr>';
 
@@ -226,13 +226,16 @@
     }
 
     function OpenCreateTemplateWindow(){
+        $("#template-input-window-title").html("Nowy szablon")
         $(".template-options-form").attr('id', 'create-template-form');
         $("#createOrEditButton").html("Utwórz");
         $(".templates-list-container").hide();
         $(".templates-options-container").show();
     }
 
+
     function GoBackToList() {
+        $("#createOrEditButton").removeAttr("data-id");
         $(".templates-list-container").show();
         $(".templates-options-container").hide();
         $(".template-options-form").removeAttr('id');
@@ -244,8 +247,35 @@
         FetchAllTemplatesAndPopulateTable();
 
         $(document).on('click', '.template-delete', function (e) {
-            var templateName = $(this).attr("href").split('-')[1];
-            DeleteTemplate(templateName)
+            var templateId = $(this).attr("href").split('-')[1];
+            DeleteTemplate(templateId)
+        });
+
+        $(document).on('click', '.template-edit', function (e) {
+            var templateId = $(this).attr("href").split('-')[1];
+
+            $.ajax({
+                url: '@Url.Action("GetTemplateById", "Home")',
+                type: 'GET',
+                data: {id: templateId},
+                contentType: 'application/json',
+                success: function (templateEnitity) {
+
+                    $("#createOrEditButton").attr("data-id", templateEnitity.templateId)
+                    $("#templateNameInput").val(templateEnitity.templateName);
+                    $("#templateDescriptionInput").val(templateEnitity.templateDescription);
+                    $("#templateContentInput").val(templateEnitity.templateContent);
+
+                    $("#template-input-window-title").html("Edytuj szablon")
+                    $(".template-options-form").attr('id', 'edit-template-form');
+                    $("#createOrEditButton").html("Zatwierdź edycję");
+                    $(".templates-list-container").hide();
+                    $(".templates-options-container").show();
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
         });
 
         $(document).on('submit', '#create-template-form', function (e) {
@@ -258,6 +288,21 @@
                 }
 
             CreateNewTemplate();
+            GoBackToList();
+            $(".template-options-form :input").val('');
+
+        });
+
+        $(document).on('submit', '#edit-template-form', function (e) {
+            var form = document.getElementById("edit-template-form");
+            e.preventDefault();
+
+            if (form.checkValidity() === false) {
+                form.reportValidity()
+                return
+            }
+
+            EditTemplate();
             GoBackToList();
             $(".template-options-form :input").val('');
 
@@ -279,111 +324,6 @@
                 $(this).toggle(rowHit);
             });
         });
-
-        // $("#editTemplateForm").hide();
-        // $("#deleteTemplateForm").hide();
-
-        // FetchAllTemplatesAndPopulateSelects();
-
-        // let addForm = document.getElementById("createNewTemplateForm");
-        // let editForm = document.getElementById("editTemplateForm");
-        // let deleteForm = document.getElementById("deleteTemplateForm");
-
-        // addForm.addEventListener('submit', function (event) {
-        //     event.preventDefault();
-
-        //     if (addForm.checkValidity() === false) {
-        //         addForm.reportValidity()
-        //         return
-        //     }
-
-        //     CreateNewTemplate();
-        // });
-
-        // editForm.addEventListener('submit', function (event) {
-        //     event.preventDefault();
-
-        //     if (editForm.checkValidity() === false) {
-        //         editForm.reportValidity()
-        //         return
-        //     }
-
-        //     EditTemplate();
-        // });
-
-        // deleteForm.addEventListener('submit', function (event) {
-        //     event.preventDefault();
-
-        //     if (editForm.checkValidity() === false) {
-        //         editForm.reportValidity()
-        //         return
-        //     }
-
-        //     DeleteTemplate();
-        // });
-
-        // const messageEleForAdd = document.getElementById('templateContentInputAdd');
-        // const messageEleForEdit = document.getElementById("templateContentInputEdit");
-        
-        // messageEleForAdd.addEventListener('input', function (e) {
-        //     const target = e.target;
-        //     const maxLength = target.getAttribute('maxlength');
-        //     const currentLength = target.value.length;
-        //     const counterEle = document.getElementById('symbolCounterAdd');
-        //     counterEle.innerHTML = `${currentLength}/${maxLength}`;
-        // });
-
-        // messageEleForEdit.addEventListener('input', function (e) {
-        //     const target = e.target;
-        //     const maxLength = target.getAttribute('maxlength');
-        //     const currentLength = target.value.length;
-        //     const counterEle = document.getElementById('symbolCounterEdit');
-        //     counterEle.innerHTML = `${currentLength}/${maxLength}`;
-        // });
-
-
-        // $('#sms-options-list a').on('click', function (e) {
-        //     $(".selected-sms").removeClass("selected-sms");
-        //     e.preventDefault();
-        //     $(this).tab('show');
-        //     $(this).parent().toggleClass('selected-sms');
-        // });
-        // $('#contacts-options-list a').on('click', function (e) {
-        //     $(".selected-contacts").removeClass("selected-contacts");
-        //     e.preventDefault();
-        //     $(this).tab('show');
-        //     $(this).parent().toggleClass('selected-contacts');
-        // });
-        // $('#groups-options-list a').on('click', function (e) {
-        //     $(".selected-groups").removeClass("selected-groups");
-        //     e.preventDefault();
-        //     $(this).tab('show');
-        //     $(this).parent().toggleClass('selected-groups');
-        // });
-        // $('#roles-options-list a').on('click', function (e) {
-        //     $(".selected-roles").removeClass("selected-roles");
-        //     e.preventDefault();
-        //     $(this).tab('show');
-        //     $(this).parent().toggleClass('selected-roles');
-        // });
-
-        // $("#templateSelectEdit").change(function () {
-        //     $("#editTemplateForm").show();
-        //     var templateId = $(this).val();
-        //     $("#enableTemplateEditing").prop("disabled", false);
-        //     GetTemplateByIdAndFillInputFields(templateId, "Edit");
-        //     $("#templateNameInputEdit").prop('readonly', true);
-        //     $("#templateDescriptionInputEdit").prop('readonly', true);
-        //     $("#templateContentInputEdit").prop('readonly', true);
-        //     $("#editNewTemplateSubmitButton").prop('disabled', true);
-        // });
-
-        // $("#templateSelectDelete").change(function () {
-        //     $("#deleteTemplateForm").show();
-        //     var templateId = $(this).val();
-        //     GetTemplateByIdAndFillInputFields(templateId, "Delete");
-        //     $("#deleteTemplateSubmitButton").prop('disabled', false);
-        // });
     });
 
 
