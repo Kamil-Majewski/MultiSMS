@@ -104,13 +104,19 @@ body {
     font-family: 'Open Sans', sans-serif;
     font-size: 24px;
     margin-bottom: 15px;
+    color: #606060;
+}
+
+label {
+    color: #5a6372;
+    font-family: 'Open Sans', sans-serif;
 }
 
 .previous-page{
     margin-bottom: 15px;
 }
 
-#template-options-form{
+.template-options-form{
     padding: 12px;
 }
 
@@ -143,6 +149,8 @@ body {
     font-family: 'Open Sans', sans-serif;
     font-size: 17px;
     height: 44px;
+    display: flex;
+    align-items: center;
 }
 
 .centered-cell{

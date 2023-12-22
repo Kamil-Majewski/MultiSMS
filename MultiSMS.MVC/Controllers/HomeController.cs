@@ -50,9 +50,10 @@ namespace MultiSMS.MVC.Controllers
         }
 
         [HttpGet]
-        public async Task DeleteTemplate(int id)
+        public async Task DeleteTemplate(string name)
         {
-            await _smsTemplateRepository.DeleteEntityAsync(id);
+            var template = await _smsTemplateRepository.GetTemplateByNameAsync(name);
+            await _smsTemplateRepository.DeleteEntityAsync(template.TemplateId);
 
 
         }
