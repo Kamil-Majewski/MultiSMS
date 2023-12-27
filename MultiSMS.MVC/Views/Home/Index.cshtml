@@ -10,13 +10,13 @@
             </div>
         </div>
         <div class="tab-pane" id="templates">
-            <div class="templates-list-container">
+            <div class="templates-list-container list-container">
                 <div class="list-header">
                     <div class="list-header-left">
                         <button class="add-new-button violet-button" type="button" onclick="OpenCreateTemplateWindow()">Dodaj nowy</button>
                     </div>
                     <div class="list-search-bar d-flex">
-                        <input class="search-for" placeholder="Wyszukaj szablon" />
+                        <input class="search-for template-search" placeholder="Wyszukaj szablon" />
                     </div>
                 </div>
                 <div class="list-content">
@@ -64,15 +64,96 @@
                             <div style="margin-top: 0.25rem; text-align: right" id="symbolCounterAdd">&nbsp</div>
                         </div>
                         <div class="justify-content-center d-flex">
-                            <button type="submit" class="violet-button" id="createOrEditButton"></button>
+                            <button type="submit" class="violet-button" id="createOrEditButtonTemplates"></button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
         <div class="tab-pane" id="contacts">
-            <div class="d-flex contacts-container">
-                kontakty
+            <div class="contacts-container">
+                <div class="contacts-list-container list-container">
+                    <div class="list-header">
+                        <div class="list-header-left">
+                            <button class="add-new-button violet-button" type="button">Dodaj nowy</button>
+                            <button class="import-contacts-button ie-button" type="button">Importuj kontakty</button>
+                            <button class="export-contacts-button ie-button" type="button">Exportuj kontakty</button>
+                        </div>
+                        <div class="list-search-bar d-flex">
+                            <input class="search-for contact-search" placeholder="Wyszukaj kontakt">
+                        </div>
+                    </div>
+                    <div class="list-content">
+                        <div class="table-responsive">
+                            <table class="contacts-list table table-borderless" id="contacts-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Imię</th>
+                                        <th scope="col">Nazwisko</th>
+                                        <th scope="col">Numer telefonu</th>
+                                        <th scope="col">Role</th>
+                                        <th scope="col">Grupy</th>
+                                        <th class="centered-cell" scope="col">Opcje</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="contacts-options-container" style="margin: 20px; display: none;">
+                    <div class="options-header">
+                        <div class="previous-page">
+                            <button class="violet-button" id="contacts-previous-button" type="button" style="display: flex; align-items:center;">
+                                <span style="max-width:24px;"><img src="/icons/previous.png"></span>
+                                <span>Powrót</span>
+                            </button>
+                        </div>
+                        <div class="option-name">
+                            <span class="opion-name-placeholder" id="contact-input-window-title">Nowy kontakt</span>
+                        </div>
+                    </div>
+                    <div class="list-content">
+                        <form class="contact-options-form">
+                            <div class="form-group">
+                                <label for="ContactName">Imię</label>
+                                <input type="text" class="form-input" id="contactNameInput" required="">
+                            </div>
+                            <div class="form-group">
+                                <label for="ContactSurname">Nazwisko</label>
+                                <input type="text" class="form-input" id="contactSurnameInput" required="">
+                            </div>
+                            <div class="form-group">
+                                <label for="ContactPhone">Numer telefonu</label>
+                                <input type="text" class="form-input" id="contactPhoneNumber" required="">
+                            </div>
+                            <div class="form-group">
+                                <label for="ContactHQAddress">Adres miejsca pracy</label>
+                                <input type="text" class="form-input" id="ContactHQAddress">
+                            </div>
+                            <div class="form-group">
+                                <label for="ContactDepartmentNumber">Oznaczenie jednostki organizacyjnej</label>
+                                <input type="text" class="form-input" id="contactDepartmentNumber">
+                            </div>
+                            <div class="form-group">
+                                <label for="ContactDepartment">Jednostka organizacyjna</label>
+                                <input type="text" class="form-input" id="contactDepartment">
+                            </div>
+                            <div class="form-group">
+                                <label for="ContactIsActive">Czy kontakt obecnie jest zatrudniony?</label>
+                                <input type="text" class="form-input" id="ContactIsActive">
+                            </div>
+                            <div class="form-group">
+                                <label for="ContactRoles">Przypisz role</label>
+                                <input type="text" class="form-input" id="contactRoles">
+                            </div>
+                            <div class="justify-content-center d-flex">
+                                <button type="submit" class="violet-button" id="createOrEditButtonContacts"></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="tab-pane" id="groups">
@@ -212,9 +293,17 @@
         $("#symbolCounterAdd").innerHTML = '25';
         $("#template-input-window-title").html("Nowy szablon")
         $(".template-options-form").attr('id', 'create-template-form');
-        $("#createOrEditButton").html("Utwórz");
+        $("#createOrEditButtonTemplates").html("Utwórz");
         $(".templates-list-container").hide();
         $(".templates-options-container").show();
+    }
+
+    function OpenCreateContactWindow() {
+        $("#contact-input-window-title").html("Nowy kontakt")
+        $(".contact-options-form").attr('id', 'create-template-form');
+        $("#createOrEditButtonContacts").html("Utwórz");
+        $(".contact-list-container").hide();
+        $(".contacts-options-container").show();
     }
 
 
@@ -296,7 +385,7 @@
 
         });
 
-        $(".search-for").on('input', function () {
+        $(".template-search").on('input', function () {
 
             var filterText = $(this).val().toLowerCase();
 

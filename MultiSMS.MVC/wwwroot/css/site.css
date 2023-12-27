@@ -10,15 +10,47 @@ html {
     overflow: hidden;
 }
 
-.list-header{
+.list-header {
     display: flex;
-    justify-content:space-between;
+    justify-content: space-between;
     margin-bottom: 15px;
-    min-height: 48px;
-    align-items:center;
+    min-height: 44px;
+    align-items: center;
 }
 
-.templates-list-container {
+.ie-button {
+    display: flex;
+    align-items: center;
+    margin-left: 30px;
+    border-radius: 5px;
+    padding:10px;
+    border: 2px solid #d7dadf;
+    background-color: #ffffff;
+    color: #54637e;
+    border: 2px solid #d7dadf;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    height: 49px;
+}
+.ie-button:focus {
+    border: 2px solid #6f5cc4;
+    outline: none;
+}
+
+.option-name {
+    font-weight: 600;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #606060;
+}
+
+.list-header-left {
+    display: flex;
+}
+
+.list-container {
     margin: 20px;
 }
 
@@ -28,23 +60,24 @@ html {
     border: 3px solid #f0f1f1;
 }
 
-tr td{
+tr td {
     border-top: none;
     border-bottom: none;
 }
 
 
-.table td{
+.table td {
     vertical-align: middle;
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-.nav{
+.nav {
     display: block;
 }
+
 body {
     margin-bottom: 60px;
     background-color: transparent;
@@ -60,7 +93,6 @@ body {
 .option-list-item {
     border-left: thick solid transparent;
     padding: 0px;
-
 }
 
 .active-tab {
@@ -81,14 +113,14 @@ body {
 .link {
     display: flex;
     padding-left: 25px;
-    padding-bottom: 10px;
-    padding-top: 10px;
+    padding-bottom: 15px;
+    padding-top: 15px;
     align-items: center;
 }
 
 .form-input {
     border-radius: 4px;
-    min-height:44px;
+    min-height: 44px;
     border: 3px solid #f0f1f1;
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
     width: 100%
@@ -99,62 +131,68 @@ body {
     outline: none;
 }
 
-.option-name {
-    font-weight: 700;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 24px;
-    margin-bottom: 15px;
-    color: #606060;
-}
-
 label {
     color: #5a6372;
     font-family: 'Open Sans', sans-serif;
 }
 
-.previous-page{
+.previous-page {
     margin-bottom: 15px;
+    display: flex;
+    align-items: center;
 }
 
-.template-options-form{
+.template-options-form {
     padding: 12px;
 }
 
 .search-for {
-    border-radius: 4px;
-    border: 3px solid #f0f1f1;
-    height: 44px;
+    border-radius: 5px;
+    border: 2px solid #d7dadf;
+    font-weight: 400;
+    font-family: 'Open Sans', sans-serif;
+    color: #5b6372;
+    height: 49px;
     width: 25vw;
     background-image: url(../icons/search-bar.png);
     background-position: 3% 55%;
     background-size: 18px;
     background-repeat: no-repeat;
-    padding-left: 35px;
+    padding-left: 40px;
+    margin-left: 30px;
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
 .search-for:focus {
-    border: 3px solid #6f5cc4;
+    border: 2px solid #6f5cc4;
     outline: none;
 }
 
 .violet-button {
-    border: none;
+    display: flex;
+    align-items: center;
+    border: 2px solid transparent;
     background-color: #6f5cc4;
     padding: 10px;
     color: #f0eef9;
     border-radius: 5px;
-    font-weight: 400;
+    font-weight: 600;
     font-family: 'Open Sans', sans-serif;
     font-size: 17px;
-    height: 44px;
+    height: 49px;
     display: flex;
     align-items: center;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
-.centered-cell{
+.violet-button:focus {
+    border: 2px solid black;
+    outline: none;
+}
+
+.centered-cell {
     max-width: 4vw;
-    text-align:center;
+    text-align: center;
     min-width: 150px;
 }
 
@@ -185,7 +223,7 @@ label {
 .text-nav {
     color: white;
     font-size: 16px;
-    font-weight: 400;
+    font-weight: 600;
     font-family: 'Open Sans', sans-serif;
     display: inline-block;
     vertical-align: middle;
@@ -194,7 +232,6 @@ label {
 tbody {
     color: #5a6372;
     font-family: 'Open Sans', sans-serif;
-
 }
 
 .table thead th {
@@ -223,15 +260,11 @@ tbody {
     cursor: default;
 }
 
-svg {
-    max-width: 32px;
-    max-height:32px;
-}
 .icon {
-    max-width: 32px;
+    max-width: 22px;
     display: inline-block;
-    padding: 5px;
-    margin-right: 5px;
+    margin-right: 10px;
+    
 }
 
 .icon-list {
@@ -239,6 +272,7 @@ svg {
     display: inline-block;
     padding: 5px;
     margin-left: 10px;
+    object-fit:cover;
 }
 
 img {
@@ -251,7 +285,6 @@ img {
     height: 100%;
     margin: 20px;
     margin-top: 60px;
-
 }
 
 .layout-header {
@@ -321,11 +354,9 @@ img {
 }
 
 .content-container {
-
     margin: 0px;
-
 }
 
-.app-header{
+.app-header {
     box-shadow: 2px 4px 10px grey
 }
