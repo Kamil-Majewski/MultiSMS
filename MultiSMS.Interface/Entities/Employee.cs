@@ -8,6 +8,7 @@ namespace MultiSMS.Interface.Entities
         public int EmployeeId { get; set; }
         public string Name { get; set; } = default!;
         public string Surname { get; set; } = default!;
+        public string Email { get; set; } = default!;
         public PhoneNumber PhoneNumber { get; set; } = default!;
         public string? Department { get; set; }
         public int? DepartmentNumber { get; set; }
