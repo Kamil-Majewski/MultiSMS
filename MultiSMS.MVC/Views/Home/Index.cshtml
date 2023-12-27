@@ -17,7 +17,6 @@
                     </div>
                     <div class="list-search-bar d-flex">
                         <input class="search-for" placeholder="Wyszukaj szablon" />
-                        @* <button class="search-for-button violet-button" type="button">Wyszukaj</button> *@
                     </div>
                 </div>
                 <div class="list-content">
@@ -32,16 +31,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td class="small-cell">Alert RGB</td>
-                                    <td class="medium-cell">Alert pogodowy informujący o zagrożeniach atmosferycznych</td>
-                                    <td class="big-cell">Dot zdarzenia 56a z sądu okręgowego. Nie wiem co tu wpisać więc będę bełkotał - bla elb ble</td>
-                                    <td class="centered-cell">
-                                        <a href="#leadMe" class="icon-list"><img src="~/icons/view-doc.png" /></a>
-                                        <a href="#leadMe" class="icon-list"><img src="~/icons//edit.png" /></a>
-                                        <a href="#leadMe" class="icon-list"><img src="~/icons/trash.png" /></a>
-                                    </td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -105,14 +94,6 @@
 </div>
 
 <script defer>
-
-    function EnableTemplateEditing() {
-        $("#templateNameInputEdit").prop('readonly', false);
-        $("#templateDescriptionInputEdit").prop('readonly', false);
-        $("#templateContentInputEdit").prop('readonly', false);
-        $("#editNewTemplateSubmitButton").prop('disabled', false);
-        $("#enableTemplateEditing").prop('disabled', true);
-    }
 
     function DeleteTemplate(templateId) {
 
@@ -226,6 +207,9 @@
     }
 
     function OpenCreateTemplateWindow(){
+        const messageEle = document.getElementById('templateContentInput');
+        document.getElementById('symbolCounterAdd').innerHTML = messageEle.value.length + "/" + messageEle.getAttribute('maxlength');
+        $("#symbolCounterAdd").innerHTML = '25';
         $("#template-input-window-title").html("Nowy szablon")
         $(".template-options-form").attr('id', 'create-template-form');
         $("#createOrEditButton").html("Utwórz");
@@ -243,6 +227,8 @@
     }
 
     $(document).ready(function () {
+        const messageEle = document.getElementById('templateContentInput');
+        const counterEle = document.getElementById('symbolCounterAdd');
         $(".templates-options-container").hide();
         FetchAllTemplatesAndPopulateTable();
 
@@ -265,6 +251,8 @@
                     $("#templateNameInput").val(templateEnitity.templateName);
                     $("#templateDescriptionInput").val(templateEnitity.templateDescription);
                     $("#templateContentInput").val(templateEnitity.templateContent);
+                    const messageEle = document.getElementById('templateContentInput');
+                    document.getElementById('symbolCounterAdd').innerHTML = messageEle.value.length + "/" + messageEle.getAttribute('maxlength');
 
                     $("#template-input-window-title").html("Edytuj szablon")
                     $(".template-options-form").attr('id', 'edit-template-form');
@@ -323,6 +311,14 @@
 
                 $(this).toggle(rowHit);
             });
+        });
+
+        messageEle.addEventListener('input', function (e) {
+            const target = e.target;
+            const maxLength = target.getAttribute('maxlength');
+            const currentLength = target.value.length;
+
+            counterEle.innerHTML = `${currentLength}/${maxLength}`;
         });
     });
 
