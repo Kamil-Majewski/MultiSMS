@@ -330,6 +330,36 @@
         });
     }
 
+    function EditContact() {
+        var contactId = $("#createOrEditButtonContacts").attr('data-id');
+        let name = $("#contactNameInput").val();
+        let surname = $("#contactSurnameInput").val();
+        let email = $("#contactEmail").val();
+        let phoneNumber = $("#contactPhoneNumber").val();
+        let address = $("#contactHQAddress").val();
+        let zip = $("#ContactPostalNumber").val();
+        let city = $("#ContactCity").val();
+        let department = $("#contactDepartment").val();
+        let isActive = true;
+        let assignedRoles = null;
+        let assignedGroups = null;
+
+        $.ajax({
+            url: '@Url.Action("EditContact", "Home")',
+            type: 'GET',
+            contentType: 'application/json',
+            data: { contactId: contactId, contactName: name, contactSurname: surname, email: email, phone: phoneNumber, address: address, zip: zip, city: city, department: department, isActive: isActive },
+            success: function (contactName) {
+                console.log("Successfully edited contact " + contactName)
+                FetchAllContactsAndPopulateTable();
+
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+
     function FetchAllTemplatesAndPopulateTable() {
         $.ajax({
             url: '@Url.Action("FetchAllTemplates", "Home")',
@@ -413,27 +443,6 @@
                 console.error(error);
             }
         })
-    }
-
-    function GetTemplateByIdAndFillInputFields(id, type){
-        $.ajax({
-            url: '@Url.Action("GetTemplateById", "Home")',
-            type: 'GET',
-            contentType: 'application/json',
-            data: { id: id },
-            success: function (template) {
-                let nameInputField = document.getElementById("templateNameInput" + type);
-                let descriptionInputField = document.getElementById("templateDescriptionInput" + type);
-                let contentInputField = document.getElementById("templateContentInput" + type);
-
-                nameInputField.value = template.templateName;
-                descriptionInputField.value = template.templateDescription;
-                contentInputField.value = template.templateContent;
-            },
-            error: function (error) {
-                console.error(error);
-            }
-        });
     }
 
     function CreateNewTemplate() {
@@ -563,6 +572,41 @@
             });
         });
 
+        $(document).on('click', '.contact-edit', function (e) {
+            var contactId = $(this).attr("href").split('-')[1];
+
+            $.ajax({
+                url: '@Url.Action("GetContactById", "Home")',
+                type: 'GET',
+                data: { id: contactId },
+
+                contentType: 'application/json',
+                success: function (contactEnitity) {
+
+                    $("#createOrEditButtonContacts").attr("data-id", contactEnitity.employeeId)
+                    $("#contactNameInput").val(contactEnitity.name);
+                    $("#contactSurnameInput").val(contactEnitity.surname);
+                    $("#contactEmail").val(contactEnitity.email);
+                    $("#contactPhoneNumber").val(contactEnitity.phoneNumber);
+                    $("#contactHQAddress").val(contactEnitity.hqAddress);
+                    $("#ContactPostalNumber").val(contactEnitity.postalNumber);
+                    $("#ContactCity").val(contactEnitity.city);
+                    $("#contactDepartment").val(contactEnitity.department);
+                    $("#contactRoles").val(contactEnitity.employeeRole);
+                    $("#contactGroups").val(contactEnitity.employeesGroup);
+
+                    $("#contact-input-window-title").html("Edytuj kontakt")
+                    $(".contact-options-form").attr('id', 'edit-contact-form');
+                    $("#createOrEditButtonContacts").html("Zatwierdź edycję");
+                    $(".contacts-options-container").show();
+                    $(".contacts-list-container").hide();
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        });
+
         $(document).on('submit', '#create-template-form', function (e) {
             var form = document.getElementById("create-template-form");
             e.preventDefault();
@@ -604,7 +648,20 @@
 
             EditTemplate();
             GoBackToTemplateList();
-            $(".template-options-form :input").val('');
+
+        });
+
+        $(document).on('submit', '#edit-contact-form', function (e) {
+            var form = document.getElementById("edit-contact-form");
+            e.preventDefault();
+
+            if (form.checkValidity() === false) {
+                form.reportValidity()
+                return
+            }
+
+            EditContact();
+            GoBackToContactList();
 
         });
 
@@ -613,6 +670,23 @@
             var filterText = $(this).val().toLowerCase();
 
             $('#template-table tbody tr').each(function () {
+                var rowHit = false;
+                $(this).find('td').each(function () {
+                    if ($(this).text().toLowerCase().includes(filterText)) {
+                        rowHit = true;
+                        return false;
+                    }
+                });
+
+                $(this).toggle(rowHit);
+            });
+        });
+
+        $(".contact-search").on('input', function () {
+
+            var filterText = $(this).val().toLowerCase();
+
+            $('#contacts-table tbody tr').each(function () {
                 var rowHit = false;
                 $(this).find('td').each(function () {
                     if ($(this).text().toLowerCase().includes(filterText)) {

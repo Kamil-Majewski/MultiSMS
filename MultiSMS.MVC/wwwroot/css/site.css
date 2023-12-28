@@ -92,17 +92,17 @@ html {
     font-weight: 600;
     font-family: 'Open Sans', sans-serif;
     text-align: center;
-    padding:3px;
+    padding:4px 16.48px;
 }
 
 .inactive-pill {
     width: 90px;
     border-radius: 90px;
     background-color: #f5d0cd;
-    color: #e5746a;
+    color: #d5675d;
     font-weight: 600;
     font-family: 'Open Sans', sans-serif;
-    padding:3px;;
+    padding: 4px;
 }
 
 .check-input{

@@ -50,12 +50,42 @@ namespace MultiSMS.MVC.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetContactById(int id)
+        {
+            var template = await _employeeRepository.GetByIdAsync(id);
+            return Json(template);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> EditTemplate(int id, string name, string description, string content)
         {
             var template = new SMSMessageTemplate { TemplateId = id, TemplateName = name, TemplateDescription = description, TemplateContent = content};
             
             await _smsTemplateRepository.UpdateEntityAsync(template);
             return Json(template);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditContact(int contactId, string contactName, string contactSurname, string email, string phone, string address, string zip, string city, string department, bool isActive)
+        {
+            var contact = new Employee
+            {
+                EmployeeId = contactId,
+                Name = contactName,
+                Surname = contactSurname,
+                Email = email,
+                PhoneNumber = phone,
+                HQAddress = address,
+                PostalNumber = zip,
+                City = city,
+                Department = department,
+                IsActive = isActive,
+                EmployeeRole = null,
+                EmployeesGroup = null
+            };
+
+            await _employeeRepository.UpdateEntityAsync(contact);
+            return Json(contact.Name);
         }
 
         [HttpGet]
