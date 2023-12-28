@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
 <div class="content-container">
@@ -40,7 +40,7 @@
                 <div class="option-content">
                     <div class="options-header">
                         <div class="previous-page" style="flex:1;">
-                            <button class="violet-button" id="templates-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToList()">
+                            <button class="violet-button" id="templates-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToTemplateList()">
                                 <span style="max-width:24px;"><img src="~/icons/previous.png" /></span>
                                 <span>Powrót</span>
                             </button>
@@ -100,6 +100,7 @@
                                         <th scope="col">Imię</th>
                                         <th scope="col">Nazwisko</th>
                                         <th scope="col">Numer telefonu</th>
+                                        <th scope="col">Status</th>
                                         <th scope="col">Role</th>
                                         <th scope="col">Grupy</th>
                                         <th class="centered-cell" scope="col">Opcje</th>
@@ -115,7 +116,7 @@
                     <div class="option-content">
                         <div class="options-header">
                             <div class="previous-page" style="flex:1;">
-                                <button class="violet-button" id="contacts-previous-button" type="button" style="display: flex; align-items:center;">
+                                <button class="violet-button" id="contacts-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToContactList()">
                                     <span style="max-width:24px;"><img src="/icons/previous.png"></span>
                                     <span>Powrót</span>
                                 </button>
@@ -309,7 +310,7 @@
     }
 
     function EditTemplate() {
-        var templateId = $("#createOrEditButton").attr('data-id');
+        var templateId = $("#createOrEditButtonTemplates").attr('data-id');
         var templateName = $("#templateNameInput").val();
         var templateContent = $("#templateContentInput").val();
         var templateDescription = $("#templateDescriptionInput").val();
@@ -361,6 +362,39 @@
         })
     }
 
+    function FetchAllContactsAndPopulateTable() {
+        $.ajax({
+            url: '@Url.Action("FetchAllContacts", "Home")',
+            type: 'GET',
+            contentType: 'application/json',
+            success: function (listOfContacts) {
+                console.log("Successfully retrieved contacts")
+                $('.contact-list tbody').empty();
+
+                $.each(listOfContacts, function (index, item) {
+                    var newRow = '<tr>' +
+                        '<td class="small-cell">' + item.contactName + '</td>' +
+                        '<td class="small-cell">' + item.contactSurname + '</td>' +
+                        '<td class="small-cell">' + item.contactPhoneNumber + '</td>' +
+                        '<td class="small-cell">' + item.contactPhoneNumber + '</td>' +
+                        '<td class="centered-cell">' +
+                        '<a href="#details-' + item.templateId + '" class="icon-list template-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>' +
+                        '<a href="#edit-' + item.templateId + '" class="icon-list template-edit"><img src="/icons/edit.png" title="Edytuj"/></a>' +
+                        '<a href="#delete-' + item.templateId + '" class="icon-list template-delete"><img src="/icons/trash.png" title="Usuń"/></a>' +
+                        '</td>' +
+                        '</tr>';
+
+
+                    $('.template-list tbody').append(newRow);
+                });
+
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        })
+    }
+
     function GetTemplateByIdAndFillInputFields(id, type){
         $.ajax({
             url: '@Url.Action("GetTemplateById", "Home")',
@@ -402,6 +436,34 @@
         });
     }
 
+    function CreateNewContact() {
+        let name = $("#contactNameInput").val();
+        let surname = $("#contactSurnameInput").val();
+        let email = $("#contactEmail").val();
+        let phoneNumber = $("#contactPhoneNumber").val();
+        let address = $("#contactHQAddress").val();
+        let zip = $("#ContactPostalNumber").val();
+        let city = $("#ContactCity").val();
+        let department = $("#contactDepartment").val();
+        let isActive = true;
+        let assignedRoles = null;
+        let assignedGroups = null;
+
+        $.ajax({
+            url: '@Url.Action("CreateNewContact", "Home")',
+            type: 'GET',
+            contentType: 'application/json',
+            data: { contactName: name, contactSurname: surname, email: email, phone: phoneNumber, address: address, zip: zip, city: city, department: department, isActive: isActive },
+            success: function (contactEnitityName) {
+                FetchAllContactsAndPopulateTable();
+                console.log("Successfully added new contact: " + contactEnitityName)
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+
     function OpenCreateTemplateWindow(){
         const messageEle = document.getElementById('templateContentInput');
         document.getElementById('symbolCounterAdd').innerHTML = messageEle.value.length + "/" + messageEle.getAttribute('maxlength');
@@ -422,12 +484,21 @@
     }
 
 
-    function GoBackToList() {
-        $("#createOrEditButton").removeAttr("data-id");
+    function GoBackToTemplateList() {
+        $("#createOrEditButtonTemplates").removeAttr("data-id");
         $(".templates-list-container").show();
         $(".templates-options-container").hide();
         $(".template-options-form").removeAttr('id');
         $(".template-options-form :input").val('');
+    }
+
+    function GoBackToContactList() {
+        $(".contact-options-form").removeAttr('id');
+        $(".contact-options-form :input").val('');
+        $(".contacts-options-container").hide();
+        $(".contacts-list-container").show();
+        
+
     }
 
     $(document).ready(function () {
@@ -452,7 +523,7 @@
                 contentType: 'application/json',
                 success: function (templateEnitity) {
 
-                    $("#createOrEditButton").attr("data-id", templateEnitity.templateId)
+                    $("#createOrEditButtonTemplates").attr("data-id", templateEnitity.templateId)
                     $("#templateNameInput").val(templateEnitity.templateName);
                     $("#templateDescriptionInput").val(templateEnitity.templateDescription);
                     $("#templateContentInput").val(templateEnitity.templateContent);
@@ -461,7 +532,7 @@
 
                     $("#template-input-window-title").html("Edytuj szablon")
                     $(".template-options-form").attr('id', 'edit-template-form');
-                    $("#createOrEditButton").html("Zatwierdź edycję");
+                    $("#createOrEditButtonTemplates").html("Zatwierdź edycję");
                     $(".templates-list-container").hide();
                     $(".templates-options-container").show();
                 },
@@ -481,8 +552,23 @@
                 }
 
             CreateNewTemplate();
-            GoBackToList();
+            GoBackToTemplateList();
             $(".template-options-form :input").val('');
+
+        });
+
+        $(document).on('submit', '#create-contact-form', function (e) {
+            var form = document.getElementById("create-contact-form");
+            e.preventDefault();
+
+            if (form.checkValidity() === false) {
+                form.reportValidity()
+                return
+            }
+
+            CreateNewContact();
+            GoBackToContactList();
+            $(".contact-options-form :input").val('');
 
         });
 
@@ -496,7 +582,7 @@
             }
 
             EditTemplate();
-            GoBackToList();
+            GoBackToTemplateList();
             $(".template-options-form :input").val('');
 
         });

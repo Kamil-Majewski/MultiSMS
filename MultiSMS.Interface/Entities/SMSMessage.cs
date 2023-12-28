@@ -12,5 +12,6 @@ namespace MultiSMS.Interface.Entities
         public EmployeesGroup ChosenGroup { get; set; } = default!;
         public List<Employee> AdditionalEmployees { get; set; } = new List<Employee>();
         public DateTime MessageSentDate { get; set; } = DateTime.Now;
+        public string? AdditionalInformation { get; set; }
     }
 }

@@ -85,6 +85,28 @@ html {
     width:100%
 }
 
+.active-pill {
+    width: 80px;
+    border-radius: 20px;
+    background-color: #d2ebd3;
+    color: #7bc57e;
+    font-weight: 600;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.inactive-pill {
+    width: 80px;
+    border-radius: 20px;
+    background-color: #f5d0cd;
+    color: #e5746a;
+    font-weight: 600;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.check-input{
+    margin-right:5px;
+}
+
 tr td {
     border-top: none;
     border-bottom: none;

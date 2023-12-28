@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MultiSMS.Interface.Entities;
-using MultiSMS.Interface.Repositories;
 using MultiSMS.Interface.Repositories.Interfaces;
 using MultiSMS.MVC.Models;
 using System.Diagnostics;
@@ -10,9 +9,11 @@ namespace MultiSMS.MVC.Controllers
     public class HomeController : Controller
     {
         private readonly ISMSMessageTemplateRepository _smsTemplateRepository;
-        public HomeController(ISMSMessageTemplateRepository smsTemplateRepository)
+        private readonly IEmployeeRepository _employeeRepository;
+        public HomeController(ISMSMessageTemplateRepository smsTemplateRepository, IEmployeeRepository employeeRepository)
         {
             _smsTemplateRepository = smsTemplateRepository;
+            _employeeRepository = employeeRepository;
         }
         public IActionResult Index()
         {
@@ -32,6 +33,13 @@ namespace MultiSMS.MVC.Controllers
         {
             var templates = await Task.FromResult(_smsTemplateRepository.GetAllEntries());
             return Json(templates);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> FetchAllContacts()
+        {
+            var contacts = await Task.FromResult(_employeeRepository.GetAllEntries());
+            return Json(contacts);
         }
 
         [HttpGet]
@@ -57,6 +65,31 @@ namespace MultiSMS.MVC.Controllers
 
 
         }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateNewContact(string contactName, string contactSurname, string email, string phone, string address, string zip, string city, string department, bool isActive)
+        {
+            var contact = new Employee
+            {
+                Name = contactName,
+                Surname = contactSurname,
+                Email = email,
+                PhoneNumber = phone,
+                HQAddress = address,
+                PostalNumber = zip,
+                City = city,
+                Department = department,
+                IsActive = isActive,
+                EmployeeRole = null,
+                EmployeesGroup = null
+            };
+            await _employeeRepository.AddEntityToDatabaseAsync(contact);
+
+            return Json(contact.Name);
+        }
+      
+            
+        
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

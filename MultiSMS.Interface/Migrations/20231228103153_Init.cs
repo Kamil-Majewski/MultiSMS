@@ -76,7 +76,8 @@ namespace MultiSMS.Interface.Migrations
                     TemplateId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TemplateName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SMSContent = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    TemplateDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TemplateContent = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -198,7 +199,8 @@ namespace MultiSMS.Interface.Migrations
                     Issuer = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SMSContent = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ChosenGroupGroupId = table.Column<int>(type: "int", nullable: false),
-                    MessageSentDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    MessageSentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AdditionalInformation = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -219,28 +221,47 @@ namespace MultiSMS.Interface.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Surname = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Department = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DepartmentNumber = table.Column<int>(type: "int", nullable: true),
+                    PostalNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HQAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    GroupId = table.Column<int>(type: "int", nullable: false),
-                    EmployeesGroupGroupId = table.Column<int>(type: "int", nullable: false),
                     SMSMessageSMSId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Employees", x => x.EmployeeId);
                     table.ForeignKey(
-                        name: "FK_Employees_EmployeeGroups_EmployeesGroupGroupId",
+                        name: "FK_Employees_SMSMessageLogs_SMSMessageSMSId",
+                        column: x => x.SMSMessageSMSId,
+                        principalTable: "SMSMessageLogs",
+                        principalColumn: "SMSId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EmployeeEmployeesGroup",
+                columns: table => new
+                {
+                    EmployeesGroupGroupId = table.Column<int>(type: "int", nullable: false),
+                    GroupMembersEmployeeId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmployeeEmployeesGroup", x => new { x.EmployeesGroupGroupId, x.GroupMembersEmployeeId });
+                    table.ForeignKey(
+                        name: "FK_EmployeeEmployeesGroup_EmployeeGroups_EmployeesGroupGroupId",
                         column: x => x.EmployeesGroupGroupId,
                         principalTable: "EmployeeGroups",
                         principalColumn: "GroupId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Employees_SMSMessageLogs_SMSMessageSMSId",
-                        column: x => x.SMSMessageSMSId,
-                        principalTable: "SMSMessageLogs",
-                        principalColumn: "SMSId");
+                        name: "FK_EmployeeEmployeesGroup_Employees_GroupMembersEmployeeId",
+                        column: x => x.GroupMembersEmployeeId,
+                        principalTable: "Employees",
+                        principalColumn: "EmployeeId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -250,7 +271,7 @@ namespace MultiSMS.Interface.Migrations
                     RoleId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RoleName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EmployeeId = table.Column<int>(type: "int", nullable: false)
+                    EmployeeId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -259,28 +280,7 @@ namespace MultiSMS.Interface.Migrations
                         name: "FK_EmployeeRoles_Employees_EmployeeId",
                         column: x => x.EmployeeId,
                         principalTable: "Employees",
-                        principalColumn: "EmployeeId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PhoneNumber",
-                columns: table => new
-                {
-                    PhoneNumberId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Number = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EmployeeId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PhoneNumber", x => x.PhoneNumberId);
-                    table.ForeignKey(
-                        name: "FK_PhoneNumber_Employees_EmployeeId",
-                        column: x => x.EmployeeId,
-                        principalTable: "Employees",
-                        principalColumn: "EmployeeId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "EmployeeId");
                 });
 
             migrationBuilder.CreateIndex(
@@ -323,25 +323,19 @@ namespace MultiSMS.Interface.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_EmployeeEmployeesGroup_GroupMembersEmployeeId",
+                table: "EmployeeEmployeesGroup",
+                column: "GroupMembersEmployeeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_EmployeeRoles_EmployeeId",
                 table: "EmployeeRoles",
                 column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Employees_EmployeesGroupGroupId",
-                table: "Employees",
-                column: "EmployeesGroupGroupId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Employees_SMSMessageSMSId",
                 table: "Employees",
                 column: "SMSMessageSMSId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PhoneNumber_EmployeeId",
-                table: "PhoneNumber",
-                column: "EmployeeId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_SMSMessageLogs_ChosenGroupGroupId",
@@ -368,10 +362,10 @@ namespace MultiSMS.Interface.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "EmployeeRoles");
+                name: "EmployeeEmployeesGroup");
 
             migrationBuilder.DropTable(
-                name: "PhoneNumber");
+                name: "EmployeeRoles");
 
             migrationBuilder.DropTable(
                 name: "SMSMessageTemplates");
