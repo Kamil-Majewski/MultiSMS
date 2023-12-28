@@ -86,21 +86,23 @@ html {
 }
 
 .active-pill {
-    width: 80px;
-    border-radius: 20px;
+    border-radius: 90px;
     background-color: #d2ebd3;
-    color: #7bc57e;
+    color: #6eb171;
     font-weight: 600;
     font-family: 'Open Sans', sans-serif;
+    text-align: center;
+    padding:3px;
 }
 
 .inactive-pill {
-    width: 80px;
-    border-radius: 20px;
+    width: 90px;
+    border-radius: 90px;
     background-color: #f5d0cd;
     color: #e5746a;
     font-weight: 600;
     font-family: 'Open Sans', sans-serif;
+    padding:3px;;
 }
 
 .check-input{
@@ -243,10 +245,27 @@ label {
     outline: none;
 }
 
+.tiny-centered-cell {
+    max-width: 3vw;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    min-width: 112px;
+    text-align: center;
+}
+
 .centered-cell {
     max-width: 4vw;
     text-align: center;
     min-width: 150px;
+}
+
+.tiny-cell {
+    max-width: 3vw;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    min-width: 80px;
 }
 
 .small-cell {
@@ -285,11 +304,12 @@ label {
 tbody {
     color: #5a6372;
     font-family: 'Open Sans', sans-serif;
+    font-weight:600;
 }
 
 .table thead th {
     color: #99a1af;
-    font-weight: 400;
+    font-weight: 600;
     font-family: 'Open Sans', sans-serif;
 }
 

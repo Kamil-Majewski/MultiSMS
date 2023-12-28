@@ -100,9 +100,9 @@
                                         <th scope="col">Imię</th>
                                         <th scope="col">Nazwisko</th>
                                         <th scope="col">Numer telefonu</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col">Role</th>
-                                        <th scope="col">Grupy</th>
+                                        <th class="tiny-centered-cell">Status</th>
+                                        <th class="centered-cell">Role</th>
+                                        <th class="centered-cell">Grupy</th>
                                         <th class="centered-cell" scope="col">Opcje</th>
                                     </tr>
                                 </thead>
@@ -369,23 +369,43 @@
             contentType: 'application/json',
             success: function (listOfContacts) {
                 console.log("Successfully retrieved contacts")
-                $('.contact-list tbody').empty();
+                $('.contacts-list tbody').empty();
 
                 $.each(listOfContacts, function (index, item) {
+
+                    var group = item.employeesGroup;
+                    var role = item.employeeRole;
+
+                    if (item.employeesGroup = 'null') {
+                        group = "Nie przypisano";
+                    }
+                    if (item.employeeRole = 'null') {
+                        var role = "Nie przypisano"
+                    }
+
                     var newRow = '<tr>' +
-                        '<td class="small-cell">' + item.contactName + '</td>' +
-                        '<td class="small-cell">' + item.contactSurname + '</td>' +
-                        '<td class="small-cell">' + item.contactPhoneNumber + '</td>' +
-                        '<td class="small-cell">' + item.contactPhoneNumber + '</td>' +
-                        '<td class="centered-cell">' +
-                        '<a href="#details-' + item.templateId + '" class="icon-list template-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>' +
-                        '<a href="#edit-' + item.templateId + '" class="icon-list template-edit"><img src="/icons/edit.png" title="Edytuj"/></a>' +
-                        '<a href="#delete-' + item.templateId + '" class="icon-list template-delete"><img src="/icons/trash.png" title="Usuń"/></a>' +
-                        '</td>' +
-                        '</tr>';
+                        '<td class="tiny-cell">' + item.name + '</td>' +
+                        '<td class="tiny-cell">' + item.surname + '</td>' +
+                        '<td class="tiny-cell">' + item.phoneNumber + '</td>';
+
+                    if (item.isActive == true) {
+                        newRow += '<td class="tiny-centered-cell"><span class="active-pill">Aktywny<span></td>';
+                        }
+                    else {
+                        newRow += '<td class="tiny-centered-cell"><span class="inactive-pill">Nieaktywny<span></td>';
+                    }
+
+                    newRow += '<td class="centered-cell">' + role + '</td>' +
+                    '<td class="centered-cell">' + group + '</td>' +
+                    '<td class="centered-cell">' +
+                    '<a href="#details-' + item.employeeId + '" class="icon-list contact-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>' +
+                    '<a href="#edit-' + item.employeeId + '" class="icon-list contact-edit"><img src="/icons/edit.png" title="Edytuj"/></a>' +
+                    '<a href="#delete-' + item.employeeId + '" class="icon-list contact-delete"><img src="/icons/trash.png" title="Usuń"/></a>' +
+                    '</td>' +
+                    '</tr>';
 
 
-                    $('.template-list tbody').append(newRow);
+                    $('.contacts-list tbody').append(newRow);
                 });
 
             },
@@ -506,6 +526,7 @@
         const counterEle = document.getElementById('symbolCounterAdd');
         $(".templates-options-container").hide();
         FetchAllTemplatesAndPopulateTable();
+        FetchAllContactsAndPopulateTable();
 
         $(document).on('click', '.template-delete', function (e) {
             var templateId = $(this).attr("href").split('-')[1];
