@@ -15,6 +15,11 @@ html {
     justify-content: center;
 }
 
+.templates-options-container {
+    display: flex;
+    justify-content: center;
+}
+
 .list-header {
     display: flex;
     justify-content: space-between;
@@ -77,6 +82,7 @@ html {
     border: 3px solid #f0f1f1;
     max-width: 550px;
     min-width: 307px;
+    width:100%
 }
 
 tr td {
@@ -107,6 +113,12 @@ body {
     padding-left: 0px;
     margin-top: 15px;
     margin-bottom: 15px;
+}
+
+.options-header {
+    display: flex;
+    padding: 30px 30px 0px 30px;
+    align-items: center;
 }
 
 .option-list-item {
