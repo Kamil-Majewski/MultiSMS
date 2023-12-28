@@ -309,6 +309,23 @@
         });
     }
 
+    function DeleteContact(contactId) {
+
+        $.ajax({
+            url: '@Url.Action("DeleteContact", "Home")',
+            type: 'GET',
+            contentType: 'application/json',
+            data: { id: contactId },
+            success: function (contactName) {
+                console.log("Successfully deleted template " + contactName)
+                FetchAllContactsAndPopulateTable();
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+
     function EditTemplate() {
         var templateId = $("#createOrEditButtonTemplates").attr('data-id');
         var templateName = $("#templateNameInput").val();
@@ -540,6 +557,11 @@
         $(document).on('click', '.template-delete', function (e) {
             var templateId = $(this).attr("href").split('-')[1];
             DeleteTemplate(templateId)
+        });
+
+        $(document).on('click', '.contact-delete', function (e) {
+            var contactId = $(this).attr("href").split('-')[1];
+            DeleteContact(contactId)
         });
 
         $(document).on('click', '.template-edit', function (e) {

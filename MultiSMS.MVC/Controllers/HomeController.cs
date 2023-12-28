@@ -92,8 +92,12 @@ namespace MultiSMS.MVC.Controllers
         public async Task DeleteTemplate(int id)
         {
             await _smsTemplateRepository.DeleteEntityAsync(id);
+        }
 
-
+        [HttpGet]
+        public async Task DeleteContact(int id)
+        {
+            await _employeeRepository.DeleteEntityAsync(id);
         }
 
         [HttpGet]
