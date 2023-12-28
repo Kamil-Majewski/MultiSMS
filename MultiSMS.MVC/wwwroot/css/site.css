@@ -10,6 +10,11 @@ html {
     
 }
 
+.contacts-options-container{
+    display: flex;
+    justify-content: center;
+}
+
 .list-header {
     display: flex;
     justify-content: space-between;
@@ -38,6 +43,13 @@ html {
     outline: none;
 }
 
+.form-subtitle {
+    color: #5a6372;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    font-size: 17px;
+}
+
 .option-name {
     font-weight: 600;
     font-family: 'Open Sans', sans-serif;
@@ -57,6 +69,14 @@ html {
     background-color: white;
     border-radius: 10px;
     border: 3px solid #f0f1f1;
+}
+
+.option-content {
+    background-color: white;
+    border-radius: 10px;
+    border: 3px solid #f0f1f1;
+    max-width: 550px;
+    min-width: 307px;
 }
 
 tr td {

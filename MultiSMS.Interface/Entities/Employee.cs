@@ -11,7 +11,8 @@ namespace MultiSMS.Interface.Entities
         public string Email { get; set; } = default!;
         public PhoneNumber PhoneNumber { get; set; } = default!;
         public string? Department { get; set; }
-        public int? DepartmentNumber { get; set; }
+        public string? PostalNumber { get; set; }
+        public string? City { get; set; }
         public string? HQAddress { get; set; }
         public bool IsActive { get; set; }
         public ICollection<EmployeesRole> EmployeeRole { get; set; } = default!;
