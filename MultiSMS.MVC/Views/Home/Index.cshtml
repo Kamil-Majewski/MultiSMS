@@ -722,16 +722,26 @@
         });
 
         $("#ContactPostalNumber").on('input', function () {
-            var inputValue = $(this).val();
-            if(inputValue.length == 2){
-                inputValue += '-';
-                $(this).val(inputValue);
+
+            if (event.inputType === 'deleteContentBackward') {
+                return;
             }
+
+            var inputValue = $(this).val();
+            var sanitizedValue = inputValue.replace(/[^0-9]/g, '');
+
+            var formattedValue = sanitizedValue.replace(/(\S{2})/, '$1-');
+            $(this).val(formattedValue);
+            
 
         });
 
         var phoneInput = document.getElementById("contactPhoneNumber");
         phoneInput.addEventListener('input', function () {
+
+            if (event.inputType === 'deleteContentBackward') {
+                return;
+            }
 
             var inputValue = phoneInput.value;
             var sanitizedValue = inputValue.replace(/[^0-9+]/g, '');
