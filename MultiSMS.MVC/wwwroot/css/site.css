@@ -10,14 +10,11 @@ html {
     
 }
 
-.contacts-options-container{
-    display: flex;
-    justify-content: center;
-}
 
-.templates-options-container {
+.options-container {
     display: flex;
     justify-content: center;
+    margin: 20px
 }
 
 .list-header {
