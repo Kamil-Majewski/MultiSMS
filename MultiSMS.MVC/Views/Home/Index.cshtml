@@ -723,15 +723,21 @@
 
         $("#ContactPostalNumber").on('input', function () {
 
-            if (event.inputType === 'deleteContentBackward') {
+            if (event.inputType === 'deleteContentBackward' || event.inputType === 'deleteContentForward') {
                 return;
             }
 
             var inputValue = $(this).val();
+            var cursorPosition = this.selectionStart;
+
             var sanitizedValue = inputValue.replace(/[^0-9]/g, '');
 
             var formattedValue = sanitizedValue.replace(/(\S{2})/, '$1-');
+            var lengthDiff = formattedValue.length - inputValue.length;
+
             $(this).val(formattedValue);
+
+            this.setSelectionRange(cursorPosition + lengthDiff, cursorPosition + lengthDiff);
             
 
         });
@@ -739,16 +745,21 @@
         var phoneInput = document.getElementById("contactPhoneNumber");
         phoneInput.addEventListener('input', function () {
 
-            if (event.inputType === 'deleteContentBackward') {
+            if (event.inputType === 'deleteContentBackward' || event.inputType === 'deleteContentForward') {
                 return;
             }
 
             var inputValue = phoneInput.value;
+            var cursorPosition = phoneInput.selectionStart;
+
             var sanitizedValue = inputValue.replace(/[^0-9+]/g, '');
 
             var formattedValue = sanitizedValue.replace(/(\S{3})/g, '$1 ').trim();
+            var lengthDiff = formattedValue.length - inputValue.length;
             
             phoneInput.value = formattedValue; 
+
+            phoneInput.setSelectionRange(cursorPosition + lengthDiff, cursorPosition + lengthDiff);
         });
 
         messageEle.addEventListener('input', function (e) {
