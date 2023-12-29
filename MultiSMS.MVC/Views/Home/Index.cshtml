@@ -55,13 +55,13 @@
                             <div class="row">
                                 <div class="col">
                                     <label for="TemplateName">Nazwa szablonu *</label>
-                                    <input type="text" class="form-input" id="templateNameInput" required />
+                                    <input type="text" class="form-input" id="templateNameInput" required maxlength="20"/>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col">
                                     <label for="TemplateDescription">Opis</label>
-                                    <input type="text" class="form-input" id="templateDescriptionInput" />
+                                    <input type="text" class="form-input" id="templateDescriptionInput" maxlength="35" />
                                 </div>
                             </div>
                             <div class="row">
@@ -133,17 +133,17 @@
                                     <div class="row">
                                         <div class="col">
                                             <label for="ContactName">Imię *</label>
-                                            <input type="text" class="form-input" id="contactNameInput" required>
+                                            <input type="text" class="form-input" id="contactNameInput" required maxlength="20">
                                         </div>
                                         <div class="col">
                                             <label for="ContactSurname">Nazwisko *</label>
-                                            <input type="text" class="form-input" id="contactSurnameInput" required>
+                                            <input type="text" class="form-input" id="contactSurnameInput" required maxlength="20">
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col">
                                             <label for="ContactEmail">Email *</label>
-                                            <input type="text" class="form-input" id="contactEmail" required>
+                                            <input type="email" class="form-input" id="contactEmail" required maxlength="30">
                                         </div>
                                     </div>  
                                 </div>
@@ -155,29 +155,29 @@
                                     <div class="row">
                                         <div class="col">
                                             <label for="ContactPhone">Numer telefonu *</label>
-                                            <input type="text" class="form-input" id="contactPhoneNumber" required>
+                                            <input type="tel" class="form-input" id="contactPhoneNumber" required maxlength="15" minlength="11" pattern="^(\+[0-9]{2} )?\d{3} \d{3} \d{3}$" placeholder="XXX XXX XXX lub +XX XXX XXX XXX">
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col">
                                             <label for="contactHQAddress">Adres miejsca pracy</label>
-                                            <input type="text" class="form-input" id="contactHQAddress">
+                                            <input type="text" class="form-input" id="contactHQAddress" maxlength="50">
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col">
                                             <label for="ContactPostalNumber">Kod pocztowy</label>
-                                            <input type="text" class="form-input" id="ContactPostalNumber">
+                                            <input type="text" class="form-input" id="ContactPostalNumber" pattern="[0-9]{2}-[0-9]{3}">
                                         </div>
                                         <div class="col" style="flex-grow: 3;">
                                             <label for="ContactCity">Miasto</label>
-                                            <input type="text" class="form-input" id="ContactCity">
+                                            <input type="text" class="form-input" id="ContactCity" maxlength="20">
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col" style="flex-grow:3;">
                                             <label for="contactDepartment">Jednostka organizacyjna</label>
-                                            <input type="text" class="form-input" id="contactDepartment">
+                                            <input type="text" class="form-input" id="contactDepartment" maxlength="100">
                                         </div>
                                     </div>
                                 </div>
