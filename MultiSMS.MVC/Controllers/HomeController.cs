@@ -10,10 +10,12 @@ namespace MultiSMS.MVC.Controllers
     {
         private readonly ISMSMessageTemplateRepository _smsTemplateRepository;
         private readonly IEmployeeRepository _employeeRepository;
-        public HomeController(ISMSMessageTemplateRepository smsTemplateRepository, IEmployeeRepository employeeRepository)
+        private readonly IEmployeesGroupRepository _groupRepository;
+        public HomeController(ISMSMessageTemplateRepository smsTemplateRepository, IEmployeeRepository employeeRepository, IEmployeesGroupRepository groupRepository)
         {
             _smsTemplateRepository = smsTemplateRepository;
             _employeeRepository = employeeRepository;
+            _groupRepository = groupRepository;
         }
         public IActionResult Index()
         {
@@ -29,6 +31,38 @@ namespace MultiSMS.MVC.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> CreateNewContact(string contactName, string contactSurname, string email, string phone, string address, string zip, string city, string department, bool isActive)
+        {
+            var contact = new Employee
+            {
+                Name = contactName,
+                Surname = contactSurname,
+                Email = email,
+                PhoneNumber = phone,
+                HQAddress = address,
+                PostalNumber = zip,
+                City = city,
+                Department = department,
+                IsActive = isActive,
+                EmployeeRole = null,
+                EmployeesGroup = null
+            };
+            await _employeeRepository.AddEntityToDatabaseAsync(contact);
+
+            return Json(contact.Name);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateNewGroup(string groupName, string groupDescription)
+        {
+            var group = new EmployeesGroup() { GroupName = groupName, GroupDescription = groupDescription };
+            await _groupRepository.AddEntityToDatabaseAsync(group);
+            return Json(group.GroupName);
+        }
+
+
+
+        [HttpGet]
         public async Task<IActionResult> FetchAllTemplates()
         {
             var templates = await Task.FromResult(_smsTemplateRepository.GetAllEntries());
@@ -40,6 +74,13 @@ namespace MultiSMS.MVC.Controllers
         {
             var contacts = await Task.FromResult(_employeeRepository.GetAllEntries());
             return Json(contacts);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> FetchAllGroups()
+        {
+            var groups = await Task.FromResult(_groupRepository.GetAllEntries());
+            return Json(groups);
         }
 
         [HttpGet]
@@ -99,31 +140,6 @@ namespace MultiSMS.MVC.Controllers
         {
             await _employeeRepository.DeleteEntityAsync(id);
         }
-
-        [HttpGet]
-        public async Task<IActionResult> CreateNewContact(string contactName, string contactSurname, string email, string phone, string address, string zip, string city, string department, bool isActive)
-        {
-            var contact = new Employee
-            {
-                Name = contactName,
-                Surname = contactSurname,
-                Email = email,
-                PhoneNumber = phone,
-                HQAddress = address,
-                PostalNumber = zip,
-                City = city,
-                Department = department,
-                IsActive = isActive,
-                EmployeeRole = null,
-                EmployeesGroup = null
-            };
-            await _employeeRepository.AddEntityToDatabaseAsync(contact);
-
-            return Json(contact.Name);
-        }
-      
-            
-        
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

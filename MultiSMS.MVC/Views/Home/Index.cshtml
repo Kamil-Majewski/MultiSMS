@@ -184,13 +184,6 @@
                             </div>
                             <hr />
                             <div class="other-data" style="margin-top: 20px;">
-                                @*<div class="pill-container" id="pillContainer"></div>
-
-                                 <div class="dropdown">
-                                    <input type="text" class="search-input" oninput="showDropdown(this.value)" placeholder="Search...">
-                                    <div class="dropdown-content" id="dropdownContent"></div>
-                                </div> *@
-
                                 <div class="form-group">
                                     <label for="contactIsActive" style="width:100%;">Czy kontakt obecnie jest zatrudniony?</label>
                                     <div class="form-check form-check-inline" style="margin-bottom: 8px;">
@@ -204,18 +197,6 @@
                                         <label class="form-check-label" for="IsActiveNo">
                                             Nie
                                         </label>    
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <label for="contactRoles">Przypisz role</label>
-                                            <input type="text" class="form-input" id="contactRoles">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <label for="contactGroups">Przypisz grupy</label>
-                                            <input type="text" class="form-input" id="contactGroups">
-                                        </div>
                                     </div> 
                                 </div>
                             </div>
@@ -228,10 +209,10 @@
             </div>
         </div>
         <div class="tab-pane" id="groups">
-            <div class="groups-container list-container">
+            <div class="groups-list-container list-container">
                 <div class="list-header">
                     <div class="list-header-left">
-                        <button class="add-new-button violet-button" type="button">Dodaj nową</button>
+                        <button class="add-new-button violet-button" type="button" onclick="OpenCreateGroupWindow()">Dodaj nową</button>
                     </div>
                     <div class="list-search-bar d-flex">
                         <input class="search-for group-search" placeholder="Wyszukaj grupę" />
@@ -244,7 +225,7 @@
                                 <tr>
                                     <th scope="col">Nazwa</th>
                                     <th scope="col">Opis</th>
-                                    <th scope="col">Liczba członków</th>
+                                    <th class="tiny-centered-cell">Liczba członków</th>
                                     <th class="centered-cell" scope="col">Opcje</th>
                                 </tr>
                             </thead>
@@ -258,7 +239,7 @@
                 <div class="option-content">
                     <div class="options-header">
                         <div class="previous-page" style="flex:1;">
-                            <button class="violet-button" id="groups-previous-button" type="button" style="display: flex; align-items:center;">
+                            <button class="violet-button" id="groups-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToGroupList()">
                                 <span style="max-width:24px;"><img src="~/icons/previous.png" /></span>
                                 <span>Powrót</span>
                             </button>
@@ -273,7 +254,7 @@
                             <div class="row">
                                 <div class="col">
                                     <label for="groupNameInput">Nazwa grupy *</label>
-                                    <input type="text" class="form-input" id="groupNameInput" required maxlength="20" />
+                                    <input type="text" class="form-input" id="groupNameInput" required maxlength="30" />
                                 </div>
                             </div>
                             <div class="row">
@@ -303,51 +284,6 @@
         </div>
     </div>
 </div>
-
-@* <style>
-    .pill-container {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-    }
-
-    .pill {
-        margin: 5px;
-        padding: 5px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    .search-input {
-        width: 200px;
-        margin-right: 10px;
-    }
-
-    .dropdown {
-        position: relative;
-        display: inline-block;
-    }
-
-    .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: #f9f9f9;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        z-index: 1;
-    }
-
-    .dropdown-content a {
-        padding: 12px 16px;
-        display: block;
-        cursor: pointer;
-    }
-
-    .dropdown-content a:hover {
-        background-color: #f1f1f1;
-    }
-</style> *@
-
 
 <script defer>
 
@@ -521,6 +457,38 @@
         })
     }
 
+    function FetchAllGroupsAndPopulateTable() {
+        $.ajax({
+            url: '@Url.Action("FetchAllGroups", "Home")',
+            type: 'GET',
+            contentType: 'application/json',
+            success: function (listOfGroups) {
+                console.log("Successfully retrieved groups")
+                $('.group-list tbody').empty();
+
+                $.each(listOfGroups, function (index, item) {
+                    var newRow = '<tr>' +
+                        '<td class="small-cell">' + item.groupName + '</td>' +
+                        '<td class="big-cell">' + item.groupDescription + '</td>' +
+                        '<td class="tiny-centered-cell">' + item.groupMembers.length + '</td>' +
+                        '<td class="centered-cell">' +
+                        '<a href="#details-' + item.groupId + '" class="icon-list group-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>' +
+                        '<a href="#edit-' + item.groupId + '" class="icon-list group-edit"><img src="/icons/edit.png" title="Edytuj"/></a>' +
+                        '<a href="#delete-' + item.groupId + '" class="icon-list group-delete"><img src="/icons/trash.png" title="Usuń"/></a>' +
+                        '</td>' +
+                        '</tr>';
+
+
+                    $('.group-list tbody').append(newRow);
+                });
+
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        })
+    }
+
     function CreateNewTemplate() {
         let name = $("#templateNameInput").val();
         let description = $("#templateDescriptionInput").val();
@@ -569,6 +537,25 @@
         });
     }
 
+    function CreateNewGroup() {
+        let name = $("#groupNameInput").val();
+        let description = $("#groupDescriptionInput").val();
+
+        $.ajax({
+            url: '@Url.Action("CreateNewGroup", "Home")',
+            type: 'GET',
+            contentType: 'application/json',
+            data: { groupName: name, groupDescription: description},
+            success: function (groupName) {
+                FetchAllGroupsAndPopulateTable();
+                console.log("Successfully added new template: " + groupName)
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+
     function OpenCreateTemplateWindow(){
         const messageEle = document.getElementById('templateContentInput');
         document.getElementById('symbolCounterAdd').innerHTML = messageEle.value.length + "/" + messageEle.getAttribute('maxlength');
@@ -588,6 +575,14 @@
         $(".contacts-options-container").show();
     }
 
+    function OpenCreateGroupWindow() {
+        $("#group-input-window-title").html("Nowa grupa")
+        $(".group-options-form").attr('id', 'create-group-form');
+        $("#createOrEditButtonGroups").html("Utwórz");
+        $(".groups-list-container").hide();
+        $(".groups-options-container").show();
+    }
+
 
     function GoBackToTemplateList() {
         $("#createOrEditButtonTemplates").removeAttr("data-id");
@@ -602,8 +597,13 @@
         $(".contact-options-form :input").val('');
         $(".contacts-options-container").hide();
         $(".contacts-list-container").show();
-        
+    }
 
+    function GoBackToGroupList() {
+        $(".group-options-form").removeAttr('id');
+        $(".group-options-form :input").val('');
+        $(".groups-options-container").hide();
+        $(".groups-list-container").show();
     }
 
     $(document).ready(function () {
@@ -611,6 +611,7 @@
         const counterEle = document.getElementById('symbolCounterAdd');
         FetchAllTemplatesAndPopulateTable();
         FetchAllContactsAndPopulateTable();
+        FetchAllGroupsAndPopulateTable();
 
         $(document).on('click', '.template-delete', function (e) {
             var templateId = $(this).attr("href").split('-')[1];
@@ -714,6 +715,21 @@
             CreateNewContact();
             GoBackToContactList();
             $(".contact-options-form :input").val('');
+
+        });
+
+        $(document).on('submit', '#create-group-form', function (e) {
+            var form = document.getElementById("create-group-form");
+            e.preventDefault();
+
+            if (form.checkValidity() === false) {
+                form.reportValidity()
+                return
+            }
+
+            CreateNewGroup();
+            GoBackToGroupList();
+            $(".group-options-form :input").val('');
 
         });
 

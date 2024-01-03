@@ -9,6 +9,7 @@ namespace MultiSMS.Interface.Entities
         public int EmployeeId { get; set; }
         public string Name { get; set; } = default!;
         public string Surname { get; set; } = default!;
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; } = default!;
         [DataType(DataType.PhoneNumber)]
         public string PhoneNumber { get; set; } = default!;
