@@ -331,8 +331,8 @@
             type: 'GET',
             contentType: 'application/json',
             data: { id: templateId ,name: templateName, description: templateDescription, content: templateContent },
-            success: function (template) {
-                console.log("Successfully edited template " + template.templateName)
+            success: function (templateName) {
+                console.log("Successfully edited template " + templateName)
                 FetchAllTemplatesAndPopulateTable();
                 
             },
@@ -365,6 +365,25 @@
                 console.log("Successfully edited contact " + contactName)
                 FetchAllContactsAndPopulateTable();
 
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+
+    function EditGroup() {
+        var groupId = $("#createOrEditButtonGroups").attr('data-id');
+        var groupName = $("#groupNameInput").val();
+        var groupDescription = $("#groupDescriptionInput").val();
+        $.ajax({
+            url: '@Url.Action("EditGroup", "Home")',
+            type: 'GET',
+            contentType: 'application/json',
+            data: { id: groupId, name: groupName, description: groupDescription},
+            success: function (groupName) {
+                console.log("Successfully edited group " + groupName)
+                FetchAllGroupsAndPopulateTable();
             },
             error: function (error) {
                 console.error(error);
@@ -576,6 +595,8 @@
     }
 
     function OpenCreateGroupWindow() {
+        const messageEle = document.getElementById('groupDescriptionInput');
+        document.getElementById('symbolCounterAddGroups').innerHTML = messageEle.value.length + "/" + messageEle.getAttribute('maxlength');
         $("#group-input-window-title").html("Nowa grupa")
         $(".group-options-form").attr('id', 'create-group-form');
         $("#createOrEditButtonGroups").html("Utwórz");
@@ -607,8 +628,6 @@
     }
 
     $(document).ready(function () {
-        const messageEle = document.getElementById('templateContentInput');
-        const counterEle = document.getElementById('symbolCounterAdd');
         FetchAllTemplatesAndPopulateTable();
         FetchAllContactsAndPopulateTable();
         FetchAllGroupsAndPopulateTable();
@@ -621,6 +640,11 @@
         $(document).on('click', '.contact-delete', function (e) {
             var contactId = $(this).attr("href").split('-')[1];
             DeleteContact(contactId)
+        });
+
+        $(document).on('click', '.group-delete', function (e) {
+            var groupId = $(this).attr("href").split('-')[1];
+            DeleteGroup(groupId)
         });
 
         $(document).on('click', '.template-edit', function (e) {
@@ -681,6 +705,35 @@
                     $("#createOrEditButtonContacts").html("Zatwierdź edycję");
                     $(".contacts-options-container").show();
                     $(".contacts-list-container").hide();
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        });
+
+        $(document).on('click', '.group-edit', function (e) {
+            var groupId = $(this).attr("href").split('-')[1];
+
+            $.ajax({
+                url: '@Url.Action("GetGroupById", "Home")',
+                type: 'GET',
+                data: { id: groupId },
+
+                contentType: 'application/json',
+                success: function (groupEntity) {
+
+                    $("#createOrEditButtonGroups").attr("data-id", groupEntity.groupId)
+                    $("#groupNameInput").val(groupEntity.groupName);
+                    $("#groupDescriptionInput").val(groupEntity.groupDescription);
+                    const messageEle = document.getElementById('groupDescriptionInput');
+                    document.getElementById('symbolCounterAddGroups').innerHTML = messageEle.value.length + "/" + messageEle.getAttribute('maxlength');
+
+                    $("#group-input-window-title").html("Edytuj grupę")
+                    $(".group-options-form").attr('id', 'edit-group-form');
+                    $("#createOrEditButtonGroups").html("Zatwierdź edycję");
+                    $(".groups-list-container").hide();
+                    $(".groups-options-container").show();
                 },
                 error: function (error) {
                     console.error(error);
@@ -761,6 +814,20 @@
 
         });
 
+        $(document).on('submit', '#edit-group-form', function (e) {
+            var form = document.getElementById("edit-group-form");
+            e.preventDefault();
+
+            if (form.checkValidity() === false) {
+                form.reportValidity()
+                return
+            }
+
+            EditGroup();
+            GoBackToGroupList();
+
+        });
+
         $(".template-search").on('input', function () {
 
             var filterText = $(this).val().toLowerCase();
@@ -795,6 +862,23 @@
             });
         });
 
+        $(".group-search").on('input', function () {
+
+            var filterText = $(this).val().toLowerCase();
+
+            $('#group-table tbody tr').each(function () {
+                var rowHit = false;
+                $(this).find('td').each(function () {
+                    if ($(this).text().toLowerCase().includes(filterText)) {
+                        rowHit = true;
+                        return false;
+                    }
+                });
+
+                $(this).toggle(rowHit);
+            });
+        });
+
         $("#ContactPostalNumber").on('input', function () {
 
             if (event.inputType === 'deleteContentBackward' || event.inputType === 'deleteContentForward') {
@@ -816,8 +900,8 @@
 
         });
 
-        var phoneInput = document.getElementById("contactPhoneNumber");
-        phoneInput.addEventListener('input', function () {
+        $("#contactPhoneNumber").on('input', function () {
+            var phoneInput = document.getElementById('contactPhoneNumber');
 
             if (event.inputType === 'deleteContentBackward' || event.inputType === 'deleteContentForward') {
                 return;
@@ -836,7 +920,20 @@
             phoneInput.setSelectionRange(cursorPosition + lengthDiff, cursorPosition + lengthDiff);
         });
 
-        messageEle.addEventListener('input', function (e) {
+        
+        $("#templateContentInput").on('input', function (e) {
+            const counterEle = document.getElementById('symbolCounterAdd');
+
+            const target = e.target;
+            const maxLength = target.getAttribute('maxlength');
+            const currentLength = target.value.length;
+
+            counterEle.innerHTML = `${currentLength}/${maxLength}`;
+        });
+
+        $("#groupDescriptionInput").on('input', function (e) {
+            const counterEle = document.getElementById('symbolCounterAddGroups');
+
             const target = e.target;
             const maxLength = target.getAttribute('maxlength');
             const currentLength = target.value.length;

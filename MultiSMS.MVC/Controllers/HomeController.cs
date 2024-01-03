@@ -98,12 +98,19 @@ namespace MultiSMS.MVC.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetGroupById(int id)
+        {
+            var group = await _groupRepository.GetByIdAsync(id);
+            return Json(group);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> EditTemplate(int id, string name, string description, string content)
         {
             var template = new SMSMessageTemplate { TemplateId = id, TemplateName = name, TemplateDescription = description, TemplateContent = content};
             
             await _smsTemplateRepository.UpdateEntityAsync(template);
-            return Json(template);
+            return Json(template.TemplateName);
         }
 
         [HttpGet]
@@ -127,6 +134,15 @@ namespace MultiSMS.MVC.Controllers
 
             await _employeeRepository.UpdateEntityAsync(contact);
             return Json(contact.Name);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditGroup(int id, string name, string description)
+        {
+            var group = new EmployeesGroup { GroupId = id, GroupName = name, GroupDescription = description};
+
+            await _groupRepository.UpdateEntityAsync(group);
+            return Json(group.GroupName);
         }
 
         [HttpGet]
