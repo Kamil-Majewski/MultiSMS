@@ -145,7 +145,7 @@
                                             <label for="ContactEmail">Email *</label>
                                             <input type="email" class="form-input" id="contactEmail" required maxlength="30">
                                         </div>
-                                    </div>  
+                                    </div>
                                 </div>
                             </div>
                             <hr />
@@ -196,8 +196,8 @@
                                         <input class="check-input" type="radio" name="isActive?" id="isActiveNo" value="no" />
                                         <label class="form-check-label" for="IsActiveNo">
                                             Nie
-                                        </label>    
-                                    </div> 
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                             <div class="justify-content-center d-flex" style="margin-top: 20px;">
@@ -294,7 +294,7 @@
             type: 'GET',
             contentType: 'application/json',
             data: { id: templateId},
-            success: function (template) {
+            success: function () {
                 console.log("Successfully deleted template")
                 FetchAllTemplatesAndPopulateTable();
             },
@@ -311,8 +311,8 @@
             type: 'GET',
             contentType: 'application/json',
             data: { id: contactId },
-            success: function (contactName) {
-                console.log("Successfully deleted template " + contactName)
+            success: function () {
+                console.log("Successfully deleted contact")
                 FetchAllContactsAndPopulateTable();
             },
             error: function (error) {
@@ -328,8 +328,8 @@
             type: 'GET',
             contentType: 'application/json',
             data: { id: groupId },
-            success: function (groupName) {
-                console.log("Successfully deleted template: " + groupName)
+            success: function () {
+                console.log("Successfully deleted group")
                 FetchAllGroupsAndPopulateTable();
             },
             error: function (error) {
@@ -369,7 +369,7 @@
         let zip = $("#ContactPostalNumber").val();
         let city = $("#ContactCity").val();
         let department = $("#contactDepartment").val();
-        let isActive = true;
+        let isActive = document.querySelector('input[name="isActive?"]:checked').value;
         let assignedRoles = null;
         let assignedGroups = null;
 
@@ -508,6 +508,7 @@
                         '<td class="big-cell">' + item.groupDescription + '</td>' +
                         '<td class="tiny-centered-cell">' + item.groupMembers.length + '</td>' +
                         '<td class="centered-cell">' +
+                        '<a href="#assign-' + item.groupId + '" class="icon-list group-details"><img src="/icons/assign-users.png" title="Przypisz użytkowników"/></a>' +
                         '<a href="#details-' + item.groupId + '" class="icon-list group-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>' +
                         '<a href="#edit-' + item.groupId + '" class="icon-list group-edit"><img src="/icons/edit.png" title="Edytuj"/></a>' +
                         '<a href="#delete-' + item.groupId + '" class="icon-list group-delete"><img src="/icons/trash.png" title="Usuń"/></a>' +
@@ -554,7 +555,7 @@
         let zip = $("#ContactPostalNumber").val();
         let city = $("#ContactCity").val();
         let department = $("#contactDepartment").val();
-        let isActive = true;
+        let isActive = document.querySelector('input[name="isActive?"]:checked').value;
         let assignedRoles = null;
         let assignedGroups = null;
 
@@ -619,6 +620,11 @@
         $("#createOrEditButtonGroups").html("Utwórz");
         $(".groups-list-container").hide();
         $(".groups-options-container").show();
+    }
+
+    function OpenAssignUsersToGroupWindow() {
+        $(".groups-list-container").hide();
+        $(".groups-assign-users").show();
     }
 
 
@@ -704,6 +710,11 @@
 
                 contentType: 'application/json',
                 success: function (contactEnitity) {
+
+                    if(contactEnitity.isActive == false){
+                        document.querySelector('input[name="isActive?"]:checked').checked = false;
+                        document.getElementById("isActiveNo").checked = true;
+                    }
 
                     $("#createOrEditButtonContacts").attr("data-id", contactEnitity.employeeId)
                     $("#contactNameInput").val(contactEnitity.name);

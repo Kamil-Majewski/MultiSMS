@@ -31,8 +31,10 @@ namespace MultiSMS.MVC.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> CreateNewContact(string contactName, string contactSurname, string email, string phone, string address, string zip, string city, string department, bool isActive)
+        public async Task<IActionResult> CreateNewContact(string contactName, string contactSurname, string email, string phone, string address, string zip, string city, string department, string isActive)
         {
+            bool activeValue = isActive == "yes" ? true : false;
+
             var contact = new Employee
             {
                 Name = contactName,
@@ -43,7 +45,7 @@ namespace MultiSMS.MVC.Controllers
                 PostalNumber = zip,
                 City = city,
                 Department = department,
-                IsActive = isActive,
+                IsActive = activeValue,
                 EmployeeRole = null,
                 EmployeesGroup = null
             };
@@ -114,8 +116,10 @@ namespace MultiSMS.MVC.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> EditContact(int contactId, string contactName, string contactSurname, string email, string phone, string address, string zip, string city, string department, bool isActive)
+        public async Task<IActionResult> EditContact(int contactId, string contactName, string contactSurname, string email, string phone, string address, string zip, string city, string department, string isActive)
         {
+            bool activeValue = isActive == "yes" ? true : false;
+
             var contact = new Employee
             {
                 EmployeeId = contactId,
@@ -127,7 +131,7 @@ namespace MultiSMS.MVC.Controllers
                 PostalNumber = zip,
                 City = city,
                 Department = department,
-                IsActive = isActive,
+                IsActive = activeValue,
                 EmployeeRole = null,
                 EmployeesGroup = null
             };
