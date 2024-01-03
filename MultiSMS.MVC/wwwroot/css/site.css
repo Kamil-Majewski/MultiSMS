@@ -59,6 +59,17 @@ html {
     color: #606060;
 }
 
+.option-name-assign {
+    font-weight: 600;
+    font-family: "Open Sans", sans-serif;
+    font-size: 20px;
+    color: rgb(96, 96, 96);
+    background-color: white;
+    border-radius: 5px;
+    padding: 7.5px;
+    border: 2px solid rgb(215, 218, 223);
+}
+
 .list-header-left {
     display: flex;
 }
@@ -333,7 +344,7 @@ tbody {
 .icon {
     max-width: 22px;
     display: inline-block;
-    margin-right: 10px;
+    margin-right: 13px;
     
 }
 

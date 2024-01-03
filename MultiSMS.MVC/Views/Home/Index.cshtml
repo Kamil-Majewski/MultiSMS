@@ -271,6 +271,39 @@
                     </form>
                 </div>
             </div>
+            <div class="groups-options-container-assign list-container">
+                <div class="list-header">
+                    <div class="previous-page">
+                        <button class="violet-button" id="groups-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToGroupList()">
+                            <span style="max-width:24px;"><img src="~/icons/previous.png" /></span>
+                            <span>Powrót</span>
+                        </button>
+                        <span class="option-name-assign" id="group-assign-title" style="margin-left: 20px;">Przypisz użytkowników</span>
+                    </div>
+                    <div class="list-search-bar d-flex">
+                        <input class="search-for group-search-for-user" placeholder="Wyszukaj użytkownika" />
+                    </div>
+                </div>
+                <div class="list-content">
+                    <div class="table-responsive">
+                        <table class="group-assign-contacts-list table table-borderless" id="group-assign-contacts-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Imię</th>
+                                    <th scope="col">Nazwisko</th>
+                                    <th scope="col">Numer telefonu</th>
+                                    <th class="tiny-centered-cell">Status</th>
+                                    <th class="centered-cell">Role</th>
+                                    <th class="centered-cell">Grupy</th>
+                                    <th class="centered-cell" scope="col">Opcje</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="tab-pane" id="roles">
             <div class="d-flex role-container">
@@ -769,6 +802,35 @@
                 }
             });
         });
+
+        // $(document).on('click', '.group-assign', function (e) {
+        //     var groupId = $(this).attr("href").split('-')[1];
+
+        //     $.ajax({
+        //         url: '@Url.Action("GetGroupById", "Home")',
+        //         type: 'GET',
+        //         data: { id: groupId },
+
+        //         contentType: 'application/json',
+        //         success: function (groupEntity) {
+
+        //             $("#createOrEditButtonGroups").attr("data-id", groupEntity.groupId)
+        //             $("#groupNameInput").val(groupEntity.groupName);
+        //             $("#groupDescriptionInput").val(groupEntity.groupDescription);
+        //             const messageEle = document.getElementById('groupDescriptionInput');
+        //             document.getElementById('symbolCounterAddGroups').innerHTML = messageEle.value.length + "/" + messageEle.getAttribute('maxlength');
+
+        //             $("#group-input-window-title").html("Edytuj grupę")
+        //             $(".group-options-form").attr('id', 'edit-group-form');
+        //             $("#createOrEditButtonGroups").html("Zatwierdź edycję");
+        //             $(".groups-list-container").hide();
+        //             $(".groups-options-container").show();
+        //         },
+        //         error: function (error) {
+        //             console.error(error);
+        //         }
+        //     });
+        // });
 
         $(document).on('submit', '#create-template-form', function (e) {
             var form = document.getElementById("create-template-form");
