@@ -321,6 +321,23 @@
         });
     }
 
+    function DeleteGroup(groupId) {
+
+        $.ajax({
+            url: '@Url.Action("DeleteGroup", "Home")',
+            type: 'GET',
+            contentType: 'application/json',
+            data: { id: groupId },
+            success: function (groupName) {
+                console.log("Successfully deleted template: " + groupName)
+                FetchAllGroupsAndPopulateTable();
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+
     function EditTemplate() {
         var templateId = $("#createOrEditButtonTemplates").attr('data-id');
         var templateName = $("#templateNameInput").val();

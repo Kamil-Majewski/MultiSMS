@@ -157,6 +157,12 @@ namespace MultiSMS.MVC.Controllers
             await _employeeRepository.DeleteEntityAsync(id);
         }
 
+        [HttpGet]
+        public async Task DeleteGroup(int id)
+        {
+            await _groupRepository.DeleteEntityAsync(id);
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
