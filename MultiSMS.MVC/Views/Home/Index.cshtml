@@ -271,31 +271,52 @@
                     </form>
                 </div>
             </div>
-            <div class="groups-options-container-assign list-container">
+            <div class="groups-options-container-assign list-container" style="display: none;">
                 <div class="list-header">
-                    <div class="previous-page">
+                    <div class="previous-page" style="flex:1;">
                         <button class="violet-button" id="groups-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToGroupList()">
                             <span style="max-width:24px;"><img src="~/icons/previous.png" /></span>
                             <span>Powrót</span>
                         </button>
-                        <span class="option-name-assign" id="group-assign-title" style="margin-left: 20px;">Przypisz użytkowników</span>
                     </div>
+                    <div class="option-name" style="flex:auto; text-align:center;">
+                        <span class="opion-name-placeholder" id="group-asssign-window-title">Przypisz użytkowników w wybranej grupie</span>
+                    </div>
+                    <div style="flex:1;"></div>
+                </div>
+                <div class="list-content" style="margin-bottom: 30px;">
+                    <div class="table-responsive">
+                        <table class="group-assign-chosen-group table table-borderless" id="group-assign-chosen-group-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Nazwa</th>
+                                    <th scope="col">Opis</th>
+                                    <th class="tiny-centered-cell">Liczba członków</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="list-header">
+                    <div></div>
                     <div class="list-search-bar d-flex">
                         <input class="search-for group-search-for-user" placeholder="Wyszukaj użytkownika" />
                     </div>
                 </div>
                 <div class="list-content">
                     <div class="table-responsive">
-                        <table class="group-assign-contacts-list table table-borderless" id="group-assign-contacts-table">
+                        <table class="group-assign-contact-list table table-borderless" id="group-assign-contact-list-table">
                             <thead>
                                 <tr>
                                     <th scope="col">Imię</th>
                                     <th scope="col">Nazwisko</th>
+                                    <th scope="col">Email</th>
                                     <th scope="col">Numer telefonu</th>
                                     <th class="tiny-centered-cell">Status</th>
-                                    <th class="centered-cell">Role</th>
                                     <th class="centered-cell">Grupy</th>
-                                    <th class="centered-cell" scope="col">Opcje</th>
+                                    <th class="tiny-centered-cell" scope="col">Akcja</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -656,12 +677,6 @@
         $(".groups-options-container").show();
     }
 
-    function OpenAssignUsersToGroupWindow() {
-        $(".groups-list-container").hide();
-        $(".groups-assign-users").show();
-    }
-
-
     function GoBackToTemplateList() {
         $("#createOrEditButtonTemplates").removeAttr("data-id");
         $(".templates-list-container").show();
@@ -681,6 +696,7 @@
         $(".group-options-form").removeAttr('id');
         $(".group-options-form :input").val('');
         $(".groups-options-container").hide();
+        $(".groups-options-container-assign").hide();
         $(".groups-list-container").show();
     }
 
@@ -803,34 +819,85 @@
             });
         });
 
-        // $(document).on('click', '.group-assign', function (e) {
-        //     var groupId = $(this).attr("href").split('-')[1];
+        $(document).on('click', '.group-assign', function (e) {
+            var groupId = $(this).attr("href").split('-')[1];
 
-        //     $.ajax({
-        //         url: '@Url.Action("GetGroupById", "Home")',
-        //         type: 'GET',
-        //         data: { id: groupId },
+            $.ajax({
+                url: '@Url.Action("GetGroupById", "Home")',
+                type: 'GET',
+                data: { id: groupId },
 
-        //         contentType: 'application/json',
-        //         success: function (groupEntity) {
+                contentType: 'application/json',
+                success: function (groupEntity) {
+                    $("#group-assign-chosen-group-table tbody").empty();
+                    var newRow = '<tr>' +
+                        '<td class="small-cell">' + groupEntity.groupName + '</td>' +
+                        '<td class="big-cell">' + groupEntity.groupDescription + '</td>' +
+                        '<td class="tiny-centered-cell">' + groupEntity.groupMembers.length + '</td>' +
+                        '</tr>';
 
-        //             $("#createOrEditButtonGroups").attr("data-id", groupEntity.groupId)
-        //             $("#groupNameInput").val(groupEntity.groupName);
-        //             $("#groupDescriptionInput").val(groupEntity.groupDescription);
-        //             const messageEle = document.getElementById('groupDescriptionInput');
-        //             document.getElementById('symbolCounterAddGroups').innerHTML = messageEle.value.length + "/" + messageEle.getAttribute('maxlength');
+                    $('#group-assign-chosen-group-table').append(newRow);
 
-        //             $("#group-input-window-title").html("Edytuj grupę")
-        //             $(".group-options-form").attr('id', 'edit-group-form');
-        //             $("#createOrEditButtonGroups").html("Zatwierdź edycję");
-        //             $(".groups-list-container").hide();
-        //             $(".groups-options-container").show();
-        //         },
-        //         error: function (error) {
-        //             console.error(error);
-        //         }
-        //     });
-        // });
+                    $.ajax({
+                        url: '@Url.Action("FetchAllContacts", "Home")',
+                        type: 'GET',
+                        contentType: 'application/json',
+                        success: function (listOfContacts) {
+
+                            $('#group-assign-contact-list-table tbody').empty();
+
+                            $.each(listOfContacts, function (index, item) {
+
+                                var group = item.employeesGroup;
+
+                                if (item.employeesGroup = 'null') {
+                                    group = "Nie przypisano";
+                                }
+
+                                var newRow = '<tr>' +
+                                    '<td class="tiny-cell">' + item.name + '</td>' +
+                                    '<td class="tiny-cell">' + item.surname + '</td>' +
+                                    '<td class="small-cell">' + item.email + '</td>' +
+                                    '<td class="tiny-cell">' + item.phoneNumber + '</td>';
+
+                                if (item.isActive == true) {
+                                    newRow += '<td class="tiny-centered-cell"><span class="active-pill">Aktywny<span></td>';
+                                }
+                                else {
+                                    newRow += '<td class="tiny-centered-cell"><span class="inactive-pill">Nieaktywny<span></td>';
+                                }
+
+                                newRow += '<td class="centered-cell">' + group + '</td>' +
+                                    '<td class="tiny-centered-cell">';
+
+                                if (groupEntity.groupMembers.includes(item)) {
+
+                                    newRow += '<a href="#unassign-' + item.employeeId + '-' + groupEntity.groupId + '" class="icon-list contact-unassign"><img src="/icons/unassign-user.png" title="Wypisz z grupy"/></a>' +
+                                        '</td>' +
+                                        '</tr>';
+                                }
+                                else {
+                                    newRow += '<a href="#assign-' + item.employeeId + '-' + groupEntity.groupId + '" class="icon-list contact-unassign" > <img src="/icons/assign-user.png" title = "Dopisz do grupy" /> </a>' +
+                                        '</td>' +
+                                        '</tr>';
+                                }
+
+                                $('#group-assign-contact-list-table tbody').append(newRow);
+                            });
+                        },
+                        error: function (error) {
+                            console.error(error);
+                        }
+                    });
+
+                    $(".groups-list-container").hide();
+                    $(".groups-options-container-assign").show();
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        });
 
         $(document).on('submit', '#create-template-form', function (e) {
             var form = document.getElementById("create-template-form");
