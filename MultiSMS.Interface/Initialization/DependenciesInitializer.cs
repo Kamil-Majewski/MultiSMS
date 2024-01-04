@@ -9,7 +9,7 @@ namespace MultiSMS.Interface.Initialization
         public static void InitializeMultiSMSInfrastructureDependencies(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IEmployeeRepository, EmployeeRepository>();
-            serviceCollection.AddScoped<IEmployeesGroupRepository, EmployeesGroupRepository>();
+            serviceCollection.AddScoped<IGroupRepository, GroupRepository>();
             serviceCollection.AddScoped<ISMSMessageTemplateRepository, SMSMessageTemplateRepository>();
             serviceCollection.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         }

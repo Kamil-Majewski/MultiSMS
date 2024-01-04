@@ -9,10 +9,11 @@ namespace MultiSMS.Interface
     public class MultiSMSDbContext : IdentityDbContext<Administrator, IdentityRole<int>, int>
     {
         public virtual DbSet<Employee> Employees { get; set; }
-        public virtual DbSet<EmployeesGroup> EmployeeGroups { get; set; }
-        public virtual DbSet<EmployeesRole> EmployeeRoles { get; set; }
-        public virtual DbSet<SMSMessage> SMSMessageLogs { get; set; }
+        public virtual DbSet<Group> Groups { get; set; }
         public virtual DbSet<SMSMessageTemplate> SMSMessageTemplates { get; set; }
+        public virtual DbSet<Log> Logs { get; set; }
+        public virtual DbSet<SMSMessage > SMSMessages { get; set; }
+        public virtual DbSet<EmployeeGroup> EmployeeGroups { get; set; }
 
         public MultiSMSDbContext(DbContextOptions options) : base(options)
         {

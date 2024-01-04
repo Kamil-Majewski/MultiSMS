@@ -580,6 +580,84 @@
         })
     }
 
+    function PopulateTablesForAssigningUsersToGroups(groupId) {
+        $.ajax({
+            url: '@Url.Action("GetGroupById", "Home")',
+            type: 'GET',
+            data: { id: groupId },
+
+            contentType: 'application/json',
+            success: function (groupEntity) {
+                $("#group-assign-chosen-group-table tbody").empty();
+                var newRow = '<tr>' +
+                    '<td class="small-cell">' + groupEntity.groupName + '</td>' +
+                    '<td class="big-cell">' + groupEntity.groupDescription + '</td>' +
+                    '<td class="tiny-centered-cell">' + groupEntity.groupMembers.length + '</td>' +
+                    '</tr>';
+
+                $('#group-assign-chosen-group-table').append(newRow);
+
+                $.ajax({
+                    url: '@Url.Action("FetchAllContacts", "Home")',
+                    type: 'GET',
+                    contentType: 'application/json',
+                    success: function (listOfContacts) {
+
+                        $('#group-assign-contact-list-table tbody').empty();
+
+                        $.each(listOfContacts, function (index, item) {
+
+                            var group = item.employeesGroup;
+
+                            if (item.employeesGroup = 'null') {
+                                group = "Nie przypisano";
+                            }
+
+                            var newRow = '<tr>' +
+                                '<td class="tiny-cell">' + item.name + '</td>' +
+                                '<td class="tiny-cell">' + item.surname + '</td>' +
+                                '<td class="small-cell">' + item.email + '</td>' +
+                                '<td class="tiny-cell">' + item.phoneNumber + '</td>';
+
+                            if (item.isActive == true) {
+                                newRow += '<td class="tiny-centered-cell"><span class="active-pill">Aktywny<span></td>';
+                            }
+                            else {
+                                newRow += '<td class="tiny-centered-cell"><span class="inactive-pill">Nieaktywny<span></td>';
+                            }
+
+                            newRow += '<td class="centered-cell">' + group + '</td>' +
+                                '<td class="tiny-centered-cell">';
+
+                            if (groupEntity.groupMembers.includes(item)) {
+
+                                newRow += '<a href="#unassign-' + item.employeeId + '-' + groupEntity.groupId + '" class="icon-list contact-unassign"><img src="/icons/unassign-user.png" title="Wypisz z grupy"/></a>' +
+                                    '</td>' +
+                                    '</tr>';
+                            }
+                            else {
+                                newRow += '<a href="#assign-' + item.employeeId + '-' + groupEntity.groupId + '" class="icon-list contact-assign" > <img src="/icons/assign-user.png" title = "Dopisz do grupy" /> </a>' +
+                                    '</td>' +
+                                    '</tr>';
+                            }
+
+                            $('#group-assign-contact-list-table tbody').append(newRow);
+                        });
+                    },
+                    error: function (error) {
+                        console.error(error);
+                    }
+                });
+
+                $(".groups-list-container").hide();
+                $(".groups-options-container-assign").show();
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+
     function CreateNewTemplate() {
         let name = $("#templateNameInput").val();
         let description = $("#templateDescriptionInput").val();
@@ -821,84 +899,27 @@
 
         $(document).on('click', '.group-assign', function (e) {
             var groupId = $(this).attr("href").split('-')[1];
+            PopulateTablesForAssigningUsersToGroups(groupId)
+        });
+
+        $(document).on('click', '.contact-assign', function (e) {
+            var assignContactIdGroupId = $(this).attr("href").split('-');
 
             $.ajax({
-                url: '@Url.Action("GetGroupById", "Home")',
+                url: '@Url.Action("AddUserToGroup", "Home")',
                 type: 'GET',
-                data: { id: groupId },
-
+                data: { groupId: assignContactIdGroupId[2], employeeId: assignContactIdGroupId[1] },
                 contentType: 'application/json',
-                success: function (groupEntity) {
-                    $("#group-assign-chosen-group-table tbody").empty();
-                    var newRow = '<tr>' +
-                        '<td class="small-cell">' + groupEntity.groupName + '</td>' +
-                        '<td class="big-cell">' + groupEntity.groupDescription + '</td>' +
-                        '<td class="tiny-centered-cell">' + groupEntity.groupMembers.length + '</td>' +
-                        '</tr>';
-
-                    $('#group-assign-chosen-group-table').append(newRow);
-
-                    $.ajax({
-                        url: '@Url.Action("FetchAllContacts", "Home")',
-                        type: 'GET',
-                        contentType: 'application/json',
-                        success: function (listOfContacts) {
-
-                            $('#group-assign-contact-list-table tbody').empty();
-
-                            $.each(listOfContacts, function (index, item) {
-
-                                var group = item.employeesGroup;
-
-                                if (item.employeesGroup = 'null') {
-                                    group = "Nie przypisano";
-                                }
-
-                                var newRow = '<tr>' +
-                                    '<td class="tiny-cell">' + item.name + '</td>' +
-                                    '<td class="tiny-cell">' + item.surname + '</td>' +
-                                    '<td class="small-cell">' + item.email + '</td>' +
-                                    '<td class="tiny-cell">' + item.phoneNumber + '</td>';
-
-                                if (item.isActive == true) {
-                                    newRow += '<td class="tiny-centered-cell"><span class="active-pill">Aktywny<span></td>';
-                                }
-                                else {
-                                    newRow += '<td class="tiny-centered-cell"><span class="inactive-pill">Nieaktywny<span></td>';
-                                }
-
-                                newRow += '<td class="centered-cell">' + group + '</td>' +
-                                    '<td class="tiny-centered-cell">';
-
-                                if (groupEntity.groupMembers.includes(item)) {
-
-                                    newRow += '<a href="#unassign-' + item.employeeId + '-' + groupEntity.groupId + '" class="icon-list contact-unassign"><img src="/icons/unassign-user.png" title="Wypisz z grupy"/></a>' +
-                                        '</td>' +
-                                        '</tr>';
-                                }
-                                else {
-                                    newRow += '<a href="#assign-' + item.employeeId + '-' + groupEntity.groupId + '" class="icon-list contact-unassign" > <img src="/icons/assign-user.png" title = "Dopisz do grupy" /> </a>' +
-                                        '</td>' +
-                                        '</tr>';
-                                }
-
-                                $('#group-assign-contact-list-table tbody').append(newRow);
-                            });
-                        },
-                        error: function (error) {
-                            console.error(error);
-                        }
-                    });
-
-                    $(".groups-list-container").hide();
-                    $(".groups-options-container-assign").show();
+                success: function () {
+                    console.log("Successfully added contact to group");
                 },
                 error: function (error) {
                     console.error(error);
                 }
             });
+            PopulateTablesForAssigningUsersToGroups(assignContactIdGroupId[2]);
         });
-
+        contact - assign
         $(document).on('submit', '#create-template-form', function (e) {
             var form = document.getElementById("create-template-form");
             e.preventDefault();

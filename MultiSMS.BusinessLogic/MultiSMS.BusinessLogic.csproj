@@ -13,4 +13,8 @@
     <Folder Include="Services\Interfaces\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MultiSMS.Interface\MultiSMS.Interface.csproj" />
+  </ItemGroup>
+
 </Project>

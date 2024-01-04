@@ -10,8 +10,8 @@ namespace MultiSMS.MVC.Controllers
     {
         private readonly ISMSMessageTemplateRepository _smsTemplateRepository;
         private readonly IEmployeeRepository _employeeRepository;
-        private readonly IEmployeesGroupRepository _groupRepository;
-        public HomeController(ISMSMessageTemplateRepository smsTemplateRepository, IEmployeeRepository employeeRepository, IEmployeesGroupRepository groupRepository)
+        private readonly IGroupRepository _groupRepository;
+        public HomeController(ISMSMessageTemplateRepository smsTemplateRepository, IEmployeeRepository employeeRepository, IGroupRepository groupRepository)
         {
             _smsTemplateRepository = smsTemplateRepository;
             _employeeRepository = employeeRepository;
@@ -46,8 +46,6 @@ namespace MultiSMS.MVC.Controllers
                 City = city,
                 Department = department,
                 IsActive = activeValue,
-                EmployeeRole = null,
-                EmployeesGroup = null
             };
             await _employeeRepository.AddEntityToDatabaseAsync(contact);
 
@@ -57,7 +55,7 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateNewGroup(string groupName, string groupDescription)
         {
-            var group = new EmployeesGroup() { GroupName = groupName, GroupDescription = groupDescription };
+            var group = new Group() { GroupName = groupName, GroupDescription = groupDescription };
             await _groupRepository.AddEntityToDatabaseAsync(group);
             return Json(group.GroupName);
         }
@@ -132,8 +130,6 @@ namespace MultiSMS.MVC.Controllers
                 City = city,
                 Department = department,
                 IsActive = activeValue,
-                EmployeeRole = null,
-                EmployeesGroup = null
             };
 
             await _employeeRepository.UpdateEntityAsync(contact);
@@ -143,7 +139,7 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> EditGroup(int id, string name, string description)
         {
-            var group = new EmployeesGroup { GroupId = id, GroupName = name, GroupDescription = description};
+            var group = new Group { GroupId = id, GroupName = name, GroupDescription = description};
 
             await _groupRepository.UpdateEntityAsync(group);
             return Json(group.GroupName);
