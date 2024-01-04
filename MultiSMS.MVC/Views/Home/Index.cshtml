@@ -326,11 +326,6 @@
                 </div>
             </div>
         </div>
-        <div class="tab-pane" id="roles">
-            <div class="d-flex role-container">
-                role
-            </div>
-        </div>
         <div class="tab-pane" id="logs">
             <div class="d-flex logs-container">
                 logi
@@ -688,8 +683,6 @@
         let city = $("#ContactCity").val();
         let department = $("#contactDepartment").val();
         let isActive = document.querySelector('input[name="isActive?"]:checked').value;
-        let assignedRoles = null;
-        let assignedGroups = null;
 
         $.ajax({
             url: '@Url.Action("CreateNewContact", "Home")',
@@ -919,7 +912,7 @@
             });
             PopulateTablesForAssigningUsersToGroups(assignContactIdGroupId[2]);
         });
-        contact - assign
+
         $(document).on('submit', '#create-template-form', function (e) {
             var form = document.getElementById("create-template-form");
             e.preventDefault();
@@ -946,7 +939,6 @@
 
             CreateNewContact();
             GoBackToContactList();
-            $(".contact-options-form :input").val('');
 
         });
 
