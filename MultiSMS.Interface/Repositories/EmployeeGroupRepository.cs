@@ -29,5 +29,10 @@ namespace MultiSMS.Interface.Repositories
             _dbContext.EmployeeGroups.Remove(groupMember);
             await _dbContext.SaveChangesAsync();
         }
+
+        public IQueryable<string> GetAllGroupNamesForEmployeeQueryable(int employeeId)
+        {
+            return _dbContext.EmployeeGroups.Where(eg => eg.EmployeeId == employeeId).Include(eg => eg.Group).Select(g => g.Group.GroupName);
+        }
     }
 }

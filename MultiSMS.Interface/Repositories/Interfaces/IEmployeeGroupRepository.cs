@@ -7,5 +7,6 @@ namespace MultiSMS.Interface.Repositories.Interfaces
         Task AddGroupMemberAsync(int groupId, int employeeId);
         IQueryable<int> GetAllEmployeesIdsForGroupQueryable(int groupId);
         Task RemoveGroupMember(int groupId, int employeeId);
+        IQueryable<string> GetAllGroupNamesForEmployeeQueryable(int employeeId);
     }
 }

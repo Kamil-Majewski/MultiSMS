@@ -86,7 +86,11 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> FetchAllContacts()
         {
-            var contacts = await Task.FromResult(_employeeRepository.GetAllEntries());
+            var contacts = await Task.FromResult(_employeeRepository.GetAllEntries().ToList());
+            foreach(var contact in contacts)
+            {
+                contact.EmployeeGroupNames = _employeeGroupRepository.GetAllGroupNamesForEmployeeQueryable(contact.EmployeeId).ToList();
+            }
             return Json(contacts);
         }
 

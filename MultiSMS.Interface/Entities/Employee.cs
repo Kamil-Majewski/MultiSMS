@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MultiSMS.Interface.Entities
 {
@@ -18,5 +19,11 @@ namespace MultiSMS.Interface.Entities
         public string? HQAddress { get; set; }
         public bool IsActive { get; set; }
         public ICollection<EmployeeGroup>? EmployeeGroups { get; set; }
+
+        [NotMapped]
+        public ICollection<int>? EmployeeGroupIds { get; set; } = new List<int>();
+
+        [NotMapped]
+        public ICollection<string>? EmployeeGroupNames { get; set; } = new List<string>();
     }
 }
