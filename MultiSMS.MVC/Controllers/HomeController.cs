@@ -11,15 +11,29 @@ namespace MultiSMS.MVC.Controllers
         private readonly ISMSMessageTemplateRepository _smsTemplateRepository;
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IGroupRepository _groupRepository;
-        public HomeController(ISMSMessageTemplateRepository smsTemplateRepository, IEmployeeRepository employeeRepository, IGroupRepository groupRepository)
+        private readonly IEmployeeGroupRepository _employeeGroupRepository;
+        public HomeController(ISMSMessageTemplateRepository smsTemplateRepository, IEmployeeRepository employeeRepository, IGroupRepository groupRepository, IEmployeeGroupRepository employeeGroupRepository)
         {
             _smsTemplateRepository = smsTemplateRepository;
             _employeeRepository = employeeRepository;
             _groupRepository = groupRepository;
+            _employeeGroupRepository = employeeGroupRepository;
         }
         public IActionResult Index()
         {
             return View();
+        }
+
+        [HttpGet]
+        public async Task AddUserToGroup(int groupId, int employeeId)
+        {
+            await _employeeGroupRepository.AddGroupMemberAsync(groupId, employeeId);
+        }
+
+        [HttpGet]
+        public async Task RemoveUserFromGroup(int groupId, int employeeId)
+        {
+            await _employeeGroupRepository.RemoveGroupMember(groupId, employeeId);
         }
 
         [HttpGet]
@@ -79,7 +93,11 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> FetchAllGroups()
         {
-            var groups = await Task.FromResult(_groupRepository.GetAllEntries());
+            var groups = await Task.FromResult(_groupRepository.GetAllEntries().ToList());
+            foreach(var group in groups)
+            {
+                group.MembersIds = _employeeGroupRepository.GetAllEmployeesIdsForGroupQueryable(group.GroupId).ToList();
+            }
             return Json(groups);
         }
 
@@ -101,6 +119,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> GetGroupById(int id)
         {
             var group = await _groupRepository.GetByIdAsync(id);
+            group.MembersIds = _employeeGroupRepository.GetAllEmployeesIdsForGroupQueryable(group.GroupId).ToList();
             return Json(group);
         }
 

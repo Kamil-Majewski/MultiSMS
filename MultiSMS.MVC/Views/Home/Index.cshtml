@@ -99,9 +99,9 @@
                                     <tr>
                                         <th scope="col">Imię</th>
                                         <th scope="col">Nazwisko</th>
+                                        <th scope="col">Email</th>
                                         <th scope="col">Numer telefonu</th>
                                         <th class="tiny-centered-cell">Status</th>
-                                        <th class="centered-cell">Role</th>
                                         <th class="centered-cell">Grupy</th>
                                         <th class="centered-cell" scope="col">Opcje</th>
                                     </tr>
@@ -280,7 +280,7 @@
                         </button>
                     </div>
                     <div class="option-name" style="flex:auto; text-align:center;">
-                        <span class="opion-name-placeholder" id="group-asssign-window-title">Przypisz użytkowników w wybranej grupie</span>
+                        <span class="opion-name-placeholder" id="group-asssign-window-title">Zarządzaj użytkownikami w grupie</span>
                     </div>
                     <div style="flex:1;"></div>
                 </div>
@@ -506,14 +506,13 @@
                     if (item.employeesGroup = 'null') {
                         group = "Nie przypisano";
                     }
-                    if (item.employeeRole = 'null') {
-                        var role = "Nie przypisano"
-                    }
 
                     var newRow = '<tr>' +
                         '<td class="tiny-cell">' + item.name + '</td>' +
                         '<td class="tiny-cell">' + item.surname + '</td>' +
+                        '<td class="small-cell">' + item.email + '</td>' +
                         '<td class="tiny-cell">' + item.phoneNumber + '</td>';
+
 
                     if (item.isActive == true) {
                         newRow += '<td class="tiny-centered-cell"><span class="active-pill">Aktywny<span></td>';
@@ -522,8 +521,7 @@
                         newRow += '<td class="tiny-centered-cell"><span class="inactive-pill">Nieaktywny<span></td>';
                     }
 
-                    newRow += '<td class="centered-cell">' + role + '</td>' +
-                    '<td class="centered-cell">' + group + '</td>' +
+                    newRow += '<td class="centered-cell">' + group + '</td>' +
                     '<td class="centered-cell">' +
                     '<a href="#details-' + item.employeeId + '" class="icon-list contact-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>' +
                     '<a href="#edit-' + item.employeeId + '" class="icon-list contact-edit"><img src="/icons/edit.png" title="Edytuj"/></a>' +
@@ -555,7 +553,7 @@
                     var newRow = '<tr>' +
                         '<td class="small-cell">' + item.groupName + '</td>' +
                         '<td class="big-cell">' + item.groupDescription + '</td>' +
-                        '<td class="tiny-centered-cell">' + item.groupMembers.length + '</td>' +
+                        '<td class="tiny-centered-cell">' + item.membersIds.length + '</td>' +
                         '<td class="centered-cell">' +
                         '<a href="#assign-' + item.groupId + '" class="icon-list group-assign"><img src="/icons/assign-users.png" title="Przypisz użytkowników"/></a>' +
                         '<a href="#details-' + item.groupId + '" class="icon-list group-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>' +
@@ -587,7 +585,7 @@
                 var newRow = '<tr>' +
                     '<td class="small-cell">' + groupEntity.groupName + '</td>' +
                     '<td class="big-cell">' + groupEntity.groupDescription + '</td>' +
-                    '<td class="tiny-centered-cell">' + groupEntity.groupMembers.length + '</td>' +
+                    '<td class="tiny-centered-cell">' + groupEntity.membersIds.length + '</td>' +
                     '</tr>';
 
                 $('#group-assign-chosen-group-table').append(newRow);
@@ -624,7 +622,7 @@
                             newRow += '<td class="centered-cell">' + group + '</td>' +
                                 '<td class="tiny-centered-cell">';
 
-                            if (groupEntity.groupMembers.includes(item)) {
+                            if (groupEntity.membersIds.includes(item.employeeId)) {
 
                                 newRow += '<a href="#unassign-' + item.employeeId + '-' + groupEntity.groupId + '" class="icon-list contact-unassign"><img src="/icons/unassign-user.png" title="Wypisz z grupy"/></a>' +
                                     '</td>' +
@@ -846,8 +844,6 @@
                     $("#ContactPostalNumber").val(contactEnitity.postalNumber);
                     $("#ContactCity").val(contactEnitity.city);
                     $("#contactDepartment").val(contactEnitity.department);
-                    $("#contactRoles").val(contactEnitity.employeeRole);
-                    $("#contactGroups").val(contactEnitity.employeesGroup);
 
                     $("#contact-input-window-title").html("Edytuj kontakt")
                     $(".contact-options-form").attr('id', 'edit-contact-form');
@@ -905,13 +901,33 @@
                 contentType: 'application/json',
                 success: function () {
                     console.log("Successfully added contact to group");
+                    PopulateTablesForAssigningUsersToGroups(assignContactIdGroupId[2]);
                 },
                 error: function (error) {
                     console.error(error);
                 }
             });
-            PopulateTablesForAssigningUsersToGroups(assignContactIdGroupId[2]);
         });
+
+        $(document).on('click', '.contact-unassign', function (e) {
+            var assignContactIdGroupId = $(this).attr("href").split('-');
+
+            $.ajax({
+                url: '@Url.Action("RemoveUserFromGroup", "Home")',
+                type: 'GET',
+                data: { groupId: assignContactIdGroupId[2], employeeId: assignContactIdGroupId[1] },
+                contentType: 'application/json',
+                success: function () {
+                    console.log("Successfully removed contact from group");
+                    PopulateTablesForAssigningUsersToGroups(assignContactIdGroupId[2]);
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        });
+
+
 
         $(document).on('submit', '#create-template-form', function (e) {
             var form = document.getElementById("create-template-form");
@@ -1038,6 +1054,23 @@
             var filterText = $(this).val().toLowerCase();
 
             $('#group-table tbody tr').each(function () {
+                var rowHit = false;
+                $(this).find('td').each(function () {
+                    if ($(this).text().toLowerCase().includes(filterText)) {
+                        rowHit = true;
+                        return false;
+                    }
+                });
+
+                $(this).toggle(rowHit);
+            });
+        });
+
+        $(".group-search-for-user").on('input', function () {
+
+            var filterText = $(this).val().toLowerCase();
+
+            $('#group-assign-contact-list-table tbody tr').each(function () {
                 var rowHit = false;
                 $(this).find('td').each(function () {
                     if ($(this).text().toLowerCase().includes(filterText)) {
