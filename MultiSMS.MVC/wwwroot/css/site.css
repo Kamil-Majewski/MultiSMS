@@ -10,6 +10,30 @@ html {
     
 }
 
+.login-container {
+    background-color: white;
+    width: 23vw;
+    padding: 40px 40px 20px 40px;
+    border-radius: 5px;
+    border: 3px solid #f0f1f1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-60%);
+    box-shadow: 1px 1px 5px grey;
+}
+
+#forgot-password {
+    color: #99a1af;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+#forgot-password:hover {
+    color: #5a6372;
+    text-decoration:none;
+}
 
 .options-container {
     display: flex;
@@ -198,6 +222,7 @@ body {
 label {
     color: #5a6372;
     font-family: 'Open Sans', sans-serif;
+    margin-bottom:0.25rem;
 }
 
 .previous-page {

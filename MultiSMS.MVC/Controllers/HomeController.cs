@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Extensions;
 using MultiSMS.Interface.Repositories.Interfaces;
@@ -23,6 +24,7 @@ namespace MultiSMS.MVC.Controllers
             _employeeGroupRepository = employeeGroupRepository;
             _logRepository = logRepository;
         }
+        //[Authorize]
         public IActionResult Index()
         {
             return View();
