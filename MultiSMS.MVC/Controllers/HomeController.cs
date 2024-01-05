@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MultiSMS.Interface.Entities;
+using MultiSMS.Interface.Extensions;
 using MultiSMS.Interface.Repositories.Interfaces;
 using MultiSMS.MVC.Models;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace MultiSMS.MVC.Controllers
 {
@@ -12,12 +14,14 @@ namespace MultiSMS.MVC.Controllers
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IGroupRepository _groupRepository;
         private readonly IEmployeeGroupRepository _employeeGroupRepository;
-        public HomeController(ISMSMessageTemplateRepository smsTemplateRepository, IEmployeeRepository employeeRepository, IGroupRepository groupRepository, IEmployeeGroupRepository employeeGroupRepository)
+        private readonly ILogRepository _logRepository;
+        public HomeController(ISMSMessageTemplateRepository smsTemplateRepository, IEmployeeRepository employeeRepository, IGroupRepository groupRepository, IEmployeeGroupRepository employeeGroupRepository, ILogRepository logRepository)
         {
             _smsTemplateRepository = smsTemplateRepository;
             _employeeRepository = employeeRepository;
             _groupRepository = groupRepository;
             _employeeGroupRepository = employeeGroupRepository;
+            _logRepository = logRepository;
         }
         public IActionResult Index()
         {
@@ -27,7 +31,24 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task AddUserToGroup(int groupId, int employeeId)
         {
+            //var adminId = User.GetLoggedInUserId<int>();
+            //var adminUserName = User.GetLoggedInUserName();
+            //var employee = await _employeeRepository.GetByIdAsync(employeeId);
+            //var group = await _groupRepository.GetByIdAsync(groupId);
+
             await _employeeGroupRepository.AddGroupMemberAsync(groupId, employeeId);
+            //await _logRepository.AddEntityToDatabaseAsync(
+            //    new Log
+            //    {
+            //        LogType = "Info",
+            //        LogSource = "Grupy",
+            //        LogMessage = $"Użytkownik {employee.Name} {employee.Surname} został dodany do grupy {group.GroupName}",
+            //        LogCreatorId = adminId,
+
+                   
+
+            //    }
+            //);
         }
 
         [HttpGet]
@@ -40,8 +61,20 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> CreateNewTemplate(string templateName, string templateDescription, string templateContent)
         {
             var template = new SMSMessageTemplate() { TemplateName = templateName, TemplateDescription = templateDescription, TemplateContent = templateContent };
-            await _smsTemplateRepository.AddEntityToDatabaseAsync(template);
-            return Json(template);
+            var addedTemplate = await _smsTemplateRepository.AddEntityToDatabaseAsync(template);
+
+            //await _logRepository.AddEntityToDatabaseAsync(
+            //    new Log
+            //    {
+            //        LogType = "Info",
+            //        LogSource = "Szablony",
+            //        LogMessage = $"Szablon {addedTemplate.TemplateName} został utworzony",
+            //        LogRelatedObjectId = addedTemplate.TemplateId
+
+            //    }
+            //);
+
+            return Json(addedTemplate);
         }
 
         [HttpGet]
@@ -61,7 +94,17 @@ namespace MultiSMS.MVC.Controllers
                 Department = department,
                 IsActive = activeValue,
             };
-            await _employeeRepository.AddEntityToDatabaseAsync(contact);
+            var addedContact = await _employeeRepository.AddEntityToDatabaseAsync(contact);
+
+           // await _logRepository.AddEntityToDatabaseAsync(
+           //    new Log
+           //    {
+           //        LogType = "Info",
+           //        LogSource = "Kontakty",
+           //        LogMessage = $"Kontakt {addedContact.Name} został utworzony",
+           //        LogRelatedObjectId = addedContact.EmployeeId
+           //    }
+           //);
 
             return Json(contact.Name);
         }
@@ -73,8 +116,6 @@ namespace MultiSMS.MVC.Controllers
             await _groupRepository.AddEntityToDatabaseAsync(group);
             return Json(group.GroupName);
         }
-
-
 
         [HttpGet]
         public async Task<IActionResult> FetchAllTemplates()

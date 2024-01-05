@@ -315,7 +315,7 @@
                                     <th class="tiny-cell">Numer telefonu</th>
                                     <th class="tiny-centered-cell">Status</th>
                                     <th class="centered-cell">Grupy</th>
-                                    <th class="tiny-centered-cell" scope="col">Akcja</th>
+                                    <th class="tiny-centered-cell" style="width: 94px;">Akcja</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -326,8 +326,32 @@
             </div>
         </div>
         <div class="tab-pane" id="logs">
-            <div class="d-flex logs-container">
-                logi
+            <div class="logs-list-container list-container">
+                <div class="list-header">
+                    <div class="list-header-left">
+
+                    </div>
+                    <div class="list-search-bar d-flex">
+                        <input class="search-for log-search" placeholder="Wyszukaj logi" />
+                    </div>
+                </div>
+                <div class="list-content">
+                    <div class="table-responsive">
+                        <table class="log-list table table-borderless" id="log-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Typ</th>
+                                    <th scope="col">Źródło</th>
+                                    <th scope="col">Wiadomość</th>
+                                    <th class="tiny-centered-cell">Data</th>
+                                    <th class="centered-cell" scope="col">Opcje</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -911,6 +935,7 @@
                 success: function () {
                     console.log("Successfully added contact to group");
                     PopulateTablesForAssigningUsersToGroups(assignContactIdGroupId[2]);
+                    FetchAllContactsAndPopulateTable();
                 },
                 error: function (error) {
                     console.error(error);
@@ -929,6 +954,7 @@
                 success: function () {
                     console.log("Successfully removed contact from group");
                     PopulateTablesForAssigningUsersToGroups(assignContactIdGroupId[2]);
+                    FetchAllContactsAndPopulateTable();
                 },
                 error: function (error) {
                     console.error(error);
@@ -1054,7 +1080,7 @@
                     }
                 });
 
-                $(this).toggle(rowHit);5
+                $(this).toggle(rowHit);
             });
         });
 

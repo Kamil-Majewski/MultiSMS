@@ -12,6 +12,7 @@ namespace MultiSMS.Interface.Initialization
             serviceCollection.AddScoped<IGroupRepository, GroupRepository>();
             serviceCollection.AddScoped<ISMSMessageTemplateRepository, SMSMessageTemplateRepository>();
             serviceCollection.AddScoped<IEmployeeGroupRepository, EmployeeGroupRepository>();
+            serviceCollection.AddScoped<ILogRepository, LogRepository>();
             serviceCollection.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
         }
