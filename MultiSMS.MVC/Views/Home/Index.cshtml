@@ -100,7 +100,7 @@
                                         <th class="tiny-cell">Imię</th>
                                         <th class="tiny-cell">Nazwisko</th>
                                         <th class="tiny-cell">Email</th>
-                                        <th class="small-cell">Numer telefonu</th>
+                                        <th class="small-cell" style="width: 150px;">Numer telefonu</th>
                                         <th class="tiny-centered-cell">Status</th>
                                         <th class="centered-cell">Grupy</th>
                                         <th class="centered-cell" scope="col">Opcje</th>
@@ -289,8 +289,8 @@
                         <table class="group-assign-chosen-group table table-borderless" id="group-assign-chosen-group-table">
                             <thead>
                                 <tr>
-                                    <th scope="col">Nazwa</th>
-                                    <th scope="col">Opis</th>
+                                    <th class="small-cell">Nazwa</th>
+                                    <th class="big-cell">Opis</th>
                                     <th class="tiny-centered-cell">Liczba członków</th>
                                 </tr>
                             </thead>
@@ -504,6 +504,9 @@
                     if (group == 'null' || group.length == 0) {
                         group = "Nie przypisano";
                     }
+                    else{
+                        group = group.join(", ")
+                    }
 
                     var newRow = '<tr>' +
                         '<td class="tiny-cell">' + item.name + '</td>' +
@@ -598,10 +601,13 @@
 
                         $.each(listOfContacts, function (index, item) {
 
-                            var group = item.employeesGroup;
+                            var group = item.employeeGroupNames;
 
-                            if (item.employeesGroup = 'null') {
+                            if (group == 'null' || group.length == 0) {
                                 group = "Nie przypisano";
+                            }
+                            else{
+                                group = group.join(", ");
                             }
 
                             var newRow = '<tr>' +
