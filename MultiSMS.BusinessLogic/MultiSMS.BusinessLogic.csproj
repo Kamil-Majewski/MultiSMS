@@ -10,7 +10,11 @@
     <Folder Include="DTO\" />
     <Folder Include="Automapper\" />
     <Folder Include="Initialization\" />
-    <Folder Include="Services\Interfaces\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MailKit" Version="4.3.0" />
+    <PackageReference Include="MimeKit" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>

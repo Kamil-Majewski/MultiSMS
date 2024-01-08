@@ -343,7 +343,7 @@
                                     <th class="tiny-centered-cell">Typ</th>
                                     <th scope="col">Źródło</th>
                                     <th scope="col">Wiadomość</th>
-                                    <th class="centered-cell">Data</th>
+                                    <th class="centered-cell" style="min-width:105px;">Data</th>
                                     <th class="tiny-centered-cell" scope="col">Opcje</th>
                                 </tr>
                             </thead>
@@ -612,7 +612,7 @@
                         '<td class="tiny-centered-cell">' + item.logType + '</td>' +
                         '<td class="tiny-cell">' + item.logSource + '</td>' +
                         '<td class="big-cell">' + item.logMessage + '</td>' +
-                        '<td class="centered-cell">' + new Date(item.logCreationDate).toLocaleString('en-GB') + '</td>' +
+                        '<td class="centered-cell" style="min-width:105px;">' + new Date(item.logCreationDate).toLocaleString('en-GB') + '</td>' +
                         '<td class="tiny-centered-cell">' +
                         '<a href="#details-' + item.logId + '" class="icon-list template-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>' +
                         '</td>' +
