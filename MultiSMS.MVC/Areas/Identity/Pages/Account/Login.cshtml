@@ -9,24 +9,25 @@
     <section>
         <form id="account" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
+            <div class="form-floating">
                 <label asp-for="Input.Email" class="form-label">Email</label>
-                <input asp-for="Input.Email" class="form-input" autocomplete="username" aria-required="true"/>
+                <input asp-for="Input.Email" class="form-input" autocomplete="username" aria-required="true" placeholder="Wprowadź adres email" required/>
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
                 <label asp-for="Input.Password" class="form-label">Hasło</label>
-                <input asp-for="Input.Password" class="form-input" autocomplete="current-password" aria-required="true"/>
+                <input asp-for="Input.Password" class="form-input" autocomplete="current-password" aria-required="true" placeholder="Wprowadź hasło" required/>
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
+                <div>
+                    <p style="float:right;">
+                        <a id="forgot-password" asp-page="./ForgotPassword">Zapomniałeś hasła?</a>
+                    </p>
+                </div>
             </div>
-            <div style="display:flex; justify-content:center;">
-                <button id="login-submit" type="submit" class="violet-button mb-2" style="width:100%; display:flex; justify-content:center; font-size:19px;">Zaloguj się</button>
+            <div style="display:flex; justify-content:center; width:100%;">
+                <button id="login-submit" type="submit" class="violet-button mb-2" style="width:100%; display:flex; justify-content:center; font-size:19px; height:44px;">Zaloguj się</button>
             </div>
-            <div>
-                <p style="float:right;">
-                    <a id="forgot-password" asp-page="./ForgotPassword">Zapomniałeś hasła?</a>
-                </p>
-            </div>
+            
         </form>
     </section>
 </div>
