@@ -80,7 +80,7 @@ namespace MultiSMS.Interface.Migrations
                     LogCreator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LogCreatorId = table.Column<int>(type: "int", nullable: false),
                     LogCreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LogRelatedObjectId = table.Column<int>(type: "int", nullable: true)
+                    LogRelatedObjectsDictionarySerialized = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -285,7 +285,7 @@ namespace MultiSMS.Interface.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "Surname", "TwoFactorEnabled", "UserName" },
-                values: new object[] { 1, 0, "", "gigaadmin@gmail.com", false, false, null, "Giga", "GIGAADMIN@GMAIL.COM", "GIGAADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAEDtbTnk8QvXxN4QCwWVe6UIQBh773d+i/PSipbByKBLitt9w2XGwuYLA7WXuJ6K2yA==", null, false, "UVB7OMQEEJQEO33NGQNXC72D3DC4MHKA", "Admin", false, "gigaadmin@gmail.com" });
+                values: new object[] { 1, 0, "", "gigaadmin@gmail.com", false, false, null, "Giga", "GIGAADMIN@GMAIL.COM", "GIGAADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAEC+Rbzml8UViUvgYaB/B4Us2o2weIzHxKIBdtBiT4fGNSZuLtf09nrx/sPYNijbQQw==", null, false, "WLGMYNDY6WWMVVYNN5JWGMTA6FDVC5GD", "Admin", false, "gigaadmin@gmail.com" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

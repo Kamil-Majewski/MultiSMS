@@ -12,7 +12,7 @@ using MultiSMS.Interface;
 namespace MultiSMS.Interface.Migrations
 {
     [DbContext(typeof(MultiSMSDbContext))]
-    [Migration("20240108092813_Init")]
+    [Migration("20240108111435_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -249,9 +249,9 @@ namespace MultiSMS.Interface.Migrations
                             Name = "Giga",
                             NormalizedEmail = "GIGAADMIN@GMAIL.COM",
                             NormalizedUserName = "GIGAADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDtbTnk8QvXxN4QCwWVe6UIQBh773d+i/PSipbByKBLitt9w2XGwuYLA7WXuJ6K2yA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEC+Rbzml8UViUvgYaB/B4Us2o2weIzHxKIBdtBiT4fGNSZuLtf09nrx/sPYNijbQQw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "UVB7OMQEEJQEO33NGQNXC72D3DC4MHKA",
+                            SecurityStamp = "WLGMYNDY6WWMVVYNN5JWGMTA6FDVC5GD",
                             Surname = "Admin",
                             TwoFactorEnabled = false,
                             UserName = "gigaadmin@gmail.com"
@@ -364,8 +364,8 @@ namespace MultiSMS.Interface.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("LogRelatedObjectId")
-                        .HasColumnType("int");
+                    b.Property<string>("LogRelatedObjectsDictionarySerialized")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LogSource")
                         .IsRequired()

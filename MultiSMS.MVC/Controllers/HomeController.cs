@@ -4,6 +4,7 @@ using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Extensions;
 using MultiSMS.Interface.Repositories.Interfaces;
 using MultiSMS.MVC.Models;
+using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Security.Claims;
 
@@ -33,30 +34,56 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task AddUserToGroup(int groupId, int employeeId)
         {
-            //var adminId = User.GetLoggedInUserId<int>();
-            //var adminUserName = User.GetLoggedInUserName();
-            //var employee = await _employeeRepository.GetByIdAsync(employeeId);
-            //var group = await _groupRepository.GetByIdAsync(groupId);
+            var adminId = User.GetLoggedInUserId<int>();
+            var adminUserName = User.GetLoggedInUserName();
+            var employee = await _employeeRepository.GetByIdAsync(employeeId);
+            var group = await _groupRepository.GetByIdAsync(groupId);
 
             await _employeeGroupRepository.AddGroupMemberAsync(groupId, employeeId);
-            //await _logRepository.AddEntityToDatabaseAsync(
-            //    new Log
-            //    {
-            //        LogType = "Info",
-            //        LogSource = "Grupy",
-            //        LogMessage = $"Użytkownik {employee.Name} {employee.Surname} został dodany do grupy {group.GroupName}",
-            //        LogCreatorId = adminId,
 
-                   
+            await _logRepository.AddEntityToDatabaseAsync(
+                new Log
+                {
+                    LogType = "Info",
+                    LogSource = "Grupy",
+                    LogMessage = $"Użytkownik {employee.Name} {employee.Surname} został dodany do grupy {group.GroupName}",
+                    LogCreatorId = adminId,
+                    LogCreator = adminUserName,
+                    LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, int>
+                    {
+                        {"Employees", employeeId },
+                        {"Groups", groupId }
 
-            //    }
-            //);
+                    })
+                }
+            );
         }
 
         [HttpGet]
         public async Task RemoveUserFromGroup(int groupId, int employeeId)
         {
+            var adminId = User.GetLoggedInUserId<int>();
+            var adminUserName = User.GetLoggedInUserName();
+            var employee = await _employeeRepository.GetByIdAsync(employeeId);
+            var group = await _groupRepository.GetByIdAsync(groupId);
+
             await _employeeGroupRepository.RemoveGroupMember(groupId, employeeId);
+
+            await _logRepository.AddEntityToDatabaseAsync(
+                new Log
+                {
+                    LogType = "Info",
+                    LogSource = "Grupy",
+                    LogMessage = $"Użytkownik {employee.Name} {employee.Surname} został usunięty z grupy {group.GroupName}",
+                    LogCreatorId = adminId,
+                    LogCreator = adminUserName,
+                    LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, int>
+                    {
+                        {"Employees", employeeId },
+                        {"Groups", groupId }
+                    })
+                }
+            );
         }
 
         [HttpGet]
@@ -77,10 +104,13 @@ namespace MultiSMS.MVC.Controllers
                     LogMessage = $"Szablon {addedTemplate.TemplateName} został utworzony",
                     LogCreator = adminUserName,
                     LogCreatorId = adminId,
-                    LogRelatedObjectId = addedTemplate.TemplateId
+                    LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, int>
+                    {
+                        { "Templates", template.TemplateId }
+                    })
 
                 }
-            );
+            ); 
 
             return Json(addedTemplate);
         }
@@ -88,6 +118,9 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateNewContact(string contactName, string contactSurname, string email, string phone, string address, string zip, string city, string department, string isActive)
         {
+            var adminId = User.GetLoggedInUserId<int>();
+            var adminUserName = User.GetLoggedInUserName();
+
             bool activeValue = isActive == "yes" ? true : false;
 
             var contact = new Employee
@@ -104,15 +137,21 @@ namespace MultiSMS.MVC.Controllers
             };
             var addedContact = await _employeeRepository.AddEntityToDatabaseAsync(contact);
 
-           // await _logRepository.AddEntityToDatabaseAsync(
-           //    new Log
-           //    {
-           //        LogType = "Info",
-           //        LogSource = "Kontakty",
-           //        LogMessage = $"Kontakt {addedContact.Name} został utworzony",
-           //        LogRelatedObjectId = addedContact.EmployeeId
-           //    }
-           //);
+            await _logRepository.AddEntityToDatabaseAsync(
+                  new Log
+                  {
+                      LogType = "Info",
+                      LogSource = "Kontakty",
+                      LogMessage = $"Kontakt {addedContact.Name} {addedContact.Surname} został utworzony",
+                      LogCreator = adminUserName,
+                      LogCreatorId = adminId,
+                      LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, int>
+                      {
+                        { "Employees", addedContact.EmployeeId }
+                      })
+
+                  }
+              );
 
             return Json(contact.Name);
         }
@@ -120,8 +159,28 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateNewGroup(string groupName, string groupDescription)
         {
+            var adminId = User.GetLoggedInUserId<int>();
+            var adminUserName = User.GetLoggedInUserName();
+
             var group = new Group() { GroupName = groupName, GroupDescription = groupDescription };
-            await _groupRepository.AddEntityToDatabaseAsync(group);
+            var addedGroup =  await _groupRepository.AddEntityToDatabaseAsync(group);
+
+            await _logRepository.AddEntityToDatabaseAsync(
+                 new Log
+                 {
+                     LogType = "Info",
+                     LogSource = "Grupy",
+                     LogMessage = $"Grupa {addedGroup.GroupName} została utworzona",
+                     LogCreator = adminUserName,
+                     LogCreatorId = adminId,
+                     LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, int>
+                     {
+                        { "Groups", addedGroup.GroupId}
+                     })
+
+                 }
+             );
+
             return Json(group.GroupName);
         }
 
@@ -179,15 +238,38 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> EditTemplate(int id, string name, string description, string content)
         {
+            var adminId = User.GetLoggedInUserId<int>();
+            var adminUserName = User.GetLoggedInUserName();
+
             var template = new SMSMessageTemplate { TemplateId = id, TemplateName = name, TemplateDescription = description, TemplateContent = content};
             
-            await _smsTemplateRepository.UpdateEntityAsync(template);
+            var editedTemplate = await _smsTemplateRepository.UpdateEntityAsync(template);
+
+            await _logRepository.AddEntityToDatabaseAsync(
+                 new Log
+                 {
+                     LogType = "Info",
+                     LogSource = "Szablony",
+                     LogMessage = $"Szablon {editedTemplate.TemplateName} został zedytowany",
+                     LogCreator = adminUserName,
+                     LogCreatorId = adminId,
+                     LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, int>
+                     {
+                        { "Templates", editedTemplate.TemplateId}
+                     })
+
+                 }
+             );
+
             return Json(template.TemplateName);
         }
 
         [HttpGet]
         public async Task<IActionResult> EditContact(int contactId, string contactName, string contactSurname, string email, string phone, string address, string zip, string city, string department, string isActive)
         {
+            var adminId = User.GetLoggedInUserId<int>();
+            var adminUserName = User.GetLoggedInUserName();
+
             bool activeValue = isActive == "yes" ? true : false;
 
             var contact = new Employee
@@ -204,34 +286,108 @@ namespace MultiSMS.MVC.Controllers
                 IsActive = activeValue,
             };
 
-            await _employeeRepository.UpdateEntityAsync(contact);
+            var editedContact = await _employeeRepository.UpdateEntityAsync(contact);
+            await _logRepository.AddEntityToDatabaseAsync(
+                 new Log
+                 {
+                     LogType = "Info",
+                     LogSource = "Kontakty",
+                     LogMessage = $"Kontakt {editedContact.Name} {editedContact.Surname} został zedytowany",
+                     LogCreator = adminUserName,
+                     LogCreatorId = adminId,
+                     LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, int>
+                     {
+                        { "Employees", editedContact.EmployeeId}
+                     })
+
+                 }
+             );
+
             return Json(contact.Name);
         }
 
         [HttpGet]
         public async Task<IActionResult> EditGroup(int id, string name, string description)
         {
+            var adminId = User.GetLoggedInUserId<int>();
+            var adminUserName = User.GetLoggedInUserName();
+
             var group = new Group { GroupId = id, GroupName = name, GroupDescription = description};
 
-            await _groupRepository.UpdateEntityAsync(group);
+            var editedGroup = await _groupRepository.UpdateEntityAsync(group);
+            await _logRepository.AddEntityToDatabaseAsync(
+                 new Log
+                 {
+                     LogType = "Info",
+                     LogSource = "Grupy",
+                     LogMessage = $"Grupa {editedGroup.GroupName} została zedytowana",
+                     LogCreator = adminUserName,
+                     LogCreatorId = adminId,
+                     LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject( new Dictionary<string, int>
+                     {
+                         {"Groups", editedGroup.GroupId}
+                     })
+                 }
+             );
+
             return Json(group.GroupName);
         }
 
         [HttpGet]
         public async Task DeleteTemplate(int id)
         {
+            var adminId = User.GetLoggedInUserId<int>();
+            var adminUserName = User.GetLoggedInUserName();
+            var template = await _smsTemplateRepository.GetByIdAsync(id);
+            await _logRepository.AddEntityToDatabaseAsync(
+                new Log
+                {
+                    LogType = "Info",
+                    LogSource = "Szablony",
+                    LogMessage = $"Szablon {template.TemplateName} został usunięty",
+                    LogCreator = adminUserName,
+                    LogCreatorId = adminId,
+                }
+            );
+
             await _smsTemplateRepository.DeleteEntityAsync(id);
         }
 
         [HttpGet]
         public async Task DeleteContact(int id)
         {
+            var adminId = User.GetLoggedInUserId<int>();
+            var adminUserName = User.GetLoggedInUserName();
+            var contact = await _employeeRepository.GetByIdAsync(id);
+            await _logRepository.AddEntityToDatabaseAsync(
+               new Log
+               {
+                   LogType = "Info",
+                   LogSource = "Kontakty",
+                   LogMessage = $"Kontakt {contact.Name} {contact.Surname} - {contact.PhoneNumber} został usunięty",
+                   LogCreator = adminUserName,
+                   LogCreatorId = adminId,
+               }
+           );
             await _employeeRepository.DeleteEntityAsync(id);
         }
 
         [HttpGet]
         public async Task DeleteGroup(int id)
         {
+            var adminId = User.GetLoggedInUserId<int>();
+            var adminUserName = User.GetLoggedInUserName();
+            var group = await _groupRepository.GetByIdAsync(id);
+            await _logRepository.AddEntityToDatabaseAsync(
+               new Log
+               {
+                   LogType = "Info",
+                   LogSource = "Grupy",
+                   LogMessage = $"Grupa {group.GroupName} została usunięta",
+                   LogCreator = adminUserName,
+                   LogCreatorId = adminId,
+               }
+           );
             await _groupRepository.DeleteEntityAsync(id);
         }
 

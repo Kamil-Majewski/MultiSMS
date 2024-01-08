@@ -9,6 +9,6 @@
         public string LogCreator { get; set; } = default!;
         public int LogCreatorId { get; set; }
         public DateTime LogCreationDate { get; set; } = DateTime.UtcNow;
-        public int? LogRelatedObjectId { get; set; } = default!;
+        public string? LogRelatedObjectsDictionarySerialized { get; set; }
     }
 }
