@@ -340,11 +340,11 @@
                         <table class="log-list table table-borderless" id="log-table">
                             <thead>
                                 <tr>
-                                    <th scope="col">Typ</th>
+                                    <th class="tiny-centered-cell">Typ</th>
                                     <th scope="col">Źródło</th>
                                     <th scope="col">Wiadomość</th>
-                                    <th class="tiny-centered-cell">Data</th>
-                                    <th class="centered-cell" scope="col">Opcje</th>
+                                    <th class="centered-cell">Data</th>
+                                    <th class="tiny-centered-cell" scope="col">Opcje</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -598,6 +598,37 @@
         })
     }
 
+    function FetchAllLogsAndPopulateTable() {
+        $.ajax({
+            url: '@Url.Action("FetchAllLogs", "Home")',
+            type: 'GET',
+            contentType: 'application/json',
+            success: function (listOfLogs) {
+                console.log("Successfully retrieved logs")
+                $('#log-table tbody').empty();
+
+                $.each(listOfLogs, function (index, item) {
+                    var newRow = '<tr>' +
+                        '<td class="tiny-centered-cell">' + item.logType + '</td>' +
+                        '<td class="tiny-cell">' + item.logSource + '</td>' +
+                        '<td class="big-cell">' + item.logMessage + '</td>' +
+                        '<td class="centered-cell">' + new Date(item.logCreationDate).toLocaleString('en-GB') + '</td>' +
+                        '<td class="tiny-centered-cell">' +
+                        '<a href="#details-' + item.logId + '" class="icon-list template-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>' +
+                        '</td>' +
+                        '</tr>';
+
+
+                    $('#log-table tbody').append(newRow);
+                });
+
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        })
+    }
+
     function PopulateTablesForAssigningUsersToGroups(groupId) {
         $.ajax({
             url: '@Url.Action("GetGroupById", "Home")',
@@ -806,6 +837,7 @@
         FetchAllTemplatesAndPopulateTable();
         FetchAllContactsAndPopulateTable();
         FetchAllGroupsAndPopulateTable();
+        FetchAllLogsAndPopulateTable();
 
         $(document).on('click', '.template-delete', function (e) {
             var templateId = $(this).attr("href").split('-')[1];
@@ -1050,7 +1082,7 @@
 
         });
 
-        $(".template-search").on('input', function () {
+        $(".template-search ").on('input', function () {
 
             var filterText = $(this).val().toLowerCase();
 
@@ -1106,6 +1138,23 @@
             var filterText = $(this).val().toLowerCase();
 
             $('#group-assign-contact-list-table tbody tr').each(function () {
+                var rowHit = false;
+                $(this).find('td').each(function () {
+                    if ($(this).text().toLowerCase().includes(filterText)) {
+                        rowHit = true;
+                        return false;
+                    }
+                });
+
+                $(this).toggle(rowHit);
+            });
+        });
+
+        $(".log-search").on('input', function () {
+
+            var filterText = $(this).val().toLowerCase();
+
+            $('#log-table tbody tr').each(function () {
                 var rowHit = false;
                 $(this).find('td').each(function () {
                     if ($(this).text().toLowerCase().includes(filterText)) {

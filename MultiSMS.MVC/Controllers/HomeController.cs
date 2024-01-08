@@ -46,7 +46,7 @@ namespace MultiSMS.MVC.Controllers
                 {
                     LogType = "Info",
                     LogSource = "Grupy",
-                    LogMessage = $"Użytkownik {employee.Name} {employee.Surname} został dodany do grupy {group.GroupName}",
+                    LogMessage = $"{employee.Name} {employee.Surname} został dodany do grupy {group.GroupName}",
                     LogCreatorId = adminId,
                     LogCreator = adminUserName,
                     LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, int>
@@ -74,7 +74,7 @@ namespace MultiSMS.MVC.Controllers
                 {
                     LogType = "Info",
                     LogSource = "Grupy",
-                    LogMessage = $"Użytkownik {employee.Name} {employee.Surname} został usunięty z grupy {group.GroupName}",
+                    LogMessage = $"{employee.Name} {employee.Surname} został usunięty z grupy {group.GroupName}",
                     LogCreatorId = adminId,
                     LogCreator = adminUserName,
                     LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, int>
@@ -211,6 +211,13 @@ namespace MultiSMS.MVC.Controllers
                 group.MembersIds = _employeeGroupRepository.GetAllEmployeesIdsForGroupQueryable(group.GroupId).ToList();
             }
             return Json(groups);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> FetchAllLogs()
+        {
+            var logs = await Task.FromResult(_logRepository.GetAllEntries());
+            return Json(logs);
         }
 
         [HttpGet]

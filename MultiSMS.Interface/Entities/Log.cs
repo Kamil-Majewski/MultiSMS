@@ -8,7 +8,7 @@
         public string LogMessage { get; set; } = default!;
         public string LogCreator { get; set; } = default!;
         public int LogCreatorId { get; set; }
-        public DateTime LogCreationDate { get; set; } = DateTime.UtcNow;
+        public DateTime LogCreationDate { get; set; } = DateTime.Now;
         public string? LogRelatedObjectsDictionarySerialized { get; set; }
     }
 }
