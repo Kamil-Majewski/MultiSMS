@@ -24,7 +24,7 @@ namespace MultiSMS.MVC.Controllers
             _employeeGroupRepository = employeeGroupRepository;
             _logRepository = logRepository;
         }
-        //[Authorize]
+        [Authorize]
         public IActionResult Index()
         {
             return View();
@@ -62,19 +62,25 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateNewTemplate(string templateName, string templateDescription, string templateContent)
         {
+
+            var adminId = User.GetLoggedInUserId<int>();
+            var adminUserName = User.GetLoggedInUserName();
+
             var template = new SMSMessageTemplate() { TemplateName = templateName, TemplateDescription = templateDescription, TemplateContent = templateContent };
             var addedTemplate = await _smsTemplateRepository.AddEntityToDatabaseAsync(template);
 
-            //await _logRepository.AddEntityToDatabaseAsync(
-            //    new Log
-            //    {
-            //        LogType = "Info",
-            //        LogSource = "Szablony",
-            //        LogMessage = $"Szablon {addedTemplate.TemplateName} został utworzony",
-            //        LogRelatedObjectId = addedTemplate.TemplateId
+            await _logRepository.AddEntityToDatabaseAsync(
+                new Log
+                {
+                    LogType = "Info",
+                    LogSource = "Szablony",
+                    LogMessage = $"Szablon {addedTemplate.TemplateName} został utworzony",
+                    LogCreator = adminUserName,
+                    LogCreatorId = adminId,
+                    LogRelatedObjectId = addedTemplate.TemplateId
 
-            //    }
-            //);
+                }
+            );
 
             return Json(addedTemplate);
         }

@@ -170,9 +170,6 @@ namespace MultiSMS.Interface.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<int>("AdministratorId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -236,6 +233,26 @@ namespace MultiSMS.Interface.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "",
+                            Email = "gigaadmin@gmail.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            Name = "Giga",
+                            NormalizedEmail = "GIGAADMIN@GMAIL.COM",
+                            NormalizedUserName = "GIGAADMIN@GMAIL.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDtbTnk8QvXxN4QCwWVe6UIQBh773d+i/PSipbByKBLitt9w2XGwuYLA7WXuJ6K2yA==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "UVB7OMQEEJQEO33NGQNXC72D3DC4MHKA",
+                            Surname = "Admin",
+                            TwoFactorEnabled = false,
+                            UserName = "gigaadmin@gmail.com"
+                        });
                 });
 
             modelBuilder.Entity("MultiSMS.Interface.Entities.Employee", b =>
@@ -330,8 +347,15 @@ namespace MultiSMS.Interface.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LogId"));
 
-                    b.Property<DateTime>("LogCreated")
+                    b.Property<DateTime>("LogCreationDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("LogCreator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LogCreatorId")
+                        .HasColumnType("int");
 
                     b.Property<string>("LogMessage")
                         .IsRequired()

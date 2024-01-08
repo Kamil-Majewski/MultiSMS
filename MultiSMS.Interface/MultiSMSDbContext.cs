@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MultiSMS.Interface.Entities;
+using MultiSMS.Interface.Seeding;
 using System.Reflection.Emit;
 
 namespace MultiSMS.Interface
@@ -21,6 +22,8 @@ namespace MultiSMS.Interface
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<Administrator>().HasData(SeedAdmin.GetAdminSeed());
         }
     }
 }
