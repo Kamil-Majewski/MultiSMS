@@ -609,7 +609,7 @@
 
                 $.each(listOfLogs, function (index, item) {
                     var newRow = '<tr>' +
-                        '<td class="tiny-centered-cell">' + item.logType + '</td>' +
+                        '<td class="tiny-centered-cell"><span class="info-pill">' + item.logType + '</span></td>' +
                         '<td class="tiny-cell">' + item.logSource + '</td>' +
                         '<td class="big-cell">' + item.logMessage + '</td>' +
                         '<td class="centered-cell" style="min-width:105px;">' + new Date(item.logCreationDate).toLocaleString('en-GB') + '</td>' +

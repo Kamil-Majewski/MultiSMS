@@ -10,6 +10,12 @@ html {
     
 }
 
+.info-pill {
+    background-color: #d1d1fd;
+    border-radius: 50px;
+    padding:4px 20px;
+}
+
 .credentials-container {
     background-color: white;
     width: 25vw;
@@ -138,6 +144,10 @@ html {
     padding: 4px;
 }
 
+input::-ms-clear, input::-ms-reveal {
+    display: none;
+}
+
 .check-input{
     margin-right:5px;
 }
@@ -241,6 +251,20 @@ label {
 
 .options-form {
     padding: 30px;
+}
+
+.eye-icons {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-60%);
+    cursor: pointer;
+    width: 30px;
+    display: none;
+}
+
+.password-input-container{
+    position: relative;
 }
 
 .search-for {
