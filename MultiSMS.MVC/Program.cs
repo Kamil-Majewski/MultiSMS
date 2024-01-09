@@ -1,8 +1,11 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MultiSMS.Interface;
 using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Initialization;
+using MultiSMS.BusinessLogic.Initialization;
+using MultiSMS.BusinessLogic.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,11 +20,17 @@ var multiSMSConnectionString = builder.Configuration.GetConnectionString("MultiS
 builder.Services.AddDbContext<MultiSMSDbContext>(options =>
     options.UseSqlServer(multiSMSConnectionString));
 
+builder.Services.Configure<EmailSettings>(configuration.GetSection("MailSettings"));
+
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 builder.Services.AddDefaultIdentity<Administrator>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<MultiSMSDbContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.InitializeMultiSMSInfrastructureDependencies();
+builder.Services.InitializeInfrastructureDependencies();
+builder.Services.InitializeBusinessLogicDependencies();
 
 builder.Services.AddControllersWithViews();
 
@@ -53,5 +62,8 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
+
+var mapper = app.Services.GetRequiredService<IMapper>();
+mapper.ConfigurationProvider.AssertConfigurationIsValid();
 
 app.Run();

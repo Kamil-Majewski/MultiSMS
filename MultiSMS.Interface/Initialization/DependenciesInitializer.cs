@@ -6,7 +6,7 @@ namespace MultiSMS.Interface.Initialization
 {
     public static class DependenciesInitializer
     {
-        public static void InitializeMultiSMSInfrastructureDependencies(this IServiceCollection serviceCollection)
+        public static void InitializeInfrastructureDependencies(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IEmployeeRepository, EmployeeRepository>();
             serviceCollection.AddScoped<IGroupRepository, GroupRepository>();

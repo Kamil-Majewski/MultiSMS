@@ -26,13 +26,13 @@ namespace MultiSMS.BusinessLogic.Services
         {
             var emailMessage = new MimeMessage();
             emailMessage.From.Add(MailboxAddress.Parse(_mailSettings.MailAddress));
-            var parsedList = new List<MailboxAddress>();
+            var mailboxAddresses = new List<MailboxAddress>();
             foreach (var receipent in message.To)
             {
-                parsedList.Add(MailboxAddress.Parse(receipent));
+                mailboxAddresses.Add(MailboxAddress.Parse(receipent));
             }
 
-            emailMessage.To.AddRange(parsedList);
+            emailMessage.To.AddRange(mailboxAddresses);
             emailMessage.Subject = message.Subject;
             emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = message.MessageContent };
 
