@@ -5,12 +5,12 @@
 @inject UserManager<Administrator> UserManager
 @inject IAdministratorService AdministratorService
 
-@{
-    var admin = await AdministratorService.GetAdministratorByEmailAsync(UserManager.GetUserName(User)!);
-}
+
 
 @if (SignInManager.IsSignedIn(User))
 {
+    var admin = await AdministratorService.GetAdministratorByEmailAsync(UserManager.GetUserName(User)!);
+
     <nav class="navbar-nav navbar-expand-lg ml-auto">
         <div class="container-fluid">
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
