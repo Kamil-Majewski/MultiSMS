@@ -7,7 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Automapper\" />
+    <Compile Remove="Automapper\**" />
+    <EmbeddedResource Remove="Automapper\**" />
+    <None Remove="Automapper\**" />
   </ItemGroup>
 
   <ItemGroup>

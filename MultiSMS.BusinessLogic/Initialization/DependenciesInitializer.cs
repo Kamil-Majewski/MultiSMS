@@ -9,6 +9,7 @@ namespace MultiSMS.BusinessLogic.Initialization
         public static void InitializeBusinessLogicDependencies(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IEmailService, EmailService>();
+            serviceCollection.AddScoped<IAdministratorService, AdministratorService>();
         }
     }
 }

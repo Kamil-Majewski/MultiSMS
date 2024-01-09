@@ -9,6 +9,7 @@ namespace MultiSMS.Interface
 {
     public class MultiSMSDbContext : IdentityDbContext<Administrator, IdentityRole<int>, int>
     {
+        public virtual DbSet<Administrator> AspNetUsers { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<Group> Groups { get; set; }
         public virtual DbSet<SMSMessageTemplate> SMSMessageTemplates { get; set; }

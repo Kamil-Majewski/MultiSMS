@@ -1,7 +1,13 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using MultiSMS.BusinessLogic.Services.Interfaces;
 @using MultiSMS.Interface.Entities;
 @inject SignInManager<Administrator> SignInManager
 @inject UserManager<Administrator> UserManager
+@inject IAdministratorService AdministratorService
+
+@{
+    var admin = await AdministratorService.GetAdministratorByEmailAsync(UserManager.GetUserName(User)!);
+}
 
 @if (SignInManager.IsSignedIn(User))
 {
@@ -11,7 +17,7 @@
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            @UserManager.GetUserName(User)?.Split('@')[0]
+                            @admin.Name @admin.Surname
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/ChangePassword">Zmień hasło</a></li>
