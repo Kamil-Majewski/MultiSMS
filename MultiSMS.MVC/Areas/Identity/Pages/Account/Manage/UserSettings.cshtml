@@ -13,19 +13,19 @@
                 <div class="form-group" style="margin-top: 20px;">
                     <div class="row">
                         <div class="col">
-                            <label for="ContactName">Imię</label>
-                            <input type="text" class="form-input" id="contactNameInput" required maxlength="20">
+                            <label for="AdminName">Imię</label>
+                            <input type="text" class="form-input" id="AdminName" required maxlength="20">
                         </div>
                         <div class="col">
-                            <label for="ContactSurname">Nazwisko</label>
-                            <input type="text" class="form-input" id="contactSurnameInput" required maxlength="20">
+                            <label for="AdminSurname">Nazwisko</label>
+                            <input type="text" class="form-input" id="AdminSurname" required maxlength="20">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col">
-                            <label for="ContactEmail">Email</label>
+                            <label for="AdminEmail">Email</label>
                             <div style="width: 100%; display: inline-flex; justify-content: space-between;">
-                                <input asp-for="Username" type="email" class="form-input" id="contactEmail" required maxlength="30" style="flex-grow:1;" disabled>
+                                <input asp-for="Username" type="email" class="form-input" id="AdminEmail" required maxlength="30" style="flex-grow:1;" disabled>
                                 <button type="button" class="violet-button" id="change-email-button" style="min-width: 125px; height: 44px; margin-left: 30px;">
                                     Zmień Email
                                 </button>
@@ -35,13 +35,13 @@
                 </div>
             </div>
             <hr />
-            <div class="contact-data" style="margin-top:20px; margin-bottom:20px;">
+            <div class="admin-data" style="margin-top:20px; margin-bottom:20px;">
                 <span class="form-subtitle">Dane Kontaktowe</span>
                 <div class="form-group" style="margin-top:20px;">
                     <div class="row">
                         <div class="col">
-                            <label for="ContactPhone">Numer telefonu *</label>
-                            <input asp-for="Input.PhoneNumber" type="tel" class="form-input" id="contactPhoneNumber" required maxlength="15" minlength="11" pattern="^(\+[0-9]{2} )?\d{3} \d{3} \d{3}$">
+                            <label for="AdminPhone">Numer telefonu *</label>
+                            <input asp-for="Input.PhoneNumber" type="tel" class="form-input" id="AdminPhone" required maxlength="15" minlength="11" pattern="^(\+[0-9]{2} )?\d{3} \d{3} \d{3}$">
                             <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
                         </div>
                     </div>
