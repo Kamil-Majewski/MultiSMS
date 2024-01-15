@@ -1,26 +1,55 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Profile";
     ViewData["ActivePage"] = ManageNavPages.Index;
 }
 
-<h3>@ViewData["Title"]</h3>
 <partial name="_StatusMessage" for="StatusMessage" />
-<div class="row">
-    <div class="col-md-6">
-        <form id="profile-form" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Username" class="form-control" placeholder="Please choose your username." disabled />
-                <label asp-for="Username" class="form-label"></label>
+<div class="user-info options-container">
+    <div class="option-content">
+        <form class="contact-options-form options-form">
+            <div class="personal-data" style="margin-bottom:20px;">
+                <span class="form-subtitle">Dane Personalne</span>
+                <div class="form-group" style="margin-top: 20px;">
+                    <div class="row">
+                        <div class="col">
+                            <label for="ContactName">Imię</label>
+                            <input type="text" class="form-input" id="contactNameInput" required maxlength="20">
+                        </div>
+                        <div class="col">
+                            <label for="ContactSurname">Nazwisko</label>
+                            <input type="text" class="form-input" id="contactSurnameInput" required maxlength="20">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label for="ContactEmail">Email</label>
+                            <div style="width: 100%; display: inline-flex; justify-content: space-between;">
+                                <input asp-for="Username" type="email" class="form-input" id="contactEmail" required maxlength="30" style="flex-grow:1;" disabled>
+                                <button type="button" class="violet-button" id="change-email-button" style="min-width: 125px; height: 44px; margin-left: 30px;">
+                                    Zmień Email
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number."/>
-                <label asp-for="Input.PhoneNumber" class="form-label"></label>
-                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+            <hr />
+            <div class="contact-data" style="margin-top:20px; margin-bottom:20px;">
+                <span class="form-subtitle">Dane Kontaktowe</span>
+                <div class="form-group" style="margin-top:20px;">
+                    <div class="row">
+                        <div class="col">
+                            <label for="ContactPhone">Numer telefonu *</label>
+                            <input asp-for="Input.PhoneNumber" type="tel" class="form-input" id="contactPhoneNumber" required maxlength="15" minlength="11" pattern="^(\+[0-9]{2} )?\d{3} \d{3} \d{3}$">
+                            <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+            <div class="justify-content-center d-flex" style="margin-top: 20px;">
+                <button type="submit" class="violet-button" id="update-profile-button">Zapisz zmiany</button>
+            </div>
         </form>
     </div>
 </div>

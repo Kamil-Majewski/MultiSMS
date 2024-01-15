@@ -304,6 +304,7 @@ label {
 
 .violet-button {
     display: flex;
+    justify-content: center;
     align-items: center;
     border: 2px solid transparent;
     background-color: #6f5cc4;
