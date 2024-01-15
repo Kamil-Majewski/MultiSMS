@@ -19,7 +19,16 @@
                 $(this).tab('show');
                 $(this).parent().toggleClass("active-tab")
             });
+            
+            $('#settings-card-headers a').on('click', function (e) {
+                $(".active-tab").removeClass("active-tab");
+                //e.preventDefault();
+                $(this).tab('show');
+                $(this).parent().toggleClass("active-tab")
+            });
         });
+
+
     </script>
 
 </head>
@@ -41,7 +50,7 @@
             </header>
         </div>
         <div class="layout-content">
-            <div class="toolbar-left" id="toolbar">
+            <div class="toolbar-left-main toolbar-left" id="toolbar">
                 <div class="toolbar-body">
                     <ul class="options-list-left nav" id="master-card-headers" role="list">
                         <li class="option-list-item active-tab">
@@ -72,6 +81,30 @@
                             <a class="link" id="logs-tab" href="#logs">
                                 <span class="icon"><img src="~/icons/logs.png" /></span>
                                 <span class="text-nav">Logi</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="toolbar-left-user-settings toolbar-left" id="toolbar-user-settings" style="display:none;">
+                <div class="toolbar-body">
+                    <ul class="options-list-left-user-settings nav" id="settings-card-headers" role="list">
+                        <li class="option-list-item active-tab">
+                            <a class="link show active" id="profile" href="./UserSettings">
+                                <span class="icon" id="profil-icon"><img src="~/icons/profile.png" /></span>
+                                <span class="text-nav" id="profile-text">Profil</span>
+                            </a>
+                        </li>
+                        <li class="option-list-item">
+                            <a class="link" id="email-tab" href="./Email">
+                                <span class="icon"><img src="~/icons/email.png" /></span>
+                                <span class="text-nav">Email</span>
+                            </a>
+                        </li>
+                        <li class="option-list-item">
+                            <a class="link" id="password-tab" href="./ChangePassword">
+                                <span class="icon"><img src="~/icons//password.png" /></span>
+                                <span class="text-nav">Hasło</span>
                             </a>
                         </li>
                     </ul>
