@@ -27,7 +27,7 @@
     <div class="container-fluid main-window">
         <div class="layout-header">
             <header class="app-header">
-                <nav class="navbar navbar-light box-shadow">
+                <nav class="navbar navbar-light box-shadow" id="main-header">
                     <div class="container-fluid" style="padding:0px;">
                         <div class="nav-left-logo">
                             <span class="logo-icon"><img src="" /></span>
@@ -41,7 +41,7 @@
             </header>
         </div>
         <div class="layout-content">
-            <div class="toolbar-left">
+            <div class="toolbar-left" id="toolbar">
                 <div class="toolbar-body">
                     <ul class="options-list-left nav" id="master-card-headers" role="list">
                         <li class="option-list-item active-tab">
@@ -77,7 +77,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="layout-render-body">
+            <div class="layout-render-body" id="content-render">
                 <main role="main">
                     @RenderBody()
                 </main>

@@ -359,6 +359,14 @@
 
 <script defer>
 
+    function CalculateHeaderWidth(){
+        const sidebar = document.getElementById('toolbar');
+        const header = document.getElementById('main-header');
+        const renderedContent = document.getElementById('content-render');
+
+        header.style.width = `${sidebar.offsetWidth + renderedContent.offsetWidth}px`;
+    }
+
     function DeleteTemplate(templateId) {
 
         $.ajax({
@@ -834,10 +842,15 @@
     }
 
     $(document).ready(function () {
+        CalculateHeaderWidth();
         FetchAllTemplatesAndPopulateTable();
         FetchAllContactsAndPopulateTable();
         FetchAllGroupsAndPopulateTable();
         FetchAllLogsAndPopulateTable();
+
+        window.addEventListener('resize', () => {
+            CalculateHeaderWidth();
+        });
 
         $(document).on('click', '.template-delete', function (e) {
             var templateId = $(this).attr("href").split('-')[1];

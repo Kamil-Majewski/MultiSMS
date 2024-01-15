@@ -249,6 +249,19 @@ label {
     align-items: center;
 }
 
+.profile-settings {
+    color: white;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.profile-settings:hover{
+    text-decoration: none;
+    color: white;
+}
+
 .options-form {
     padding: 30px;
 }
@@ -259,7 +272,7 @@ label {
     right: 15px;
     transform: translateY(-60%);
     cursor: pointer;
-    width: 30px;
+    width: 27px;
     display: none;
 }
 
@@ -301,7 +314,6 @@ label {
     font-family: 'Open Sans', sans-serif;
     font-size: 17px;
     height: 49px;
-    display: flex;
     align-items: center;
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
