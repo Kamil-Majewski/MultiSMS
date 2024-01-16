@@ -16,3 +16,21 @@
 @section Scripts {
     @RenderSection("Scripts", required: false)
 }
+
+<script>
+    function CalculateHeaderWidthForProfile() {
+        const sidebar = document.getElementById('toolbar-user-settings');
+        const header = document.getElementById('main-header');
+        const renderedContent = document.getElementById('content-render');
+
+        header.style.width = `${sidebar.offsetWidth + renderedContent.offsetWidth}px`;
+    }
+
+    $(document).ready(function () {
+        CalculateHeaderWidthForProfile();
+
+        window.addEventListener('resize', () => {
+            CalculateHeaderWidthForProfile();
+        });
+    })
+</script>

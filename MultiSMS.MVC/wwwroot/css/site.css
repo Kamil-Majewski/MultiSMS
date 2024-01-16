@@ -10,6 +10,10 @@ html {
     
 }
 
+.home-link:hover{
+    text-decoration: none;
+}
+
 .info-pill {
     background-color: #d1d1fd;
     border-radius: 50px;
