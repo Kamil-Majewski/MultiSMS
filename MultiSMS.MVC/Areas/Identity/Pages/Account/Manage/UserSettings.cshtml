@@ -7,18 +7,20 @@
 <partial name="_StatusMessage" for="StatusMessage" />
 <div class="user-info options-container">
     <div class="option-content">
-        <form class="contact-options-form options-form">
+        <form class="contact-options-form options-form" id="update-admin-info" method="post">
             <div class="personal-data" style="margin-bottom:20px;">
                 <span class="form-subtitle">Dane Personalne</span>
                 <div class="form-group" style="margin-top: 20px;">
                     <div class="row">
                         <div class="col">
                             <label for="AdminName">Imię</label>
-                            <input type="text" class="form-input" id="AdminName" required maxlength="20">
+                            <input asp-for=Input.Name type="text" class="form-input" id="AdminName" required maxlength="20">
+                            <span asp-validation-for="Input.Name" class="text-danger"></span>
                         </div>
                         <div class="col">
                             <label for="AdminSurname">Nazwisko</label>
-                            <input type="text" class="form-input" id="AdminSurname" required maxlength="20">
+                            <input asp-for="Input.Surname" type="text" class="form-input" id="AdminSurname" required maxlength="20">
+                            <span asp-validation-for="Input.Surname" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="row">
@@ -40,7 +42,7 @@
                 <div class="form-group" style="margin-top:20px;">
                     <div class="row">
                         <div class="col">
-                            <label for="AdminPhone">Numer telefonu *</label>
+                            <label for="AdminPhone">Numer telefonu</label>
                             <input asp-for="Input.PhoneNumber" type="tel" class="form-input" id="AdminPhone" required maxlength="15" minlength="11" pattern="^(\+[0-9]{2} )?\d{3} \d{3} \d{3}$">
                             <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
                         </div>
@@ -54,13 +56,62 @@
     </div>
 </div>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
-
 <script>
+    function FormatPhoneNumberOnLoad() {
+        var phoneInput = document.getElementById('AdminPhone');
+        var inputValue = phoneInput.value;
+
+        var sanitizedValue = inputValue.replace(/[^0-9+]/g, '');
+
+        var formattedValue = sanitizedValue.replace(/(\S{3})/g, '$1 ').trim();
+        phoneInput.value = formattedValue;
+
+    }
+
     $("#toolbar").hide();
     $("#toolbar-user-settings").show();
     $(".active-tab").removeClass("active-tab");
     $("#profile").parent().toggleClass("active-tab");
+
+    $(document).ready(function () {
+        FormatPhoneNumberOnLoad();
+
+        $("#change-email-button").on('click', function () {
+            window.location.replace("./Email");
+        });
+
+        $("#AdminPhone").on('input', function () {
+            var phoneInput = document.getElementById('AdminPhone');
+
+            if (event.inputType === 'deleteContentBackward' || event.inputType === 'deleteContentForward') {
+                return;
+            }
+
+            var inputValue = phoneInput.value;
+            var cursorPosition = phoneInput.selectionStart;
+
+            var sanitizedValue = inputValue.replace(/[^0-9+]/g, '');
+
+            var formattedValue = sanitizedValue.replace(/(\S{3})/g, '$1 ').trim();
+            var lengthDiff = formattedValue.length - inputValue.length;
+
+            phoneInput.value = formattedValue;
+
+            phoneInput.setSelectionRange(cursorPosition + lengthDiff, cursorPosition + lengthDiff);
+        });
+
+        $(document).on('submit', '#update-admin-info', function (e) {
+            var form = document.getElementById("update-admin-info");
+            e.preventDefault();
+
+            if (form.checkValidity() === false) {
+                form.reportValidity()
+                return
+            }
+
+            form.submit();
+        });
+    });
+
+   
 </script>

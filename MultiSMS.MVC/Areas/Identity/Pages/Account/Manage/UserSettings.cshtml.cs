@@ -2,13 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
 
 namespace MultiSMS.MVC.Areas.Identity.Pages.Account.Manage
@@ -17,13 +15,16 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<Administrator> _userManager;
         private readonly SignInManager<Administrator> _signInManager;
+        private readonly IAdministratorService _adminService;
 
         public IndexModel(
             UserManager<Administrator> userManager,
-            SignInManager<Administrator> signInManager)
+            SignInManager<Administrator> signInManager,
+            IAdministratorService adminService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _adminService = adminService;
         }
 
         /// <summary>
@@ -57,19 +58,29 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account.Manage
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Phone]
-            [Display(Name = "Phone number")]
+            [Display(Name = "Numer telefonu")]
+            [Required(ErrorMessage = "Pole numer telefonu nie może być puste!")]
             public string PhoneNumber { get; set; }
+            [MaxLength(20)]
+            [Required(ErrorMessage="Pole imię nie może być puste!")]
+            public string Name { get; set; }
+            [MaxLength(20)]
+            [Required(ErrorMessage = "Pole nazwisko nie może być puste!")]
+            public string Surname { get; set; }
         }
 
         private async Task LoadAsync(Administrator user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
+            var adminDto = await _adminService.GetAdministratorByEmailAsync(userName);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
             Username = userName;
 
             Input = new InputModel
             {
+                Name = adminDto.Name,
+                Surname = adminDto.Surname,
                 PhoneNumber = phoneNumber
             };
         }
@@ -101,19 +112,42 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account.Manage
             }
 
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            var adminIdentity = await _userManager.GetUserAsync(User);
+
             if (Input.PhoneNumber != phoneNumber)
             {
                 var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
                 if (!setPhoneResult.Succeeded)
                 {
-                    StatusMessage = "Unexpected error when trying to set phone number.";
+                    StatusMessage = "Błąd: Wystąpił nieoczekiwany błąd podczas zmiany numeru telefonu.";
                     return RedirectToPage();
                 }
+
+                await _signInManager.RefreshSignInAsync(user);
+                StatusMessage = "Profil został pomyślnie zaktualizowany";
+                return RedirectToPage();
+            }
+            else if (Input.Name != adminIdentity.Name || Input.Surname != adminIdentity.Surname)
+            {
+                user.Name = Input.Name;
+                user.Surname = Input.Surname;
+                var updateResult = await _userManager.UpdateAsync(user);
+                if (!updateResult.Succeeded)
+                {
+                    StatusMessage = "Błąd: Wystąpił nieoczekiwany błąd podczas aktualizowania danych osobowych";
+                }
+                await _signInManager.RefreshSignInAsync(user);
+                StatusMessage = "Profil został pomyślnie zaktualizowany";
+                return RedirectToPage();
+            }
+            else
+            {
+                StatusMessage = "Nie zmieniono żadnych danych";
+                return RedirectToPage();
             }
 
-            await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your profile has been updated";
-            return RedirectToPage();
+           
+            
         }
     }
 }
