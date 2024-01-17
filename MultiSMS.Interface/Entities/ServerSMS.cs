@@ -18,7 +18,7 @@ namespace MultiSMS.Interface.Entities
         {
                 if(string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
-                throw new Exception("Brak danych autoryzacyjnych");
+                throw new Exception("Authorization failed: username or password was empty!");
             }
 
             Username = username;
@@ -26,7 +26,7 @@ namespace MultiSMS.Interface.Entities
 
         }
 
-        public async Task<object> CallAsync(string url, Dictionary<string, string> data)
+        public async Task<string> CallAsync(string url, Dictionary<string, string> data)
         {
             data["username"] = Username;
             data["password"] = Password;
@@ -42,16 +42,8 @@ namespace MultiSMS.Interface.Entities
 
             string responseBody = await response.Content.ReadAsStringAsync();
 
-            if (Format == "xml")
-            {
-                var xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(responseBody);
-                return xmlDoc;
-            }
-            else
-            {
-                return JsonConvert.DeserializeObject(responseBody)!;
-            }
+            return responseBody; //raw string response, process in controller or service
+
         }
     }
 }

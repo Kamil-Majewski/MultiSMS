@@ -19,7 +19,7 @@ namespace MultiSMS.BusinessLogic.Services
             return new ServerSms(_smsSettings.Username, _smsSettings.Password);
         }
 
-        public async Task<Object> SendSmsAsync(string phone, string text, string sender, Dictionary<string, string> data)
+        public async Task<string> SendSmsAsync(string phone, string text, Dictionary<string, string> data)
         {
 
             var serverSmsInstance = CreateServerSMSInstance();
@@ -30,7 +30,7 @@ namespace MultiSMS.BusinessLogic.Services
                 {
                     { "phone", phone },
                     { "text", text },
-                    { "sender", sender }
+                    { "sender", "Toruń WOL" }
                 };
 
                 data = dataDictionary;
@@ -39,7 +39,7 @@ namespace MultiSMS.BusinessLogic.Services
             {
                 data.Add("phone", phone);
                 data.Add("text", text);
-                data.Add("sender", sender);
+                data.Add("sender", "Toruń WOL");
             }
 
             return await serverSmsInstance.CallAsync("messages/send_sms", data);

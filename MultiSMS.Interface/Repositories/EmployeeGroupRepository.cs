@@ -34,5 +34,10 @@ namespace MultiSMS.Interface.Repositories
         {
             return _dbContext.EmployeeGroups.Where(eg => eg.EmployeeId == employeeId).Include(eg => eg.Group).Select(g => g.Group.GroupName);
         }
+
+        public IQueryable<string> GetAllPhoneNumbersForGroupQueryable(int groupId)
+        {
+            return _dbContext.EmployeeGroups.Where(eg => eg.GroupId == groupId).Include(eg => eg.Employee).Select(e => e.Employee.PhoneNumber);
+        }
     }
 }

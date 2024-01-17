@@ -2,6 +2,6 @@
 {
     public interface IServerSmsService
     {
-        Task<Object> SendSmsAsync(string phone, string text, string sender, Dictionary<string, string> data);
+        Task<string> SendSmsAsync(string phone, string text, Dictionary<string, string> data);
     }
 }

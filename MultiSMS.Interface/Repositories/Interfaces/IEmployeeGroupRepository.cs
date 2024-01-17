@@ -1,6 +1,4 @@
-﻿using MultiSMS.Interface.Entities;
-
-namespace MultiSMS.Interface.Repositories.Interfaces
+﻿namespace MultiSMS.Interface.Repositories.Interfaces
 {
     public interface IEmployeeGroupRepository
     {
@@ -8,5 +6,6 @@ namespace MultiSMS.Interface.Repositories.Interfaces
         IQueryable<int> GetAllEmployeesIdsForGroupQueryable(int groupId);
         Task RemoveGroupMember(int groupId, int employeeId);
         IQueryable<string> GetAllGroupNamesForEmployeeQueryable(int employeeId);
+        IQueryable<string> GetAllPhoneNumbersForGroupQueryable(int groupId);
     }
 }
