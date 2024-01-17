@@ -9,7 +9,7 @@ namespace MultiSMS.Interface.Entities
         public int SMSId { get; set; }
         public int IssuerId { get; set; }
         public int ChosenGroupId { get; set; }
-        public List<string> AdditionalPhoneNumbers { get; set; } = new List<string>();
+        public string? AdditionalPhoneNumbers { get; set; } 
         public DateTime MessageSentDate { get; set; } = DateTime.Now;
         public string? AdditionalInformation { get; set; }
         public string DataDictionarySerialized { get; set; } = default!;

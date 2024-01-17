@@ -22,6 +22,7 @@ namespace MultiSMS.MVC.Controllers
             _employeeGroupRepository = employeeGroupRepository;
         }
 
+        [HttpGet]
         public async Task<IActionResult> SendSmsMessage(string text, int chosenGroupId, string chosenGroupName, List<string> additionalPhoneNumbers, string additionalInfo)
         {
             var adminId = User.GetLoggedInUserId<int>();
@@ -44,8 +45,6 @@ namespace MultiSMS.MVC.Controllers
 
             var response = await _smsService.SendSmsAsync(phoneNumbersString, text, data);
 
-            dynamic responseObject = JsonConvert.DeserializeObject(response) ?? throw new Exception("Deserialization failed");
-
             data.Add("phone", phoneNumbersString);
             data.Add("text", text);
             data.Add("sender", "Toruń WOL");
@@ -54,14 +53,15 @@ namespace MultiSMS.MVC.Controllers
             {
                 IssuerId = adminId,
                 ChosenGroupId = chosenGroupId,
-                AdditionalPhoneNumbers = additionalPhoneNumbers,
+                AdditionalPhoneNumbers = string.Join(',', additionalPhoneNumbers),
                 AdditionalInformation = additionalInfo,
                 DataDictionarySerialized = JsonConvert.SerializeObject(data),
                 ServerResponseSerialized = response
             });
 
-            if (responseObject.success == "true")
+            try
             {
+                SuccessResponse successResponse = JsonConvert.DeserializeObject<SuccessResponse>(response) ?? throw new Exception("Deserialization failed");
                 await _logRepository.AddEntityToDatabaseAsync(new Log
                 {
                     LogType = "Info",
@@ -76,29 +76,34 @@ namespace MultiSMS.MVC.Controllers
                     })
                 });
 
-                return Json(new { Status = "success", Queued = responseObject.queued, Unsent = responseObject.unsent });
+                return Json(new { Status = successResponse.Success, Queued = successResponse.Queued, Unsent = successResponse.Unsent });
             }
-            else
+            catch (JsonException)
             {
-                await _logRepository.AddEntityToDatabaseAsync(new Log
+                try
                 {
-                    LogType = "Błąd",
-                    LogSource = "SMS",
-                    LogMessage = $"Próba wysłania smsa do grupy {chosenGroupName} zakończona niepowodzeniem",
-                    LogCreator = adminUsername,
-                    LogCreatorId = adminId,
-                    LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, int>()
+                    ErrorResponse errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(response) ?? throw new Exception("Deserialization failed");
+                    await _logRepository.AddEntityToDatabaseAsync(new Log
+                    {
+                        LogType = "Błąd",
+                        LogSource = "SMS",
+                        LogMessage = $"Próba wysłania smsa do grupy {chosenGroupName} zakończona niepowodzeniem",
+                        LogCreator = adminUsername,
+                        LogCreatorId = adminId,
+                        LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, int>()
                     {
                         { "SmsMessages", smsMessage.SMSId },
                         { "Groups", chosenGroupId }
                     })
-                });
+                    });
 
-                return Json(new { Status = "success", Queued = responseObject.queued, Unsent = responseObject.unsent });
+                    return Json(new { Status = "failed", Code = errorResponse.Error.Code, Message = errorResponse.Error.Message });
+                }
+                catch (JsonException)
+                {
+                    throw new Exception("Error deserializing objects: response structure doesn't fit the object structure. ");
+                }
             }
-
-
-
         }
     }
 }
