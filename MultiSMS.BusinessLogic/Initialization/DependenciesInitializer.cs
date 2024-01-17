@@ -10,6 +10,7 @@ namespace MultiSMS.BusinessLogic.Initialization
         {
             serviceCollection.AddScoped<IEmailService, EmailService>();
             serviceCollection.AddScoped<IAdministratorService, AdministratorService>();
+            serviceCollection.AddScoped<IServerSmsService, ServerSmsService>();
         }
     }
 }

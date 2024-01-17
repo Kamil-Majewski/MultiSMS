@@ -4,7 +4,7 @@ using System.Xml;
 
 namespace MultiSMS.Interface.Entities
 {
-    public class ServerSMS
+    public class ServerSms
     {
         private const string _api_url = "https://api2.serwersms.pl/";
         private const string _system = "client_csharp";
@@ -14,7 +14,7 @@ namespace MultiSMS.Interface.Entities
 
         public string Format = "json";
 
-        public ServerSMS(string username, string password)
+        public ServerSms(string username, string password)
         {
                 if(string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
