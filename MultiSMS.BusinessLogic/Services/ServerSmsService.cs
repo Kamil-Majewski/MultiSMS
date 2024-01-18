@@ -29,8 +29,8 @@ namespace MultiSMS.BusinessLogic.Services
                 var dataDictionary = new Dictionary<string, string>
                 {
                     { "phone", phone },
-                    { "text", text },
-                    { "sender", "Toruń WOL" }
+                    { "text", text }
+                    //{ "sender", "Toruń WOL" }
                 };
 
                 data = dataDictionary;
@@ -39,7 +39,7 @@ namespace MultiSMS.BusinessLogic.Services
             {
                 data.Add("phone", phone);
                 data.Add("text", text);
-                data.Add("sender", "Toruń WOL");
+                //data.Add("sender", "Toruń WOL");
             }
 
             return await serverSmsInstance.CallAsync("messages/send_sms", data);

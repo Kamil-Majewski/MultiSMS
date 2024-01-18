@@ -5,6 +5,8 @@
 <div class="content-container">
     <div class="tab-content" id="category-tab-content">
         <div class="tab-pane show active" id="send-sms" aria-labelledby="sms-tab">
+            <div class="alert" id="status-message-sms" role="alert" style="border-radius: 50px; display:none;">
+            </div>
             <div class="sms-container options-container">
                 <div class="option-content">
                     <form class="sms-options-form options-form" id="send-sms-form">
@@ -471,11 +473,19 @@
             contentType: 'application/json',
             data: { text: text, chosenGroupId: chosenGroupId, chosenGroupName: chosenGroupName, additionalPhoneNumber: additionalPhoneNumbers, additionalInfo: additionalInfo },
             success: function (response) {
-                if (response.status = "failed") {
+                if (response.status == "failed") {
                     console.log("Operation failed, server responded with code " + response.code + " - " + response.message);
+                    $("#status-message-sms").addClass("failed-status");
+                    $("#status-message-sms").html("Operacja zakończyła się niepowodzeniem, błąd " + response.code + " - " + response.message + "<button type='button' class='btn-close text-dark' data-bs-dismiss='alert' aria-label='Close'></button>");
+                    $("#status-message-sms").show();
                 }
                 else {
-                    console.log("Operation successful, messages queued: " + response.queued + ", messages unsent: " + response.message);
+                    $("#status-message-sms").addClass("success-status");
+                    console.log("Operation successful, messages queued: " + response.queued + ", messages unsent: " + response.unsent);
+                    $("#status-message-sms").html("Wiadomość została wysłana (zakolejkowane: " + response.queued + ", niewysłane: " + response.unsent + ") <button type='button' class='btn-close text-dark' data-bs-dismiss='alert' aria-label='Close'></button>");
+                    $("#status-message-sms").show();
+                    $("#send-sms-form :input").val('');
+
                 }
             },
             error: function (error) {
@@ -733,9 +743,14 @@
                 $('#log-table tbody').empty();
 
                 $.each(listOfLogs, function (index, item) {
-                    var newRow = '<tr>' +
-                        '<td class="tiny-centered-cell"><span class="info-pill">' + item.logType + '</span></td>' +
-                        '<td class="tiny-cell">' + item.logSource + '</td>' +
+                    var newRow = '<tr>'
+                    if(item.logType == "Błąd"){
+                        newRow += '<td class="tiny-centered-cell"><span class="error-pill">' + item.logType + '</span></td>'
+                    }
+                    else{
+                        newRow += '<td class="tiny-centered-cell"><span class="info-pill">' + item.logType + '</span></td>'
+                    }
+                    newRow += '<td class="tiny-cell">' + item.logSource + '</td>' +
                         '<td class="big-cell">' + item.logMessage + '</td>' +
                         '<td class="centered-cell" style="min-width:105px;">' + new Date(item.logCreationDate).toLocaleString('en-GB') + '</td>' +
                         '<td class="tiny-centered-cell">' +
@@ -764,6 +779,9 @@
                 $('#choose-group-for-sms-table tbody').empty();
 
                 $.each(listOfGroups, function (index, item) {
+                    if(item.membersIds.length == 0){
+                        return;
+                    }
                     var newRow = '<tr>' +
                         '<td class="small-cell">' + item.groupName + '</td>' +
                         '<td class="big-cell">' + item.groupDescription + '</td>' +

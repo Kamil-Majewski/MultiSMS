@@ -4,7 +4,6 @@ using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Extensions;
 using MultiSMS.Interface.Repositories.Interfaces;
 using Newtonsoft.Json;
-using NuGet.Packaging;
 
 namespace MultiSMS.MVC.Controllers
 {
