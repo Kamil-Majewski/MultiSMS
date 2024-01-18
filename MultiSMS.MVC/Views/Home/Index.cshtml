@@ -12,8 +12,8 @@
                             <div class="col">
                                 <label for="GroupOfContacts">Grupa kontaktów *</label>
                                 <div style="width: 100%; display: inline-flex; justify-content: space-between;">
-                                    <input type="text" class="form-input" id="GroupOfContacts" style="flex-grow:1;" required disabled>
-                                    <button class="violet-button" id="choose-group-of-contacts" type="button" style="min-width: 125px; height: 44px; margin-left: 30px;">Wybierz</button>
+                                    <input type="text" class="form-input" id="GroupOfContacts" style="flex-grow:1; font-weight:500;" required disabled>
+                                    <button class="violet-button" id="choose-group-of-contacts" type="button" style="min-width: 125px; height: 44px; margin-left: 30px;" onclick="OpenChooseGroupForSMS()">Wybierz</button>
                                 </div>
                             </div>
                         </div>
@@ -21,7 +21,7 @@
                             <div class="col">
                                 <label for="ChosenTemplate">Szablon</label>
                                 <div style="width: 100%; display: inline-flex; justify-content: space-between;">
-                                    <input type="text" class="form-input" id="ChosenTemplate" style="flex-grow:1;" disabled>
+                                    <input type="text" class="form-input" id="ChosenTemplate" style="flex-grow:1; font-weight:500;" disabled>
                                     <button class="violet-button" id="choose-template" type="button" style="min-width: 125px; height: 44px; margin-left: 30px;">Wybierz</button>
                                 </div>
                             </div>
@@ -38,6 +38,70 @@
                             <button type="submit" class="violet-button" id="SendSmsMessage">Wyślij wiadomość SMS</button>
                         </div>
                     </form>
+                </div>
+            </div>
+            <div class="choose-group-for-sms-container list-container" style="display:none;">
+                <div class="list-header">
+                    <div class="previous-page" style="flex:1;">
+                        <button class="violet-button" id="choose-group-for-sms-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToSMSWindow()">
+                            <span style="max-width:24px;"><img src="~/icons/previous.png" /></span>
+                            <span>Powrót</span>
+                        </button>
+                    </div>
+                    <div class="option-name" style="flex:auto; text-align:center;">
+                        <span class="opion-name-placeholder" id="choose-group-for-sms-title">Wybierz grupę odbiorców wiadomości</span>
+                    </div>
+                    <div class="list-search-bar">
+                        <input class="search-for search-for-group-for-sms" placeholder="Wyszukaj grupę" style="flex:1;" />
+                    </div>
+                </div>
+                <div class="list-content">
+                    <div class="table-responsive">
+                        <table class="choose-group-for-sms-list table table-borderless" id="choose-group-for-sms-table">
+                            <thead>
+                                <tr>
+                                    <th class="small-cell">Nazwa</th>
+                                    <th class="big-cell">Opis</th>
+                                    <th class="tiny-centered-cell">Liczba członków</th>
+                                    <th class="tiny-centered-cell">Akcja</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="choose-template-for-sms-container list-container" style="display:none;">
+                <div class="list-header">
+                    <div class="previous-page" style="flex:1;">
+                        <button class="violet-button" id="choose-template-for-sms-previous-button" type="button" style="display: flex; align-items:center;" onclick="">
+                            <span style="max-width:24px;"><img src="~/icons/previous.png" /></span>
+                            <span>Powrót</span>
+                        </button>
+                    </div>
+                    <div class="option-name" style="flex:auto; text-align:center;">
+                        <span class="opion-name-placeholder" id="choose-template-for-sms-title">Wybierz szablon wiadomości</span>
+                    </div>
+                    <div class="list-search-bar">
+                        <input class="search-for search-for-template-for-sms" placeholder="Wyszukaj szablon" style="flex:1;" />
+                    </div>
+                </div>
+                <div class="list-content">
+                    <div class="table-responsive">
+                        <table class="choose-template-for-sms-list table table-borderless" id="choose-template-for-sms-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Nazwa</th>
+                                    <th scope="col">Opis</th>
+                                    <th scope="col">Treść</th>
+                                    <th class="tiny-centered-cell">Opcje</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -255,8 +319,8 @@
                         <table class="group-list table table-borderless" id="group-table">
                             <thead>
                                 <tr>
-                                    <th scope="col">Nazwa</th>
-                                    <th scope="col">Opis</th>
+                                    <th class="small-cell">Nazwa</th>
+                                    <th class="big-cell">Opis</th>
                                     <th class="tiny-centered-cell">Liczba członków</th>
                                     <th class="centered-cell" scope="col">Opcje</th>
                                 </tr>
@@ -669,6 +733,35 @@
         })
     }
 
+    function PopulateTableForChooseGroupForSMS(){
+        $.ajax({
+            url: '@Url.Action("FetchAllGroups", "Home")',
+            type: 'GET',
+            contentType: 'application/json',
+            success: function (listOfGroups) {
+                console.log("Successfully retrieved groups")
+                $('#choose-group-for-sms-table tbody').empty();
+
+                $.each(listOfGroups, function (index, item) {
+                    var newRow = '<tr>' +
+                        '<td class="small-cell">' + item.groupName + '</td>' +
+                        '<td class="big-cell">' + item.groupDescription + '</td>' +
+                        '<td class="tiny-centered-cell">' + item.membersIds.length + '</td>' +
+                        '<td class="tiny-centered-cell">' +
+                        '<a href="#pick-' + item.groupId + '" class="icon-list group-pick-me"><img src="/icons/pick-me.png" title="Wybierz grupę"/></a>' +
+                        '</td>' +
+                        '</tr>';
+
+
+                    $('#choose-group-for-sms-table tbody').append(newRow);
+                });
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        })
+    }
+
     function PopulateTablesForAssigningUsersToGroups(groupId) {
         $.ajax({
             url: '@Url.Action("GetGroupById", "Home")',
@@ -844,6 +937,17 @@
         $(".groups-options-container").show();
     }
 
+    function OpenChooseGroupForSMS() {
+        PopulateTableForChooseGroupForSMS();
+        $(".sms-container").hide();
+        $(".choose-group-for-sms-container").show();
+    }
+
+    function GoBackToSMSWindow(){
+        $(".choose-group-for-sms-container").hide();
+        $(".sms-container").show();
+    }
+
     function GoBackToTemplateList() {
         $("#createOrEditButtonTemplates").removeAttr("data-id");
         $(".templates-list-container").show();
@@ -1001,6 +1105,26 @@
             PopulateTablesForAssigningUsersToGroups(groupId)
         });
 
+        $(document).on('click', '.group-pick-me', function (e) {
+            var groupId = $(this).attr("href").split('-')[1];
+
+            $.ajax({
+                url: '@Url.Action("GetGroupById", "Home")',
+                type: 'GET',
+                data: { id: groupId },
+
+                contentType: 'application/json',
+                success: function (groupEntity) {
+                    $("#GroupOfContacts").val(groupEntity.groupName);
+                    $("#GroupOfContacts").attr('data-id', groupEntity.groupId);
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+            GoBackToSMSWindow();  
+        });
+
         $(document).on('click', '.contact-assign', function (e) {
             var assignContactIdGroupId = $(this).attr("href").split('-');
 
@@ -1132,6 +1256,23 @@
             var filterText = $(this).val().toLowerCase();
 
             $('#template-table tbody tr').each(function () {
+                var rowHit = false;
+                $(this).find('td').each(function () {
+                    if ($(this).text().toLowerCase().includes(filterText)) {
+                        rowHit = true;
+                        return false;
+                    }
+                });
+
+                $(this).toggle(rowHit);
+            });
+        });
+
+        $(".search-for-group-for-sms").on('input', function () {
+
+            var filterText = $(this).val().toLowerCase();
+
+            $('#choose-group-for-sms-table tbody tr').each(function () {
                 var rowHit = false;
                 $(this).find('td').each(function () {
                     if ($(this).text().toLowerCase().includes(filterText)) {
