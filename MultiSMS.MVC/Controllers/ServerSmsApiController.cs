@@ -43,13 +43,13 @@ namespace MultiSMS.MVC.Controllers
 
             var phoneNumbersString = string.Join(',', groupPhoneNumbers);
 
-            var response = await _smsService.SendSmsAsync(phoneNumbersString, text, data);
+            var response = await _smsService.SendSmsAsync(phoneNumbersString, text, data); //Call API
 
             data.Add("phone", phoneNumbersString);
             data.Add("text", text);
             data.Add("sender", "Toruń WOL");
 
-            var smsMessage = await _smsRepository.AddEntityToDatabaseAsync(new SMSMessage
+            var smsMessage = await _smsRepository.AddEntityToDatabaseAsync(new SMSMessage //Save SMSMessage entity to database in order to link it to the log entity
             {
                 IssuerId = adminId,
                 ChosenGroupId = chosenGroupId,
@@ -59,7 +59,7 @@ namespace MultiSMS.MVC.Controllers
                 ServerResponseSerialized = response
             });
 
-            try
+            try //try to deserialize response into entities that correspond with response structure and then act depending on the outcome
             {
                 SuccessResponse successResponse = JsonConvert.DeserializeObject<SuccessResponse>(response) ?? throw new Exception("Deserialization failed");
                 await _logRepository.AddEntityToDatabaseAsync(new Log
@@ -80,7 +80,7 @@ namespace MultiSMS.MVC.Controllers
             }
             catch (JsonException)
             {
-                try
+                try //deserialization into SuccessResponse failed, try to deserialize into ErrorResponse
                 {
                     ErrorResponse errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(response) ?? throw new Exception("Deserialization failed");
                     await _logRepository.AddEntityToDatabaseAsync(new Log
@@ -91,17 +91,17 @@ namespace MultiSMS.MVC.Controllers
                         LogCreator = adminUsername,
                         LogCreatorId = adminId,
                         LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, int>()
-                    {
-                        { "SmsMessages", smsMessage.SMSId },
-                        { "Groups", chosenGroupId }
-                    })
+                        {
+                            { "SmsMessages", smsMessage.SMSId },
+                            { "Groups", chosenGroupId }
+                        })
                     });
 
                     return Json(new { Status = "failed", Code = errorResponse.Error.Code, Message = errorResponse.Error.Message });
                 }
                 catch (JsonException)
                 {
-                    throw new Exception("Error deserializing objects: response structure doesn't fit the object structure. ");
+                    throw new Exception("Error deserializing objects: response structure doesn't fit the object structure.");
                 }
             }
         }

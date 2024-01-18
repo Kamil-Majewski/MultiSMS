@@ -5,8 +5,40 @@
 <div class="content-container">
     <div class="tab-content" id="category-tab-content">
         <div class="tab-pane show active" id="send-sms" aria-labelledby="sms-tab">
-            <div class="d-flex sms-container">
-                Wyślij sms
+            <div class="sms-container options-container">
+                <div class="option-content">
+                    <form class="sms-options-form options-form" id="send-sms-form">
+                        <div class="row">
+                            <div class="col">
+                                <label for="GroupOfContacts">Grupa kontaktów *</label>
+                                <div style="width: 100%; display: inline-flex; justify-content: space-between;">
+                                    <input type="text" class="form-input" id="GroupOfContacts" style="flex-grow:1;" required disabled>
+                                    <button class="violet-button" id="choose-group-of-contacts" type="button" style="min-width: 125px; height: 44px; margin-left: 30px;">Wybierz</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label for="ChosenTemplate">Szablon</label>
+                                <div style="width: 100%; display: inline-flex; justify-content: space-between;">
+                                    <input type="text" class="form-input" id="ChosenTemplate" style="flex-grow:1;" disabled>
+                                    <button class="violet-button" id="choose-template" type="button" style="min-width: 125px; height: 44px; margin-left: 30px;">Wybierz</button>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col">
+                                <label for="SmsText">Treść wiadomości *</label>
+                                <textarea class="form-input" id="SmsText" rows="5" maxlength="160" required></textarea>
+                                <div style="margin-top: 0.25rem; text-align: right" id="sms-text-symbol-counter">&nbsp</div>
+                            </div>
+                        </div>
+                        <div class="justify-content-center d-flex">
+                            <button type="submit" class="violet-button" id="SendSmsMessage">Wyślij wiadomość SMS</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
         <div class="tab-pane" id="templates">
