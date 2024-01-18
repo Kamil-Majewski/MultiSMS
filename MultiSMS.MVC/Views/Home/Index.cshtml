@@ -22,7 +22,7 @@
                                 <label for="ChosenTemplate">Szablon</label>
                                 <div style="width: 100%; display: inline-flex; justify-content: space-between;">
                                     <input type="text" class="form-input" id="ChosenTemplate" style="flex-grow:1; font-weight:500;" disabled>
-                                    <button class="violet-button" id="choose-template" type="button" style="min-width: 125px; height: 44px; margin-left: 30px;">Wybierz</button>
+                                    <button class="violet-button" id="choose-template" type="button" style="min-width: 125px; height: 44px; margin-left: 30px;" onclick="OpenChooseTemplateForSMS()">Wybierz</button>
                                 </div>
                             </div>
                         </div>
@@ -75,7 +75,7 @@
             <div class="choose-template-for-sms-container list-container" style="display:none;">
                 <div class="list-header">
                     <div class="previous-page" style="flex:1;">
-                        <button class="violet-button" id="choose-template-for-sms-previous-button" type="button" style="display: flex; align-items:center;" onclick="">
+                        <button class="violet-button" id="choose-template-for-sms-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToSMSWindow()">
                             <span style="max-width:24px;"><img src="~/icons/previous.png" /></span>
                             <span>Powrót</span>
                         </button>
@@ -762,6 +762,36 @@
         })
     }
 
+    function PopulateTableForChooseTemplateForSMS(){
+        $.ajax({
+            url: '@Url.Action("FetchAllTemplates", "Home")',
+            type: 'GET',
+            contentType: 'application/json',
+            success: function (listOfTemplates) {
+                console.log("Successfully retrieved templates")
+                $('#choose-template-for-sms-table tbody').empty();
+
+                $.each(listOfTemplates, function (index, item) {
+                    var newRow = '<tr>' +
+                        '<td class="small-cell">' + item.templateName + '</td>' +
+                        '<td class="medium-cell">' + item.templateDescription + '</td>' +
+                        '<td class="big-cell">' + item.templateContent + '</td>' +
+                        '<td class="tiny-centered-cell">' +
+                        '<a href="#pick-' + item.templateId + '" class="icon-list template-pick-me"><img src="/icons/pick-me.png" title="Wybierz szablon"/></a>' +
+                        '</td>' +
+                        '</tr>';
+
+
+                    $('#choose-template-for-sms-table tbody').append(newRow);
+                });
+
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+
     function PopulateTablesForAssigningUsersToGroups(groupId) {
         $.ajax({
             url: '@Url.Action("GetGroupById", "Home")',
@@ -943,8 +973,15 @@
         $(".choose-group-for-sms-container").show();
     }
 
+    function OpenChooseTemplateForSMS() {
+        PopulateTableForChooseTemplateForSMS();
+        $(".sms-container").hide();
+        $(".choose-template-for-sms-container").show();
+    }
+
     function GoBackToSMSWindow(){
         $(".choose-group-for-sms-container").hide();
+        $(".choose-template-for-sms-container").hide();
         $(".sms-container").show();
     }
 
@@ -1125,6 +1162,30 @@
             GoBackToSMSWindow();  
         });
 
+        $(document).on('click', '.template-pick-me', function (e) {
+            var templateId = $(this).attr("href").split('-')[1];
+
+            $.ajax({
+                url: '@Url.Action("GetTemplateById", "Home")',
+                type: 'GET',
+                data: { id: templateId },
+
+                contentType: 'application/json',
+                success: function (templateEntity) {
+                    $("#ChosenTemplate").val(templateEntity.templateName);
+                    $("#ChosenTemplate").attr('data-id', templateEntity.groupId);
+                    $("#SmsText").val(templateEntity.templateContent);
+
+                    const messageEle = document.getElementById('SmsText');
+                    document.getElementById('sms-text-symbol-counter').innerHTML = messageEle.value.length + "/" + messageEle.getAttribute('maxlength');
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+            GoBackToSMSWindow();
+        });
+
         $(document).on('click', '.contact-assign', function (e) {
             var assignContactIdGroupId = $(this).attr("href").split('-');
 
@@ -1285,6 +1346,23 @@
             });
         });
 
+        $(".search-for-template-for-sms").on('input', function () {
+
+            var filterText = $(this).val().toLowerCase();
+
+            $('#choose-template-for-sms-table tbody tr').each(function () {
+                var rowHit = false;
+                $(this).find('td').each(function () {
+                    if ($(this).text().toLowerCase().includes(filterText)) {
+                        rowHit = true;
+                        return false;
+                    }
+                });
+
+                $(this).toggle(rowHit);
+            });
+        });
+
         $(".contact-search").on('input', function () {
 
             var filterText = $(this).val().toLowerCase();
@@ -1397,6 +1475,16 @@
         
         $("#templateContentInput").on('input', function (e) {
             const counterEle = document.getElementById('symbolCounterAdd');
+
+            const target = e.target;
+            const maxLength = target.getAttribute('maxlength');
+            const currentLength = target.value.length;
+
+            counterEle.innerHTML = `${currentLength}/${maxLength}`;
+        });
+
+        $("#SmsText").on('input', function (e) {
+            const counterEle = document.getElementById('sms-text-symbol-counter');
 
             const target = e.target;
             const maxLength = target.getAttribute('maxlength');
