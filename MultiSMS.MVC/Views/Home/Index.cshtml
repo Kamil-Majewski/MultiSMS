@@ -163,7 +163,7 @@
                             <div class="row">
                                 <div class="col">
                                     <label for="TemplateContent">Treść wiadomości *</label>
-                                    <textarea class="form-input" id="templateContentInput" rows="5" maxlength="255" required></textarea>
+                                    <textarea class="form-input" id="templateContentInput" rows="5" maxlength="160" required></textarea>
                                     <div style="margin-top: 0.25rem; text-align: right" id="symbolCounterAdd">&nbsp</div>
                                 </div>
                             </div>
@@ -461,6 +461,27 @@
         const renderedContent = document.getElementById('content-render');
 
         header.style.width = `${sidebar.offsetWidth + renderedContent.offsetWidth}px`;
+    }
+
+    function SendSMS(text, chosenGroupId, chosenGroupName, additionalPhoneNumbers, additionalInfo)
+    {
+        $.ajax({
+            url: '@Url.Action("SendSmsMessage", "ServerSmsApi")',
+            type: 'GET',
+            contentType: 'application/json',
+            data: { text: text, chosenGroupId: chosenGroupId, chosenGroupName: chosenGroupName, additionalPhoneNumber: additionalPhoneNumbers, additionalInfo: additionalInfo },
+            success: function (response) {
+                if (response.status = "failed") {
+                    console.log("Operation failed, server responded with code " + response.code + " - " + response.message);
+                }
+                else {
+                    console.log("Operation successful, messages queued: " + response.queued + ", messages unsent: " + response.message);
+                }
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
     }
 
     function DeleteTemplate(templateId) {
@@ -1283,6 +1304,25 @@
             GoBackToTemplateList();
 
         });
+
+        $(document).on('submit', '#send-sms-form', function (e) {
+            var form = document.getElementById("send-sms-form");
+            e.preventDefault();
+
+            if (form.checkValidity() === false) {
+                form.reportValidity()
+                return
+            }
+
+            var smsText = $("#SmsText").val();
+            var smsGroupId = $("#GroupOfContacts").attr("data-id");
+            var smsGroupName = $("#GroupOfContacts").val();
+            var smsAdditional = null;
+            var smsAdditionalInfo = "Testing demo";
+
+            SendSMS(smsText, smsGroupId, smsGroupName, smsAdditional, smsAdditionalInfo);
+        });
+
 
         $(document).on('submit', '#edit-contact-form', function (e) {
             var form = document.getElementById("edit-contact-form");

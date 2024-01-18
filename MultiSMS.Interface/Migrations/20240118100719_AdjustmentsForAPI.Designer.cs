@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MultiSMS.Interface;
 
@@ -11,9 +12,11 @@ using MultiSMS.Interface;
 namespace MultiSMS.Interface.Migrations
 {
     [DbContext(typeof(MultiSMSDbContext))]
-    partial class MultiSMSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240118100719_AdjustmentsForAPI")]
+    partial class AdjustmentsForAPI
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

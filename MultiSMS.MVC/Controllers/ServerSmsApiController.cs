@@ -4,6 +4,7 @@ using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Extensions;
 using MultiSMS.Interface.Repositories.Interfaces;
 using Newtonsoft.Json;
+using NuGet.Packaging;
 
 namespace MultiSMS.MVC.Controllers
 {
@@ -23,11 +24,22 @@ namespace MultiSMS.MVC.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> SendSmsMessage(string text, int chosenGroupId, string chosenGroupName, List<string> additionalPhoneNumbers, string additionalInfo)
+        public async Task<IActionResult> SendSmsMessage(string text, int chosenGroupId, string chosenGroupName, string additionalPhoneNumbers, string additionalInfo)
         {
             var adminId = User.GetLoggedInUserId<int>();
             var adminUsername = User.GetLoggedInUserName();
+            
             var groupPhoneNumbers = _employeeGroupRepository.GetAllPhoneNumbersForGroupQueryable(chosenGroupId).ToList();
+
+            if (additionalPhoneNumbers != null)
+            {
+                var additionalNumbers = additionalPhoneNumbers.Split(',').ToList();
+
+                if (additionalNumbers.Count != 0)
+                {
+                    groupPhoneNumbers.AddRange(additionalNumbers);
+                }
+            }
 
             var data = new Dictionary<string, string>
             {
@@ -36,18 +48,21 @@ namespace MultiSMS.MVC.Controllers
                 {"test", "true" }
             };
 
-            if (additionalPhoneNumbers.Count != 0)
+            var dataForSmsEntity = new Dictionary<string, string>
             {
-                groupPhoneNumbers.AddRange(additionalPhoneNumbers);
-            }
+                {"details", "true"},
+                {"speed", "1"},
+                {"test", "true" }
+            };
+
 
             var phoneNumbersString = string.Join(',', groupPhoneNumbers);
 
             var response = await _smsService.SendSmsAsync(phoneNumbersString, text, data); //Call API
 
-            data.Add("phone", phoneNumbersString);
-            data.Add("text", text);
-            data.Add("sender", "Toruń WOL");
+            dataForSmsEntity.Add("phone", phoneNumbersString);
+            dataForSmsEntity.Add("text", text);
+            dataForSmsEntity.Add("sender", "Toruń WOL");
 
             var smsMessage = await _smsRepository.AddEntityToDatabaseAsync(new SMSMessage //Save SMSMessage entity to database in order to link it to the log entity
             {
@@ -55,7 +70,7 @@ namespace MultiSMS.MVC.Controllers
                 ChosenGroupId = chosenGroupId,
                 AdditionalPhoneNumbers = string.Join(',', additionalPhoneNumbers),
                 AdditionalInformation = additionalInfo,
-                DataDictionarySerialized = JsonConvert.SerializeObject(data),
+                DataDictionarySerialized = JsonConvert.SerializeObject(dataForSmsEntity),
                 ServerResponseSerialized = response
             });
 

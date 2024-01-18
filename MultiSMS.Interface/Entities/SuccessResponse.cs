@@ -1,10 +1,16 @@
-﻿namespace MultiSMS.Interface.Entities
+﻿using Newtonsoft.Json;
+
+namespace MultiSMS.Interface.Entities
 {
     public class SuccessResponse
     {
+        [JsonProperty(PropertyName = "success", Required = Required.Always)]
         public bool Success { get; set; }
+        [JsonProperty(PropertyName = "queued", Required = Required.Always)]
         public int Queued { get; set; }
+        [JsonProperty(PropertyName = "unsent", Required = Required.Always)]
         public int Unsent { get; set; }
+        [JsonProperty(PropertyName = "items", Required = Required.AllowNull)]
         public Item[] Items { get; set; } = default!;
     }
 
