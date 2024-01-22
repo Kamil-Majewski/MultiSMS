@@ -9,12 +9,12 @@
     <section>
         <form id="account" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating">
+            <div>
                 <label asp-for="Input.Email" class="form-label">Email</label>
                 <input asp-for="Input.Email" class="form-input" autocomplete="username" aria-required="true" placeholder="Wprowadź adres email" required/>
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
-            <div class="form-floating mb-3">
+            <div class="mb-3">
                 <label asp-for="Input.Password" class="form-label">Hasło</label>
                 <div class="password-input-container">
                     <input asp-for="Input.Password" class="form-input" id="password-input" autocomplete="current-password" style="padding-right:30px;" aria-required="true" placeholder="Wprowadź hasło" required />
