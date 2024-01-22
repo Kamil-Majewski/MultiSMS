@@ -12,7 +12,7 @@ namespace MultiSMS.Interface.Entities
         private string Username { get; set; } = default!;
         private string Password { get; set; } = default!;
 
-        public string Format = "json";
+        private string Format = "json";
 
         public ServerSms(string username, string password)
         {

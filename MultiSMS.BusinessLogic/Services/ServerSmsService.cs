@@ -14,15 +14,10 @@ namespace MultiSMS.BusinessLogic.Services
             _smsSettings = smsSettings.Value;
         }
 
-        private ServerSms CreateServerSMSInstance()
-        {
-            return new ServerSms(_smsSettings.Username, _smsSettings.Password);
-        }
-
         public async Task<string> SendSmsAsync(string phone, string text, Dictionary<string, string> data)
         {
 
-            var serverSmsInstance = CreateServerSMSInstance();
+            var serverSmsInstance = new ServerSms(_smsSettings.Username, _smsSettings.Password);
 
             if (data == null)
             {

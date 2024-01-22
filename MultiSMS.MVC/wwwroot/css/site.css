@@ -14,6 +14,17 @@ a{
     text-decoration:none;
 }
 
+hr{
+    color:grey;
+}
+
+.dropdown-item {
+    color: #5a6372;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 500 !important;
+    font-size: 15px;
+}
+
 .home-link:hover{
     text-decoration: none;
 }
@@ -27,7 +38,7 @@ a{
 
 .failed-status {
     font-family: 'Open Sans', sans-serif !important;
-    font-weight: 500 !important;
+    font-weight: 600 !important;
     background-color: #ffd1d1;
     color: #5a6372;
 }
@@ -45,6 +56,7 @@ a{
 }
 
 .credentials-container {
+    
     background-color: white;
     width: 25vw;
     padding: 40px 40px 20px 40px;
@@ -414,7 +426,7 @@ label {
 tbody {
     color: #5a6372;
     font-family: 'Open Sans', sans-serif;
-    font-weight:600;
+    font-weight: 500;
 }
 
 .table thead th {
