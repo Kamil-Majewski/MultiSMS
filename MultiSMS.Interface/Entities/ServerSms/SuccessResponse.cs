@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace MultiSMS.Interface.Entities
+namespace MultiSMS.Interface.Entities.ServerSms
 {
     public class SuccessResponse
     {

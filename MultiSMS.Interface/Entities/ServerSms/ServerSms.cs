@@ -1,8 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Text;
-using System.Xml;
 
-namespace MultiSMS.Interface.Entities
+namespace MultiSMS.Interface.Entities.ServerSms
 {
     public class ServerSms
     {
@@ -16,7 +15,7 @@ namespace MultiSMS.Interface.Entities
 
         public ServerSms(string username, string password)
         {
-                if(string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
                 throw new Exception("Authorization failed: username or password was empty!");
             }

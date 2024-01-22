@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
+using MultiSMS.Interface.Entities.ServerSms;
 using MultiSMS.Interface.Extensions;
 using MultiSMS.Interface.Repositories.Interfaces;
 using Newtonsoft.Json;
@@ -40,12 +41,7 @@ namespace MultiSMS.MVC.Controllers
                 }
             }
 
-            var data = new Dictionary<string, string>
-            {
-                {"details", "true"},
-                {"speed", "1"},
-                {"test", "true" }
-            };
+            var data = new Dictionary<string, string>();
 
             var dataForSmsEntity = new Dictionary<string, string>
             {

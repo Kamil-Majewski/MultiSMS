@@ -485,6 +485,7 @@
                     $("#status-message-sms").html("Wiadomość została wysłana (zakolejkowane: " + response.queued + ", niewysłane: " + response.unsent + ") <button type='button' class='btn-close text-dark' data-bs-dismiss='alert' aria-label='Close'></button>");
                     $("#status-message-sms").show();
                     $("#send-sms-form :input").val('');
+                    $("#GroupOfContacts").removeAttr("data-id");
 
                 }
             },

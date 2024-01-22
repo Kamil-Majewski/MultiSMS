@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.BusinessLogic.Settings;
-using MultiSMS.Interface.Entities;
+using MultiSMS.Interface.Entities.ServerSms;
 
 namespace MultiSMS.BusinessLogic.Services
 {
@@ -24,7 +24,10 @@ namespace MultiSMS.BusinessLogic.Services
                 var dataDictionary = new Dictionary<string, string>
                 {
                     { "phone", phone },
-                    { "text", text }
+                    { "text", text },
+                    { "details", "true"},
+                    { "speed", "1"},
+                    { "test", "true" }
                     //{ "sender", "Toruń WOL" }
                 };
 
@@ -34,6 +37,9 @@ namespace MultiSMS.BusinessLogic.Services
             {
                 data.Add("phone", phone);
                 data.Add("text", text);
+                data.Add("details", "true");
+                data.Add("speed", "1");
+                data.Add("test", "true");
                 //data.Add("sender", "Toruń WOL");
             }
 
