@@ -1,0 +1,81 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Zarejestruj się";
+}
+
+<style>
+    .toolbar-left {
+        display: none;
+    }
+
+    .navbar {
+        display: none;
+    }
+
+    .layout-render-body {
+        background-color: transparent;
+        box-shadow: none;
+    }
+
+</style>
+
+
+<div class="credentials-container">
+    <section>
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <span class="form-subtitle">Utwórz nowe konto</span>
+            <div class="row" style="margin-top:10px;">
+                <div class="col">
+                    <label for="AdminName">Imię</label>
+                    <input asp-for=Input.Name type="text" class="form-input" id="AdminName" placeholder="Wprowadź imię" required maxlength="20">
+                    <span asp-validation-for="Input.Name" class="text-danger"></span>
+                </div>
+                <div class="col">
+                    <label for="AdminSurname">Nazwisko</label>
+                    <input asp-for="Input.Surname" type="text" class="form-input" id="AdminSurname" placeholder="Wprowadź nazwisko" required maxlength="20">
+                    <span asp-validation-for="Input.Surname" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-floating">
+                <label asp-for="Input.Email" class="form-label">Email</label>
+                <input asp-for="Input.Email" class="form-input" type="email" autocomplete="username" aria-required="true" placeholder="Wprowadź adres email" required />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <label asp-for="Input.Password" class="form-label">Hasło jednorazowe</label>
+                <div class="password-input-container">
+                    <input asp-for="Input.Password" class="form-input" id="create-acc-password" type="password" autocomplete="new-password" style="padding-right:30px;" aria-required="true" placeholder="Wprowadź hasło" required />
+                    <img src="~/icons/closed-eye.png" class="eye-icons" id="eye-icon" alt="Toggle Password Visibility" onclick="togglePasswordVisibilityForCreateAccount()">
+                </div>
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            <div style="display:flex; justify-content:center; width:100%;">
+                <button id="create-acc-submit" type="submit" class="violet-button mb-2" style="width:100%; display:flex; justify-content:center; font-size:19px; height:44px;">Zarejestruj nowe konto</button>
+            </div>
+        </form>
+    </section>
+</div>
+
+
+<script>
+    function togglePasswordVisibilityForCreateAccount() {
+        var passwordInput = document.getElementById('create-acc-password');
+        var eyeIcon = document.getElementById('eye-icon');
+
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            eyeIcon.src = window.location.origin + "/icons/eye.png";
+        } else {
+            passwordInput.type = 'password';
+            eyeIcon.src = window.location.origin + "/icons/closed-eye.png";
+        }
+    }
+
+    $("#create-acc-password").on('input', function () {
+        if ($("#create-acc-password").val().length > 0) {
+            $("#eye-icon").css('display', 'block')
+        };
+    });
+</script>

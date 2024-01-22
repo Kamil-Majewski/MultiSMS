@@ -21,7 +21,7 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/UserSettings">Profil użytkownika</a></li>
-                            <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Email">Stwórz nowe konto</a></li>
+                            <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/CreateNewAccount">Stwórz nowe konto</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
