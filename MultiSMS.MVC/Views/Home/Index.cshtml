@@ -489,7 +489,7 @@
             url: '@Url.Action("SendSmsMessage", "ServerSmsApi")',
             type: 'GET',
             contentType: 'application/json',
-            data: { text: text, chosenGroupId: chosenGroupId, chosenGroupName: chosenGroupName, additionalPhoneNumber: additionalPhoneNumbers, additionalInfo: additionalInfo },
+            data: { text: text, chosenGroupId: chosenGroupId, chosenGroupName: chosenGroupName, additionalPhoneNumbers: additionalPhoneNumbers, additionalInfo: additionalInfo },
             success: function (response) {
                 if (response.status == "failed") {
                     console.log("Operation failed, server responded with code " + response.code + " - " + response.message);
@@ -1359,10 +1359,11 @@
             var smsText = $("#SmsText").val();
             var smsGroupId = $("#GroupOfContacts").attr("data-id");
             var smsGroupName = $("#GroupOfContacts").val();
-            var smsAdditional = null;
-            var smsAdditionalInfo = "Testing demo";
+            var additionalPhoneNumbers = $("#AdditionalPhoneNumbers").val();
+            var smsAdditionalInfo = $("#Comment").val();
 
-            SendSMS(smsText, smsGroupId, smsGroupName, smsAdditional, smsAdditionalInfo);
+
+            SendSMS(smsText, smsGroupId, smsGroupName, additionalPhoneNumbers, smsAdditionalInfo);
         });
 
 
