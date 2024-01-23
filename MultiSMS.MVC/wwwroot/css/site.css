@@ -70,16 +70,16 @@ hr{
     min-width: 375px;
 }
 
-#forgot-password {
+.bleak-hoverable {
     color: #99a1af;
     font-family: 'Open Sans', sans-serif;
     font-weight: 600;
     font-size: 15px;
 }
 
-#forgot-password:hover {
+.bleak-hoverable:hover {
     color: #5a6372;
-    text-decoration:none;
+    text-decoration: none;
 }
 
 .options-container {

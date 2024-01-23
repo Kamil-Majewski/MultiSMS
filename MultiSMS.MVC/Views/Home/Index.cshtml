@@ -5,8 +5,7 @@
 <div class="content-container">
     <div class="tab-content" id="category-tab-content">
         <div class="tab-pane show active" id="send-sms" aria-labelledby="sms-tab">
-            <div class="alert alert-dismissible" id="status-message-sms" role="alert" style="border-radius: 50px; display:none;">
-            </div>
+            <div class="alert alert-dismissible" id="status-message-sms" role="alert" style="border-radius: 50px; display:none;"></div>
             <div class="sms-container options-container">
                 <div class="option-content">
                     <form class="sms-options-form options-form" id="send-sms-form">
@@ -33,7 +32,26 @@
                             <div class="col">
                                 <label for="SmsText">Treść wiadomości *</label>
                                 <textarea class="form-input" id="SmsText" rows="5" maxlength="160" required></textarea>
-                                <div style="margin-top: 0.25rem; text-align: right" id="sms-text-symbol-counter">&nbsp</div>
+                                <div style="display: flex; justify-content:space-between;">
+                                    <div>
+                                        <a href="#more-options" class="bleak-hoverable" style="margin-top: 0.20rem;">Więcej opcji</a>
+                                    </div>
+                                    <div style="margin-top: 0.20rem; text-align: right" id="sms-text-symbol-counter">&nbsp</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="more-options-container" style="display:none;">
+                            <div class="row">
+                                <div class="col">
+                                    <label for="AdditionalPhoneNumbers" style="margin-top:10px">Dodatkowe numery telefonu</label>
+                                    <input type="text" class="form-input" id="AdditionalPhoneNumbers"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <label for="Comment">Komentarz</label>
+                                    <textarea class="form-input" id="Comment" rows="2" maxlength="100" style="margin-bottom:20px;"></textarea>
+                                </div>
                             </div>
                         </div>
                         <div class="justify-content-center d-flex">
@@ -476,15 +494,16 @@
                 if (response.status == "failed") {
                     console.log("Operation failed, server responded with code " + response.code + " - " + response.message);
                     $("#status-message-sms").addClass("failed-status");
-                    $("#status-message-sms").html("Operacja zakończyła się niepowodzeniem, błąd " + response.code + " - " + response.message + "<button type='button' class='btn-close text-dark' data-bs-dismiss='alert' aria-label='Close'></button>");
+                    $("#status-message-sms").html("Operacja zakończyła się niepowodzeniem, błąd " + response.code + " - " + response.message + "<button type='button' class='btn-close text-dark' aria-label='Close' onclick='CloseAlert()'></button>");
                     $("#status-message-sms").show();
                 }
                 else {
                     $("#status-message-sms").addClass("success-status");
                     console.log("Operation successful, messages queued: " + response.queued + ", messages unsent: " + response.unsent);
-                    $("#status-message-sms").html("Wiadomość została wysłana (zakolejkowane: " + response.queued + ", niewysłane: " + response.unsent + ") <button type='button' class='btn-close text-dark' data-bs-dismiss='alert' aria-label='Close'></button>");
+                    $("#status-message-sms").html("Wiadomość została wysłana (zakolejkowane: " + response.queued + ", niewysłane: " + response.unsent + ") <button type='button' class='btn-close text-dark' onclick='CloseAlert()' aria-label='Close'></button>");
                     $("#status-message-sms").show();
                     $("#send-sms-form :input").val('');
+                    document.getElementById('sms-text-symbol-counter').innerHTML = "";
                     $("#GroupOfContacts").removeAttr("data-id");
 
                 }
@@ -510,6 +529,10 @@
                 console.error(error);
             }
         });
+    }
+
+    function CloseAlert(){
+        $("#status-message-sms").hide();
     }
 
     function DeleteContact(contactId) {

@@ -27,7 +27,7 @@ namespace MultiSMS.BusinessLogic.Services
                     { "text", text },
                     { "details", "true"},
                     { "speed", "1"},
-                    //{ "test", "true" },
+                    { "test", "true" },
                     { "sender", "TORUN WOL" }
                 };
 
@@ -39,7 +39,7 @@ namespace MultiSMS.BusinessLogic.Services
                 data.Add("text", text);
                 data.Add("details", "true");
                 data.Add("speed", "1");
-                //data.Add("test", "true");
+                data.Add("test", "true");
                 data.Add("sender", "TORUN WOL");
             }
 
