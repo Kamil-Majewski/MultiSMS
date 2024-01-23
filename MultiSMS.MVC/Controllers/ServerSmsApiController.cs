@@ -71,7 +71,7 @@ namespace MultiSMS.MVC.Controllers
 
             try //try to deserialize response into entities that correspond with response structure and then act depending on the outcome
             {
-                SuccessResponse successResponse = JsonConvert.DeserializeObject<SuccessResponse>(response) ?? throw new Exception("Deserialization failed");
+                ServerSmsSuccessResponse successResponse = JsonConvert.DeserializeObject<ServerSmsSuccessResponse>(response) ?? throw new Exception("Deserialization failed");
                 await _logRepository.AddEntityToDatabaseAsync(new Log
                 {
                     LogType = "Info",
@@ -92,7 +92,7 @@ namespace MultiSMS.MVC.Controllers
             {
                 try //deserialization into SuccessResponse failed, try to deserialize into ErrorResponse
                 {
-                    ErrorResponse errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(response) ?? throw new Exception("Deserialization failed");
+                    ServerSmsErrorResponse errorResponse = JsonConvert.DeserializeObject<ServerSmsErrorResponse>(response) ?? throw new Exception("Deserialization failed");
                     await _logRepository.AddEntityToDatabaseAsync(new Log
                     {
                         LogType = "Błąd",

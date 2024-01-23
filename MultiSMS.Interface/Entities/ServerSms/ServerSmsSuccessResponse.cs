@@ -2,7 +2,7 @@
 
 namespace MultiSMS.Interface.Entities.ServerSms
 {
-    public class SuccessResponse
+    public class ServerSmsSuccessResponse
     {
         [JsonProperty(PropertyName = "success", Required = Required.Always)]
         public bool Success { get; set; }

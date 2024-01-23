@@ -26,7 +26,9 @@ namespace MultiSMS.BusinessLogic.Services
                     { "to", to },
                     { "message", message },
                     { "format", "json" },
-                    { "from", "Toruń WOL" }
+                    { "from", "Toruń WOL" },
+                    { "fast", "1" },
+                    { "test",  "true"}
                 };
 
                 data = dataDictionary;
@@ -37,6 +39,8 @@ namespace MultiSMS.BusinessLogic.Services
                 data.Add("message", message);
                 data.Add("format", "json");
                 data.Add("from", "Toruń WOL");
+                data.Add("fast", "1");
+                data.Add("test", "true");
             }
 
             return await serverSmsInstance.CallAsync("sms.do", data);
