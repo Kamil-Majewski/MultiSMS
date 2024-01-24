@@ -50,12 +50,12 @@
                             <div class="row">
                                 <div class="col">
                                     <label for="Comment">Komentarz</label>
-                                    <textarea class="form-input" id="Comment" rows="2" maxlength="100" style="margin-bottom:20px;"></textarea>
+                                    <textarea class="form-input" id="Comment" rows="2" maxlength="100" style="margin-bottom:0px;"></textarea>
                                 </div>
                             </div>
                         </div>
                         <div class="justify-content-center d-flex">
-                            <button type="submit" class="violet-button" id="SendSmsMessage">Wyślij wiadomość SMS</button>
+                            <button type="submit" class="violet-button" style="margin-top:20px;" id="SendSmsMessage">Wyślij wiadomość SMS</button>
                         </div>
                     </form>
                 </div>
@@ -1118,6 +1118,24 @@
             CalculateHeaderWidth();
         });
 
+        var initialRenderContentWidthInVW = ($("#content-render").width() / $(window).width()) * 100;
+        var initialToolboxContextWidthInVW = ($("#toolbar").width() / $(window).width()) * 100;
+        var hoveredWidthInVW = (190 / $(window).width()) * 100;
+        var differenceInVW = hoveredWidthInVW - (50 / $(window).width()) * 100;
+
+        $(".option-list-item").hover(
+            function () {
+                $("#toolbar").css("width", hoveredWidthInVW + "vw");
+                $("#content-render").css("width", (initialRenderContentWidthInVW - differenceInVW) + "vw");
+            },
+            function () {
+                $("#toolbar").css("width", initialToolboxContextWidthInVW + "vw");
+                $("#content-render").css("width", initialRenderContentWidthInVW + "vw");
+            }
+        );
+        
+
+      
         $(document).on('click', '.template-delete', function (e) {
             var templateId = $(this).attr("href").split('-')[1];
             DeleteTemplate(templateId)

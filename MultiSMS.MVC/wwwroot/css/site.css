@@ -250,7 +250,7 @@ body {
 
 .link {
     display: flex;
-    padding-left: 25px;
+    margin-left: 10px;
     padding-bottom: 15px;
     padding-top: 15px;
     align-items: center;
@@ -415,6 +415,7 @@ label {
 }
 
 .text-nav {
+    white-space: nowrap;
     color: white;
     font-size: 16px;
     font-weight: 600;
@@ -456,10 +457,10 @@ tbody {
 }
 
 .icon {
+    min-width: 22px;
     max-width: 22px;
     display: inline-block;
     margin-right: 13px;
-    
 }
 
 .icon-list {
@@ -491,17 +492,18 @@ img {
 }
 
 .toolbar-left {
-    min-width: 175px;
-    width: 13vw;
+    transition: width 0.5s ease;
+    width: 50px;
     background-color: #6f5cc4;
     box-shadow: 2px 0px 10px grey
 }
 
 .layout-render-body {
+    transition: width 0.5s ease;
     width: 65vw;
     background-color: #f7f7f7;
     box-shadow: 2px 2px 10px grey;
-    max-height:79vh;
+    max-height: 79vh;
     overflow: auto;
 }
 
