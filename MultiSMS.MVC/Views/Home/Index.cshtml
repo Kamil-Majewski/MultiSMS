@@ -514,6 +514,35 @@
         });
     }
 
+    function SanitizePolishSymbols(inputId) {
+
+        const diacriticToAsciiMap = {
+            'ą': 'a',
+            'ć': 'c',
+            'ę': 'e',
+            'ł': 'l',
+            'ń': 'n',
+            'ó': 'o',
+            'ś': 's',
+            'ź': 'z',
+            'ż': 'z',
+            'Ą': 'A',
+            'Ć': 'C',
+            'Ę': 'E',
+            'Ł': 'L',
+            'Ń': 'N',
+            'Ó': 'O',
+            'Ś': 'S',
+            'Ź': 'Z',
+            'Ż': 'Z'
+        };
+
+        var input = document.getElementById(inputId);
+        var inputValue = input.value;
+        var sanitizedValue = inputValue.replace(/[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g, match => diacriticToAsciiMap[match] || match);
+        input.value = sanitizedValue;
+    }
+
     function DeleteTemplate(templateId) {
 
         $.ajax({
@@ -1078,6 +1107,7 @@
     }
 
     $(document).ready(function () {
+
         CalculateHeaderWidth();
         FetchAllTemplatesAndPopulateTable();
         FetchAllContactsAndPopulateTable();
@@ -1575,6 +1605,8 @@
         $("#templateContentInput").on('input', function (e) {
             const counterEle = document.getElementById('symbolCounterAdd');
 
+            SanitizePolishSymbols("templateContentInput");
+
             const target = e.target;
             const maxLength = target.getAttribute('maxlength');
             const currentLength = target.value.length;
@@ -1584,6 +1616,8 @@
 
         $("#SmsText").on('input', function (e) {
             const counterEle = document.getElementById('sms-text-symbol-counter');
+
+            SanitizePolishSymbols("SmsText");
 
             const target = e.target;
             const maxLength = target.getAttribute('maxlength');
