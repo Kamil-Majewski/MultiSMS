@@ -11,7 +11,7 @@
                     <form class="sms-options-form options-form" id="send-sms-form">
                         <div class="row">
                             <div class="col">
-                                <label for="GroupOfContacts">Grupa kontaktów *</label>
+                                <label for="GroupOfContacts">Grupa kontaktów</label>
                                 <div style="width: 100%; display: inline-flex; justify-content: space-between;">
                                     <input type="text" class="form-input" id="GroupOfContacts" style="flex-grow:1; font-weight:500;" required disabled>
                                     <button class="violet-button" id="choose-group-of-contacts" type="button" style="min-width: 125px; height: 44px; margin-left: 30px;" onclick="OpenChooseGroupForSMS()">Wybierz</button>
@@ -34,7 +34,7 @@
                                 <textarea class="form-input" id="SmsText" rows="5" maxlength="160" required></textarea>
                                 <div style="display: flex; justify-content:space-between;">
                                     <div>
-                                        <a href="#more-options" class="bleak-hoverable" style="margin-top: 0.20rem;">Więcej opcji</a>
+                                        <a href="#more-options" class="bleak-hoverable options-hidden" style="margin-top: 0.20rem;">Więcej opcji</a>
                                     </div>
                                     <div style="margin-top: 0.20rem; text-align: right" id="sms-text-symbol-counter">&nbsp</div>
                                 </div>
@@ -1091,6 +1091,22 @@
         $(document).on('click', '.template-delete', function (e) {
             var templateId = $(this).attr("href").split('-')[1];
             DeleteTemplate(templateId)
+        });
+
+        $(document).on('click', '.options-hidden', function () {
+            $(".options-hidden").text("Ukryj opcje");
+            $(".more-options-container").slideDown(300);
+            $(".options-hidden").addClass("options-shown");
+            $(".options-hidden").removeClass("options-hidden");
+
+        });
+
+        $(document).on('click', '.options-shown', function () {
+            $(".options-shown").text("Więcej opcji");
+            $(".more-options-container").slideUp(300);
+            $(".options-shown").addClass("options-hidden");
+            $(".options-shown").removeClass("options-shown");
+
         });
 
         $(document).on('click', '.contact-delete', function (e) {
