@@ -7,5 +7,6 @@
         Task RemoveGroupMember(int groupId, int employeeId);
         IQueryable<string> GetAllGroupNamesForEmployeeQueryable(int employeeId);
         IQueryable<string> GetAllPhoneNumbersForGroupQueryable(int groupId);
+        IQueryable<string> GetAllActiveEmployeesPhoneNumbersForGroupQueryable(int groupId);
     }
 }

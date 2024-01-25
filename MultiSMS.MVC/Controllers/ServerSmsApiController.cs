@@ -29,7 +29,7 @@ namespace MultiSMS.MVC.Controllers
             var adminId = User.GetLoggedInUserId<int>();
             var adminUsername = User.GetLoggedInUserName();
             
-            var groupPhoneNumbers = _employeeGroupRepository.GetAllPhoneNumbersForGroupQueryable(chosenGroupId).ToList();
+            var groupPhoneNumbers = _employeeGroupRepository.GetAllActiveEmployeesPhoneNumbersForGroupQueryable(chosenGroupId).ToList();
 
             if (additionalPhoneNumbers != null)
             {
