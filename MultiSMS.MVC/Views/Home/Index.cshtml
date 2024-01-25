@@ -1114,22 +1114,31 @@
         FetchAllGroupsAndPopulateTable();
         FetchAllLogsAndPopulateTable();
 
+        let resizeTimer;
         window.addEventListener('resize', () => {
+            hoveredWidthInVW = (190 / $(window).width()) * 100;
+            differenceInVW = hoveredWidthInVW - (50 / $(window).width()) * 100;
+            document.body.classList.add("resize-animation-stopper");
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                document.body.classList.remove("resize-animation-stopper");
+            }, 400);
             CalculateHeaderWidth();
         });
 
         var initialRenderContentWidthInVW = ($("#content-render").width() / $(window).width()) * 100;
-        var initialToolboxContextWidthInVW = ($("#toolbar").width() / $(window).width()) * 100;
+        var initialToolboxContextWidthInPx = 50;
+        var hoveredWidthInPx = 190;
         var hoveredWidthInVW = (190 / $(window).width()) * 100;
         var differenceInVW = hoveredWidthInVW - (50 / $(window).width()) * 100;
 
         $(".option-list-item").hover(
             function () {
-                $("#toolbar").css("width", hoveredWidthInVW + "vw");
+                $("#toolbar").css("width", hoveredWidthInPx + "px");
                 $("#content-render").css("width", (initialRenderContentWidthInVW - differenceInVW) + "vw");
             },
             function () {
-                $("#toolbar").css("width", initialToolboxContextWidthInVW + "vw");
+                $("#toolbar").css("width", initialToolboxContextWidthInPx + "px");
                 $("#content-render").css("width", initialRenderContentWidthInVW + "vw");
             }
         );
