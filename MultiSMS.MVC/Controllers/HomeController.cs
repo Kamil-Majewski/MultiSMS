@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Extensions;
 using MultiSMS.Interface.Repositories.Interfaces;
@@ -12,18 +13,20 @@ namespace MultiSMS.MVC.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IAdministratorService _administratorService;
         private readonly ISMSMessageTemplateRepository _smsTemplateRepository;
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IGroupRepository _groupRepository;
         private readonly IEmployeeGroupRepository _employeeGroupRepository;
         private readonly ILogRepository _logRepository;
-        public HomeController(ISMSMessageTemplateRepository smsTemplateRepository, IEmployeeRepository employeeRepository, IGroupRepository groupRepository, IEmployeeGroupRepository employeeGroupRepository, ILogRepository logRepository)
+        public HomeController(ISMSMessageTemplateRepository smsTemplateRepository, IEmployeeRepository employeeRepository, IGroupRepository groupRepository, IEmployeeGroupRepository employeeGroupRepository, ILogRepository logRepository, IAdministratorService administratorService)
         {
             _smsTemplateRepository = smsTemplateRepository;
             _employeeRepository = employeeRepository;
             _groupRepository = groupRepository;
             _employeeGroupRepository = employeeGroupRepository;
             _logRepository = logRepository;
+            _administratorService = administratorService;
         }
         [Authorize]
         public IActionResult Index()
@@ -396,6 +399,67 @@ namespace MultiSMS.MVC.Controllers
                }
            );
             await _groupRepository.DeleteEntityAsync(id);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetLog(int id)
+        {
+            Dictionary<string, int> logRelatedObjects;
+
+            var log = await _logRepository.GetByIdAsync(id);
+            var logSanitized = new { LogType = log.LogType, LogSource = log.LogSource, LogMessage = log.LogMessage, LogCreationDate = log.LogCreationDate };
+            var logCreator = await _administratorService.GetAdministratorDtoByIdAsync(log.LogCreatorId);
+
+            if (log.LogRelatedObjectsDictionarySerialized == null)
+            {
+                
+                if (log.LogSource == "Szablony" || log.LogSource == "Kontakty" || log.LogSource == "Grupy")
+                {
+                    return Json(new { Type = "Entity-Delete", Log = logSanitized, LogCreator = logCreator });
+                }
+                else
+                {
+                    throw new Exception("Error: LogRelatedObjects is null where it shouldn't be");
+                }
+            }
+            else
+            {
+                logRelatedObjects = JsonConvert.DeserializeObject<Dictionary<string, int>>(log.LogRelatedObjectsDictionarySerialized)!;
+            }
+            
+            switch (log.LogSource)
+            {
+                case "Szablony":
+                    var template = await _smsTemplateRepository.GetByIdAsync(logRelatedObjects["Templates"]);
+                    return Json(new { Type = "Template", Template = template, Log = logSanitized, logCreator = logCreator });
+                case "Kontakty":
+                    var employee = await _employeeRepository.GetByIdAsync(logRelatedObjects["Employees"]);
+                    return Json(new { Type = "Contact", Contact = employee, Log = logSanitized, logCreator = logCreator });
+                case "Grupy":
+                    var group = await _groupRepository.GetByIdAsync(logRelatedObjects["Groups"]);
+                    try
+                    {
+                        var addedEmployee = await _employeeRepository.GetByIdAsync(logRelatedObjects["Employees"]);
+                        return Json(new { Type = "Groups-Assign", Group = group, Contact = addedEmployee, Log = logSanitized, logCreator = logCreator });
+                    }
+                    catch (Exception)
+                    {
+                        return Json(new { Type = "Groups", Group = group, Log = logSanitized, logCreator = logCreator });
+                    }
+                case "SMS":
+                    var sms = await _smsTemplateRepository.GetByIdAsync(logRelatedObjects["SmsMessages"]);
+                    try
+                    {
+                        var chosenGroup = await _groupRepository.GetByIdAsync(logRelatedObjects["Groups"]);
+                        return Json(new { Type = "SMS-Group", Sms = sms, Group = chosenGroup, Log = logSanitized, logCreator = logCreator });
+                    }
+                    catch (Exception)
+                    {
+                        return Json(new { Type = "SMS-NoGroup", Sms = sms, Log = logSanitized, logCreator = logCreator });
+                    }
+                default:
+                    throw new Exception("Unknown case of log source");
+            }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

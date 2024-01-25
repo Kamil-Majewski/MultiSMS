@@ -72,7 +72,7 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account.Manage
         private async Task LoadAsync(Administrator user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
-            var adminDto = await _adminService.GetAdministratorByEmailAsync(userName);
+            var adminDto = await _adminService.GetAdministratorDtoByEmailAsync(userName);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
             Username = userName;

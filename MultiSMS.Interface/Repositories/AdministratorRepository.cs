@@ -17,5 +17,10 @@ namespace MultiSMS.Interface.Repositories
         {
             return await _dbContext.AspNetUsers.FirstOrDefaultAsync(a => a.Email == email) ?? throw new Exception("Could not find user with provided Email");
         }
+
+        public async Task<Administrator> GetAdinistratorByIdAsync(int id)
+        {
+            return await _dbContext.AspNetUsers.FirstOrDefaultAsync(a => a.Id == id) ?? throw new Exception("Could not find user with provided Id");
+        }
     }
 }

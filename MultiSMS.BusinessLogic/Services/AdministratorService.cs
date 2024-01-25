@@ -16,10 +16,18 @@ namespace MultiSMS.BusinessLogic.Services
             _mapper = mapper;
         }
 
-        public async Task<AdministratorDTO> GetAdministratorByEmailAsync(string email)
+        public async Task<AdministratorDTO> GetAdministratorDtoByEmailAsync(string email)
         {
             var admin = await _adminRepository.GetAdministratorByEmailAsync(email);
             return _mapper.Map<AdministratorDTO>(admin);
         }
+
+        public async Task<AdministratorDTO> GetAdministratorDtoByIdAsync(int id)
+        {
+            var admin = await _adminRepository.GetAdinistratorByIdAsync(id);
+            return _mapper.Map<AdministratorDTO>(admin);
+        }
+
+
     }
 }

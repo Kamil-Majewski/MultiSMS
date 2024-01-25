@@ -4,6 +4,7 @@ namespace MultiSMS.BusinessLogic.Services.Interfaces
 {
     public interface IAdministratorService
     {
-        Task<AdministratorDTO> GetAdministratorByEmailAsync(string email);
+        Task<AdministratorDTO> GetAdministratorDtoByEmailAsync(string email);
+        Task<AdministratorDTO> GetAdministratorDtoByIdAsync(int id);
     }
 }
