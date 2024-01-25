@@ -217,6 +217,38 @@ namespace MultiSMS.MVC.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> FetchAllValidGroups()
+        {
+            var groups = await Task.FromResult(_groupRepository.GetAllGroupsWithGroupMembersQueryable().ToList());
+            int amountOfInactives = 0;
+            List<Group> validGroups = new List<Group>();
+            foreach (var group in groups)
+            {
+                group.MembersIds = _employeeGroupRepository.GetAllEmployeesIdsForGroupQueryable(group.GroupId).ToList();
+
+                if (group.GroupMembers != null)
+                {
+                    foreach (var member in group.GroupMembers)
+                    {
+                        if (member.Employee.IsActive == false)
+                        {
+                            amountOfInactives += 1;
+                        }
+                    }
+
+                    if(amountOfInactives != group.GroupMembers.Count()) {
+                        group.GroupMembers = null;
+                        validGroups.Add(group);
+                        amountOfInactives = 0;
+                    }
+                }
+                
+            }
+
+            return Json(validGroups);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> FetchAllLogs()
         {
             var logs = await Task.FromResult(_logRepository.GetAllEntries());

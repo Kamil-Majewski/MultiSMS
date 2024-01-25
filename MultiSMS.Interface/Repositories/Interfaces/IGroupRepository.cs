@@ -5,5 +5,6 @@ namespace MultiSMS.Interface.Repositories.Interfaces
     public interface IGroupRepository : IGenericRepository<Group>
     {
         Task<Group> GetGroupByNameAsync(string groupName);
+        IQueryable<Group> GetAllGroupsWithGroupMembersQueryable();
     }
 }

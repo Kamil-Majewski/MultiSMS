@@ -824,7 +824,7 @@
 
     function PopulateTableForChooseGroupForSMS(){
         $.ajax({
-            url: '@Url.Action("FetchAllGroups", "Home")',
+            url: '@Url.Action("FetchAllValidGroups", "Home")',
             type: 'GET',
             contentType: 'application/json',
             success: function (listOfGroups) {
@@ -832,9 +832,7 @@
                 $('#choose-group-for-sms-table tbody').empty();
 
                 $.each(listOfGroups, function (index, item) {
-                    if(item.membersIds.length == 0){
-                        return;
-                    }
+
                     var newRow = '<tr>' +
                         '<td class="small-cell">' + item.groupName + '</td>' +
                         '<td class="big-cell">' + item.groupDescription + '</td>' +
