@@ -137,7 +137,7 @@
                 </div>
                 <div class="list-content">
                     <div class="table-responsive">
-                        <table class="template-list table table-borderless" id="template-table" style="table-">
+                        <table class="template-list table table-borderless" id="template-table">
                             <thead>
                                 <tr>
                                     <th scope="col">Nazwa</th>
@@ -201,7 +201,7 @@
                     <div class="list-header">
                         <div class="list-header-left">
                             <button class="add-new-button violet-button" type="button" onclick="OpenCreateContactWindow()">Dodaj nowy</button>
-                            <input type="file" id="import-file-input" style="display: none;" accept=".csv, .xlsx" />
+                            <input type="file" id="import-file-input" style="display: none;" accept=".csv" />
                             <button class="import-contacts-button ie-button" type="button" onclick="TriggerFileInput()">Importuj kontakty</button>
                             <button class="export-contacts-button ie-button" type="button">Exportuj kontakty</button>
                         </div>
@@ -377,7 +377,7 @@
                             <div class="row">
                                 <div class="col">
                                     <label for="groupDescriptionInput">Opis grupy</label>
-                                    <textarea class="form-input" id="groupDescriptionInput" rows="3" maxlength="100" required></textarea>
+                                    <textarea class="form-input" id="groupDescriptionInput" rows="3" maxlength="100"></textarea>
                                     <div style="margin-top: 0.25rem; text-align: right" id="symbolCounterAddGroups">&nbsp</div>
                                 </div>
                             </div>
@@ -520,6 +520,15 @@
         var file = fileInput.files[0];
 
         if (file) {
+            var fileName = file.name;
+
+            if(!fileName.toLowerCase().endsWith('.csv')){
+
+                console.log("Unsupported file type! Import aborted.")
+                alert("Nieprawidłowy format pliku! Import przerwany.")
+                fileInput.value = null;
+                return;
+            }
             var formData = new FormData();
             formData.append('file', file);
 
@@ -531,9 +540,11 @@
                 processData: false,
                 success: function (responseObject) {
                     console.log("Nice")
+                    fileInput.value = null;
                 },
                 error: function (error) {
                     console.error(error);
+                    fileInput.value = null;
                 }
             });
         }
@@ -703,9 +714,14 @@
                 $('.template-list tbody').empty();
 
                 $.each(listOfTemplates, function (index, item) {
+                    var description = item.templateDescription;
+                    if (description == null){
+                        description = "Brak opisu"
+                    }
+
                     var newRow = '<tr>' +
                         '<td class="small-cell">' + item.templateName + '</td>' +
-                        '<td class="medium-cell">' + item.templateDescription + '</td>' +
+                        '<td class="medium-cell">' + description + '</td>' +
                         '<td class="big-cell">' + item.templateContent + '</td>' +
                         '<td class="centered-cell">' +
                         '<a href="#details-' + item.templateId + '" class="icon-list template-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>' +
@@ -793,9 +809,14 @@
                 $('.group-list tbody').empty();
 
                 $.each(listOfGroups, function (index, item) {
+                    var description = item.groupDescription;
+                    if (description == null) {
+                        description = "Brak opisu"
+                    }
+
                     var newRow = '<tr>' +
                         '<td class="small-cell">' + item.groupName + '</td>' +
-                        '<td class="big-cell">' + item.groupDescription + '</td>' +
+                        '<td class="big-cell">' + description + '</td>' +
                         '<td class="tiny-centered-cell">' + item.membersIds.length + '</td>' +
                         '<td class="centered-cell">' +
                         '<a href="#assign-' + item.groupId + '" class="icon-list group-assign"><img src="/icons/assign-users.png" title="Przypisz użytkowników"/></a>' +
@@ -862,10 +883,14 @@
                 $('#choose-group-for-sms-table tbody').empty();
 
                 $.each(listOfGroups, function (index, item) {
+                    var description = item.groupDescription;
+                    if (description == null) {
+                        description = "Brak opisu"
+                    }
 
                     var newRow = '<tr>' +
                         '<td class="small-cell">' + item.groupName + '</td>' +
-                        '<td class="big-cell">' + item.groupDescription + '</td>' +
+                        '<td class="big-cell">' + description + '</td>' +
                         '<td class="tiny-centered-cell">' + item.membersIds.length + '</td>' +
                         '<td class="tiny-centered-cell">' +
                         '<a href="#pick-' + item.groupId + '" class="icon-list group-pick-me"><img src="/icons/pick-me.png" title="Wybierz grupę"/></a>' +

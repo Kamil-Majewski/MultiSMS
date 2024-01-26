@@ -1,4 +1,5 @@
 ﻿using CsvHelper;
+using CsvHelper.Configuration;
 using Microsoft.AspNetCore.Http;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
@@ -28,16 +29,30 @@ namespace MultiSMS.BusinessLogic.Services
             var invalidRecords = new List<Employee>();
             var repeatedEntries = new List<Employee>();
 
+            string[] requiredHeaders = { "osoba", "tel", "instytucja", "grupa"};
+
             using var memoryStream = new MemoryStream(new byte[file.Length]);
             await file.CopyToAsync(memoryStream);
             memoryStream.Position = 0;
 
+            var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                PrepareHeaderForMatch = args => args.Header.ToLower()
+            };
+
             using (var reader = new StreamReader(memoryStream))
-            using (var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
+            using (var csvReader = new CsvReader(reader, csvConfig))
             {
 
                 csvReader.Read();
                 csvReader.ReadHeader();
+
+                var fileHeaders = csvReader.HeaderRecord;
+                if (requiredHeaders.Except(fileHeaders).Any())
+                {
+                    return new { Status = "Failure", Message = "Struktura pliku .csv nie jest prawidłowa." };
+                }
+
                 while (csvReader.Read())
                 {
                     var record = new Employee
@@ -64,7 +79,7 @@ namespace MultiSMS.BusinessLogic.Services
                 }
             }
             var addedEmployees = await _employeeRepository.AddRangeOfEntitiesToDatabaseAsync(records);
-            return new { AddedEmployees = addedEmployees, RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords };
+            return new {Status = "Success", AddedEmployees = addedEmployees, RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords };
         }
     }
 }
