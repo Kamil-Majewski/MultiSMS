@@ -258,8 +258,8 @@
                                     </div>
                                     <div class="row">
                                         <div class="col">
-                                            <label for="ContactEmail">Email *</label>
-                                            <input type="email" class="form-input" id="contactEmail" required maxlength="30">
+                                            <label for="ContactEmail">Email</label>
+                                            <input type="email" class="form-input" id="contactEmail" maxlength="30">
                                         </div>
                                     </div>
                                 </div>
@@ -712,6 +712,7 @@
                 $.each(listOfContacts, function (index, item) {
 
                     var group = item.employeeGroupNames;
+                    var email = item.email;
 
                     if (group == 'null' || group.length == 0) {
                         group = "Nie przypisano";
@@ -720,10 +721,14 @@
                         group = group.join(", ")
                     }
 
+                    if (email == 'null'){
+                        email = "Brak danych"
+                    }
+
                     var newRow = '<tr>' +
                         '<td class="tiny-cell">' + item.name + '</td>' +
                         '<td class="tiny-cell">' + item.surname + '</td>' +
-                        '<td class="small-cell">' + item.email + '</td>' +
+                        '<td class="small-cell">' + email + '</td>' +
                         '<td class="small-cell">' + item.phoneNumber + '</td>';
 
 
