@@ -507,6 +507,28 @@ namespace MultiSMS.MVC.Controllers
             }
         }
 
+        public IActionResult DownloadExcelWithContacts()
+        {
+            var fileDirectory = _ieService.ExportContactsExcel();
+
+            if (System.IO.File.Exists(fileDirectory))
+            {
+                try
+                {
+                    var fileBytes = System.IO.File.ReadAllBytes(fileDirectory);
+                    return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "MultiSMS-Kontakty.xlsx");
+                }
+                catch( Exception ex)
+                {
+                    return StatusCode(500, ex.Message);
+                }
+            }
+            else
+            {
+                return NotFound("Excel file not found");
+            }
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

@@ -6,8 +6,12 @@ using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Initialization;
 using MultiSMS.BusinessLogic.Initialization;
 using MultiSMS.BusinessLogic.Settings;
+using MultiSMS.BusinessLogic.Services.Interfaces;
+using MultiSMS.MVC.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<IPathProvider, PathProvider>();
 
 var configuration = new ConfigurationBuilder()
    .SetBasePath(builder.Environment.ContentRootPath)

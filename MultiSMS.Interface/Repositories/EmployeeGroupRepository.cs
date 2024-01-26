@@ -23,6 +23,11 @@ namespace MultiSMS.Interface.Repositories
             return _dbContext.EmployeeGroups.Where(eg => eg.GroupId == groupId).Select(eg => eg.EmployeeId);
         }
 
+        public IQueryable<int> GetAllGroupIdsForEmployeeQueryable(int employeeId)
+        {
+            return _dbContext.EmployeeGroups.Where(eg => eg.EmployeeId == employeeId).Select(eg => eg.GroupId);
+        }
+
         public async Task RemoveGroupMember(int groupId, int employeeId)
         {
             var groupMember = await _dbContext.EmployeeGroups.FirstOrDefaultAsync(eg => eg.GroupId == groupId && eg.EmployeeId == employeeId) ?? throw new Exception("Could not find the group with provided id that contains employee with given id");

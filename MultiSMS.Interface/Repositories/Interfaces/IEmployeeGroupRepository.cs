@@ -4,6 +4,7 @@
     {
         Task AddGroupMemberAsync(int groupId, int employeeId);
         IQueryable<int> GetAllEmployeesIdsForGroupQueryable(int groupId);
+        IQueryable<int> GetAllGroupIdsForEmployeeQueryable(int employeeId);
         Task RemoveGroupMember(int groupId, int employeeId);
         IQueryable<string> GetAllGroupNamesForEmployeeQueryable(int employeeId);
         IQueryable<string> GetAllPhoneNumbersForGroupQueryable(int groupId);

@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <Folder Include="Views\Home\" />
+    <Folder Include="wwwroot\ContactsExcel\" />
   </ItemGroup>
 
 </Project>
