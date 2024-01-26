@@ -14,12 +14,13 @@ namespace MultiSMS.MVC.Controllers
     public class HomeController : Controller
     {
         private readonly IAdministratorService _administratorService;
+        private readonly IImportExportEmployeesService _ieService;
         private readonly ISMSMessageTemplateRepository _smsTemplateRepository;
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IGroupRepository _groupRepository;
         private readonly IEmployeeGroupRepository _employeeGroupRepository;
         private readonly ILogRepository _logRepository;
-        public HomeController(ISMSMessageTemplateRepository smsTemplateRepository, IEmployeeRepository employeeRepository, IGroupRepository groupRepository, IEmployeeGroupRepository employeeGroupRepository, ILogRepository logRepository, IAdministratorService administratorService)
+        public HomeController(ISMSMessageTemplateRepository smsTemplateRepository, IEmployeeRepository employeeRepository, IGroupRepository groupRepository, IEmployeeGroupRepository employeeGroupRepository, ILogRepository logRepository, IAdministratorService administratorService, IImportExportEmployeesService ieService)
         {
             _smsTemplateRepository = smsTemplateRepository;
             _employeeRepository = employeeRepository;
@@ -27,6 +28,7 @@ namespace MultiSMS.MVC.Controllers
             _employeeGroupRepository = employeeGroupRepository;
             _logRepository = logRepository;
             _administratorService = administratorService;
+            _ieService = ieService;
         }
         [Authorize]
         public IActionResult Index()
@@ -185,6 +187,17 @@ namespace MultiSMS.MVC.Controllers
              );
 
             return Json(group.GroupName);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ImportContacts(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("Invalid file");
+            }
+
+            return Json(await _ieService.ImportContactsCsvAsync(file));
         }
 
         [HttpGet]
@@ -406,7 +419,7 @@ namespace MultiSMS.MVC.Controllers
                {
                    LogType = "Info",
                    LogSource = "Kontakty",
-                   LogMessage = $"Kontakt {contact.Name} {contact.Surname} - {contact.PhoneNumber} został usunięty",
+                   LogMessage = $"Kontakt {contact.Name} {contact.Surname} ({contact.PhoneNumber}) został usunięty",
                    LogCreator = adminUserName,
                    LogCreatorId = adminId,
                }

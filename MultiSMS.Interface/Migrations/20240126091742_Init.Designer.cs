@@ -12,7 +12,7 @@ using MultiSMS.Interface;
 namespace MultiSMS.Interface.Migrations
 {
     [DbContext(typeof(MultiSMSDbContext))]
-    [Migration("20240108111435_Init")]
+    [Migration("20240126091742_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -249,9 +249,9 @@ namespace MultiSMS.Interface.Migrations
                             Name = "Giga",
                             NormalizedEmail = "GIGAADMIN@GMAIL.COM",
                             NormalizedUserName = "GIGAADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEC+Rbzml8UViUvgYaB/B4Us2o2weIzHxKIBdtBiT4fGNSZuLtf09nrx/sPYNijbQQw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGwKrUXc/sL0IW2E5+vXha2eJygeuYWXgP2Oaz360KqMwjNAB3juPbPWHOO7t8Y0lQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "WLGMYNDY6WWMVVYNN5JWGMTA6FDVC5GD",
+                            SecurityStamp = "TNBCLGFCJYR5XXCWQ6H3QE654HLJRIFN",
                             Surname = "Admin",
                             TwoFactorEnabled = false,
                             UserName = "gigaadmin@gmail.com"
@@ -273,7 +273,6 @@ namespace MultiSMS.Interface.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HQAddress")
@@ -293,16 +292,11 @@ namespace MultiSMS.Interface.Migrations
                     b.Property<string>("PostalNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("SMSMessageSMSId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Surname")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("EmployeeId");
-
-                    b.HasIndex("SMSMessageSMSId");
 
                     b.ToTable("Employees");
                 });
@@ -391,23 +385,27 @@ namespace MultiSMS.Interface.Migrations
                     b.Property<string>("AdditionalInformation")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ChosenGroupGroupId")
+                    b.Property<string>("AdditionalPhoneNumbers")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ChosenGroupId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Issuer")
+                    b.Property<string>("DataDictionarySerialized")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("IssuerId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("MessageSentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("SMSContent")
+                    b.Property<string>("ServerResponseSerialized")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("SMSId");
-
-                    b.HasIndex("ChosenGroupGroupId");
 
                     b.ToTable("SMSMessages");
                 });
@@ -487,13 +485,6 @@ namespace MultiSMS.Interface.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MultiSMS.Interface.Entities.Employee", b =>
-                {
-                    b.HasOne("MultiSMS.Interface.Entities.SMSMessage", null)
-                        .WithMany("AdditionalEmployees")
-                        .HasForeignKey("SMSMessageSMSId");
-                });
-
             modelBuilder.Entity("MultiSMS.Interface.Entities.EmployeeGroup", b =>
                 {
                     b.HasOne("MultiSMS.Interface.Entities.Employee", "Employee")
@@ -513,17 +504,6 @@ namespace MultiSMS.Interface.Migrations
                     b.Navigation("Group");
                 });
 
-            modelBuilder.Entity("MultiSMS.Interface.Entities.SMSMessage", b =>
-                {
-                    b.HasOne("MultiSMS.Interface.Entities.Group", "ChosenGroup")
-                        .WithMany()
-                        .HasForeignKey("ChosenGroupGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ChosenGroup");
-                });
-
             modelBuilder.Entity("MultiSMS.Interface.Entities.Employee", b =>
                 {
                     b.Navigation("EmployeeGroups");
@@ -532,11 +512,6 @@ namespace MultiSMS.Interface.Migrations
             modelBuilder.Entity("MultiSMS.Interface.Entities.Group", b =>
                 {
                     b.Navigation("GroupMembers");
-                });
-
-            modelBuilder.Entity("MultiSMS.Interface.Entities.SMSMessage", b =>
-                {
-                    b.Navigation("AdditionalEmployees");
                 });
 #pragma warning restore 612, 618
         }

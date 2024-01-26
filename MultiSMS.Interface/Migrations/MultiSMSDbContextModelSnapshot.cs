@@ -246,9 +246,9 @@ namespace MultiSMS.Interface.Migrations
                             Name = "Giga",
                             NormalizedEmail = "GIGAADMIN@GMAIL.COM",
                             NormalizedUserName = "GIGAADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBCjKOKL7JXJsx7QCT7qvvJruPt1yUnTwn5xGiOieq6J8drhwl3gJKZDeM9bcwx0sQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGwKrUXc/sL0IW2E5+vXha2eJygeuYWXgP2Oaz360KqMwjNAB3juPbPWHOO7t8Y0lQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "R5OAZQNRVKX2NIGZ6L6WJPNQ3K4LW23F",
+                            SecurityStamp = "TNBCLGFCJYR5XXCWQ6H3QE654HLJRIFN",
                             Surname = "Admin",
                             TwoFactorEnabled = false,
                             UserName = "gigaadmin@gmail.com"
@@ -270,7 +270,6 @@ namespace MultiSMS.Interface.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HQAddress")

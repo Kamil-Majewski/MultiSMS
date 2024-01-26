@@ -137,7 +137,7 @@
                 </div>
                 <div class="list-content">
                     <div class="table-responsive">
-                        <table class="template-list table table-borderless" id="template-table">
+                        <table class="template-list table table-borderless" id="template-table" style="table-">
                             <thead>
                                 <tr>
                                     <th scope="col">Nazwa</th>
@@ -171,13 +171,13 @@
                             <div class="row">
                                 <div class="col">
                                     <label for="TemplateName">Nazwa szablonu *</label>
-                                    <input type="text" class="form-input" id="templateNameInput" required maxlength="20"/>
+                                    <input type="text" class="form-input" id="templateNameInput" required maxlength="30"/>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col">
                                     <label for="TemplateDescription">Opis</label>
-                                    <input type="text" class="form-input" id="templateDescriptionInput" maxlength="35" />
+                                    <input type="text" class="form-input" id="templateDescriptionInput" maxlength="50" />
                                 </div>
                             </div>
                             <div class="row">
@@ -201,7 +201,8 @@
                     <div class="list-header">
                         <div class="list-header-left">
                             <button class="add-new-button violet-button" type="button" onclick="OpenCreateContactWindow()">Dodaj nowy</button>
-                            <button class="import-contacts-button ie-button" type="button">Importuj kontakty</button>
+                            <input type="file" id="import-file-input" style="display: none;" accept=".csv, .xlsx" />
+                            <button class="import-contacts-button ie-button" type="button" onclick="TriggerFileInput()">Importuj kontakty</button>
                             <button class="export-contacts-button ie-button" type="button">Exportuj kontakty</button>
                         </div>
                         <div class="list-search-bar d-flex">
@@ -210,7 +211,7 @@
                     </div>
                     <div class="list-content">
                         <div class="table-responsive">
-                            <table class="contacts-list table table-borderless" id="contacts-table">
+                            <table class="contacts-list table table-borderless" id="contacts-table" style="table-layout:fixed;">
                                 <thead>
                                     <tr>
                                         <th class="tiny-cell">Imię</th>
@@ -249,17 +250,17 @@
                                     <div class="row">
                                         <div class="col">
                                             <label for="ContactName">Imię *</label>
-                                            <input type="text" class="form-input" id="contactNameInput" required maxlength="20">
+                                            <input type="text" class="form-input" id="contactNameInput" required maxlength="40">
                                         </div>
                                         <div class="col">
                                             <label for="ContactSurname">Nazwisko *</label>
-                                            <input type="text" class="form-input" id="contactSurnameInput" required maxlength="20">
+                                            <input type="text" class="form-input" id="contactSurnameInput" required maxlength="40">
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col">
                                             <label for="ContactEmail">Email</label>
-                                            <input type="email" class="form-input" id="contactEmail" maxlength="30">
+                                            <input type="email" class="form-input" id="contactEmail" maxlength="50">
                                         </div>
                                     </div>
                                 </div>
@@ -287,7 +288,7 @@
                                         </div>
                                         <div class="col" style="flex-grow: 3;">
                                             <label for="ContactCity">Miasto</label>
-                                            <input type="text" class="form-input" id="ContactCity" maxlength="20">
+                                            <input type="text" class="form-input" id="ContactCity" maxlength="30">
                                         </div>
                                     </div>
                                     <div class="row">
@@ -514,6 +515,30 @@
         });
     }
 
+    function ImportContacts() {
+        var fileInput = document.getElementById('import-file-input');
+        var file = fileInput.files[0];
+
+        if (file) {
+            var formData = new FormData();
+            formData.append('file', file);
+
+            $.ajax({
+                url: '@Url.Action("ImportContacts", "Home")',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (responseObject) {
+                    console.log("Nice")
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        }
+    }
+
     function SanitizePolishSymbols(inputId) {
 
         const diacriticToAsciiMap = {
@@ -714,14 +739,14 @@
                     var group = item.employeeGroupNames;
                     var email = item.email;
 
-                    if (group == 'null' || group.length == 0) {
+                    if (group == null || group.length == 0) {
                         group = "Nie przypisano";
                     }
                     else{
                         group = group.join(", ")
                     }
 
-                    if (email == 'null'){
+                    if (email == null){
                         email = "Brak danych"
                     }
 
@@ -1032,6 +1057,10 @@
         });
     }
 
+    function TriggerFileInput(){
+        $("#import-file-input").click();
+    }
+
     function OpenCreateTemplateWindow(){
         const messageEle = document.getElementById('templateContentInput');
         document.getElementById('symbolCounterAdd').innerHTML = messageEle.value.length + "/" + messageEle.getAttribute('maxlength');
@@ -1145,9 +1174,11 @@
                 $("#content-render").css("width", initialRenderContentWidthInVW + "vw");
             }
         );
-        
 
-      
+        $('#import-file-input').change(function () {
+            ImportContacts();
+        });
+        
         $(document).on('click', '.template-delete', function (e) {
             var templateId = $(this).attr("href").split('-')[1];
             DeleteTemplate(templateId)
