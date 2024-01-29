@@ -27,14 +27,49 @@ namespace MultiSMS.BusinessLogic.Services
 
         }
 
-        public async Task<object> ImportContactsCsvAsync(IFormFile file)
+        public async Task<object> ImportContactsAsync(IFormFile file)
+        {
+            string[] requiredHeaders = { "osoba", "tel", "instytucja", "grupa" };
+
+            string[] fileHeaders;
+
+            using var memoryStream = new MemoryStream(new byte[file.Length]);
+            await file.CopyToAsync(memoryStream);
+            memoryStream.Position = 0;
+
+            using (var reader = new StreamReader(memoryStream))
+            using (var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                csvReader.Read();
+                csvReader.ReadHeader();
+                fileHeaders = csvReader.HeaderRecord.Select(f => f.ToLower()).ToArray();
+            }
+
+            if (requiredHeaders.Except(fileHeaders).Any())
+            {
+                fileHeaders = fileHeaders[0].Split(";").ToArray();
+
+                if (requiredHeaders.Except(fileHeaders).Any())
+                {
+                    return new { Status = "Failure", Message = "Struktura pliku .csv nie jest prawidłowa." };
+                }
+                else
+                {
+                    return await ImportContactsCsvNewAppAsync(file);
+                }
+            }
+            else
+            {
+                return await ImportContactsCsvOldAppAsync(file);
+            }
+        }
+
+        public async Task<object> ImportContactsCsvOldAppAsync(IFormFile file)
         {
             var phoneNumbersInDb = _employeeRepository.GetAllEntries().Select(e => e.PhoneNumber);
-            var records = new List<Employee>();
-            var invalidRecords = new List<Employee>();
-            var repeatedEntries = new List<Employee>();
-
-            string[] requiredHeaders = { "osoba", "tel", "instytucja", "grupa"};
+            List<Employee> repeatedEntries = new List<Employee>();
+            List<Employee> records = new List<Employee>();
+            List<Employee> invalidRecords = new List<Employee>();
 
             using var memoryStream = new MemoryStream(new byte[file.Length]);
             await file.CopyToAsync(memoryStream);
@@ -42,7 +77,7 @@ namespace MultiSMS.BusinessLogic.Services
 
             var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
-                PrepareHeaderForMatch = args => args.Header.ToLower()
+                PrepareHeaderForMatch = args => args.Header.ToLowerInvariant(),
             };
 
             using (var reader = new StreamReader(memoryStream))
@@ -51,12 +86,6 @@ namespace MultiSMS.BusinessLogic.Services
 
                 csvReader.Read();
                 csvReader.ReadHeader();
-
-                var fileHeaders = csvReader.HeaderRecord;
-                if (requiredHeaders.Except(fileHeaders).Any())
-                {
-                    return new { Status = "Failure", Message = "Struktura pliku .csv nie jest prawidłowa." };
-                }
 
                 while (csvReader.Read())
                 {
@@ -83,8 +112,66 @@ namespace MultiSMS.BusinessLogic.Services
                     }
                 }
             }
+
             var addedEmployees = await _employeeRepository.AddRangeOfEntitiesToDatabaseAsync(records);
-            return new {Status = "Success", AddedEmployees = addedEmployees, RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords };
+            return new { Status = "Success", AddedEmployees = addedEmployees, RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords };
+        }
+
+        public async Task<object> ImportContactsCsvNewAppAsync(IFormFile file)
+        {
+            var phoneNumbersInDb = _employeeRepository.GetAllEntries().Select(e => e.PhoneNumber);
+            List<Employee> repeatedEntries = new List<Employee>();
+            List<Employee> records = new List<Employee>();
+            List<Employee> invalidRecords = new List<Employee>();
+
+            using var memoryStream = new MemoryStream(new byte[file.Length]);
+            await file.CopyToAsync(memoryStream);
+            memoryStream.Position = 0;
+
+            var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                PrepareHeaderForMatch = args => args.Header.ToLowerInvariant(),
+                Delimiter = ";"
+            };
+
+            using (var reader = new StreamReader(memoryStream))
+            using (var csvReader = new CsvReader(reader, csvConfig))
+            {
+
+                csvReader.Read();
+                csvReader.ReadHeader();
+
+                while (csvReader.Read())
+                {
+                    var record = new Employee
+                    {
+                        Name = csvReader.GetField<string>("osoba").Split(' ')[0],
+                        Surname = csvReader.GetField<string>("osoba").Split(' ')[1],
+                        PhoneNumber = csvReader.GetField<string>("tel"),
+                        Email = csvReader.GetField<string>("email"),
+                        Department = csvReader.GetField<string>("instytucja"),
+                        PostalNumber = csvReader.GetField<string>("kod pocztowy"),
+                        City = csvReader.GetField<string>("miasto"),
+                        HQAddress = csvReader.GetField<string>("adres miejsca pracy"),
+                        IsActive = csvReader.GetField<string>("aktywność") == "Aktywny" ? true : false,
+                    };
+
+                    if (phoneNumbersInDb.Any(p => p == record.PhoneNumber))
+                    {
+                        repeatedEntries.Add(record);
+                    }
+                    else if (_entitiesValidationService.CheckEmployeeValidity(record))
+                    {
+                        records.Add(record);
+                    }
+                    else
+                    {
+                        invalidRecords.Add(record);
+                    }
+                }
+            }
+            var addedEmployees = await _employeeRepository.AddRangeOfEntitiesToDatabaseAsync(records);
+            return new { Status = "Success", AddedEmployees = addedEmployees, RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords };
         }
 
         public string ExportContactsExcel()
@@ -104,7 +191,7 @@ namespace MultiSMS.BusinessLogic.Services
                 sheet.Cells["A1"].Value = "Osoba";
                 sheet.Cells["B1"].Value = "Tel";
                 sheet.Cells["C1"].Value = "Email";
-                sheet.Cells["D1"].Value = "Departament";
+                sheet.Cells["D1"].Value = "Instytucja";
                 sheet.Cells["E1"].Value = "Kod Pocztowy";
                 sheet.Cells["F1"].Value = "Miasto";
                 sheet.Cells["G1"].Value = "Adres miejsca pracy";
@@ -112,7 +199,7 @@ namespace MultiSMS.BusinessLogic.Services
                 sheet.Cells["I1"].Value = "Grupa";
                 sheet.Cells["J1"].Value = "Nazwy grup";
 
-                foreach(var employee in allEmployees)
+                foreach (var employee in allEmployees)
                 {
                     var groupNamesList = _employeeGroupRepository.GetAllGroupNamesForEmployeeQueryable(employee.EmployeeId).ToList();
                     var groupIdsList = _employeeGroupRepository.GetAllGroupIdsForEmployeeQueryable(employee.EmployeeId).ToList();

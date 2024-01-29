@@ -197,7 +197,7 @@ namespace MultiSMS.MVC.Controllers
                 return BadRequest("Invalid file");
             }
 
-            return Json(await _ieService.ImportContactsCsvAsync(file));
+            return Json(await _ieService.ImportContactsAsync(file));
         }
 
         [HttpGet]
