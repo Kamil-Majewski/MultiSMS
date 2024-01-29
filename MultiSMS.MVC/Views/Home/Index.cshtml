@@ -170,19 +170,19 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col">
-                                    <label for="TemplateName">Nazwa szablonu *</label>
+                                    <label for="templateNameInput">Nazwa szablonu *</label>
                                     <input type="text" class="form-input" id="templateNameInput" required maxlength="30"/>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col">
-                                    <label for="TemplateDescription">Opis</label>
+                                    <label for="templateDescriptionInput">Opis</label>
                                     <input type="text" class="form-input" id="templateDescriptionInput" maxlength="50" />
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col">
-                                    <label for="TemplateContent">Treść wiadomości *</label>
+                                    <label for="templateContentInput">Treść wiadomości *</label>
                                     <textarea class="form-input" id="templateContentInput" rows="5" maxlength="160" required></textarea>
                                     <div style="margin-top: 0.25rem; text-align: right" id="symbolCounterAdd">&nbsp</div>
                                 </div>
@@ -203,7 +203,7 @@
                             <button class="add-new-button violet-button" type="button" onclick="OpenCreateContactWindow()">Dodaj nowy</button>
                             <input type="file" id="import-file-input" style="display: none;" accept=".csv" />
                             <button class="import-contacts-button ie-button" type="button" onclick="TriggerFileInput()">Importuj kontakty</button>
-                            <button class="export-contacts-button ie-button" type="button">Exportuj kontakty</button>
+                            <button class="export-contacts-button ie-button" type="button" onclick="ExportContactsAndDownloadExcel()">Exportuj kontakty</button>
                         </div>
                         <div class="list-search-bar d-flex">
                             <input class="search-for contact-search" placeholder="Wyszukaj kontakt">
@@ -249,17 +249,17 @@
                                 <div class="form-group" style="margin-top: 20px;">
                                     <div class="row">
                                         <div class="col">
-                                            <label for="ContactName">Imię *</label>
+                                            <label for="contactNameInput">Imię *</label>
                                             <input type="text" class="form-input" id="contactNameInput" required maxlength="40">
                                         </div>
                                         <div class="col">
-                                            <label for="ContactSurname">Nazwisko *</label>
+                                            <label for="contactSurnameInput">Nazwisko *</label>
                                             <input type="text" class="form-input" id="contactSurnameInput" required maxlength="40">
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col">
-                                            <label for="ContactEmail">Email</label>
+                                            <label for="contactEmail">Email</label>
                                             <input type="email" class="form-input" id="contactEmail" maxlength="50">
                                         </div>
                                     </div>
@@ -271,7 +271,7 @@
                                 <div class="form-group" style="margin-top:20px;">
                                     <div class="row">
                                         <div class="col">
-                                            <label for="ContactPhone">Numer telefonu *</label>
+                                            <label for="contactPhoneNumber">Numer telefonu *</label>
                                             <input type="tel" class="form-input" id="contactPhoneNumber" required maxlength="15" minlength="11" pattern="^(\+[0-9]{2} )?\d{3} \d{3} \d{3}$">
                                         </div>
                                     </div>
@@ -548,6 +548,29 @@
                 }
             });
         }
+    }
+
+    function ExportContactsAndDownloadExcel() {
+        $.ajax({
+            url: '@Url.Action("DownloadExcelWithContacts", "Home")',
+            type: 'GET',
+            contentType: 'application/json',
+            xhrFields: {
+                responseType: 'blob'
+            },
+            success: function (responseFileData) {
+                var blob = new Blob([responseFileData], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+                var downloadLink = document.createElement('a');
+                downloadLink.href = window.URL.createObjectURL(blob);
+                downloadLink.download = "Multi-SMS Kontakty.xlsx"
+
+                downloadLink.dispatchEvent(new MouseEvent('click'));
+                window.URL.revokeObjectURL(downloadLink.href);
+            },
+            error: function (error) {
+                console.error("Export has failed");
+            }
+        });
     }
 
     function SanitizePolishSymbols(inputId) {
@@ -1145,6 +1168,8 @@
     function GoBackToContactList() {
         $(".contact-options-form").removeAttr('id');
         $(".contact-options-form :input[type='text']").val('');
+        $(".contact-options-form :input[type='email']").val('');
+        $(".contact-options-form :input[type='tel']").val('');
         $(".contacts-options-container").hide();
         $(".contacts-list-container").show();
     }
@@ -1710,6 +1735,10 @@
             const currentLength = target.value.length;
 
             counterEle.innerHTML = `${currentLength}/${maxLength}`;
+        });
+
+        $(document).on('input', "#contactEmail", function () {
+            SanitizePolishSymbols("contactEmail");
         });
 
         $("#groupDescriptionInput").on('input', function (e) {

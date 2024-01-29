@@ -14,4 +14,3 @@ namespace MultiSMS.MVC.Models
         public string WwwRootPath => _webHostEnvironment.WebRootPath;
     }
 }
-}

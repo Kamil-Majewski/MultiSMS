@@ -516,7 +516,7 @@ namespace MultiSMS.MVC.Controllers
                 try
                 {
                     var fileBytes = System.IO.File.ReadAllBytes(fileDirectory);
-                    return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "MultiSMS-Kontakty.xlsx");
+                    return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
                 }
                 catch( Exception ex)
                 {

@@ -92,11 +92,14 @@ namespace MultiSMS.BusinessLogic.Services
             string wwwrootPath = _pathProvider.WwwRootPath;
             string filePath = Path.Combine(wwwrootPath, "Kontakty.xlsx");
 
-            var allEmployees = _employeeRepository.GetAllEntries();
-            var rowNumber = 1;
+            var allEmployees = _employeeRepository.GetAllEntries().ToList();
+            var rowNumber = 2;
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
             using (var package = new ExcelPackage())
             {
+
                 var sheet = package.Workbook.Worksheets.Add("Kontaky");
                 sheet.Cells["A1"].Value = "Osoba";
                 sheet.Cells["B1"].Value = "Tel";
@@ -122,7 +125,7 @@ namespace MultiSMS.BusinessLogic.Services
                     sheet.Cells[$"F{rowNumber}"].Value = employee.City;
                     sheet.Cells[$"G{rowNumber}"].Value = employee.HQAddress;
                     sheet.Cells[$"H{rowNumber}"].Value = !employee.IsActive ? "Nieaktywny" : "Aktywny";
-                    sheet.Cells[$"I{rowNumber}"].Value = string.Join(", ", groupIdsList); ;
+                    sheet.Cells[$"I{rowNumber}"].Value = string.Join(", ", groupIdsList);
                     sheet.Cells[$"J{rowNumber}"].Value = string.Join(", ", groupNamesList);
 
                     rowNumber++;

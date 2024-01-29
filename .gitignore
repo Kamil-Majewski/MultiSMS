@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /MultiSMS.MVC/appsettings.json
 /MultiSMS.MVC/appsettings.Development.json
+/MultiSMS.MVC/wwwroot/Kontakty.xlsx
