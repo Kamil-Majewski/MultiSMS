@@ -325,10 +325,10 @@
                         </form>
                     </div>
                 </div>
-                <div class="import-report-container list-container">
+                <div class="import-report-container list-container" style="display:none;">
                     <div class="list-header">
                         <div class="previous-page" style="flex:1;">
-                            <button class="violet-button" id="contacts-previous-button" type="button" style="display: flex; align-items:center;" onclick="">
+                            <button class="violet-button" id="contacts-previous-button" type="button" style="display: flex; align-items:center;" onclick="FinishBrowsingImportReport()">
                                 Zakończ przeglądanie raportu
                             </button>
                         </div>
@@ -343,7 +343,7 @@
                             <div><span class="option-name" style="font-size: 20px">Tabelaryczny rozkład kontaktów</span></div>
                         </div>
                         <div class="list-search-bar d-flex">
-                            <input class="search-for contact-search" placeholder="Wyszukaj kontakt">
+                            <input class="search-for import-contact-search" placeholder="Wyszukaj kontakt">
                         </div>
                     </div>
                     <div class="list-content" style="margin-bottom:20px;" id="import-added-contacts-container">
@@ -640,8 +640,7 @@
                     newRow += '<td class="tiny-centered-cell"><span class="inactive-pill">Nieaktywny<span></td>';
                 }
 
-                newRow += '<td class="centered-cell">' + group + '</td>' +
-                    '</tr>';
+                newRow += /* '<td class="centered-cell">' + group + '</td>' */ '</tr>';
 
                 $('#' + tableId + ' tbody').append(newRow);
             });
@@ -1306,6 +1305,17 @@
         $(".choose-template-for-sms-container").show();
     }
 
+    function FinishBrowsingImportReport(){
+        $(".import-report-container").hide();
+        $("#import-repeated-contacts-container").show();
+        $("#import-invalid-contacts-container").show();
+        $("#import-added-contacts-container").show();
+        $('#repeated-contacts-table tbody').empty();
+        $('#invalid-contacts-table tbody').empty();
+        $('#added-contacts-table tbody').empty();
+        $(".contacts-list-container").show();
+    }
+
     function GoBackToSMSWindow(){
         $(".choose-group-for-sms-container").hide();
         $(".choose-template-for-sms-container").hide();
@@ -1780,6 +1790,47 @@
             var filterText = $(this).val().toLowerCase();
 
             $('#group-table tbody tr').each(function () {
+                var rowHit = false;
+                $(this).find('td').each(function () {
+                    if ($(this).text().toLowerCase().includes(filterText)) {
+                        rowHit = true;
+                        return false;
+                    }
+                });
+
+                $(this).toggle(rowHit);
+            });
+        });
+
+        $(".import-contact-search").on('input', function () {
+
+            var filterText = $(this).val().toLowerCase();
+
+            $('#added-contacts-table tbody tr').each(function () {
+                var rowHit = false;
+                $(this).find('td').each(function () {
+                    if ($(this).text().toLowerCase().includes(filterText)) {
+                        rowHit = true;
+                        return false;
+                    }
+                });
+
+                $(this).toggle(rowHit);
+            });
+
+            $('#repeated-contacts-table tbody tr').each(function () {
+                var rowHit = false;
+                $(this).find('td').each(function () {
+                    if ($(this).text().toLowerCase().includes(filterText)) {
+                        rowHit = true;
+                        return false;
+                    }
+                });
+
+                $(this).toggle(rowHit);
+            });
+
+            $('#invalid-contacts-table tbody tr').each(function () {
                 var rowHit = false;
                 $(this).find('td').each(function () {
                     if ($(this).text().toLowerCase().includes(filterText)) {
