@@ -346,18 +346,23 @@
                             <input class="search-for contact-search" placeholder="Wyszukaj kontakt">
                         </div>
                     </div>
-                    <span class="form-subtitle">Kontakty dodane</span>
-                    <div class="list-content" style="margin-bottom:15px; margin-top:5px;">
+                    <div class="list-content" style="margin-bottom:20px;" id="import-added-contacts-container">
                         <div class="table-responsive">
                             <table class="added-contacts-list table table-borderless" id="added-contacts-table" style="table-layout:fixed;">
                                 <thead>
                                     <tr>
+                                        <th colspan="7" style="border-bottom: 2px solid #f0f1f1; color:#5a6372c4; text-align: center; font-size: 18px; padding: 10px;" ">
+                                            Kontakty dodane
+                                        </th>
+                                    </tr>
+                                    <tr>
                                         <th class="tiny-cell">Imię</th>
                                         <th class="tiny-cell">Nazwisko</th>
                                         <th class="tiny-cell">Email</th>
                                         <th class="small-cell" style="width: 150px;">Numer telefonu</th>
                                         <th class="tiny-centered-cell">Status</th>
-                                        <th class="centered-cell">Grupy</th>
+                                        <th class="tiny-centered-cell">Grupy przypisane</th>
+                                        <th class="tiny-centered-cell">Grupy nieprzypisane</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -365,18 +370,21 @@
                             </table>
                         </div>
                     </div>
-                    <span class="form-subtitle">Kontakty powtórzone</span>
-                    <div class="list-content" style="margin-bottom:15px; margin-top:5px;">
+                    <div class="list-content" style="margin-bottom:20px; margin-top:5px;" id="import-repeated-contacts-container">
                         <div class="table-responsive">
                             <table class="added-contacts-list table table-borderless" id="repeated-contacts-table" style="table-layout:fixed;">
                                 <thead>
                                     <tr>
+                                        <th colspan="5" style="border-bottom: 2px solid #f0f1f1; color:#5a6372c4; text-align: center; font-size: 18px; padding: 10px;">
+                                            Kontakty powtórzone
+                                        </th>
+                                    </tr>
+                                    <tr>
                                         <th class="tiny-cell">Imię</th>
                                         <th class="tiny-cell">Nazwisko</th>
                                         <th class="tiny-cell">Email</th>
                                         <th class="small-cell" style="width: 150px;">Numer telefonu</th>
                                         <th class="tiny-centered-cell">Status</th>
-                                        <th class="centered-cell">Grupy</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -384,18 +392,21 @@
                             </table>
                         </div>
                     </div>
-                    <span class="form-subtitle">Kontakty nieprawidłowe</span>
-                    <div class="list-content" style="margin-bottom:15px; margin-top:5px;">
+                    <div class="list-content" style="margin-bottom:20px; margin-top:5px;" id="import-invalid-contacts-container">
                         <div class="table-responsive">
                             <table class="added-contacts-list table table-borderless" id="invalid-contacts-table" style="table-layout:fixed;">
                                 <thead>
+                                    <tr>
+                                        <th colspan="5" style="border-bottom: 2px solid #f0f1f1; color:#5a6372c4; text-align: center; font-size: 18px; padding: 10px;">
+                                            Kontakty nieprawidłowe
+                                        </th>
+                                    </tr>
                                     <tr>
                                         <th class="tiny-cell">Imię</th>
                                         <th class="tiny-cell">Nazwisko</th>
                                         <th class="tiny-cell">Email</th>
                                         <th class="small-cell" style="width: 150px;">Numer telefonu</th>
                                         <th class="tiny-centered-cell">Status</th>
-                                        <th class="centered-cell">Grupy</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -598,6 +609,44 @@
     }
 
     function ImportContacts() {
+
+        function IterateOverListOfObjectsAndAppendToTable(object, tableId) {
+            $.each(object, function (index, item) {
+                var group = item.employeeGroupNames;
+                var email = item.email;
+
+                if (group == null || group.length == 0) {
+                    group = "Nie przypisano";
+                }
+                else {
+                    group = group.join(", ")
+                }
+
+                if (email == null || email == "") {
+                    email = "Brak danych"
+                }
+
+                var newRow = '<tr>' +
+                    '<td class="tiny-cell">' + item.name + '</td>' +
+                    '<td class="tiny-cell">' + item.surname + '</td>' +
+                    '<td class="small-cell">' + email + '</td>' +
+                    '<td class="small-cell">' + item.phoneNumber + '</td>';
+
+
+                if (item.isActive == true) {
+                    newRow += '<td class="tiny-centered-cell"><span class="active-pill">Aktywny<span></td>';
+                }
+                else {
+                    newRow += '<td class="tiny-centered-cell"><span class="inactive-pill">Nieaktywny<span></td>';
+                }
+
+                newRow += '<td class="centered-cell">' + group + '</td>' +
+                    '</tr>';
+
+                $('#' + tableId + ' tbody').append(newRow);
+            });
+        }
+
         var fileInput = document.getElementById('import-file-input');
         var file = fileInput.files[0];
 
@@ -622,6 +671,30 @@
                 processData: false,
                 success: function (responseObject) {
                     console.log(responseObject.status + ": " + responseObject.message)
+                    $('#repeated-contacts-table tbody').empty();
+                    $('#invalid-contacts-table tbody').empty();
+                    $('#added-contacts-table tbody').empty();
+
+                    if(responseObject.repeatedEmployees.length == 0){
+                        $("#import-repeated-contacts-container").hide();
+                    }
+                    else{
+                        IterateOverListOfObjectsAndAppendToTable(responseObject.repeatedEmployees, "repeated-contacts-table")
+                        }
+
+                    if(responseObject.invalidEmployees.length == 0){
+                        $("#import-invalid-contacts-container").hide();
+                    }
+                    else{
+                        IterateOverListOfObjectsAndAppendToTable(responseObject.invalidEmployees, "invalid-contacts-table")
+                    }
+                    if(typeof responseObject.addedEmployees !== 'undefined' ){
+                        IterateOverListOfObjectsAndAppendToTable(responseObject.addedEmployees, "added-contacts-table")
+                    }
+                    else{
+                        $("#import-added-contacts-container").hide();
+                    }
+
                     fileInput.value = null;
                 },
                 error: function (error) {
