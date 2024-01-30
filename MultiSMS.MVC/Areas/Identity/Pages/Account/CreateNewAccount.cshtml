@@ -29,24 +29,25 @@
             <div class="row" style="margin-top:20px;">
                 <div class="col">
                     <label for="AdminName">Imię</label>
-                    <input asp-for=Input.Name type="text" class="form-input" id="AdminName" placeholder="Wprowadź imię" required maxlength="20">
+                    <input asp-for=Input.Name type="text" class="form-input" id="AdminName" required maxlength="20">
                     <span asp-validation-for="Input.Name" class="text-danger"></span>
                 </div>
                 <div class="col">
                     <label for="AdminSurname">Nazwisko</label>
-                    <input asp-for="Input.Surname" type="text" class="form-input" id="AdminSurname" placeholder="Wprowadź nazwisko" required maxlength="20">
+                    <input asp-for="Input.Surname" type="text" class="form-input" id="AdminSurname" required maxlength="20">
                     <span asp-validation-for="Input.Surname" class="text-danger"></span>
                 </div>
             </div>
             <div>
                 <label asp-for="Input.Email" class="form-label">Email</label>
-                <input asp-for="Input.Email" class="form-input" type="email" autocomplete="username" aria-required="true" placeholder="Wprowadź adres email" required />
+                <input asp-for="Input.Email" class="form-input" type="email" autocomplete="username" aria-required="true" required />
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
             <div class="mb-3">
                 <label asp-for="Input.Password" class="form-label">Hasło jednorazowe</label>
                 <div class="password-input-container">
-                    <input asp-for="Input.Password" class="form-input" id="create-acc-password" type="password" autocomplete="new-password" style="padding-right:30px;" aria-required="true" placeholder="Wprowadź hasło" required />
+                    <input asp-for="Input.Password" class="form-input" id="create-acc-password" type="password" autocomplete="new-password" style="padding-right:30px;" aria-required="true"
+                    required />
                     <img src="~/icons/closed-eye.png" class="eye-icons" id="eye-icon" alt="Toggle Password Visibility" onclick="togglePasswordVisibilityForCreateAccount()">
                 </div>
                 <span asp-validation-for="Input.Password" class="text-danger"></span>

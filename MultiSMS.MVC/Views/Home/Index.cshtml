@@ -166,6 +166,7 @@
                         </div>
                         <div style="flex:1;"></div>
                     </div>
+                    <hr />
                     <form class="template-options-form options-form">
                         <div class="form-group">
                             <div class="row">
@@ -243,6 +244,7 @@
                             </div>
                             <div style="flex:1;"></div>
                         </div>
+                        <hr />
                         <form class="contact-options-form options-form">
                             <div class="personal-data" style="margin-bottom:20px;">
                                 <span class="form-subtitle">Dane Personalne</span>
@@ -323,6 +325,85 @@
                         </form>
                     </div>
                 </div>
+                <div class="import-report-container list-container">
+                    <div class="list-header">
+                        <div class="previous-page" style="flex:1;">
+                            <button class="violet-button" id="contacts-previous-button" type="button" style="display: flex; align-items:center;" onclick="">
+                                Zakończ przeglądanie raportu
+                            </button>
+                        </div>
+                        <div class="option-name" style="flex:auto; text-align:center;">
+                            <span class="opion-name-placeholder" id="report-window-title">Importuj kontakty - raport</span>
+                        </div>
+                        <div style="flex:1;"></div>
+                    </div>
+                    <hr />
+                    <div class="list-header">
+                        <div class="list-header-left">
+                            <div><span class="option-name" style="font-size: 20px">Tabelaryczny rozkład kontaktów</span></div>
+                        </div>
+                        <div class="list-search-bar d-flex">
+                            <input class="search-for contact-search" placeholder="Wyszukaj kontakt">
+                        </div>
+                    </div>
+                    <span class="form-subtitle">Kontakty dodane</span>
+                    <div class="list-content" style="margin-bottom:15px; margin-top:5px;">
+                        <div class="table-responsive">
+                            <table class="added-contacts-list table table-borderless" id="added-contacts-table" style="table-layout:fixed;">
+                                <thead>
+                                    <tr>
+                                        <th class="tiny-cell">Imię</th>
+                                        <th class="tiny-cell">Nazwisko</th>
+                                        <th class="tiny-cell">Email</th>
+                                        <th class="small-cell" style="width: 150px;">Numer telefonu</th>
+                                        <th class="tiny-centered-cell">Status</th>
+                                        <th class="centered-cell">Grupy</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <span class="form-subtitle">Kontakty powtórzone</span>
+                    <div class="list-content" style="margin-bottom:15px; margin-top:5px;">
+                        <div class="table-responsive">
+                            <table class="added-contacts-list table table-borderless" id="repeated-contacts-table" style="table-layout:fixed;">
+                                <thead>
+                                    <tr>
+                                        <th class="tiny-cell">Imię</th>
+                                        <th class="tiny-cell">Nazwisko</th>
+                                        <th class="tiny-cell">Email</th>
+                                        <th class="small-cell" style="width: 150px;">Numer telefonu</th>
+                                        <th class="tiny-centered-cell">Status</th>
+                                        <th class="centered-cell">Grupy</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <span class="form-subtitle">Kontakty nieprawidłowe</span>
+                    <div class="list-content" style="margin-bottom:15px; margin-top:5px;">
+                        <div class="table-responsive">
+                            <table class="added-contacts-list table table-borderless" id="invalid-contacts-table" style="table-layout:fixed;">
+                                <thead>
+                                    <tr>
+                                        <th class="tiny-cell">Imię</th>
+                                        <th class="tiny-cell">Nazwisko</th>
+                                        <th class="tiny-cell">Email</th>
+                                        <th class="small-cell" style="width: 150px;">Numer telefonu</th>
+                                        <th class="tiny-centered-cell">Status</th>
+                                        <th class="centered-cell">Grupy</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="tab-pane" id="groups">
@@ -366,6 +447,7 @@
                         </div>
                         <div style="flex:1;"></div>
                     </div>
+                    <hr />
                     <form class="group-options-form options-form">
                         <div class="form-group">
                             <div class="row">
