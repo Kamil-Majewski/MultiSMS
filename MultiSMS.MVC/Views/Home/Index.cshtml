@@ -34,7 +34,7 @@
                                 <textarea class="form-input" id="SmsText" rows="5" maxlength="160" required></textarea>
                                 <div style="display: flex; justify-content:space-between;">
                                     <div>
-                                        <a href="#more-options" class="bleak-hoverable options-hidden" style="margin-top: 0.20rem;">Więcej opcji</a>
+                                        <a href="# more-options" class="bleak-hoverable options-hidden" style="margin-top: 0.20rem;">Więcej opcji</a>
                                     </div>
                                     <div style="margin-top: 0.20rem; text-align: right" id="sms-text-symbol-counter">&nbsp</div>
                                 </div>
@@ -539,7 +539,7 @@
                 contentType: false,
                 processData: false,
                 success: function (responseObject) {
-                    console.log("Nice")
+                    console.log(responseObject.status + ": " + responseObject.message)
                     fileInput.value = null;
                 },
                 error: function (error) {

@@ -6,7 +6,6 @@ namespace MultiSMS.BusinessLogic.Services.Interfaces
     {
         string ExportContactsExcel();
         Task<object> ImportContactsAsync(IFormFile file);
-        Task<object> ImportContactsCsvNewAppAsync(IFormFile file);
-        Task<object> ImportContactsCsvOldAppAsync(IFormFile file);
+        Task<object> ImportContactsCsvByTypeAsync(IFormFile file, string type);
     }
 }

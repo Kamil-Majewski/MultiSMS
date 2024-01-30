@@ -21,6 +21,11 @@ namespace MultiSMS.Interface.Repositories
         {
             return _context.Groups.Include(g => g.GroupMembers)!.ThenInclude(gm => gm.Employee);
         }
+
+        public IQueryable<int> GetAllGroupIds()
+        {
+            return _context.Groups.Select(g => g.GroupId);
+        }
     }
 }
 
