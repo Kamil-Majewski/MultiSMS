@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace MultiSMS.Interface.Entities
 {
@@ -18,6 +19,7 @@ namespace MultiSMS.Interface.Entities
         public string? City { get; set; }
         public string? HQAddress { get; set; }
         public bool IsActive { get; set; }
+        [JsonIgnore]
         public ICollection<EmployeeGroup>? EmployeeGroups { get; set; }
 
         [NotMapped]

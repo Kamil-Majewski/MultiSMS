@@ -166,6 +166,7 @@ namespace MultiSMS.BusinessLogic.Services
                     }
                 }
             }
+
             if (anyFailedAssigns)
             {
                 return new { Status = "Partial Success", Message = "Import zakończony. Dodano nowe kontakty, ale nie wszystkie przypisania do grup zakończyły się powodzeniem.", AddedEmployees = addedEmployees, RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords, NonExistantGroupIds = nonExistantGroupIds };

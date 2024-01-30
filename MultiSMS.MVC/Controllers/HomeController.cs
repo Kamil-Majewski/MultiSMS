@@ -7,7 +7,6 @@ using MultiSMS.Interface.Repositories.Interfaces;
 using MultiSMS.MVC.Models;
 using Newtonsoft.Json;
 using System.Diagnostics;
-using System.Security.Claims;
 
 namespace MultiSMS.MVC.Controllers
 {
@@ -192,6 +191,7 @@ namespace MultiSMS.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> ImportContacts(IFormFile file)
         {
+
             if (file == null || file.Length == 0)
             {
                 return BadRequest("Invalid file");
