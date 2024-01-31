@@ -2,6 +2,20 @@
     ViewData["Title"] = "Home";
 }
 
+<div class="modal fade" id="deleteEntityModal" tabindex="-1" role="dialog" aria-labelledby="deleteEntityModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 550px; min-width: 307px; width:fit-content;">
+        <div class="modal-content">
+            <div class="modal-body">
+                <span class="form-subtitle" id="modal-content-text" style="font-size:16px;"></span>
+            </div>
+            <div class="modal-footer">
+                <button class="violet-button" id="denyDelete" type="button" style="margin-left:10px; height:40px;">Anuluj</button>
+                <button class="violet-button" id="confirmDelete" type="button" style="height:40px; background-color: #c95252;">Usuń kontakt</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="content-container">
     <div class="tab-content" id="category-tab-content">
         <div class="tab-pane show active" id="send-sms" aria-labelledby="sms-tab">
@@ -216,7 +230,7 @@
                                 <thead>
                                     <tr>
                                         <th class="tiny-cell">Imię</th>
-                                        <th class="tiny-cell">Nazwisko</th>
+                                        <th class="tiny-cell" id="contact-surname">Nazwisko</th>
                                         <th class="tiny-cell">Email</th>
                                         <th class="small-cell" style="width: 150px;">Numer telefonu</th>
                                         <th class="tiny-centered-cell">Status</th>
@@ -351,7 +365,7 @@
                             <table class="added-contacts-list table table-borderless" id="added-contacts-table" style="table-layout:fixed;">
                                 <thead>
                                     <tr>
-                                        <th colspan="7" style="border-bottom: 2px solid #f0f1f1; color:#5a6372c4; text-align: center; font-size: 18px; padding: 10px;" ">
+                                        <th colspan="7" style="border-bottom: 2px solid #f0f1f1; color:#5a6372c4; text-align: center; font-size: 18px; padding: 10px;">
                                             Kontakty dodane
                                         </th>
                                     </tr>
@@ -449,7 +463,7 @@
                     <div class="options-header">
                         <div class="previous-page" style="flex:1;">
                             <button class="violet-button" id="groups-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToGroupList()">
-                                <span style="max-width:24px;"><img src="~/icons/previous.png" /></span>
+                                <span style="max-width:24px;"><img src="/icons/previous.png"></span>
                                 <span>Powrót</span>
                             </button>
                         </div>
@@ -944,8 +958,8 @@
                     }
 
                     var newRow = '<tr>' +
-                        '<td class="tiny-cell">' + item.name + '</td>' +
-                        '<td class="tiny-cell">' + item.surname + '</td>' +
+                        '<td class="tiny-cell" id="contact-name">' + item.name + '</td>' +
+                        '<td class="tiny-cell" id="contact-surname">' + item.surname + '</td>' +
                         '<td class="small-cell">' + email + '</td>' +
                         '<td class="small-cell">' + item.phoneNumber + '</td>';
 
@@ -1416,8 +1430,28 @@
         });
 
         $(document).on('click', '.contact-delete', function (e) {
+            var name = $(this).closest('tr').find('#contact-name').text();
+            var surname = $(this).closest('tr').find('#contact-surname').text();
+            console.log(`${name} ${surname}`)
             var contactId = $(this).attr("href").split('-')[1];
-            DeleteContact(contactId)
+
+            $("#modal-content-text").html(`Czy na pewno chcesz usunąć kontakt ${name} ${surname}?`);
+
+            $('#deleteEntityModal').modal('show');
+
+            $('#confirmDelete').on('click', function () {
+                DeleteContact(contactId);
+                $('#deleteEntityModal').modal('hide');
+            });
+            $('#denyDelete').on('click', function () {
+                $('#deleteEntityModal').modal('hide');
+            });
+        });
+
+        $(document).on('hidden.bs.modal', '#deleteEntityModal',  function () {
+            $(document).off('click', '#confirmDelete');
+            $(document).off('click', '#denyDelete');
+            $("#modal-content-text").empty();
         });
 
         $(document).on('click', '.group-delete', function (e) {

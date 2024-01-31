@@ -469,12 +469,15 @@ tbody {
 }
 
 .icon-list {
-    max-width: 32px;
+    max-width: 22px;
     display: inline-block;
-    padding: 5px;
-    margin-left: 6px;
-    margin-right: 6px;
+    margin-left: 11px;
+    margin-right: 11px;
     object-fit:cover;
+}
+
+.table > :not(caption) > * > *{
+    padding: .6rem .5rem;
 }
 
 img {
