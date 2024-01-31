@@ -6,7 +6,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 550px; min-width: 307px; width:fit-content;">
         <div class="modal-content">
             <div class="modal-body">
-                <span class="form-subtitle" id="modal-content-text" style="font-size:16px;"></span>
+                <span class="form-subtitle" id="modal-content-text"></span>
             </div>
             <div class="modal-footer">
                 <button class="violet-button" id="denyDelete" type="button" style="margin-left:10px; height:40px;">Anuluj</button>
@@ -911,9 +911,9 @@
                     }
 
                     var newRow = '<tr>' +
-                        '<td class="small-cell">' + item.templateName + '</td>' +
-                        '<td class="medium-cell">' + description + '</td>' +
-                        '<td class="big-cell">' + item.templateContent + '</td>' +
+                        '<td class="small-cell template-name">' + item.templateName + '</td>' +
+                        '<td class="medium-cell template-description">' + description + '</td>' +
+                        '<td class="big-cell template-content">' + item.templateContent + '</td>' +
                         '<td class="centered-cell">' +
                         '<a href="#details-' + item.templateId + '" class="icon-list template-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>' +
                         '<a href="#edit-' + item.templateId + '" class="icon-list template-edit"><img src="/icons/edit.png" title="Edytuj"/></a>' +
@@ -958,8 +958,8 @@
                     }
 
                     var newRow = '<tr>' +
-                        '<td class="tiny-cell" id="contact-name">' + item.name + '</td>' +
-                        '<td class="tiny-cell" id="contact-surname">' + item.surname + '</td>' +
+                        '<td class="tiny-cell contact-name">' + item.name + '</td>' +
+                        '<td class="tiny-cell contact-surname">' + item.surname + '</td>' +
                         '<td class="small-cell">' + email + '</td>' +
                         '<td class="small-cell">' + item.phoneNumber + '</td>';
 
@@ -1006,8 +1006,8 @@
                     }
 
                     var newRow = '<tr>' +
-                        '<td class="small-cell">' + item.groupName + '</td>' +
-                        '<td class="big-cell">' + description + '</td>' +
+                        '<td class="small-cell group-name">' + item.groupName + '</td>' +
+                        '<td class="big-cell group-description">' + description + '</td>' +
                         '<td class="tiny-centered-cell">' + item.membersIds.length + '</td>' +
                         '<td class="centered-cell">' +
                         '<a href="#assign-' + item.groupId + '" class="icon-list group-assign"><img src="/icons/assign-users.png" title="Przypisz użytkowników"/></a>' +
@@ -1430,8 +1430,8 @@
         });
 
         $(document).on('click', '.contact-delete', function (e) {
-            var name = $(this).closest('tr').find('#contact-name').text();
-            var surname = $(this).closest('tr').find('#contact-surname').text();
+            var name = $(this).closest('tr').find('.contact-name').text();
+            var surname = $(this).closest('tr').find('.contact-surname').text();
             console.log(`${name} ${surname}`)
             var contactId = $(this).attr("href").split('-')[1];
 
@@ -1461,32 +1461,27 @@
 
         $(document).on('click', '.template-edit', function (e) {
             var templateId = $(this).attr("href").split('-')[1];
+            var name = $(this).closest('tr').find('.template-name').text();
+            var description = $(this).closest('tr').find('.template-description').text();
+            var content = $(this).closest('tr').find('.template-content').text();
 
-            $.ajax({
-                url: '@Url.Action("GetTemplateById", "Home")',
-                type: 'GET',
-                data: {id: templateId},
+            if (description == "Brak opisu") {
+                description = "";
+            }
 
-                contentType: 'application/json',
-                success: function (templateEnitity) {
+            $("#createOrEditButtonTemplates").attr("data-id", templateId)
 
-                    $("#createOrEditButtonTemplates").attr("data-id", templateEnitity.templateId)
-                    $("#templateNameInput").val(templateEnitity.templateName);
-                    $("#templateDescriptionInput").val(templateEnitity.templateDescription);
-                    $("#templateContentInput").val(templateEnitity.templateContent);
-                    const messageEle = document.getElementById('templateContentInput');
-                    document.getElementById('symbolCounterAdd').innerHTML = messageEle.value.length + "/" + messageEle.getAttribute('maxlength');
+            $("#templateNameInput").val(name);
+            $("#templateDescriptionInput").val(description);
+            $("#templateContentInput").val(content);
+            const messageEle = document.getElementById('templateContentInput');
+            document.getElementById('symbolCounterAdd').innerHTML = messageEle.value.length + "/" + messageEle.getAttribute('maxlength');
 
-                    $("#template-input-window-title").html("Edytuj szablon")
-                    $(".template-options-form").attr('id', 'edit-template-form');
-                    $("#createOrEditButtonTemplates").html("Zatwierdź edycję");
-                    $(".templates-list-container").hide();
-                    $(".templates-options-container").show();
-                },
-                error: function (error) {
-                    console.error(error);
-                }
-            });
+            $("#template-input-window-title").html("Edytuj szablon")
+            $(".template-options-form").attr('id', 'edit-template-form');
+            $("#createOrEditButtonTemplates").html("Zatwierdź edycję");
+            $(".templates-list-container").hide();
+            $(".templates-options-container").show();
         });
 
         $(document).on('click', '.contact-edit', function (e) {
@@ -1529,31 +1524,25 @@
 
         $(document).on('click', '.group-edit', function (e) {
             var groupId = $(this).attr("href").split('-')[1];
+            var name = $(this).closest('tr').find('.group-name').text();
+            var description = $(this).closest('tr').find('.group-description').text();
 
-            $.ajax({
-                url: '@Url.Action("GetGroupById", "Home")',
-                type: 'GET',
-                data: { id: groupId },
+            if(description == "Brak opisu"){
+                description = "";
+            }
 
-                contentType: 'application/json',
-                success: function (groupEntity) {
+            $("#createOrEditButtonGroups").attr("data-id", groupId)
+            $("#groupNameInput").val(name);
+            $("#groupDescriptionInput").val(description);
+            const messageEle = document.getElementById('groupDescriptionInput');
+            document.getElementById('symbolCounterAddGroups').innerHTML = messageEle.value.length + "/" + messageEle.getAttribute('maxlength');
 
-                    $("#createOrEditButtonGroups").attr("data-id", groupEntity.groupId)
-                    $("#groupNameInput").val(groupEntity.groupName);
-                    $("#groupDescriptionInput").val(groupEntity.groupDescription);
-                    const messageEle = document.getElementById('groupDescriptionInput');
-                    document.getElementById('symbolCounterAddGroups').innerHTML = messageEle.value.length + "/" + messageEle.getAttribute('maxlength');
+            $("#group-input-window-title").html("Edytuj grupę")
+            $(".group-options-form").attr('id', 'edit-group-form');
+            $("#createOrEditButtonGroups").html("Zatwierdź edycję");
+            $(".groups-list-container").hide();
+            $(".groups-options-container").show();
 
-                    $("#group-input-window-title").html("Edytuj grupę")
-                    $(".group-options-form").attr('id', 'edit-group-form');
-                    $("#createOrEditButtonGroups").html("Zatwierdź edycję");
-                    $(".groups-list-container").hide();
-                    $(".groups-options-container").show();
-                },
-                error: function (error) {
-                    console.error(error);
-                }
-            });
         });
 
         $(document).on('click', '.group-assign', function (e) {
