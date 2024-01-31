@@ -1320,6 +1320,7 @@
     }
 
     function FinishBrowsingImportReport(){
+        FetchAllContactsAndPopulateTable();
         $(".import-report-container").hide();
         $("#import-repeated-contacts-container").show();
         $("#import-invalid-contacts-container").show();
@@ -1410,7 +1411,21 @@
         
         $(document).on('click', '.template-delete', function (e) {
             var templateId = $(this).attr("href").split('-')[1];
-            DeleteTemplate(templateId)
+
+            var name = $(this).closest('tr').find('.template-name').text();
+
+            $("#modal-content-text").html(`Czy na pewno chcesz usunąć szablon ${name}?`);
+            $("#confirmDelete").html("Usuń szablon");
+
+            $('#deleteEntityModal').modal('show');
+
+            $('#confirmDelete').one('click', function () {
+                DeleteTemplate(templateId);
+                $('#deleteEntityModal').modal('hide');
+            });
+            $('#denyDelete').one('click', function () {
+                $('#deleteEntityModal').modal('hide');
+            });
         });
 
         $(document).on('click', '.options-hidden', function () {
@@ -1432,31 +1447,37 @@
         $(document).on('click', '.contact-delete', function (e) {
             var name = $(this).closest('tr').find('.contact-name').text();
             var surname = $(this).closest('tr').find('.contact-surname').text();
-            console.log(`${name} ${surname}`)
             var contactId = $(this).attr("href").split('-')[1];
 
             $("#modal-content-text").html(`Czy na pewno chcesz usunąć kontakt ${name} ${surname}?`);
 
             $('#deleteEntityModal').modal('show');
 
-            $('#confirmDelete').on('click', function () {
+            $('#confirmDelete').one('click', function () {
                 DeleteContact(contactId);
                 $('#deleteEntityModal').modal('hide');
             });
-            $('#denyDelete').on('click', function () {
+            $('#denyDelete').one('click', function () {
                 $('#deleteEntityModal').modal('hide');
             });
-        });
-
-        $(document).on('hidden.bs.modal', '#deleteEntityModal',  function () {
-            $(document).off('click', '#confirmDelete');
-            $(document).off('click', '#denyDelete');
-            $("#modal-content-text").empty();
         });
 
         $(document).on('click', '.group-delete', function (e) {
             var groupId = $(this).attr("href").split('-')[1];
-            DeleteGroup(groupId)
+            var name = $(this).closest('tr').find('.group-name').text();
+
+            $("#modal-content-text").html(`Czy na pewno chcesz usunąć grupę ${name}?`);
+            $("#confirmDelete").html("Usuń grupę");
+
+            $('#deleteEntityModal').modal('show');
+
+            $('#confirmDelete').one('click', function () {
+                DeleteGroup(groupId);
+                $('#deleteEntityModal').modal('hide');
+            });
+            $('#denyDelete').one('click', function () {
+                $('#deleteEntityModal').modal('hide');
+            });
         });
 
         $(document).on('click', '.template-edit', function (e) {
