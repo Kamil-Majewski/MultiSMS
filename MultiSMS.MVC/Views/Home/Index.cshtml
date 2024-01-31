@@ -2,7 +2,7 @@
     ViewData["Title"] = "Home";
 }
 
-<div class="modal fade" id="deleteEntityModal" tabindex="-1" role="dialog" aria-labelledby="deleteEntityModal" aria-hidden="true">
+<div class="modal fade" id="deleteEntityModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="deleteEntityModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 550px; min-width: 307px; width:fit-content;">
         <div class="modal-content">
             <div class="modal-body">
@@ -1419,11 +1419,17 @@
 
             $('#deleteEntityModal').modal('show');
 
-            $('#confirmDelete').one('click', function () {
+            $('#confirmDelete').on('click', function () {
                 DeleteTemplate(templateId);
+                $('#confirmDelete').off('click');
+                $('#denyDelete').off('click');
+
                 $('#deleteEntityModal').modal('hide');
             });
-            $('#denyDelete').one('click', function () {
+            $('#denyDelete').on('click', function () {
+                $('#confirmDelete').off('click');
+                $('#denyDelete').off('click');
+
                 $('#deleteEntityModal').modal('hide');
             });
         });
@@ -1455,9 +1461,15 @@
 
             $('#confirmDelete').one('click', function () {
                 DeleteContact(contactId);
+                $('#confirmDelete').off('click');
+                $('#denyDelete').off('click');
+
                 $('#deleteEntityModal').modal('hide');
             });
             $('#denyDelete').one('click', function () {
+                $('#confirmDelete').off('click');
+                $('#denyDelete').off('click');
+
                 $('#deleteEntityModal').modal('hide');
             });
         });
@@ -1473,9 +1485,15 @@
 
             $('#confirmDelete').one('click', function () {
                 DeleteGroup(groupId);
+                $('#confirmDelete').off('click');
+                $('#denyDelete').off('click');
+
                 $('#deleteEntityModal').modal('hide');
             });
             $('#denyDelete').one('click', function () {
+                $('#confirmDelete').off('click');
+                $('#denyDelete').off('click');
+
                 $('#deleteEntityModal').modal('hide');
             });
         });
