@@ -106,8 +106,18 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(Input.Email);
-                var claims = await _userManager.GetClaimsAsync(user);
+                IList<System.Security.Claims.Claim> claims;
 
+                if(user is not null)
+                {
+                    claims = await _userManager.GetClaimsAsync(user);
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Błędny email lub hasło");
+                    return Page();
+                }
+                
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
@@ -137,7 +147,7 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account
                 //}
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Błędny email lub hasło");
                     return Page();
                 }
             }

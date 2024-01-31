@@ -1410,6 +1410,7 @@
         });
         
         $(document).on('click', '.template-delete', function (e) {
+            e.preventDefault();
             var templateId = $(this).attr("href").split('-')[1];
 
             var name = $(this).closest('tr').find('.template-name').text();
@@ -1421,20 +1422,17 @@
 
             $('#confirmDelete').on('click', function () {
                 DeleteTemplate(templateId);
-                $('#confirmDelete').off('click');
-                $('#denyDelete').off('click');
 
                 $('#deleteEntityModal').modal('hide');
             });
             $('#denyDelete').on('click', function () {
-                $('#confirmDelete').off('click');
-                $('#denyDelete').off('click');
 
                 $('#deleteEntityModal').modal('hide');
             });
         });
 
-        $(document).on('click', '.options-hidden', function () {
+        $(document).on('click', '.options-hidden', function (e) {
+            e.preventDefault();
             $(".options-hidden").text("Ukryj opcje");
             $(".more-options-container").slideDown(300);
             $(".options-hidden").addClass("options-shown");
@@ -1442,7 +1440,8 @@
 
         });
 
-        $(document).on('click', '.options-shown', function () {
+        $(document).on('click', '.options-shown', function (e) {
+            e.preventDefault();
             $(".options-shown").text("Więcej opcji");
             $(".more-options-container").slideUp(300);
             $(".options-shown").addClass("options-hidden");
@@ -1451,6 +1450,7 @@
         });
 
         $(document).on('click', '.contact-delete', function (e) {
+            e.preventDefault();
             var name = $(this).closest('tr').find('.contact-name').text();
             var surname = $(this).closest('tr').find('.contact-surname').text();
             var contactId = $(this).attr("href").split('-')[1];
@@ -1461,20 +1461,22 @@
 
             $('#confirmDelete').one('click', function () {
                 DeleteContact(contactId);
-                $('#confirmDelete').off('click');
-                $('#denyDelete').off('click');
 
                 $('#deleteEntityModal').modal('hide');
             });
             $('#denyDelete').one('click', function () {
-                $('#confirmDelete').off('click');
-                $('#denyDelete').off('click');
 
                 $('#deleteEntityModal').modal('hide');
             });
         });
 
+        $(document).on('hidden.bs.modal', '#deleteEntityModal', function () {
+            $('#confirmDelete').off('click');
+            $('#denyDelete').off('click');
+        });
+
         $(document).on('click', '.group-delete', function (e) {
+            e.preventDefault();
             var groupId = $(this).attr("href").split('-')[1];
             var name = $(this).closest('tr').find('.group-name').text();
 
@@ -1485,20 +1487,17 @@
 
             $('#confirmDelete').one('click', function () {
                 DeleteGroup(groupId);
-                $('#confirmDelete').off('click');
-                $('#denyDelete').off('click');
 
                 $('#deleteEntityModal').modal('hide');
             });
             $('#denyDelete').one('click', function () {
-                $('#confirmDelete').off('click');
-                $('#denyDelete').off('click');
 
                 $('#deleteEntityModal').modal('hide');
             });
         });
 
         $(document).on('click', '.template-edit', function (e) {
+            e.preventDefault();
             var templateId = $(this).attr("href").split('-')[1];
             var name = $(this).closest('tr').find('.template-name').text();
             var description = $(this).closest('tr').find('.template-description').text();
@@ -1524,6 +1523,7 @@
         });
 
         $(document).on('click', '.contact-edit', function (e) {
+            e.preventDefault();
             var contactId = $(this).attr("href").split('-')[1];
 
             $.ajax({
@@ -1562,6 +1562,7 @@
         });
 
         $(document).on('click', '.group-edit', function (e) {
+            e.preventDefault();
             var groupId = $(this).attr("href").split('-')[1];
             var name = $(this).closest('tr').find('.group-name').text();
             var description = $(this).closest('tr').find('.group-description').text();
@@ -1585,11 +1586,13 @@
         });
 
         $(document).on('click', '.group-assign', function (e) {
+            e.preventDefault();
             var groupId = $(this).attr("href").split('-')[1];
             PopulateTablesForAssigningUsersToGroups(groupId)
         });
 
         $(document).on('click', '.group-pick-me', function (e) {
+            e.preventDefault();
             var groupId = $(this).attr("href").split('-')[1];
 
             $.ajax({
@@ -1610,6 +1613,7 @@
         });
 
         $(document).on('click', '.template-pick-me', function (e) {
+            e.preventDefault();
             var templateId = $(this).attr("href").split('-')[1];
 
             $.ajax({
@@ -1634,6 +1638,7 @@
         });
 
         $(document).on('click', '.contact-assign', function (e) {
+            e.preventDefault();
             var assignContactIdGroupId = $(this).attr("href").split('-');
 
             $.ajax({
@@ -1653,6 +1658,7 @@
         });
 
         $(document).on('click', '.contact-unassign', function (e) {
+            e.preventDefault();
             var assignContactIdGroupId = $(this).attr("href").split('-');
 
             $.ajax({
