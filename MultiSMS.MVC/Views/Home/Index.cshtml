@@ -1725,9 +1725,18 @@
             var smsText = $("#SmsText").val();
             var smsGroupId = $("#GroupOfContacts").attr("data-id");
             var smsGroupName = $("#GroupOfContacts").val();
-            var additionalPhoneNumbers = $("#AdditionalPhoneNumbers").val();
+            var additionalPhoneNumbers = $("#AdditionalPhoneNumbers").val().replace(/[^0-9+,]/g, '');
             var smsAdditionalInfo = $("#Comment").val();
 
+            var phoneLastSymbol = additionalPhoneNumbers.charAt(additionalPhoneNumbers.length - 1);
+            if (phoneLastSymbol == " "){
+                additionalPhoneNumbers = additionalPhoneNumbers.slice(0, -2);
+            }
+            else if(phoneLastSymbol == ","){
+                additionalPhoneNumbers = additionalPhoneNumbers.slice(0, -1);
+            }
+
+            console.log(additionalPhoneNumbers);
 
             SendSMS(smsText, smsGroupId, smsGroupName, additionalPhoneNumbers, smsAdditionalInfo);
         });
@@ -1962,6 +1971,38 @@
             phoneInput.setSelectionRange(cursorPosition + lengthDiff, cursorPosition + lengthDiff);
         });
 
+        $("#AdditionalPhoneNumbers").on('input', function () {
+            var phoneInput = document.getElementById('AdditionalPhoneNumbers');
+
+            if (event.inputType === 'deleteContentBackward' || event.inputType === 'deleteContentForward') {
+                return;
+            }
+
+            var inputValue = phoneInput.value;
+            var cursorPosition = phoneInput.selectionStart;
+
+            var sanitizedValue = inputValue.replace(/[^0-9+,]/g, '');
+
+            var formattedValue = sanitizedValue.replace(/(\S{3})(?!,)/g, '$1 ').trim();
+
+            var lastSymbol = formattedValue.charAt(formattedValue.length - 1);
+
+            if(lastSymbol == ","){
+                formattedValue = formattedValue.slice(0, -1);
+            }
+
+            if (formattedValue.replace(/[,\s]/g, "").length % 12 == 0 && formattedValue.length > 0 && /[^\w\s]/.test(lastSymbol) !== true) {
+                
+                formattedValue += ", ";
+                
+            }
+
+            var lengthDiff = formattedValue.length - inputValue.length;
+
+            phoneInput.value = formattedValue;
+
+            phoneInput.setSelectionRange(cursorPosition + lengthDiff, cursorPosition + lengthDiff);
+        });
         
         $("#templateContentInput").on('input', function (e) {
             const counterEle = document.getElementById('symbolCounterAdd');
