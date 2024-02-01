@@ -72,7 +72,7 @@
                             <div class="row">
                                 <div class="col">
                                     <label for="AdditionalPhoneNumbers" style="margin-top:10px">Dodatkowe numery telefonu</label>
-                                    <input type="text" class="form-input" id="AdditionalPhoneNumbers"/>
+                                    <input type="text" class="form-input" id="AdditionalPhoneNumbers" />
                                 </div>
                             </div>
                             <div class="row">
@@ -200,7 +200,7 @@
                             <div class="row">
                                 <div class="col">
                                     <label for="templateNameInput">Nazwa szablonu *</label>
-                                    <input type="text" class="form-input" id="templateNameInput" required maxlength="30"/>
+                                    <input type="text" class="form-input" id="templateNameInput" required maxlength="30" />
                                 </div>
                             </div>
                             <div class="row">
@@ -357,21 +357,16 @@
                     <div class="list-header">
                         <div class="previous-page" style="flex:1;">
                             <button class="violet-button" id="contacts-previous-button" type="button" style="display: flex; align-items:center;" onclick="FinishBrowsingImportReport()">
-                                Zakończ przeglądanie raportu
+                                Zamknij raport
                             </button>
                         </div>
                         <div class="option-name" style="flex:auto; text-align:center;">
                             <span class="opion-name-placeholder" id="report-window-title">Importuj kontakty - raport</span>
                         </div>
-                        <div style="flex:1;"></div>
-                    </div>
-                    <hr />
-                    <div class="list-header">
-                        <div class="list-header-left">
-                            <div><span class="option-name" style="font-size: 20px">Tabelaryczny rozkład kontaktów</span></div>
-                        </div>
-                        <div class="list-search-bar d-flex">
-                            <input class="search-for import-contact-search" placeholder="Wyszukaj kontakt">
+                        <div style="flex:1;">
+                            <div class="list-search-bar d-flex">
+                                <input class="search-for import-contact-search" placeholder="Wyszukaj kontakt">
+                            </div>
                         </div>
                     </div>
                     <div class="list-content" style="margin-bottom:20px;" id="import-added-contacts-container">
@@ -379,7 +374,7 @@
                             <table class="added-contacts-list table table-borderless" id="added-contacts-table" style="table-layout:fixed;">
                                 <thead>
                                     <tr>
-                                        <th colspan="7" style="border-bottom: 2px solid #f0f1f1; color:#5a6372c4; text-align: center; font-size: 18px; padding: 10px;">
+                                        <th colspan="7" class="header" style="color:#5a6372c4; text-align: center; font-size: 18px; padding: 10px;">
                                             Kontakty dodane
                                         </th>
                                     </tr>
@@ -390,7 +385,7 @@
                                         <th class="small-cell" style="width: 150px;">Numer telefonu</th>
                                         <th class="tiny-centered-cell">Status</th>
                                         <th class="tiny-centered-cell">Grupy przypisane</th>
-                                        <th class="tiny-centered-cell">Grupy nieprzypisane</th>
+                                        <th class="tiny-centered-cell">Grupy błędne (Id)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -403,7 +398,7 @@
                             <table class="added-contacts-list table table-borderless" id="repeated-contacts-table" style="table-layout:fixed;">
                                 <thead>
                                     <tr>
-                                        <th colspan="5" style="border-bottom: 2px solid #f0f1f1; color:#5a6372c4; text-align: center; font-size: 18px; padding: 10px;">
+                                        <th colspan="5" class="header" style="color:#5a6372c4; text-align: center; font-size: 18px; padding: 10px;">
                                             Kontakty powtórzone
                                         </th>
                                     </tr>
@@ -425,7 +420,7 @@
                             <table class="added-contacts-list table table-borderless" id="invalid-contacts-table" style="table-layout:fixed;">
                                 <thead>
                                     <tr>
-                                        <th colspan="5" style="border-bottom: 2px solid #f0f1f1; color:#5a6372c4; text-align: center; font-size: 18px; padding: 10px;">
+                                        <th colspan="5" class="header" style="color:#5a6372c4; text-align: center; font-size: 18px; padding: 10px;">
                                             Kontakty nieprawidłowe
                                         </th>
                                     </tr>
@@ -567,7 +562,6 @@
             <div class="logs-list-container list-container">
                 <div class="list-header">
                     <div class="list-header-left">
-
                     </div>
                     <div class="list-search-bar d-flex">
                         <input class="search-for log-search" placeholder="Wyszukaj logi" />
@@ -597,7 +591,7 @@
 
 <script defer>
 
-    function CalculateHeaderWidth(){
+    function CalculateHeaderWidth() {
         const sidebar = document.getElementById('toolbar');
         const header = document.getElementById('main-header');
         const renderedContent = document.getElementById('content-render');
@@ -605,8 +599,7 @@
         header.style.width = `${sidebar.offsetWidth + renderedContent.offsetWidth}px`;
     }
 
-    function SendSMS(text, chosenGroupId, chosenGroupName, additionalPhoneNumbers, additionalInfo)
-    {
+    function SendSMS(text, chosenGroupId, chosenGroupName, additionalPhoneNumbers, additionalInfo) {
         $.ajax({
             url: '@Url.Action("SendSmsMessage", "ServerSmsApi")',
             type: 'GET',
@@ -639,7 +632,7 @@
     function ImportContacts() {
 
         function IterateOverListOfObjectsAndAppendToTable(object, tableId) {
-            $.each(object, function (index, item) {
+            $.each(object.ListOfEmployees, function (index, item) {
                 var group = item.employeeGroupNames;
                 var email = item.email;
 
@@ -668,8 +661,29 @@
                     newRow += '<td class="tiny-centered-cell"><span class="inactive-pill">Nieaktywny<span></td>';
                 }
 
-                newRow += /* '<td class="centered-cell">' + group + '</td>' */ '</tr>';
+                if (typeof object.ListOfNonExistantGroupIds == 'undefined') {
+                    '<td class="tiny-centered-cell">Brak</td>' +
+                        '</tr>'
+                }
+                else if (typeof object.ListOfNonExistantGroupIds != 'undefined') {
+                    var nonExistantGroups = object.ListOfNonExistantGroupIds;
+                    var nonExistentGroupsForContact = nonExistantGroups[index];
 
+                    newRow += '<td class="centered-cell">' + group + '</td>';
+
+                    if (nonExistentGroupsForContact.length == 0) {
+                        newRow += '<td class="tiny-centered-cell">Brak</td>' +
+                            '</tr>'
+                    }
+                    else if (typeof nonExistentGroupsForContact == "string") {
+                        newRow += '<td class="tiny-centered-cell">Brak</td>' +
+                            '</tr>'
+                    }
+                    else {
+                        newRow += '<td class="tiny-centered-cell">' + nonExistentGroupsForContact.join(', ') + '</td>' +
+                            '</tr>'
+                    }
+                }
                 $('#' + tableId + ' tbody').append(newRow);
             });
         }
@@ -680,7 +694,7 @@
         if (file) {
             var fileName = file.name;
 
-            if(!fileName.toLowerCase().endsWith('.csv')){
+            if (!fileName.toLowerCase().endsWith('.csv')) {
 
                 console.log("Unsupported file type! Import aborted.")
                 $("#import-modal-content-text").text("Nieprawidłowy format pliku! Import przerwany.");
@@ -711,12 +725,12 @@
                     $('#invalid-contacts-table tbody').empty();
                     $('#added-contacts-table tbody').empty();
 
-                    if(responseObject.status == "Failure"){
+                    if (responseObject.status == "Failure") {
                         $("#import-modal-content-text").text(responseObject.message);
                         $("#closeModal").show();
                         $("#import-modal-footer").addClass("justify-content-center");
                         fileInput.value = null;
-                        
+
                         $("#closeModal").on("click", function () {
                             $("#viewReportModal").modal("hide");
                         });
@@ -726,24 +740,30 @@
 
                     $("#import-modal-content-text").text("Import zakończony powodzeniem. Tworzenie raportu...");
 
-                    if(responseObject.repeatedEmployees.length == 0){
+                    if (responseObject.repeatedEmployees.length == 0) {
                         $("#import-repeated-contacts-container").hide();
                     }
-                    else{
-                        IterateOverListOfObjectsAndAppendToTable(responseObject.repeatedEmployees, "repeated-contacts-table")
-                        }
+                    else {
+                        IterateOverListOfObjectsAndAppendToTable({ ListOfEmployees: responseObject.repeatedEmployees }, "repeated-contacts-table")
+                    }
 
-                    if(responseObject.invalidEmployees.length == 0){
+                    if (responseObject.invalidEmployees.length == 0) {
                         $("#import-invalid-contacts-container").hide();
                     }
-                    else{
-                        IterateOverListOfObjectsAndAppendToTable(responseObject.invalidEmployees, "invalid-contacts-table")
+                    else {
+                        IterateOverListOfObjectsAndAppendToTable({ ListOfEmployees: responseObject.invalidEmployees }, "invalid-contacts-table")
                     }
-                    if(typeof responseObject.addedEmployees !== 'undefined' ){
+                    if (typeof responseObject.addedEmployees !== 'undefined') {
                         addedLength = responseObject.addedEmployees.length;
-                        IterateOverListOfObjectsAndAppendToTable(responseObject.addedEmployees, "added-contacts-table")
+
+                        if (responseObject.status == "Success") {
+                            IterateOverListOfObjectsAndAppendToTable({ ListOfEmployees: responseObject.addedEmployees }, "added-contacts-table")
+                        }
+                        else if (responseObject.status == "Partial Success") {
+                            IterateOverListOfObjectsAndAppendToTable({ ListOfEmployees: responseObject.addedEmployees, ListOfNonExistantGroupIds: responseObject.nonExistantGroupIds }, "added-contacts-table")
+                        }
                     }
-                    else{
+                    else {
                         $("#import-added-contacts-container").hide();
                         addedLength = 0;
                     }
@@ -753,9 +773,9 @@
                     $("#viewReport").show();
 
                     $("#closeModal").on("click", function () {
-                            $("#viewReportModal").modal("hide");
+                        $("#viewReportModal").modal("hide");
                     });
-                    
+
                     $("#viewReport").on("click", function () {
 
                         $("#viewReportModal").modal("hide");
@@ -840,7 +860,7 @@
             url: '@Url.Action("DeleteTemplate", "Home")',
             type: 'GET',
             contentType: 'application/json',
-            data: { id: templateId},
+            data: { id: templateId },
             success: function () {
                 console.log("Successfully deleted template")
                 FetchAllTemplatesAndPopulateTable();
@@ -851,7 +871,7 @@
         });
     }
 
-    function CloseAlert(){
+    function CloseAlert() {
         $("#status-message-sms").hide();
     }
 
@@ -898,11 +918,11 @@
             url: '@Url.Action("EditTemplate", "Home")',
             type: 'GET',
             contentType: 'application/json',
-            data: { id: templateId ,name: templateName, description: templateDescription, content: templateContent },
+            data: { id: templateId, name: templateName, description: templateDescription, content: templateContent },
             success: function (templateName) {
                 console.log("Successfully edited template " + templateName)
                 FetchAllTemplatesAndPopulateTable();
-                
+
             },
             error: function (error) {
                 console.error(error);
@@ -948,7 +968,7 @@
             url: '@Url.Action("EditGroup", "Home")',
             type: 'GET',
             contentType: 'application/json',
-            data: { id: groupId, name: groupName, description: groupDescription},
+            data: { id: groupId, name: groupName, description: groupDescription },
             success: function (groupName) {
                 console.log("Successfully edited group " + groupName)
                 FetchAllGroupsAndPopulateTable();
@@ -970,7 +990,7 @@
 
                 $.each(listOfTemplates, function (index, item) {
                     var description = item.templateDescription;
-                    if (description == null){
+                    if (description == null) {
                         description = "Brak opisu"
                     }
 
@@ -988,7 +1008,7 @@
 
                     $('.template-list tbody').append(newRow);
                 });
-                
+
             },
             error: function (error) {
                 console.error(error);
@@ -1013,11 +1033,11 @@
                     if (group == null || group.length == 0) {
                         group = "Nie przypisano";
                     }
-                    else{
+                    else {
                         group = group.join(", ")
                     }
 
-                    if (email == null || email == ""){
+                    if (email == null || email == "") {
                         email = "Brak danych"
                     }
 
@@ -1030,18 +1050,18 @@
 
                     if (item.isActive == true) {
                         newRow += '<td class="tiny-centered-cell"><span class="active-pill">Aktywny<span></td>';
-                        }
+                    }
                     else {
                         newRow += '<td class="tiny-centered-cell"><span class="inactive-pill">Nieaktywny<span></td>';
                     }
 
                     newRow += '<td class="centered-cell">' + group + '</td>' +
-                    '<td class="centered-cell">' +
-                    '<a href="#details-' + item.employeeId + '" class="icon-list contact-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>' +
-                    '<a href="#edit-' + item.employeeId + '" class="icon-list contact-edit"><img src="/icons/edit.png" title="Edytuj"/></a>' +
-                    '<a href="#delete-' + item.employeeId + '" class="icon-list contact-delete"><img src="/icons/trash.png" title="Usuń"/></a>' +
-                    '</td>' +
-                    '</tr>';
+                        '<td class="centered-cell">' +
+                        '<a href="#details-' + item.employeeId + '" class="icon-list contact-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>' +
+                        '<a href="#edit-' + item.employeeId + '" class="icon-list contact-edit"><img src="/icons/edit.png" title="Edytuj"/></a>' +
+                        '<a href="#delete-' + item.employeeId + '" class="icon-list contact-delete"><img src="/icons/trash.png" title="Usuń"/></a>' +
+                        '</td>' +
+                        '</tr>';
 
 
                     $('.contacts-list tbody').append(newRow);
@@ -1103,10 +1123,10 @@
 
                 $.each(listOfLogs, function (index, item) {
                     var newRow = '<tr>'
-                    if(item.logType == "Błąd"){
+                    if (item.logType == "Błąd") {
                         newRow += '<td class="tiny-centered-cell"><span class="error-pill">' + item.logType + '</span></td>'
                     }
-                    else{
+                    else {
                         newRow += '<td class="tiny-centered-cell"><span class="info-pill">' + item.logType + '</span></td>'
                     }
                     newRow += '<td class="tiny-cell">' + item.logSource + '</td>' +
@@ -1128,7 +1148,7 @@
         })
     }
 
-    function PopulateTableForChooseGroupForSMS(){
+    function PopulateTableForChooseGroupForSMS() {
         $.ajax({
             url: '@Url.Action("FetchAllValidGroups", "Home")',
             type: 'GET',
@@ -1162,7 +1182,7 @@
         })
     }
 
-    function PopulateTableForChooseTemplateForSMS(){
+    function PopulateTableForChooseTemplateForSMS() {
         $.ajax({
             url: '@Url.Action("FetchAllTemplates", "Home")',
             type: 'GET',
@@ -1224,7 +1244,7 @@
                             if (group == 'null' || group.length == 0) {
                                 group = "Nie przypisano";
                             }
-                            else{
+                            else {
                                 group = group.join(", ");
                             }
 
@@ -1326,7 +1346,7 @@
             url: '@Url.Action("CreateNewGroup", "Home")',
             type: 'GET',
             contentType: 'application/json',
-            data: { groupName: name, groupDescription: description},
+            data: { groupName: name, groupDescription: description },
             success: function (groupName) {
                 FetchAllGroupsAndPopulateTable();
                 console.log("Successfully added new template: " + groupName)
@@ -1337,11 +1357,11 @@
         });
     }
 
-    function TriggerFileInput(){
+    function TriggerFileInput() {
         $("#import-file-input").click();
     }
 
-    function OpenCreateTemplateWindow(){
+    function OpenCreateTemplateWindow() {
         const messageEle = document.getElementById('templateContentInput');
         document.getElementById('symbolCounterAdd').innerHTML = messageEle.value.length + "/" + messageEle.getAttribute('maxlength');
         $("#symbolCounterAdd").innerHTML = '25';
@@ -1383,7 +1403,7 @@
         $(".choose-template-for-sms-container").show();
     }
 
-    function FinishBrowsingImportReport(){
+    function FinishBrowsingImportReport() {
         FetchAllContactsAndPopulateTable();
         $(".import-report-container").hide();
         $("#import-repeated-contacts-container").show();
@@ -1395,7 +1415,7 @@
         $(".contacts-list-container").show();
     }
 
-    function GoBackToSMSWindow(){
+    function GoBackToSMSWindow() {
         $(".choose-group-for-sms-container").hide();
         $(".choose-template-for-sms-container").hide();
         $(".sms-container").show();
@@ -1473,7 +1493,7 @@
             $("#viewReportModal").modal("show");
             ImportContacts();
         });
-        
+
         $(document).on('click', '.template-delete', function (e) {
             e.preventDefault();
             var templateId = $(this).attr("href").split('-')[1];
@@ -1608,7 +1628,7 @@
                 contentType: 'application/json',
                 success: function (contactEnitity) {
 
-                    if(contactEnitity.isActive == false){
+                    if (contactEnitity.isActive == false) {
                         document.querySelector('input[name="isActive?"]:checked').checked = false;
                         document.getElementById("isActiveNo").checked = true;
                     }
@@ -1641,7 +1661,7 @@
             var name = $(this).closest('tr').find('.group-name').text();
             var description = $(this).closest('tr').find('.group-description').text();
 
-            if(description == "Brak opisu"){
+            if (description == "Brak opisu") {
                 description = "";
             }
 
@@ -1683,7 +1703,7 @@
                     console.error(error);
                 }
             });
-            GoBackToSMSWindow();  
+            GoBackToSMSWindow();
         });
 
         $(document).on('click', '.template-pick-me', function (e) {
@@ -1760,7 +1780,7 @@
             if (form.checkValidity() === false) {
                 form.reportValidity()
                 return
-                }
+            }
 
             CreateNewTemplate();
             GoBackToTemplateList();
@@ -1827,10 +1847,10 @@
             var smsAdditionalInfo = $("#Comment").val();
 
             var phoneLastSymbol = additionalPhoneNumbers.charAt(additionalPhoneNumbers.length - 1);
-            if (phoneLastSymbol == " "){
+            if (phoneLastSymbol == " ") {
                 additionalPhoneNumbers = additionalPhoneNumbers.slice(0, -2);
             }
-            else if(phoneLastSymbol == ","){
+            else if (phoneLastSymbol == ",") {
                 additionalPhoneNumbers = additionalPhoneNumbers.slice(0, -1);
             }
 
@@ -2045,7 +2065,7 @@
             $(this).val(formattedValue);
 
             this.setSelectionRange(cursorPosition + lengthDiff, cursorPosition + lengthDiff);
-            
+
 
         });
 
@@ -2063,8 +2083,8 @@
 
             var formattedValue = sanitizedValue.replace(/(\S{3})/g, '$1 ').trim();
             var lengthDiff = formattedValue.length - inputValue.length;
-            
-            phoneInput.value = formattedValue; 
+
+            phoneInput.value = formattedValue;
 
             phoneInput.setSelectionRange(cursorPosition + lengthDiff, cursorPosition + lengthDiff);
         });
@@ -2083,16 +2103,13 @@
 
             var formattedValue = sanitizedValue.replace(/(\S{3})(?!,)/g, '$1 ').trim();
 
-            var lastSymbol = formattedValue.charAt(formattedValue.length - 1);
+            var inputtedSymbol = inputValue.charAt(inputValue.length - 1);
 
-            if(lastSymbol == ","){
+            if (inputtedSymbol == ",") {
                 formattedValue = formattedValue.slice(0, -1);
             }
-
-            if (formattedValue.replace(/[,\s]/g, "").length % 12 == 0 && formattedValue.length > 0 && /[^\w\s]/.test(lastSymbol) !== true) {
-                
+            else if (formattedValue.replace(/[,\s]/g, "").length % 12 == 0 && formattedValue.length > 0 && /[^0-9]/.test(inputtedSymbol) !== true) {
                 formattedValue += ", ";
-                
             }
 
             var lengthDiff = formattedValue.length - inputValue.length;
@@ -2101,7 +2118,7 @@
 
             phoneInput.setSelectionRange(cursorPosition + lengthDiff, cursorPosition + lengthDiff);
         });
-        
+
         $("#templateContentInput").on('input', function (e) {
             const counterEle = document.getElementById('symbolCounterAdd');
 

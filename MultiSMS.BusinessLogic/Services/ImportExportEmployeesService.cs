@@ -142,24 +142,35 @@ namespace MultiSMS.BusinessLogic.Services
             }
 
             var groupIdsInDb = _groupRepository.GetAllGroupIds();
-            var nonExistantGroupIds = new List<int>();
+            var nonExistentGroupIds = new List<List<string>>();
             var anyFailedAssigns = false;
 
-            for (var i = 0; i < addedEmployeesList.Count(); i++)
+            for (int i = 0; i < addedEmployeesList.Count(); i++)
             {
                 var employeeId = addedEmployeesList[i].EmployeeId;
+
                 foreach (var groupId in groupIds[i].Split(","))
                 {
-                    if (int.TryParse(groupId, out var id))
+                    if (int.TryParse(groupId, out var groupIdInt) && groupIdsInDb.Contains(groupIdInt))
                     {
-                        if (groupIdsInDb.Contains(id))
+                        await _employeeGroupRepository.AddGroupMemberAsync(groupIdInt, employeeId);
+
+                        if (nonExistentGroupIds.Count <= i)
                         {
-                            await _employeeGroupRepository.AddGroupMemberAsync(id, employeeId);
+                            nonExistentGroupIds.Add(new List<string>());
+                        }
+                    }
+                    else
+                    {
+                        anyFailedAssigns = true;
+
+                        if (nonExistentGroupIds.Count <= i)
+                        {
+                            nonExistentGroupIds.Add(new List<string> { groupId });
                         }
                         else
                         {
-                            anyFailedAssigns = true;
-                            nonExistantGroupIds.Add(id);
+                            nonExistentGroupIds[i].Add(groupId);
                         }
                     }
                 }
@@ -167,7 +178,7 @@ namespace MultiSMS.BusinessLogic.Services
 
             if (anyFailedAssigns)
             {
-                return new { Status = "Partial Success", Message = "Import zakończony. Dodano nowe kontakty, ale nie wszystkie przypisania do grup zakończyły się powodzeniem.", AddedEmployees = addedEmployees, RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords, NonExistantGroupIds = nonExistantGroupIds };
+                return new { Status = "Partial Success", Message = "Import zakończony. Dodano nowe kontakty, ale nie wszystkie przypisania do grup zakończyły się powodzeniem.", AddedEmployees = addedEmployees, RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords, NonExistantGroupIds = nonExistentGroupIds };
             }
             else
             {
@@ -186,9 +197,12 @@ namespace MultiSMS.BusinessLogic.Services
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
             using (var package = new ExcelPackage())
+
             {
 
                 var sheet = package.Workbook.Worksheets.Add("Kontaky");
+                sheet.Cells["A:J"].Style.Numberformat.Format = "@";
+
                 sheet.Cells["A1"].Value = "Osoba";
                 sheet.Cells["B1"].Value = "Tel";
                 sheet.Cells["C1"].Value = "Email";
