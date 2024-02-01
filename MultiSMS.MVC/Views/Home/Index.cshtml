@@ -9,8 +9,22 @@
                 <span class="form-subtitle" id="modal-content-text"></span>
             </div>
             <div class="modal-footer">
-                <button class="violet-button" id="denyDelete" type="button" style="margin-left:10px; height:40px;">Anuluj</button>
                 <button class="violet-button" id="confirmDelete" type="button" style="height:40px; background-color: #c95252;">Usuń kontakt</button>
+                <button class="violet-button" id="denyDelete" type="button" style="margin-left:10px; height:40px;">Anuluj</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="viewReportModal" tabindex="-1" role="dialog" aria-labelledby="viewReportModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 550px; min-width: 307px; width:fit-content;">
+        <div class="modal-content">
+            <div class="modal-body">
+                <span class="form-subtitle" id="import-modal-content-text">Importowanie kontaktów w toku, proszę czekać...</span>
+            </div>
+            <div class="modal-footer" id="import-modal-footer">
+                <button class="violet-button" id="viewReport" type="button" style="display:none; height:40px; margin-right:10px;">Otwórz szczegółowy raport</button>
+                <button class="ie-button" id="closeModal" type="button" style="display:none; height:40px; margin-left:4px">OK</button>
             </div>
         </div>
     </div>
@@ -669,7 +683,14 @@
             if(!fileName.toLowerCase().endsWith('.csv')){
 
                 console.log("Unsupported file type! Import aborted.")
-                alert("Nieprawidłowy format pliku! Import przerwany.")
+                $("#import-modal-content-text").text("Nieprawidłowy format pliku! Import przerwany.");
+                $("#closeModal").show();
+                $("#import-modal-footer").addClass("justify-content-center");
+
+                $("#closeModal").on("click", function () {
+                    $("#viewReportModal").modal("hide");
+                });
+
                 fileInput.value = null;
                 return;
             }
@@ -683,10 +704,27 @@
                 contentType: false,
                 processData: false,
                 success: function (responseObject) {
-                    console.log(responseObject.status + ": " + responseObject.message)
+
+                    var addedLength;
+
                     $('#repeated-contacts-table tbody').empty();
                     $('#invalid-contacts-table tbody').empty();
                     $('#added-contacts-table tbody').empty();
+
+                    if(responseObject.status == "Failure"){
+                        $("#import-modal-content-text").text(responseObject.message);
+                        $("#closeModal").show();
+                        $("#import-modal-footer").addClass("justify-content-center");
+                        fileInput.value = null;
+                        
+                        $("#closeModal").on("click", function () {
+                            $("#viewReportModal").modal("hide");
+                        });
+
+                        return;
+                    }
+
+                    $("#import-modal-content-text").text("Import zakończony powodzeniem. Tworzenie raportu...");
 
                     if(responseObject.repeatedEmployees.length == 0){
                         $("#import-repeated-contacts-container").hide();
@@ -702,16 +740,42 @@
                         IterateOverListOfObjectsAndAppendToTable(responseObject.invalidEmployees, "invalid-contacts-table")
                     }
                     if(typeof responseObject.addedEmployees !== 'undefined' ){
+                        addedLength = responseObject.addedEmployees.length;
                         IterateOverListOfObjectsAndAppendToTable(responseObject.addedEmployees, "added-contacts-table")
                     }
                     else{
                         $("#import-added-contacts-container").hide();
+                        addedLength = 0;
                     }
+
+                    $("#import-modal-content-text").text(`${responseObject.message} (dodano: ${addedLength}, duplikaty: ${responseObject.repeatedEmployees.length}, nieprawidłowe: ${responseObject.invalidEmployees.length})`);
+                    $("#closeModal").show();
+                    $("#viewReport").show();
+
+                    $("#closeModal").on("click", function () {
+                            $("#viewReportModal").modal("hide");
+                    });
+                    
+                    $("#viewReport").on("click", function () {
+
+                        $("#viewReportModal").modal("hide");
+                        $(".contacts-list-container").hide();
+                        $(".import-report-container").show();
+                    });
+
 
                     fileInput.value = null;
                 },
                 error: function (error) {
                     console.error(error);
+                    $("#import-modal-content-text").text("Wystąpił niespodziewany błąd!");
+                    $("#import-modal-footer").addClass("justify-content-center");
+                    $("#viewReport").hide();
+
+                    $("#closeModal").on("click", function () {
+                        $("#import-modal-footer").removeClass("justify-content-center");
+                        $("#viewReportModal").modal("hide");
+                    });
                     fileInput.value = null;
                 }
             });
@@ -1406,6 +1470,7 @@
         );
 
         $('#import-file-input').change(function () {
+            $("#viewReportModal").modal("show");
             ImportContacts();
         });
         
@@ -1473,6 +1538,15 @@
         $(document).on('hidden.bs.modal', '#deleteEntityModal', function () {
             $('#confirmDelete').off('click');
             $('#denyDelete').off('click');
+        });
+
+        $(document).on('hidden.bs.modal', '#viewReportModal', function () {
+            $("#import-modal-content-text").text("Importowanie kontaktów w toku, proszę czekać...");
+            $("#import-modal-footer").removeClass("justify-content-center");
+            $("#viewReport").hide();
+            $("#closeModal").hide();
+            $('#viewReport').off('click');
+            $('#closeModal').off('click');
         });
 
         $(document).on('click', '.group-delete', function (e) {

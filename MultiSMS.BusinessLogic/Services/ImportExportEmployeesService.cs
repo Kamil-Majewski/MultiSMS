@@ -5,9 +5,7 @@ using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Repositories.Interfaces;
 using OfficeOpenXml;
-using System.Drawing.Drawing2D;
 using System.Globalization;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace MultiSMS.BusinessLogic.Services
