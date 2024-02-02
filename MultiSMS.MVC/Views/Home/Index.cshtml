@@ -596,7 +596,7 @@
         const header = document.getElementById('main-header');
         const renderedContent = document.getElementById('content-render');
 
-        header.style.width = `${sidebar.offsetWidth + renderedContent.offsetWidth}px`;
+        header.style.width = `${renderedContent.offsetWidth + 50}px`;
 
         renderedContent.style.height = 'auto';
         sidebar.style.height = `auto`;
@@ -1484,20 +1484,25 @@
 
         });
 
-        // var initialRenderContentWidthInVW = ($("#content-render").width() / $(window).width()) * 100;
+
+        const resizeObserver = new ResizeObserver(entries => {
+            for (const entry of entries) {
+                const { width, height } = entry.contentRect;
+                CalculateHeaderWidthAndToolbarHeight();
+            }
+        });
+
+        resizeObserver.observe($("#content-render")[0]);
+
          var initialToolboxContextWidthInPx = 50;
-         var hoveredWidthInPx = 190;
-        // var hoveredWidthInVW = (190 / $(window).width()) * 100;
-        // var differenceInVW = hoveredWidthInVW - (50 / $(window).width()) * 100;
+         var hoveredWidthInPx = 201;
 
         $(".option-list-item").hover(
             function () {
                 $("#toolbar").css("width", hoveredWidthInPx + "px");
-                //$("#content-render").css("width", (initialRenderContentWidthInVW - differenceInVW) + "vw");
             },
             function () {
                 $("#toolbar").css("width", initialToolboxContextWidthInPx + "px");
-                //$("#content-render").css("width", initialRenderContentWidthInVW + "vw");
             }
         );
 

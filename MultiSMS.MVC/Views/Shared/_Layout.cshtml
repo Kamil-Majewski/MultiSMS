@@ -17,28 +17,14 @@
                 $(".active-tab").removeClass("active-tab");
                 e.preventDefault();
                 $(this).tab('show');
-                $(this).parent().toggleClass("active-tab")
-
-                const renderedContent = document.getElementById('content-render');
-                const sidebar = document.getElementById('toolbar');
-
-                renderedContent.style.height = 'auto';
-                sidebar.style.height = `auto`;
-
-                if (renderedContent.offsetHeight > sidebar.offsetHeight)
-                {
-                    sidebar.style.height = `${renderedContent.offsetHeight}px`;
-                }
-                else {
-                    renderedContent.style.height = `${sidebar.offsetHeight}px`
-                }
+                $(this).parent().toggleClass("active-tab");
             });
             
             $('#settings-card-headers a').on('click', function (e) {
                 $(".active-tab").removeClass("active-tab");
                 //e.preventDefault();
                 $(this).tab('show');
-                $(this).parent().toggleClass("active-tab")
+                $(this).parent().toggleClass("active-tab");
             });
         });
 
