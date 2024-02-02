@@ -646,38 +646,26 @@
     function ImportContacts() {
 
         function IterateOverListOfObjectsAndAppendToTable(object, tableId) {
-            $.each(object.ListOfEmployees, function (index, item) {
-                var group = item.employeeGroupNames;
-                var email = item.email;
+            $.each(object.ListOfEmployees, function (index, employee) {
+                var group = employee.employeeGroupNames;
+                var email = employee.email;
 
-                if (group == null || group.length == 0) {
-                    group = "Nie przypisano";
-                }
-                else {
-                    group = group.join(", ")
-                }
+                group = (group == null || group.length === 0) ? "Nie przypisano" : group.join(", ");
+                email = (email == null || email === "") ? "Brak danych" : email;
 
-                if (email == null || email == "") {
-                    email = "Brak danych"
-                }
+                var statusClass = employee.isActive ? 'active-pill' : 'inactive-pill';
+                var statusText = employee.isActive ? 'Aktywny' : 'Nieaktywny';
 
-                var newRow = '<tr>' +
-                    '<td class="tiny-cell">' + item.name + '</td>' +
-                    '<td class="tiny-cell">' + item.surname + '</td>' +
-                    '<td class="small-cell">' + email + '</td>' +
-                    '<td class="small-cell">' + item.phoneNumber + '</td>';
-
-
-                if (item.isActive == true) {
-                    newRow += '<td class="tiny-centered-cell"><span class="active-pill">Aktywny<span></td>';
-                }
-                else {
-                    newRow += '<td class="tiny-centered-cell"><span class="inactive-pill">Nieaktywny<span></td>';
-                }
+                var newRow = `<tr>
+                    <td class="tiny-cell">${employee.name}</td>
+                    <td class="tiny-cell">${employee.surname}</td>
+                    <td class="small-cell">${email}</td>
+                    <td class="small-cell">${employee.phoneNumber}</td>
+                    <td class="tiny-centered-cell"><span class="${statusClass}">${statusText}</span></td>`;
 
                 if (typeof object.ListOfNonExistantGroupIds == 'undefined' && tableId == "added-contacts-table") {
                     newRow += '<td class="centered-cell">' + group + '</td>' +
-                    '<td class="tiny-centered-cell">Brak</td>' +
+                        '<td class="tiny-centered-cell">Brak</td>' +
                         '</tr>'
                 }
                 else if (typeof object.ListOfNonExistantGroupIds != 'undefined') {
@@ -686,11 +674,7 @@
 
                     newRow += '<td class="centered-cell">' + group + '</td>';
 
-                    if (nonExistentGroupsForContact.length == 0) {
-                        newRow += '<td class="tiny-centered-cell">Brak</td>' +
-                            '</tr>'
-                    }
-                    else if (typeof nonExistentGroupsForContact == "string" || nonExistentGroupsForContact == "") {
+                    if (nonExistentGroupsForContact.length == 0 || typeof nonExistentGroupsForContact == "string" || nonExistentGroupsForContact == "") {
                         newRow += '<td class="tiny-centered-cell">Brak</td>' +
                             '</tr>'
                     }
@@ -703,28 +687,23 @@
             });
         }
 
-        var fileInput = document.getElementById('import-file-input');
-        var file = fileInput.files[0];
+        function importFile() {
+            var fileInput = document.getElementById('import-file-input');
+            var file = fileInput.files[0];
 
-        if (file) {
-            var fileName = file.name;
-
-            if (!fileName.toLowerCase().endsWith('.csv')) {
-
-                console.log("Unsupported file type! Import aborted.")
-                $("#import-modal-content-text").text("Nieprawidłowy format pliku! Import przerwany.");
-                $("#closeModal").show();
-                $("#import-modal-footer").addClass("justify-content-center");
-
-                $("#closeModal").on("click", function () {
-                    $("#viewReportModal").modal("hide");
-                });
-
-                fileInput.value = null;
+            if (!file) {
+                resetFileInput();
                 return;
             }
-            var formData = new FormData();
-            formData.append('file', file);
+
+            var fileName = file.name;
+
+            if (!isValidFileExtension(fileName, '.csv')) {
+                handleInvalidFileType();
+                return;
+            }
+
+            var formData = createFormData(file);
 
             $.ajax({
                 url: '@Url.Action("ImportContacts", "Home")',
@@ -732,90 +711,138 @@
                 data: formData,
                 contentType: false,
                 processData: false,
-                success: function (responseObject) {
-
-                    var addedLength;
-
-                    $('#repeated-contacts-table tbody').empty();
-                    $('#invalid-contacts-table tbody').empty();
-                    $('#added-contacts-table tbody').empty();
-
-                    if (responseObject.status == "Failure") {
-                        $("#import-modal-content-text").text(responseObject.message);
-                        $("#closeModal").show();
-                        $("#import-modal-footer").addClass("justify-content-center");
-                        fileInput.value = null;
-
-                        $("#closeModal").on("click", function () {
-                            $("#viewReportModal").modal("hide");
-                        });
-
-                        return;
-                    }
-
-                    $("#import-modal-content-text").text("Import zakończony powodzeniem. Tworzenie raportu...");
-
-                    if (responseObject.repeatedEmployees.length == 0) {
-                        $("#import-repeated-contacts-container").hide();
-                    }
-                    else {
-                        IterateOverListOfObjectsAndAppendToTable({ ListOfEmployees: responseObject.repeatedEmployees }, "repeated-contacts-table")
-                    }
-
-                    if (responseObject.invalidEmployees.length == 0) {
-                        $("#import-invalid-contacts-container").hide();
-                    }
-                    else {
-                        IterateOverListOfObjectsAndAppendToTable({ ListOfEmployees: responseObject.invalidEmployees }, "invalid-contacts-table")
-                    }
-                    if (typeof responseObject.addedEmployees !== 'undefined') {
-                        addedLength = responseObject.addedEmployees.length;
-
-                        if (responseObject.status == "Success") {
-                            IterateOverListOfObjectsAndAppendToTable({ ListOfEmployees: responseObject.addedEmployees }, "added-contacts-table")
-                        }
-                        else if (responseObject.status == "Partial Success") {
-                            IterateOverListOfObjectsAndAppendToTable({ ListOfEmployees: responseObject.addedEmployees, ListOfNonExistantGroupIds: responseObject.nonExistantGroupIds }, "added-contacts-table")
-                        }
-                    }
-                    else {
-                        $("#import-added-contacts-container").hide();
-                        addedLength = 0;
-                    }
-
-                    $("#import-modal-content-text").text(`${responseObject.message} (dodano: ${addedLength}, duplikaty: ${responseObject.repeatedEmployees.length}, nieprawidłowe: ${responseObject.invalidEmployees.length})`);
-                    $("#closeModal").show();
-                    $("#viewReport").show();
-
-                    $("#closeModal").on("click", function () {
-                        FinishBrowsingImportReport();
-                        $("#viewReportModal").modal("hide");
-                    });
-
-                    $("#viewReport").on("click", function () {
-
-                        $("#viewReportModal").modal("hide");
-                        $(".contacts-list-container").hide();
-                        $(".import-report-container").show();
-                    });
-
-
-                    fileInput.value = null;
-                },
-                error: function (error) {
-                    console.error(error);
-                    $("#import-modal-content-text").text("Wystąpił niespodziewany błąd!");
-                    $("#import-modal-footer").addClass("justify-content-center");
-                    $("#viewReport").hide();
-
-                    $("#closeModal").on("click", function () {
-                        $("#import-modal-footer").removeClass("justify-content-center");
-                        $("#viewReportModal").modal("hide");
-                    });
-                    fileInput.value = null;
-                }
+                success: handleImportSuccess,
+                error: handleImportError
             });
         }
+
+        function isValidFileExtension(fileName, validExtension) {
+            return fileName.toLowerCase().endsWith(validExtension);
+        }
+
+        function resetFileInput() {
+            var fileInput = document.getElementById('import-file-input');
+            fileInput.value = null;
+        }
+
+        function createFormData(file) {
+            var formData = new FormData();
+            formData.append('file', file);
+            return formData;
+        }
+
+        function handleInvalidFileType() {
+            console.log("Unsupported file type! Import aborted.");
+            $("#import-modal-content-text").text("Nieprawidłowy format pliku! Import przerwany.");
+            $("#closeModal").show();
+            $("#import-modal-footer").addClass("justify-content-center");
+
+            $("#closeModal").on("click", function () {
+                $("#viewReportModal").modal("hide");
+            });
+
+            resetFileInput();
+        }
+
+        function handleImportSuccess(responseObject) {
+            var addedLength;
+
+            clearTableRows(['repeated-contacts-table', 'invalid-contacts-table', 'added-contacts-table']);
+
+            if (responseObject.status === "Failure") {
+                handleImportFailure(responseObject.message);
+                return;
+            }
+
+            $("#import-modal-content-text").text("Import zakończony powodzeniem. Tworzenie raportu...");
+
+            handleRepeatedContacts(responseObject.repeatedEmployees);
+            handleInvalidContacts(responseObject.invalidEmployees);
+            addedLength = handleAddedContacts(responseObject.status, responseObject.addedEmployees, responseObject.nonExistantGroupIds);
+
+            $("#import-modal-content-text").text(`${responseObject.message} (dodano: ${addedLength}, duplikaty: ${responseObject.repeatedEmployees.length}, nieprawidłowe: ${responseObject.invalidEmployees.length})`);
+            $("#closeModal").show();
+            $("#viewReport").show();
+
+            attachEventHandlers();
+            resetFileInput();
+        }
+
+        function clearTableRows(tableIds) {
+            tableIds.forEach(function (tableId) {
+                $(`#${tableId} tbody`).empty();
+            });
+        }
+
+        function handleImportFailure(errorMessage) {
+            $("#import-modal-content-text").text(errorMessage);
+            $("#closeModal").show();
+            $("#import-modal-footer").addClass("justify-content-center");
+            resetFileInput();
+
+            attachEventHandlers();
+        }
+
+        function handleRepeatedContacts(repeatedEmployees) {
+            if (repeatedEmployees.length === 0) {
+                $("#import-repeated-contacts-container").hide();
+            } else {
+                IterateOverListOfObjectsAndAppendToTable({ ListOfEmployees: repeatedEmployees }, "repeated-contacts-table");
+            }
+        }
+
+        function handleInvalidContacts(invalidEmployees) {
+            if (invalidEmployees.length === 0) {
+                $("#import-invalid-contacts-container").hide();
+            } else {
+                IterateOverListOfObjectsAndAppendToTable({ ListOfEmployees: invalidEmployees }, "invalid-contacts-table");
+            }
+        }
+
+        function handleAddedContacts(status ,addedEmployees, nonExistantGroupIds) {
+            var addedLength = addedEmployees ? addedEmployees.length : 0;
+
+            if (addedLength == 0){
+                $("#import-added-contacts-container").hide();
+            }
+
+            if (status === "Success") {
+                IterateOverListOfObjectsAndAppendToTable({ ListOfEmployees: addedEmployees }, "added-contacts-table");
+            } else if (status === "Partial Success") {
+                IterateOverListOfObjectsAndAppendToTable({ ListOfEmployees: addedEmployees, ListOfNonExistantGroupIds: nonExistantGroupIds }, "added-contacts-table");
+            }
+
+            return addedLength;
+        }
+
+        function attachEventHandlers() {
+            $("#closeModal").on("click", function () {
+                FinishBrowsingImportReport();
+                $("#viewReportModal").modal("hide");
+            });
+
+            $("#viewReport").on("click", function () {
+                $("#viewReportModal").modal("hide");
+                $(".contacts-list-container").hide();
+                $(".import-report-container").show();
+            });
+        }
+
+        function handleImportError(error) {
+            console.error(error);
+            $("#import-modal-content-text").text("Wystąpił niespodziewany błąd!");
+            $("#import-modal-footer").addClass("justify-content-center");
+            $("#viewReport").hide();
+
+            $("#closeModal").on("click", function () {
+                $("#import-modal-footer").removeClass("justify-content-center");
+                $("#viewReportModal").modal("hide");
+            });
+
+            resetFileInput();
+        }
+
+        importFile();
     }
 
     function ExportContactsAndDownloadExcel() {
