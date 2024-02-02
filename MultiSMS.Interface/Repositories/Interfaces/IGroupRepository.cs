@@ -6,6 +6,6 @@ namespace MultiSMS.Interface.Repositories.Interfaces
     {
         Task<Group> GetGroupByNameAsync(string groupName);
         IQueryable<Group> GetAllGroupsWithGroupMembersQueryable();
-        IQueryable<int> GetAllGroupIds();
+        Dictionary<int, string> GetDictionaryWithGroupIdsAndNames();
     }
 }

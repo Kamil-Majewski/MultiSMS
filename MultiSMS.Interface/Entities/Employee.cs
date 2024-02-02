@@ -23,9 +23,9 @@ namespace MultiSMS.Interface.Entities
         public ICollection<EmployeeGroup>? EmployeeGroups { get; set; }
 
         [NotMapped]
-        public ICollection<int>? EmployeeGroupIds { get; set; } = new List<int>();
+        public ICollection<int> EmployeeGroupIds { get; set; } = new List<int>();
 
         [NotMapped]
-        public ICollection<string>? EmployeeGroupNames { get; set; } = new List<string>();
+        public ICollection<string> EmployeeGroupNames { get; set; } = new List<string>();
     }
 }

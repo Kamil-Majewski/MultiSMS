@@ -69,8 +69,9 @@ namespace MultiSMS.BusinessLogic.Services
         public async Task<object> ImportContactsCsvByTypeAsync(IFormFile file, string type)
         {
             var phoneNumbersInDb = _employeeRepository.GetAllEntries().Select(e => e.PhoneNumber);
+            List<Employee> allRecords = new List<Employee>();
             List<Employee> repeatedEntries = new List<Employee>();
-            List<Employee> records = new List<Employee>();
+            List<Employee> validRecords = new List<Employee>();
             List<Employee> invalidRecords = new List<Employee>();
             List<string> groupIds = new List<string>();
 
@@ -81,17 +82,12 @@ namespace MultiSMS.BusinessLogic.Services
             var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
                 PrepareHeaderForMatch = args => args.Header.ToLowerInvariant(),
+                Delimiter = type == "new" ? ";" : ","
             };
-
-            if (type == "new")
-            {
-                csvConfig.Delimiter = ";";
-            }
 
             using (var reader = new StreamReader(memoryStream))
             using (var csvReader = new CsvReader(reader, csvConfig))
             {
-
                 csvReader.Read();
                 csvReader.ReadHeader();
 
@@ -111,7 +107,7 @@ namespace MultiSMS.BusinessLogic.Services
 
                     if (type == "new")
                     {
-                        record.IsActive = csvReader.GetField<string>("aktywność") == "Aktywny" ? true : false;
+                        record.IsActive = csvReader.GetField<string>("aktywność") == "Aktywny";
                         record.Email = csvReader.GetField<string>("email");
                         record.PostalNumber = csvReader.GetField<string>("kod pocztowy");
                         record.City = csvReader.GetField<string>("miasto");
@@ -124,16 +120,18 @@ namespace MultiSMS.BusinessLogic.Services
                     }
                     else if (_entitiesValidationService.CheckEmployeeValidity(record))
                     {
-                        records.Add(record);
+                        validRecords.Add(record);
                     }
                     else
                     {
                         invalidRecords.Add(record);
                     }
+
+                    allRecords.Add(record);
                 }
             }
 
-            var addedEmployees = await _employeeRepository.AddRangeOfEntitiesToDatabaseAsync(records);
+            var addedEmployees = await _employeeRepository.AddRangeOfEntitiesToDatabaseAsync(validRecords);
             var addedEmployeesList = addedEmployees.ToList();
 
             if (addedEmployees.Count() == 0)
@@ -141,19 +139,21 @@ namespace MultiSMS.BusinessLogic.Services
                 return new { Status = "OK", Message = "Import zakończony. Nie dodano żadnych nowych kontaktów.", RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords };
             }
 
-            var groupIdsInDb = _groupRepository.GetAllGroupIds();
+            var groupIdsInDb = _groupRepository.GetDictionaryWithGroupIdsAndNames();
             var nonExistentGroupIds = new List<List<string>>();
             var anyFailedAssigns = false;
 
             for (int i = 0; i < addedEmployeesList.Count(); i++)
             {
                 var employeeId = addedEmployeesList[i].EmployeeId;
+                var indexOfAddedEmployeeInRecords = allRecords.IndexOf(addedEmployeesList[i]);
 
-                foreach (var groupId in groupIds[i].Split(","))
+                foreach (var groupId in groupIds[indexOfAddedEmployeeInRecords].Split(","))
                 {
-                    if (int.TryParse(groupId, out var groupIdInt) && groupIdsInDb.Contains(groupIdInt))
+                    if (int.TryParse(groupId, out var groupIdInt) && groupIdsInDb.TryGetValue(groupIdInt, out var groupName))
                     {
                         await _employeeGroupRepository.AddGroupMemberAsync(groupIdInt, employeeId);
+                        addedEmployeesList[i].EmployeeGroupNames.Add(groupName);
 
                         if (nonExistentGroupIds.Count <= i)
                         {

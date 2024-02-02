@@ -22,9 +22,9 @@ namespace MultiSMS.Interface.Repositories
             return _context.Groups.Include(g => g.GroupMembers)!.ThenInclude(gm => gm.Employee);
         }
 
-        public IQueryable<int> GetAllGroupIds()
+        public Dictionary<int, string> GetDictionaryWithGroupIdsAndNames()
         {
-            return _context.Groups.Select(g => g.GroupId);
+            return _context.Groups.ToDictionary(g => g.GroupId, g => g.GroupName);
         }
     }
 }

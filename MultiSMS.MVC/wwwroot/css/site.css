@@ -504,7 +504,7 @@ img {
 }
 
 #main-header{
-    width: 100%;
+    width: 77.7vw;
 }
 
 .main-window {
@@ -523,12 +523,14 @@ img {
 
 .toolbar-left {
     transition: width 0.5s ease;
+    box-shadow: 0 5px 10px -4px gray;
     width: 50px;
-    position:absolute;
-    left:0;
+    position: absolute;
+    left: 0;
     background-color: #6f5cc4;
     overflow: hidden;
-    height:100%;
+    height: 100%;
+    z-index:1;
 }
 
 .layout-render-body {

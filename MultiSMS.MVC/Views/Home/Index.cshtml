@@ -675,7 +675,8 @@
                     newRow += '<td class="tiny-centered-cell"><span class="inactive-pill">Nieaktywny<span></td>';
                 }
 
-                if (typeof object.ListOfNonExistantGroupIds == 'undefined') {
+                if (typeof object.ListOfNonExistantGroupIds == 'undefined' && tableId == "added-contacts-table") {
+                    newRow += '<td class="centered-cell">' + group + '</td>' +
                     '<td class="tiny-centered-cell">Brak</td>' +
                         '</tr>'
                 }
@@ -689,7 +690,7 @@
                         newRow += '<td class="tiny-centered-cell">Brak</td>' +
                             '</tr>'
                     }
-                    else if (typeof nonExistentGroupsForContact == "string") {
+                    else if (typeof nonExistentGroupsForContact == "string" || nonExistentGroupsForContact == "") {
                         newRow += '<td class="tiny-centered-cell">Brak</td>' +
                             '</tr>'
                     }
