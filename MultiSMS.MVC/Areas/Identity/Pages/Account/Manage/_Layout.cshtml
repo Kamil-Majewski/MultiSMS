@@ -18,39 +18,46 @@
 }
 
 <script>
-    function CalculateHeaderWidthForProfile() {
+    function CalculateHeaderWidthAndToolbarHeight() {
+
         const sidebar = document.getElementById('toolbar-user-settings');
         const header = document.getElementById('main-header');
         const renderedContent = document.getElementById('content-render');
 
-        header.style.width = `${sidebar.offsetWidth + renderedContent.offsetWidth}px`;
+        header.style.width = `${renderedContent.offsetWidth + 50}px`;
+
+        renderedContent.style.height = 'auto';
+        sidebar.style.height = `auto`;
+
+        if (renderedContent.offsetHeight > sidebar.offsetHeight) {
+            sidebar.style.height = `${renderedContent.offsetHeight}px`;
+        }
+        else {
+            renderedContent.style.height = `${sidebar.offsetHeight}px`
+        }
+
     }
 
 
 
     $(document).ready(function () {
-        CalculateHeaderWidthForProfile();
+        CalculateHeaderWidthAndToolbarHeight();
 
 
-        var initialRenderContentWidthInVW = ($("#content-render").width() / $(window).width()) * 100;
         var initialToolboxContextWidthInPx = 50;
-        var hoveredWidthInPx = 190;
-        var hoveredWidthInVW = (190 / $(window).width()) * 100;
-        var differenceInVW = hoveredWidthInVW - (50 / $(window).width()) * 100;
+        var hoveredWidthInPx = 201;
 
         $(".option-list-item").hover(
             function () {
                 $("#toolbar-user-settings").css("width", hoveredWidthInPx + "px");
-                $("#content-render").css("width", (initialRenderContentWidthInVW - differenceInVW) + "vw");
             },
             function () {
                 $("#toolbar-user-settings").css("width", initialToolboxContextWidthInPx + "px");
-                $("#content-render").css("width", initialRenderContentWidthInVW + "vw");
             }
         );
 
         window.addEventListener('resize', () => {
-            CalculateHeaderWidthForProfile();
+            CalculateHeaderWidthAndToolbarHeight();
         });
     })
 </script>
