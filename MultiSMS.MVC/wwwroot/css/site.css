@@ -54,6 +54,14 @@ hr {
     padding: 4px 20px;
 }
 
+.single-windows-container {
+    position: relative;
+    height: 79vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .credentials-container {
     background-color: white;
     width: 25vw;
@@ -61,9 +69,6 @@ hr {
     border-radius: 5px;
     border: 3px solid #f0f1f1;
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-60%);
     box-shadow: 1px 1px 5px grey;
     min-width: 375px;
 }
@@ -499,7 +504,7 @@ img {
 }
 
 #main-header{
-    width: 77.7vw;
+    width: 100%;
 }
 
 .main-window {
@@ -523,7 +528,7 @@ img {
     left:0;
     background-color: #6f5cc4;
     overflow: hidden;
-    height:59.3vh;
+    height:100%;
 }
 
 .layout-render-body {

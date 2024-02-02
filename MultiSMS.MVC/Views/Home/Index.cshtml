@@ -602,11 +602,13 @@
         renderedContent.style.height = 'auto';
         sidebar.style.height = `auto`;
 
-        if (renderedContent.offsetHeight > sidebar.offsetHeight) {
-            sidebar.style.height = `${renderedContent.offsetHeight}px`;
-        }
-        else {
-            renderedContent.style.height = `${sidebar.offsetHeight}px`
+        if (sidebar.offsetHeight > 0) {
+            if (renderedContent.offsetHeight > sidebar.offsetHeight) {
+                sidebar.style.height = `${renderedContent.offsetHeight}px`;
+            }
+            else {
+                renderedContent.style.height = `${sidebar.offsetHeight}px`
+            }
         }
 
     }
@@ -785,6 +787,7 @@
                     $("#viewReport").show();
 
                     $("#closeModal").on("click", function () {
+                        FinishBrowsingImportReport();
                         $("#viewReportModal").modal("hide");
                     });
 
@@ -1489,7 +1492,7 @@
         const resizeObserver = new ResizeObserver(entries => {
             for (const entry of entries) {
                 const { width, height } = entry.contentRect;
-                CalculateHeaderWidthAndToolbarHeight();
+               CalculateHeaderWidthAndToolbarHeight();
             }
         });
 

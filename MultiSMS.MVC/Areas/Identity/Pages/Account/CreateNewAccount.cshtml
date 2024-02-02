@@ -20,43 +20,44 @@
 
 </style>
 
-
-<div class="credentials-container" style="margin-left:30px; width:28vw">
-    <section>
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <span class="form-subtitle">Utwórz nowe konto</span>
-            <div class="row" style="margin-top:20px;">
-                <div class="col">
-                    <label for="AdminName">Imię</label>
-                    <input asp-for=Input.Name type="text" class="form-input" id="AdminName" required maxlength="20">
-                    <span asp-validation-for="Input.Name" class="text-danger"></span>
+<div class="single-windows-container">
+    <div class="credentials-container" style="margin-left:30px; width:28vw">
+        <section>
+            <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                <span class="form-subtitle">Utwórz nowe konto</span>
+                <div class="row" style="margin-top:20px;">
+                    <div class="col">
+                        <label for="AdminName">Imię</label>
+                        <input asp-for=Input.Name type="text" class="form-input" id="AdminName" required maxlength="20">
+                        <span asp-validation-for="Input.Name" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label for="AdminSurname">Nazwisko</label>
+                        <input asp-for="Input.Surname" type="text" class="form-input" id="AdminSurname" required maxlength="20">
+                        <span asp-validation-for="Input.Surname" class="text-danger"></span>
+                    </div>
                 </div>
-                <div class="col">
-                    <label for="AdminSurname">Nazwisko</label>
-                    <input asp-for="Input.Surname" type="text" class="form-input" id="AdminSurname" required maxlength="20">
-                    <span asp-validation-for="Input.Surname" class="text-danger"></span>
+                <div>
+                    <label asp-for="Input.Email" class="form-label">Email</label>
+                    <input asp-for="Input.Email" class="form-input" type="email" autocomplete="username" aria-required="true" required />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
                 </div>
-            </div>
-            <div>
-                <label asp-for="Input.Email" class="form-label">Email</label>
-                <input asp-for="Input.Email" class="form-input" type="email" autocomplete="username" aria-required="true" required />
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="Input.Password" class="form-label">Hasło jednorazowe</label>
-                <div class="password-input-container">
-                    <input asp-for="Input.Password" class="form-input" id="create-acc-password" type="password" autocomplete="new-password" style="padding-right:30px;" aria-required="true"
-                    required />
-                    <img src="~/icons/closed-eye.png" class="eye-icons" id="eye-icon" alt="Toggle Password Visibility" onclick="togglePasswordVisibilityForCreateAccount()">
+                <div class="mb-3">
+                    <label asp-for="Input.Password" class="form-label">Hasło jednorazowe</label>
+                    <div class="password-input-container">
+                        <input asp-for="Input.Password" class="form-input" id="create-acc-password" type="password" autocomplete="new-password" style="padding-right:30px;" aria-required="true"
+                               required />
+                        <img src="~/icons/closed-eye.png" class="eye-icons" id="eye-icon" alt="Toggle Password Visibility" onclick="togglePasswordVisibilityForCreateAccount()">
+                    </div>
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
-            <div style="display:flex; justify-content:center; width:100%;">
-                <button id="create-acc-submit" type="submit" class="violet-button mb-2" style="width:100%; display:flex; justify-content:center; font-size:19px; height:44px;">Zarejestruj nowe konto</button>
-            </div>
-        </form>
-    </section>
+                <div style="display:flex; justify-content:center; width:100%;">
+                    <button id="create-acc-submit" type="submit" class="violet-button mb-2" style="width:100%; display:flex; justify-content:center; font-size:19px; height:44px;">Zarejestruj nowe konto</button>
+                </div>
+            </form>
+        </section>
+    </div>
 </div>
 
 
