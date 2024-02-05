@@ -302,7 +302,7 @@
                                     <div class="row">
                                         <div class="col">
                                             <label for="contactPhoneNumber">Numer telefonu *</label>
-                                            <input type="tel" class="form-input" id="contactPhoneNumber" required maxlength="15" minlength="11" pattern="^(\+[0-9]{2} )?\d{3} \d{3} \d{3}$">
+                                            <input type="tel" class="form-input" id="contactPhoneNumber" required maxlength="15" minlength="15" pattern="^\+[0-9]{2} \d{3} \d{3} \d{3}$">
                                         </div>
                                     </div>
                                     <div class="row">
@@ -643,7 +643,7 @@
         });
     }
 
-    function ImportContacts() {
+    function importContacts() {
 
         function IterateOverListOfObjectsAndAppendToTable(object, tableId) {
             $.each(object.ListOfEmployees, function (index, employee) {
@@ -1540,7 +1540,7 @@
 
         $('#import-file-input').change(function () {
             $("#viewReportModal").modal("show");
-            ImportContacts();
+            importContacts();
         });
 
         $(document).on('click', '.template-delete', function (e) {
@@ -1691,6 +1691,7 @@
                     $("#ContactPostalNumber").val(contactEnitity.postalNumber);
                     $("#ContactCity").val(contactEnitity.city);
                     $("#contactDepartment").val(contactEnitity.department);
+                    contactEnitity.isActive ? $("#isActiveYes").prop("checked", true).trigger("click") : $("#isActiveNo").prop("checked", true).trigger("click");
 
                     $("#contact-input-window-title").html("Edytuj kontakt")
                     $(".contact-options-form").attr('id', 'edit-contact-form');
