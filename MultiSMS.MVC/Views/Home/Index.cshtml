@@ -41,7 +41,10 @@
                             <div class="col">
                                 <label for="GroupOfContacts">Grupa kontaktów</label>
                                 <div style="width: 100%; display: inline-flex; justify-content: space-between;">
-                                    <input type="text" class="form-input" id="GroupOfContacts" style="flex-grow:1; font-weight:500;" required disabled>
+                                    <div style="display: flex; align-items: center; justify-content: space-between; position:relative; width: 100%;">
+                                        <input type="text" class="form-input" id="GroupOfContacts" style="flex-grow:1; font-weight:500;" required disabled>
+                                        <button type="button" class="btn-close text-dark input-icons" id="remove-group-selection-button" onclick="" aria-label="Close" style="width: 7px; height: 10px; top: 45%;"></button>
+                                    </div>
                                     <button class="violet-button" id="choose-group-of-contacts" type="button" style="min-width: 125px; height: 44px; margin-left: 30px;" onclick="OpenChooseGroupForSMS()">Wybierz</button>
                                 </div>
                             </div>
@@ -50,7 +53,10 @@
                             <div class="col">
                                 <label for="ChosenTemplate">Szablon</label>
                                 <div style="width: 100%; display: inline-flex; justify-content: space-between;">
-                                    <input type="text" class="form-input" id="ChosenTemplate" style="flex-grow:1; font-weight:500;" disabled>
+                                    <div style="display: flex; align-items: center; justify-content: space-between; position:relative; width: 100%;">
+                                        <input type="text" class="form-input" id="ChosenTemplate" style="flex-grow:1; font-weight:500;" disabled>
+                                        <button type="button" class="btn-close text-dark input-icons" id="remove-template-selection-button" onclick="" aria-label="Close" style="width: 7px; height: 10px; top: 45%;"></button>
+                                    </div>
                                     <button class="violet-button" id="choose-template" type="button" style="min-width: 125px; height: 44px; margin-left: 30px;" onclick="OpenChooseTemplateForSMS()">Wybierz</button>
                                 </div>
                             </div>
@@ -621,15 +627,15 @@
             data: { text: text, chosenGroupId: chosenGroupId, chosenGroupName: chosenGroupName, additionalPhoneNumbers: additionalPhoneNumbers, additionalInfo: additionalInfo },
             success: function (response) {
                 if (response.status == "failed") {
-                    console.log("Operation failed, server responded with code " + response.code + " - " + response.message);
+                    console.log(`Operation failed, server responded with code ${response.code} - ${response.message}`);
                     $("#status-message-sms").addClass("failed-status");
-                    $("#status-message-sms").html("Operacja zakończyła się niepowodzeniem, błąd " + response.code + " - " + response.message + "<button type='button' class='btn-close text-dark' aria-label='Close' onclick='CloseAlert()'></button>");
+                    $("#status-message-sms").html(`Operacja zakończyła się niepowodzeniem, błąd ${response.code} - ${response.message} <button type='button' class='btn-close text-dark' aria-label='Close' onclick='CloseAlert()'></button>`);
                     $("#status-message-sms").show();
                 }
                 else {
                     $("#status-message-sms").addClass("success-status");
-                    console.log("Operation successful, messages queued: " + response.queued + ", messages unsent: " + response.unsent);
-                    $("#status-message-sms").html("Wiadomość została wysłana (zakolejkowane: " + response.queued + ", niewysłane: " + response.unsent + ") <button type='button' class='btn-close text-dark' onclick='CloseAlert()' aria-label='Close'></button>");
+                    console.log(`Operation successful, messages queued: ${response.queued}, messages unsent: ${response.unsent}`);
+                    $("#status-message-sms").html(`Wiadomość została wysłana (zakolejkowane: ${response.queued}, niewysłane: ${response.unsent}) <button type='button' class='btn-close text-dark' onclick='CloseAlert()' aria-label='Close'></button>`);
                     $("#status-message-sms").show();
                     $("#send-sms-form :input").val('');
                     document.getElementById('sms-text-symbol-counter').innerHTML = "";
@@ -664,26 +670,26 @@
                     <td class="tiny-centered-cell"><span class="${statusClass}">${statusText}</span></td>`;
 
                 if (typeof object.ListOfNonExistantGroupIds == 'undefined' && tableId == "added-contacts-table") {
-                    newRow += '<td class="centered-cell">' + group + '</td>' +
-                        '<td class="tiny-centered-cell">Brak</td>' +
-                        '</tr>'
+                    newRow += `<td class="centered-cell">${group}</td>
+                        <td class="tiny-centered-cell">Brak</td>
+                        </tr>`;
                 }
                 else if (typeof object.ListOfNonExistantGroupIds != 'undefined') {
                     var nonExistantGroups = object.ListOfNonExistantGroupIds;
                     var nonExistentGroupsForContact = nonExistantGroups[index];
 
-                    newRow += '<td class="centered-cell">' + group + '</td>';
+                    newRow += `<td class="centered-cell">${group}</td>`;
 
                     if (nonExistentGroupsForContact.length == 0 || typeof nonExistentGroupsForContact == "string" || nonExistentGroupsForContact == "") {
-                        newRow += '<td class="tiny-centered-cell">Brak</td>' +
-                            '</tr>'
+                        newRow += `<td class="tiny-centered-cell">Brak</td>
+                            </tr>`;
                     }
                     else {
-                        newRow += '<td class="tiny-centered-cell">' + nonExistentGroupsForContact.join(', ') + '</td>' +
-                            '</tr>'
+                        newRow += `<td class="tiny-centered-cell">${nonExistentGroupsForContact.join(', ')}</td>
+                            </tr>`;
                     }
                 }
-                $('#' + tableId + ' tbody').append(newRow);
+                $(`#${tableId} tbody`).append(newRow);
             });
         }
 
@@ -1721,6 +1727,7 @@
 
                 contentType: 'application/json',
                 success: function (groupEntity) {
+                    $("#remove-group-selection-button").show();
                     $("#GroupOfContacts").val(groupEntity.groupName);
                     $("#GroupOfContacts").attr('data-id', groupEntity.groupId);
                 },
@@ -1729,6 +1736,21 @@
                 }
             });
             GoBackToSMSWindow();
+        });
+
+        $(document).on('click', "#remove-group-selection-button", function (e) {
+            $("#GroupOfContacts").val("");
+            $("#GroupOfContacts").removeAttr('data-id');
+            $(this).hide();
+        });
+
+        $(document).on('click', "#remove-template-selection-button", function (e) {
+            $("#ChosenTemplate").val("");
+            $("#SmsText").val("");
+            $(this).hide();
+
+            const messageEle = document.getElementById('SmsText');
+            document.getElementById('sms-text-symbol-counter').innerHTML = messageEle.value.length + "/" + messageEle.getAttribute('maxlength');
         });
 
         $(document).on('click', '.template-pick-me', function (e) {
@@ -1742,6 +1764,7 @@
 
                 contentType: 'application/json',
                 success: function (templateEntity) {
+                    $("#remove-template-selection-button").show();
                     $("#ChosenTemplate").val(templateEntity.templateName);
                     $("#ChosenTemplate").attr('data-id', templateEntity.groupId);
                     $("#SmsText").val(templateEntity.templateContent);

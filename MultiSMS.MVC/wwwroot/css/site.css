@@ -315,13 +315,14 @@ label {
     padding: 10px 30px 30px 30px;
 }
 
-.eye-icons {
+.input-icons {
     position: absolute;
-    top: 50%;
+    top: 47%;
     right: 15px;
     transform: translateY(-60%);
     cursor: pointer;
-    width: 27px;
+    width: 23px;
+    height: 23px;
     display: none;
 }
 
