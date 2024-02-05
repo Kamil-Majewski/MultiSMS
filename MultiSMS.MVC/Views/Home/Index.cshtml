@@ -65,7 +65,7 @@
                         <div class="row">
                             <div class="col">
                                 <label for="SmsText">Treść wiadomości *</label>
-                                <textarea class="form-input" id="SmsText" rows="5" maxlength="160" required></textarea>
+                                <textarea class="form-input" id="SmsText" rows="5" maxlength="160" required spellcheck="false"></textarea>
                                 <div style="display: flex; justify-content:space-between;">
                                     <div>
                                         <a href="# more-options" class="bleak-hoverable options-hidden" style="margin-top: 0.20rem;">Więcej opcji</a>
@@ -218,7 +218,7 @@
                             <div class="row">
                                 <div class="col">
                                     <label for="templateContentInput">Treść wiadomości *</label>
-                                    <textarea class="form-input" id="templateContentInput" rows="5" maxlength="160" required></textarea>
+                                    <textarea class="form-input" id="templateContentInput" rows="5" maxlength="160" required spellcheck="false"></textarea>
                                     <div style="margin-top: 0.25rem; text-align: right" id="symbolCounterAdd">&nbsp</div>
                                 </div>
                             </div>
@@ -836,13 +836,15 @@
 
         function handleImportError(error) {
             console.error(error);
+            $("#closeModal").show();
             $("#import-modal-content-text").text("Wystąpił niespodziewany błąd!");
             $("#import-modal-footer").addClass("justify-content-center");
             $("#viewReport").hide();
 
             $("#closeModal").on("click", function () {
-                $("#import-modal-footer").removeClass("justify-content-center");
                 $("#viewReportModal").modal("hide");
+                $("#import-modal-footer").removeClass("justify-content-center");
+                
             });
 
             resetFileInput();

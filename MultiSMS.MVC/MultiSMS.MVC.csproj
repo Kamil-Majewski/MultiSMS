@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\ContactsExcel\**" />
+    <Content Remove="wwwroot\ContactsExcel\**" />
+    <EmbeddedResource Remove="wwwroot\ContactsExcel\**" />
+    <None Remove="wwwroot\ContactsExcel\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="7.0.14" />
@@ -26,7 +33,6 @@
 
   <ItemGroup>
     <Folder Include="Views\Home\" />
-    <Folder Include="wwwroot\ContactsExcel\" />
   </ItemGroup>
 
 </Project>

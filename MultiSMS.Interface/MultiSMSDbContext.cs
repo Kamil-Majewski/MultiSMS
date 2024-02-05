@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Seeding;
-using System.Reflection.Emit;
 
 namespace MultiSMS.Interface
 {
@@ -16,6 +15,7 @@ namespace MultiSMS.Interface
         public virtual DbSet<Log> Logs { get; set; }
         public virtual DbSet<SMSMessage > SMSMessages { get; set; }
         public virtual DbSet<EmployeeGroup> EmployeeGroups { get; set; }
+        public virtual DbSet<ImportResult> Imports { get; set; }
 
         public MultiSMSDbContext(DbContextOptions options) : base(options)
         {

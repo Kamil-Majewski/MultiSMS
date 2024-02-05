@@ -136,7 +136,7 @@ namespace MultiSMS.BusinessLogic.Services
 
             if (addedEmployees.Count() == 0)
             {
-                return new { Status = "OK", Message = "Import zakończony. Nie dodano żadnych nowych kontaktów.", RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords };
+                return new { Status = "OK", Message = "Nie dodano żadnych nowych kontaktów.", RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords };
             }
 
             var groupIdsInDb = _groupRepository.GetDictionaryWithGroupIdsAndNames();
@@ -178,11 +178,11 @@ namespace MultiSMS.BusinessLogic.Services
 
             if (anyFailedAssigns)
             {
-                return new { Status = "Partial Success", Message = "Import zakończony. Dodano nowe kontakty, ale nie wszystkie przypisania do grup zakończyły się powodzeniem.", AddedEmployees = addedEmployees, RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords, NonExistantGroupIds = nonExistentGroupIds };
+                return new { Status = "Partial Success", Message = "Dodano nowe kontakty, ale nie wszystkie przypisania do grup zakończyły się powodzeniem.", AddedEmployees = addedEmployees, RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords, NonExistantGroupIds = nonExistentGroupIds };
             }
             else
             {
-                return new { Status = "Success", Message = "Import zakończony. Poprawnie dodano nowe kontakty i przypisano je do grup.", AddedEmployees = addedEmployees, RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords };
+                return new { Status = "Success", Message = "Poprawnie dodano nowe kontakty i przypisano je do grup.", AddedEmployees = addedEmployees, RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords };
             }
         }
 

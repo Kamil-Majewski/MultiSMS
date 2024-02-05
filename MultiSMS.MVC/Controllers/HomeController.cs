@@ -19,7 +19,8 @@ namespace MultiSMS.MVC.Controllers
         private readonly IGroupRepository _groupRepository;
         private readonly IEmployeeGroupRepository _employeeGroupRepository;
         private readonly ILogRepository _logRepository;
-        public HomeController(ISMSMessageTemplateRepository smsTemplateRepository, IEmployeeRepository employeeRepository, IGroupRepository groupRepository, IEmployeeGroupRepository employeeGroupRepository, ILogRepository logRepository, IAdministratorService administratorService, IImportExportEmployeesService ieService)
+        private readonly IImportResultRepository _importRepository;
+        public HomeController(ISMSMessageTemplateRepository smsTemplateRepository, IEmployeeRepository employeeRepository, IGroupRepository groupRepository, IEmployeeGroupRepository employeeGroupRepository, ILogRepository logRepository, IAdministratorService administratorService, IImportExportEmployeesService ieService, IImportResultRepository importRepository)
         {
             _smsTemplateRepository = smsTemplateRepository;
             _employeeRepository = employeeRepository;
@@ -28,7 +29,21 @@ namespace MultiSMS.MVC.Controllers
             _logRepository = logRepository;
             _administratorService = administratorService;
             _ieService = ieService;
+            _importRepository = importRepository;
         }
+
+        private static object? GetPropertyValue(dynamic obj, string propertyName)
+        {
+            try
+            {
+                return obj?.GetType()?.GetProperty(propertyName)?.GetValue(obj, null);
+            }
+            catch (Microsoft.CSharp.RuntimeBinder.RuntimeBinderException)
+            {
+                return null;
+            }
+        }
+
         [Authorize]
         public IActionResult Index()
         {
@@ -198,12 +213,68 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> ImportContacts(IFormFile file)
         {
 
+            var adminId = User.GetLoggedInUserId<int>();
+            var adminUserName = User.GetLoggedInUserName();
+
             if (file == null || file.Length == 0)
             {
                 return BadRequest("Invalid file");
             }
 
-            return Json(await _ieService.ImportContactsAsync(file));
+            dynamic importResultObject = await _ieService.ImportContactsAsync(file);
+
+            var importResultObjectInDb = await _importRepository.AddEntityToDatabaseAsync(new ImportResult
+            {
+                ImportStatus = GetPropertyValue(importResultObject, "Status"),
+                ImportMessage = GetPropertyValue(importResultObject, "Message"),
+                AddedEmployeesSerialized = JsonConvert.SerializeObject(GetPropertyValue(importResultObject, "AddedEmployees")),
+                RepeatedEmployeesSerialized = JsonConvert.SerializeObject(GetPropertyValue(importResultObject, "RepeatedEmployees")),
+                InvalidEmployeesSerialized = JsonConvert.SerializeObject(GetPropertyValue(importResultObject, "InvalidEmployees")),
+                NonExistantGroupIdsSerialized = JsonConvert.SerializeObject(GetPropertyValue(importResultObject, "NonExistantGroupIds"))
+            });
+
+
+            var status = importResultObjectInDb.ImportStatus;
+            string logMessage;
+            string logType;
+            string logRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, int>
+                     {
+                        { "Imports", importResultObjectInDb.ImportId}
+                     });
+
+
+            if (status == "Success")
+            {
+
+                logMessage = $"Zaimportowano nowe kontakty ({GetPropertyValue(importResultObject, "AddedEmployees").Count()}) i przypisano do grup.";
+                logType = "Info";
+                
+
+            }
+            else if(status == "Partial Success")
+            {
+                logMessage = $"Zaimportowano nowe kontakty ({GetPropertyValue(importResultObject, "AddedEmployees").Count()}), nie wszystkie przypisano do grup.";
+                logType = "Info";
+            }
+            else
+            {
+                logMessage = $"Import nieudany ({importResultObjectInDb.ImportMessage})";
+                logType = "Błąd";
+            }
+
+            await _logRepository.AddEntityToDatabaseAsync(
+                 new Log
+                 {
+                     LogType = logType,
+                     LogSource = "Import",
+                     LogMessage = logMessage,
+                     LogCreator = adminUserName,
+                     LogCreatorId = adminId,
+                     LogRelatedObjectsDictionarySerialized = logRelatedObjectsDictionarySerialized
+                 }
+             );
+
+            return Json(importResultObject);
         }
 
         [Authorize]
