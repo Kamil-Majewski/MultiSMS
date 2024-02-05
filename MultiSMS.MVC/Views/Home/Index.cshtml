@@ -1037,16 +1037,16 @@
                         description = "Brak opisu"
                     }
 
-                    var newRow = '<tr>' +
-                        '<td class="small-cell template-name">' + item.templateName + '</td>' +
-                        '<td class="medium-cell template-description">' + description + '</td>' +
-                        '<td class="big-cell template-content">' + item.templateContent + '</td>' +
-                        '<td class="centered-cell">' +
-                        '<a href="#details-' + item.templateId + '" class="icon-list template-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>' +
-                        '<a href="#edit-' + item.templateId + '" class="icon-list template-edit"><img src="/icons/edit.png" title="Edytuj"/></a>' +
-                        '<a href="#delete-' + item.templateId + '" class="icon-list template-delete"><img src="/icons/trash.png" title="Usuń"/></a>' +
-                        '</td>' +
-                        '</tr>';
+                    var newRow = `<tr>
+                        <td class="small-cell template-name">${item.templateName}</td>
+                        <td class="medium-cell template-description">${description}</td>
+                        <td class="big-cell template-content">${item.templateContent}</td>
+                        <td class="centered-cell">
+                        <a href="#details-${item.templateId}" class="icon-list template-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
+                        <a href="#edit-${item.templateId}" class="icon-list template-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
+                        <a href="#delete-${item.templateId}" class="icon-list template-delete"><img src="/icons/trash.png" title="Usuń"/></a>
+                        </td>
+                        </tr>`;
 
 
                     $('.template-list tbody').append(newRow);
@@ -1070,41 +1070,26 @@
 
                 $.each(listOfContacts, function (index, item) {
 
-                    var group = item.employeeGroupNames;
+                    var groupNames = item.employeeGroupNames;
                     var email = item.email;
 
-                    if (group == null || group.length == 0) {
-                        group = "Nie przypisano";
-                    }
-                    else {
-                        group = group.join(", ")
-                    }
+                    groupNames = (groupNames == null || groupNames.length == 0) ? "Nie przypisano" : groupNames.join(", ")
+                    email = (email == null || email == "") ? "Brak danych" : email
+                    var isActiveRow = item.isActive ? '<td class="tiny-centered-cell"><span class="active-pill">Aktywny<span></td>' : '<td class="tiny-centered-cell"><span class="inactive-pill">Nieaktywny<span></td>'
 
-                    if (email == null || email == "") {
-                        email = "Brak danych"
-                    }
-
-                    var newRow = '<tr>' +
-                        '<td class="tiny-cell contact-name">' + item.name + '</td>' +
-                        '<td class="tiny-cell contact-surname">' + item.surname + '</td>' +
-                        '<td class="small-cell">' + email + '</td>' +
-                        '<td class="small-cell">' + item.phoneNumber + '</td>';
-
-
-                    if (item.isActive == true) {
-                        newRow += '<td class="tiny-centered-cell"><span class="active-pill">Aktywny<span></td>';
-                    }
-                    else {
-                        newRow += '<td class="tiny-centered-cell"><span class="inactive-pill">Nieaktywny<span></td>';
-                    }
-
-                    newRow += '<td class="centered-cell">' + group + '</td>' +
-                        '<td class="centered-cell">' +
-                        '<a href="#details-' + item.employeeId + '" class="icon-list contact-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>' +
-                        '<a href="#edit-' + item.employeeId + '" class="icon-list contact-edit"><img src="/icons/edit.png" title="Edytuj"/></a>' +
-                        '<a href="#delete-' + item.employeeId + '" class="icon-list contact-delete"><img src="/icons/trash.png" title="Usuń"/></a>' +
-                        '</td>' +
-                        '</tr>';
+                    var newRow = `<tr>
+                        <td class="tiny-cell contact-name">${item.name}</td>
+                        <td class="tiny-cell contact-surname">${item.surname}</td>
+                        <td class="small-cell">${email}</td>
+                        <td class="small-cell">${item.phoneNumber}</td>
+                        ${isActiveRow}
+                        <td class="centered-cell">${groupNames}</td>
+                        <td class="centered-cell">
+                        <a href="#details-${item.employeeId}" class="icon-list contact-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
+                        <a href="#edit-${item.employeeId}" class="icon-list contact-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
+                        <a href="#delete-${item.employeeId}" class="icon-list contact-delete"><img src="/icons/trash.png" title="Usuń"/></a> 
+                        </td>
+                        </tr>`;
 
 
                     $('.contacts-list tbody').append(newRow);
@@ -1127,22 +1112,21 @@
                 $('.group-list tbody').empty();
 
                 $.each(listOfGroups, function (index, item) {
-                    var description = item.groupDescription;
-                    if (description == null) {
-                        description = "Brak opisu"
-                    }
+                    var groupDescription = item.groupDescription;
+                    
+                    groupDescription = groupDescription == null ? "Brak opisu" : groupDescription;
 
-                    var newRow = '<tr>' +
-                        '<td class="small-cell group-name">' + item.groupName + '</td>' +
-                        '<td class="big-cell group-description">' + description + '</td>' +
-                        '<td class="tiny-centered-cell">' + item.membersIds.length + '</td>' +
-                        '<td class="centered-cell">' +
-                        '<a href="#assign-' + item.groupId + '" class="icon-list group-assign"><img src="/icons/assign-users.png" title="Przypisz użytkowników"/></a>' +
-                        '<a href="#details-' + item.groupId + '" class="icon-list group-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>' +
-                        '<a href="#edit-' + item.groupId + '" class="icon-list group-edit"><img src="/icons/edit.png" title="Edytuj"/></a>' +
-                        '<a href="#delete-' + item.groupId + '" class="icon-list group-delete"><img src="/icons/trash.png" title="Usuń"/></a>' +
-                        '</td>' +
-                        '</tr>';
+                    var newRow = `<tr>
+                        <td class="small-cell group-name">${item.groupName}</td>
+                        <td class="big-cell group-description">${groupDescription}</td>
+                        <td class="tiny-centered-cell">${item.membersIds.length}</td>
+                        <td class="centered-cell">
+                        <a href="#assign-${item.groupId}" class="icon-list group-assign"><img src="/icons/assign-users.png" title="Przypisz użytkowników"/></a>
+                        <a href="#details-${item.groupId}" class="icon-list group-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
+                        <a href="#edit-${item.groupId}" class="icon-list group-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
+                        <a href="#delete-${item.groupId}" class="icon-list group-delete"><img src="/icons/trash.png" title="Usuń"/></a>
+                        </td>
+                        </tr>`;
 
 
                     $('.group-list tbody').append(newRow);
@@ -1165,20 +1149,18 @@
                 $('#log-table tbody').empty();
 
                 $.each(listOfLogs, function (index, item) {
-                    var newRow = '<tr>'
-                    if (item.logType == "Błąd") {
-                        newRow += '<td class="tiny-centered-cell"><span class="error-pill">' + item.logType + '</span></td>'
-                    }
-                    else {
-                        newRow += '<td class="tiny-centered-cell"><span class="info-pill">' + item.logType + '</span></td>'
-                    }
-                    newRow += '<td class="tiny-cell">' + item.logSource + '</td>' +
-                        '<td class="big-cell">' + item.logMessage + '</td>' +
-                        '<td class="centered-cell" style="min-width:105px;">' + new Date(item.logCreationDate).toLocaleString('en-GB') + '</td>' +
-                        '<td class="tiny-centered-cell">' +
-                        '<a href="#details-' + item.logId + '" class="icon-list template-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>' +
-                        '</td>' +
-                        '</tr>';
+
+                    var logTypeRow = item.logType == "Błąd" ? `<td class="tiny-centered-cell"><span class="error-pill">${item.logType}</span></td>` : `<td class="tiny-centered-cell"><span class="info-pill">${item.logType}</span></td>`
+
+                    var newRow = `<tr>
+                        ${logTypeRow}
+                        <td class="tiny-cell">${item.logSource}</td>
+                        <td class="big-cell">${item.logMessage}</td>
+                        <td class="centered-cell" style="min-width:105px;">${new Date(item.logCreationDate).toLocaleString('en-GB')}</td>
+                        <td class="tiny-centered-cell">
+                        <a href="#details-${item.logId}" class="icon-list template-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
+                        </td>
+                        </tr>`;
 
 
                     $('#log-table tbody').append(newRow);
@@ -1201,19 +1183,17 @@
                 $('#choose-group-for-sms-table tbody').empty();
 
                 $.each(listOfGroups, function (index, item) {
-                    var description = item.groupDescription;
-                    if (description == null) {
-                        description = "Brak opisu"
-                    }
 
-                    var newRow = '<tr>' +
-                        '<td class="small-cell">' + item.groupName + '</td>' +
-                        '<td class="big-cell">' + description + '</td>' +
-                        '<td class="tiny-centered-cell">' + item.membersIds.length + '</td>' +
-                        '<td class="tiny-centered-cell">' +
-                        '<a href="#pick-' + item.groupId + '" class="icon-list group-pick-me"><img src="/icons/pick-me.png" title="Wybierz grupę"/></a>' +
-                        '</td>' +
-                        '</tr>';
+                    var description = item.groupDescription == null ? "Brak opisu" : item.groupDescription
+
+                    var newRow = `<tr>
+                        <td class="small-cell">${item.groupName}</td>
+                        <td class="big-cell">${description}</td>
+                        <td class="tiny-centered-cell">${item.membersIds.length}</td>
+                        <td class="tiny-centered-cell">
+                        <a href="#pick-${item.groupId}" class="icon-list group-pick-me"><img src="/icons/pick-me.png" title="Wybierz grupę"/></a>
+                        </td>
+                        </tr>`;
 
 
                     $('#choose-group-for-sms-table tbody').append(newRow);
@@ -1235,14 +1215,17 @@
                 $('#choose-template-for-sms-table tbody').empty();
 
                 $.each(listOfTemplates, function (index, item) {
-                    var newRow = '<tr>' +
-                        '<td class="small-cell">' + item.templateName + '</td>' +
-                        '<td class="medium-cell">' + item.templateDescription + '</td>' +
-                        '<td class="big-cell">' + item.templateContent + '</td>' +
-                        '<td class="tiny-centered-cell">' +
-                        '<a href="#pick-' + item.templateId + '" class="icon-list template-pick-me"><img src="/icons/pick-me.png" title="Wybierz szablon"/></a>' +
-                        '</td>' +
-                        '</tr>';
+
+                    var templateDescription = item.templateDescription == null ? "Brak opisu" : item.templateDescription
+
+                    var newRow = `<tr>
+                        <td class="small-cell">${item.templateName}</td>
+                        <td class="medium-cell">${templateDescription}</td>
+                        <td class="big-cell">${item.templateContent}</td>
+                        <td class="tiny-centered-cell">
+                        <a href="#pick-${item.templateId}" class="icon-list template-pick-me"><img src="/icons/pick-me.png" title="Wybierz szablon"/></a>
+                        </td>
+                        </tr>`;
 
 
                     $('#choose-template-for-sms-table tbody').append(newRow);
@@ -1263,12 +1246,15 @@
 
             contentType: 'application/json',
             success: function (groupEntity) {
+
+                var groupDescription = groupEntity.groupDescription == null ? "Brak opisu" : groupEntity.groupDescription;
                 $("#group-assign-chosen-group-table tbody").empty();
-                var newRow = '<tr>' +
-                    '<td class="small-cell">' + groupEntity.groupName + '</td>' +
-                    '<td class="big-cell">' + groupEntity.groupDescription + '</td>' +
-                    '<td class="tiny-centered-cell">' + groupEntity.membersIds.length + '</td>' +
-                    '</tr>';
+
+                var newRow = `<tr>
+                    <td class="small-cell">${groupEntity.groupName}</td>
+                    <td class="big-cell">${groupDescription}</td>
+                    <td class="tiny-centered-cell">${groupEntity.membersIds.length}</td>
+                    </tr>`;
 
                 $('#group-assign-chosen-group-table').append(newRow);
 
@@ -1282,40 +1268,29 @@
 
                         $.each(listOfContacts, function (index, item) {
 
-                            var group = item.employeeGroupNames;
+                            var groupNames = item.employeeGroupNames;
 
-                            if (group == 'null' || group.length == 0) {
-                                group = "Nie przypisano";
-                            }
-                            else {
-                                group = group.join(", ");
-                            }
+                            groupNames = (groupNames == null || groupNames.length === 0) ? "Nie przypisano" : groupNames.join(", ")
+                            var isActiveRow = item.isActive ? '<td class="tiny-centered-cell"><span class="active-pill">Aktywny<span></td>' : '<td class="tiny-centered-cell"><span class="inactive-pill">Nieaktywny<span></td>'
 
-                            var newRow = '<tr>' +
-                                '<td class="tiny-cell">' + item.name + '</td>' +
-                                '<td class="tiny-cell">' + item.surname + '</td>' +
-                                '<td class="tiny-cell">' + item.phoneNumber + '</td>';
-
-                            if (item.isActive == true) {
-                                newRow += '<td class="tiny-centered-cell"><span class="active-pill">Aktywny<span></td>';
-                            }
-                            else {
-                                newRow += '<td class="tiny-centered-cell"><span class="inactive-pill">Nieaktywny<span></td>';
-                            }
-
-                            newRow += '<td class="centered-cell">' + group + '</td>' +
-                                '<td class="tiny-centered-cell">';
+                            var newRow = `<tr>
+                                <td class="tiny-cell">${item.name}</td>
+                                <td class="tiny-cell">${item.surname}</td>
+                                <td class="tiny-cell">${item.phoneNumber}</td>
+                                ${isActiveRow}
+                                <td class="centered-cell">${groupNames}</td> 
+                                <td class="tiny-centered-cell">`
 
                             if (groupEntity.membersIds.includes(item.employeeId)) {
 
-                                newRow += '<a href="#unassign-' + item.employeeId + '-' + groupEntity.groupId + '" class="icon-list contact-unassign"><img src="/icons/unassign-user.png" title="Wypisz z grupy"/></a>' +
-                                    '</td>' +
-                                    '</tr>';
+                                newRow += `<a href="#unassign-${item.employeeId}-${groupEntity.groupId}" class="icon-list contact-unassign"><img src="/icons/unassign-user.png" title="Wypisz z grupy"/></a>
+                                    </td>
+                                    </tr>`;
                             }
                             else {
-                                newRow += '<a href="#assign-' + item.employeeId + '-' + groupEntity.groupId + '" class="icon-list contact-assign" > <img src="/icons/assign-user.png" title = "Dopisz do grupy" /> </a>' +
-                                    '</td>' +
-                                    '</tr>';
+                                newRow += `<a href="#assign-${item.employeeId}-${groupEntity.groupId}" class="icon-list contact-assign"><img src="/icons/assign-user.png" title="Dopisz do grupy" /></a>
+                                    </td>
+                                    </tr>`;
                             }
 
                             $('#group-assign-contact-list-table tbody').append(newRow);

@@ -35,6 +35,7 @@ namespace MultiSMS.MVC.Controllers
             return View();
         }
 
+        [Authorize]
         [HttpGet]
         public async Task AddUserToGroup(int groupId, int employeeId)
         {
@@ -63,6 +64,7 @@ namespace MultiSMS.MVC.Controllers
             );
         }
 
+        [Authorize]
         [HttpGet]
         public async Task RemoveUserFromGroup(int groupId, int employeeId)
         {
@@ -90,6 +92,7 @@ namespace MultiSMS.MVC.Controllers
             );
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> CreateNewTemplate(string templateName, string templateDescription, string templateContent)
         {
@@ -119,6 +122,7 @@ namespace MultiSMS.MVC.Controllers
             return Json(addedTemplate);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> CreateNewContact(string contactName, string contactSurname, string email, string phone, string address, string zip, string city, string department, string isActive)
         {
@@ -160,6 +164,7 @@ namespace MultiSMS.MVC.Controllers
             return Json(contact.Name);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> CreateNewGroup(string groupName, string groupDescription)
         {
@@ -188,6 +193,7 @@ namespace MultiSMS.MVC.Controllers
             return Json(group.GroupName);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> ImportContacts(IFormFile file)
         {
@@ -200,6 +206,7 @@ namespace MultiSMS.MVC.Controllers
             return Json(await _ieService.ImportContactsAsync(file));
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> FetchAllTemplates()
         {
@@ -207,6 +214,7 @@ namespace MultiSMS.MVC.Controllers
             return Json(templates);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> FetchAllContacts()
         {
@@ -218,6 +226,7 @@ namespace MultiSMS.MVC.Controllers
             return Json(contacts);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> FetchAllGroups()
         {
@@ -229,6 +238,7 @@ namespace MultiSMS.MVC.Controllers
             return Json(groups);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> FetchAllValidGroups()
         {
@@ -261,6 +271,7 @@ namespace MultiSMS.MVC.Controllers
             return Json(validGroups);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> FetchAllLogs()
         {
@@ -268,6 +279,7 @@ namespace MultiSMS.MVC.Controllers
             return Json(logs);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetTemplateById(int id)
         {
@@ -275,6 +287,7 @@ namespace MultiSMS.MVC.Controllers
             return Json(template);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetContactById(int id)
         {
@@ -282,6 +295,7 @@ namespace MultiSMS.MVC.Controllers
             return Json(template);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetGroupById(int id)
         {
@@ -290,6 +304,7 @@ namespace MultiSMS.MVC.Controllers
             return Json(group);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> EditTemplate(int id, string name, string description, string content)
         {
@@ -319,6 +334,7 @@ namespace MultiSMS.MVC.Controllers
             return Json(template.TemplateName);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> EditContact(int contactId, string contactName, string contactSurname, string email, string phone, string address, string zip, string city, string department, string isActive)
         {
@@ -361,6 +377,7 @@ namespace MultiSMS.MVC.Controllers
             return Json(contact.Name);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> EditGroup(int id, string name, string description)
         {
@@ -388,6 +405,7 @@ namespace MultiSMS.MVC.Controllers
             return Json(group.GroupName);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task DeleteTemplate(int id)
         {
@@ -408,6 +426,7 @@ namespace MultiSMS.MVC.Controllers
             await _smsTemplateRepository.DeleteEntityAsync(id);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task DeleteContact(int id)
         {
@@ -427,6 +446,7 @@ namespace MultiSMS.MVC.Controllers
             await _employeeRepository.DeleteEntityAsync(id);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task DeleteGroup(int id)
         {
@@ -446,6 +466,7 @@ namespace MultiSMS.MVC.Controllers
             await _groupRepository.DeleteEntityAsync(id);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetLog(int id)
         {
@@ -507,6 +528,8 @@ namespace MultiSMS.MVC.Controllers
             }
         }
 
+
+        [Authorize]
         public IActionResult DownloadExcelWithContacts()
         {
             var fileDirectory = _ieService.ExportContactsExcel();

@@ -135,6 +135,10 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account
                             }
                         }
                     }
+                    else
+                    {
+                        return RedirectToPage("../");
+                    }
                 }
                 //if (result.RequiresTwoFactor)
                 //{
