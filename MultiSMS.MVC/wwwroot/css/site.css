@@ -9,6 +9,348 @@ html {
     min-width: 100%;
 }
 
+@media screen and (min-width: 1480x) {
+    #contacts-table {
+        table-layout: fixed !important;
+    }
+
+    .header {
+        font-size: 22px !important;
+    }
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1480px) {
+    tbody {
+        font-size: 14px !important;
+    }
+
+    .arrow-back {
+        width: 20px !important;
+    }
+
+    .table > :not(caption) > * > * {
+        padding: .5rem .4rem !important;
+    }
+
+    th{
+        font-size: 14px;
+    }
+
+    .icon-list{
+        max-width: 18px !important;
+        margin-left: 9px !important;
+        margin-right: 9px !important;
+    }
+
+    .violet-button {
+        font-size: 15px !important;
+        height: 44px !important;
+    }
+
+    .ie-button {
+        font-size: 15px !important;
+        height: 44px !important;
+        margin-left: 20px !important;
+    }
+
+    .search-for{
+        height: 44px !important;
+        background-size: 17px !important;
+        margin-left: 20px !important;
+        padding-left:34px !important;
+        
+    }
+
+    input{
+        font-size: 14px !important;
+    }
+
+    input::placeholder{
+        font-size: 15px !important;
+    }
+
+    .form-input{
+        min-height: 40px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .opion-name-placeholder{
+        font-size: 20px !important;
+    }
+
+    .form-subtitle{
+        font-size: 15px !important;
+    }
+
+    span {
+        font-size: 14px !important;
+    }
+
+    label{
+        font-size: 14px !important;
+        margin-bottom: 8px !important;
+    }
+
+    #confirmDelete{
+        height: 37px !important;
+    }
+
+    #denyDelete {
+        height: 37px !important;
+    }
+
+    #closeModal{
+        height: 37px !important;
+        margin-left: 4px !important;
+    }
+
+    #viewReport {
+        height: 37px !important;
+    }
+
+    #GroupOfContacts{
+        font-size: 15px !important;
+    }
+
+    #ChosenTemplate {
+        font-size: 15px !important;
+    }
+
+    .bleak-hoverable {
+        font-size: 14px !important;
+    }
+
+    .logo-text{
+        font-size: 17px !important;
+    }
+
+    .icon {
+        min-width: 21px !important;
+        max-width: 21px !important;
+    }
+
+    .text-nav{
+        font-size: 15px !important;
+    }
+
+    .symbol-counter{
+        font-size: 14px !important; 
+    }
+
+    .dropdown-item{
+        font-size: 14px !important;
+    }
+
+    .inline-button {
+        height: 40px !important;
+        margin-left: 25px !important;
+        min-width: 100px !important
+    }
+
+    .inactive-pill {
+        padding: 4px 5.52px !important;
+    }
+
+    .tiny-centered-cell {
+       
+    }
+
+    .centered-cell {
+        min-width: 150px !important;
+    }
+
+    .tiny-cell {
+        min-width: 100px !important;
+    }
+
+    .small-cell {
+        min-width: 130px !important;
+    }
+
+    .medium-cell {
+
+    }
+
+    .big-cell {
+
+    }
+
+    .header {
+        font-size: 20px !important;
+    }
+
+}
+
+@media screen and (max-width: 1024px){
+    tbody {
+        font-size: 12px !important;
+    }
+
+    .arrow-back {
+        width: 18px !important;
+    }
+
+    .table > :not(caption) > * > * {
+        padding: .45rem .3rem !important;
+    }
+
+    th {
+        font-size: 12px;
+    }
+
+    .icon-list {
+        max-width: 15px !important;
+        margin-left: 8px !important;
+        margin-right: 8px !important;
+    }
+
+    .option-content{
+        max-width: 450px !important;
+    }
+
+    .violet-button {
+        font-size: 13px !important;
+        height: 36px !important;
+    }
+
+    .ie-button {
+        font-size: 13px !important;
+        height: 36px !important;
+        margin-left: 15px !important;
+    }
+
+    .search-for {
+        height: 36px !important;
+        background-size: 15px !important;
+        margin-left: 15px !important;
+        padding-left: 30px !important;
+    }
+
+    input {
+        font-size: 12px !important;
+    }
+
+        input::placeholder {
+            font-size: 12px !important;
+        }
+
+    .form-input {
+        min-height: 36px !important;
+        margin-bottom: 5px !important;
+    }
+
+    .opion-name-placeholder {
+        font-size: 16px !important;
+    }
+
+    .form-subtitle {
+        font-size: 13px !important;
+    }
+
+    span {
+        font-size: 12px !important;
+    }
+
+    label {
+        font-size: 13px !important;
+        margin-bottom: 6px !important;
+    }
+
+    #confirmDelete {
+        height: 34px !important;
+    }
+
+    #denyDelete {
+        height: 34px !important;
+    }
+
+    #closeModal {
+        height: 34px !important;
+        margin-left: 4px !important;
+    }
+
+    #viewReport {
+        height: 34px !important;
+    }
+
+    #GroupOfContacts {
+        font-size: 15px !important;
+    }
+
+    #ChosenTemplate {
+        font-size: 13px !important;
+    }
+
+    .bleak-hoverable {
+        font-size: 13px !important;
+    }
+
+    .logo-text {
+        font-size: 15px !important;
+    }
+
+    .icon {
+        min-width: 20px !important;
+        max-width: 20px !important;
+    }
+
+    .text-nav {
+        font-size: 13px !important;
+    }
+
+    .symbol-counter {
+        font-size: 12px !important;
+    }
+
+    .dropdown-item {
+        font-size: 12px !important;
+    }
+
+    .inline-button {
+        height: 36px !important;
+        min-width: 80px !important;
+        margin-left: 20px !important;
+    }
+
+    .inactive-pill {
+        padding: 3px 7.48px !important;
+    }
+
+    .active-pill {
+        padding: 3px 16.78px !important;
+    }
+
+    .tiny-centered-cell {
+        min-width: 80px !important;
+    }
+
+    .centered-cell {
+        min-width: 130px !important;
+    }
+
+    .tiny-cell {
+        min-width: 80px !important;
+    }
+
+    .small-cell {
+        min-width: 120px !important;
+    }
+
+    .header{
+        font-size: 14px !important;
+    }
+
+    .info-pill {
+        padding: 4px 14px !important;
+    }
+
+    .error-pill {
+        padding: 4px 14px !important;
+    }
+
+
+}
+
 a {
     text-decoration: none;
 }
@@ -196,6 +538,12 @@ input::-ms-clear, input::-ms-reveal {
     margin-right: 5px;
 }
 
+.option-name {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+
 tr td {
     border-top: none;
     border-bottom: none;
@@ -267,11 +615,15 @@ body {
 
 .form-input {
     border-radius: 4px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     min-height: 44px;
     border: 3px solid #f0f1f1;
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
     width: 100%
+}
+
+.arrow-back{
+    width: 22px;
 }
 
     .form-input:focus {
@@ -379,14 +731,14 @@ label {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    min-width: 94px;
+    min-width: 100px;
     text-align: center;
 }
 
 .centered-cell {
     max-width: 4vw;
     text-align: center;
-    min-width: 150px;
+    min-width: 157px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -397,7 +749,7 @@ label {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    min-width: 80px;
+    min-width: 100px;
 }
 
 .small-cell {
@@ -440,6 +792,7 @@ tbody {
     color: #5a6372;
     font-family: 'Open Sans', sans-serif;
     font-weight: 500;
+    font-size: 16px;
 }
 
 .table thead th {
@@ -481,7 +834,7 @@ tbody {
 }
 
 .icon-list {
-    max-width: 22px;
+    max-width: 20.5px;
     display: inline-block;
     margin-left: 11px;
     margin-right: 11px;
@@ -504,7 +857,7 @@ img {
     height: auto;
 }
 
-#main-header{
+#main-header {
     width: 77.7vw;
 }
 
@@ -531,7 +884,7 @@ img {
     background-color: #6f5cc4;
     overflow: hidden;
     height: 100%;
-    z-index:1;
+    z-index: 1;
 }
 
 .layout-render-body {
@@ -545,7 +898,7 @@ img {
 
 .layout-content {
     display: flex;
-    position:relative;
+    position: relative;
     justify-content: center;
     background-color: transparent;
 }
@@ -574,8 +927,8 @@ img {
     padding-left: 15px;
 }
 
-.table-responsive{
-    max-height:61vh;
+.table-responsive {
+    max-height: 61vh;
 }
 
 .form-row {

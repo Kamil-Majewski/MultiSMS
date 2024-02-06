@@ -73,7 +73,7 @@ namespace MultiSMS.BusinessLogic.Services
 
                 if (requiredHeaders.Except(fileHeaders).Any())
                 {
-                    return new ImportResultDTO { ImportStatus = "Failure", ImportMessage = "Struktura pliku .csv nie jest prawidłowa." };
+                    return new ImportResultDTO { ImportStatus = "Failure", ImportMessage = "Struktura pliku .csv nie jest prawidłowa" };
                 }
                 else
                 {

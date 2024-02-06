@@ -8,7 +8,7 @@
 <div class="user-info options-container">
     <div class="option-content">
         <form class="contact-options-form options-form" id="update-admin-info" method="post">
-            <div class="personal-data" style="margin-bottom:20px;">
+            <div class="personal-data" style="margin-bottom:20px; margin-top: 20px;">
                 <span class="form-subtitle">Dane Personalne</span>
                 <div class="form-group" style="margin-top: 20px;">
                     <div class="row">
@@ -28,7 +28,7 @@
                             <label for="AdminEmail">Email</label>
                             <div style="width: 100%; display: inline-flex; justify-content: space-between;">
                                 <input asp-for="Username" type="email" class="form-input" id="AdminEmail" required maxlength="30" style="flex-grow:1;" disabled>
-                                <button type="button" class="violet-button" id="change-email-button" style="min-width: 125px; height: 44px; margin-left: 30px;">
+                                <button type="button" class="violet-button inline-button" id="change-email-button" style="min-width: 125px; height: 44px; margin-left: 30px;">
                                     Zmień Email
                                 </button>
                             </div>

@@ -45,7 +45,7 @@
                                         <input type="text" class="form-input" id="GroupOfContacts" style="flex-grow:1; font-weight:500;" required disabled>
                                         <button type="button" class="btn-close text-dark input-icons" id="remove-group-selection-button" onclick="" aria-label="Close" style="width: 7px; height: 10px; top: 45%;"></button>
                                     </div>
-                                    <button class="violet-button" id="choose-group-of-contacts" type="button" style="min-width: 125px; height: 44px; margin-left: 30px;" onclick="OpenChooseGroupForSMS()">Wybierz</button>
+                                    <button class="violet-button inline-button" id="choose-group-of-contacts" type="button" style="min-width: 125px; height: 44px; margin-left: 30px;" onclick="OpenChooseGroupForSMS()">Wybierz</button>
                                 </div>
                             </div>
                         </div>
@@ -57,7 +57,7 @@
                                         <input type="text" class="form-input" id="ChosenTemplate" style="flex-grow:1; font-weight:500;" disabled>
                                         <button type="button" class="btn-close text-dark input-icons" id="remove-template-selection-button" onclick="" aria-label="Close" style="width: 7px; height: 10px; top: 45%;"></button>
                                     </div>
-                                    <button class="violet-button" id="choose-template" type="button" style="min-width: 125px; height: 44px; margin-left: 30px;" onclick="OpenChooseTemplateForSMS()">Wybierz</button>
+                                    <button class="violet-button inline-button" id="choose-template" type="button" style="min-width: 125px; height: 44px; margin-left: 30px;" onclick="OpenChooseTemplateForSMS()">Wybierz</button>
                                 </div>
                             </div>
                         </div>
@@ -70,7 +70,7 @@
                                     <div>
                                         <a href="# more-options" class="bleak-hoverable options-hidden" style="margin-top: 0.20rem;">Więcej opcji</a>
                                     </div>
-                                    <div style="margin-top: 0.20rem; text-align: right" id="sms-text-symbol-counter">&nbsp</div>
+                                    <div class="symbol-counter" style="margin-top: 0.20rem; text-align: right" id="sms-text-symbol-counter">&nbsp</div>
                                 </div>
                             </div>
                         </div>
@@ -98,7 +98,7 @@
                 <div class="list-header">
                     <div class="previous-page" style="flex:1;">
                         <button class="violet-button" id="choose-group-for-sms-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToSMSWindow()">
-                            <span style="max-width:24px;"><img src="~/icons/previous.png" /></span>
+                            <span class="arrow-back" style="max-width:24px;"><img src="~/icons/previous.png" /></span>
                             <span>Powrót</span>
                         </button>
                     </div>
@@ -130,7 +130,7 @@
                 <div class="list-header">
                     <div class="previous-page" style="flex:1;">
                         <button class="violet-button" id="choose-template-for-sms-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToSMSWindow()">
-                            <span style="max-width:24px;"><img src="~/icons/previous.png" /></span>
+                            <span class="arrow-back" style="max-width:24px;"><img src="~/icons/previous.png" /></span>
                             <span>Powrót</span>
                         </button>
                     </div>
@@ -191,7 +191,7 @@
                     <div class="options-header">
                         <div class="previous-page" style="flex:1;">
                             <button class="violet-button" id="templates-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToTemplateList()">
-                                <span style="max-width:24px;"><img src="~/icons/previous.png" /></span>
+                                <span class="arrow-back" style="max-width:24px;"><img src="~/icons/previous.png" /></span>
                                 <span>Powrót</span>
                             </button>
                         </div>
@@ -219,7 +219,7 @@
                                 <div class="col">
                                     <label for="templateContentInput">Treść wiadomości *</label>
                                     <textarea class="form-input" id="templateContentInput" rows="5" maxlength="160" required spellcheck="false"></textarea>
-                                    <div style="margin-top: 0.25rem; text-align: right" id="symbolCounterAdd">&nbsp</div>
+                                    <div class="symbol-counter" style="margin-top: 0.25rem; text-align: right" id="symbolCounterAdd">&nbsp</div>
                                 </div>
                             </div>
                         </div>
@@ -246,7 +246,7 @@
                     </div>
                     <div class="list-content">
                         <div class="table-responsive">
-                            <table class="contacts-list table table-borderless" id="contacts-table" style="table-layout:fixed;">
+                            <table class="contacts-list table table-borderless" id="contacts-table">
                                 <thead>
                                     <tr>
                                         <th class="tiny-cell">Imię</th>
@@ -269,7 +269,7 @@
                         <div class="options-header">
                             <div class="previous-page" style="flex:1;">
                                 <button class="violet-button" id="contacts-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToContactList()">
-                                    <span style="max-width:24px;"><img src="/icons/previous.png"></span>
+                                    <span class="arrow-back" style="max-width:24px;"><img src="/icons/previous.png"></span>
                                     <span>Powrót</span>
                                 </button>
                             </div>
@@ -478,7 +478,7 @@
                     <div class="options-header">
                         <div class="previous-page" style="flex:1;">
                             <button class="violet-button" id="groups-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToGroupList()">
-                                <span style="max-width:24px;"><img src="/icons/previous.png"></span>
+                                <span class="arrow-back" style="max-width:24px;"><img src="/icons/previous.png"></span>
                                 <span>Powrót</span>
                             </button>
                         </div>
@@ -500,7 +500,7 @@
                                 <div class="col">
                                     <label for="groupDescriptionInput">Opis grupy</label>
                                     <textarea class="form-input" id="groupDescriptionInput" rows="3" maxlength="100"></textarea>
-                                    <div style="margin-top: 0.25rem; text-align: right" id="symbolCounterAddGroups">&nbsp</div>
+                                    <div class="symbol-counter" style="margin-top: 0.25rem; text-align: right" id="symbolCounterAddGroups">&nbsp</div>
                                 </div>
                             </div>
                         </div>
@@ -514,7 +514,7 @@
                 <div class="list-header">
                     <div class="previous-page" style="flex:1;">
                         <button class="violet-button" id="groups-assign-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToGroupListFromAssign()">
-                            <span style="max-width:24px;"><img src="~/icons/previous.png" /></span>
+                            <span class="arrow-back" style="max-width:24px;"><img src="~/icons/previous.png" /></span>
                             <span>Powrót</span>
                         </button>
                     </div>
@@ -617,6 +617,25 @@
             }
         }
 
+    }
+
+    function OnInputFilterTable(searchBarIdentification, tableIdentification) {
+        $(searchBarIdentification).on('input', function () {
+
+            var filterText = $(this).val().toLowerCase();
+
+            $(`${tableIdentification} tbody tr`).each(function () {
+                var rowHit = false;
+                $(this).find('td').each(function () {
+                    if ($(this).text().toLowerCase().includes(filterText)) {
+                        rowHit = true;
+                        return false;
+                    }
+                });
+
+                $(this).toggle(rowHit);
+            });
+        });
     }
 
     function SendSMS(text, chosenGroupId, chosenGroupName, additionalPhoneNumbers, additionalInfo) {
@@ -1083,7 +1102,7 @@
 
                     groupNames = (groupNames == null || groupNames.length == 0) ? "Nie przypisano" : groupNames.join(", ")
                     email = (email == null || email == "") ? "Brak danych" : email
-                    var isActiveRow = item.isActive ? '<td class="tiny-centered-cell"><span class="active-pill">Aktywny<span></td>' : '<td class="tiny-centered-cell"><span class="inactive-pill">Nieaktywny<span></td>'
+                    var isActiveRow = item.isActive ? '<td class="centered-cell"><span class="active-pill">Aktywny<span></td>' : '<td class="centered-cell"><span class="inactive-pill">Nieaktywny<span></td>'
 
                     var newRow = `<tr>
                         <td class="tiny-cell contact-name">${item.name}</td>
@@ -1128,7 +1147,7 @@
                         <td class="small-cell group-name">${item.groupName}</td>
                         <td class="big-cell group-description">${groupDescription}</td>
                         <td class="tiny-centered-cell">${item.membersIds.length}</td>
-                        <td class="centered-cell">
+                            <td class="centered-cell"" style="min-width: 205px;">
                         <a href="#assign-${item.groupId}" class="icon-list group-assign"><img src="/icons/assign-users.png" title="Przypisz użytkowników"/></a>
                         <a href="#details-${item.groupId}" class="icon-list group-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
                         <a href="#edit-${item.groupId}" class="icon-list group-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
@@ -1937,166 +1956,29 @@
             GoBackToGroupList();
 
         });
+        
+        OnInputFilterTable(".template-search", "#template-table");
 
-        $(".template-search ").on('input', function () {
+        OnInputFilterTable(".search-for-group-for-sms", "#choose-group-for-sms-table");
 
-            var filterText = $(this).val().toLowerCase();
+        OnInputFilterTable(".search-for-template-for-sms", "#choose-template-for-sms-table");
 
-            $('#template-table tbody tr').each(function () {
-                var rowHit = false;
-                $(this).find('td').each(function () {
-                    if ($(this).text().toLowerCase().includes(filterText)) {
-                        rowHit = true;
-                        return false;
-                    }
-                });
+        OnInputFilterTable(".contact-search", "#contacts-table");
 
-                $(this).toggle(rowHit);
-            });
-        });
+        OnInputFilterTable(".group-search", "#group-table");
 
-        $(".search-for-group-for-sms").on('input', function () {
+        OnInputFilterTable(".import-contact-search", "#added-contacts-table");
 
-            var filterText = $(this).val().toLowerCase();
+        OnInputFilterTable(".group-search-for-user", "#group-assign-contact-list-table");
 
-            $('#choose-group-for-sms-table tbody tr').each(function () {
-                var rowHit = false;
-                $(this).find('td').each(function () {
-                    if ($(this).text().toLowerCase().includes(filterText)) {
-                        rowHit = true;
-                        return false;
-                    }
-                });
+        OnInputFilterTable(".log-search", "#log-table");
 
-                $(this).toggle(rowHit);
-            });
-        });
+        OnInputFilterTable(".import-contact-search", "#log-table");
 
-        $(".search-for-template-for-sms").on('input', function () {
+        OnInputFilterTable(".import-contact-search", "#repeated-contacts-table");
 
-            var filterText = $(this).val().toLowerCase();
+        OnInputFilterTable(".import-contact-search", "#invalid-contacts-table");
 
-            $('#choose-template-for-sms-table tbody tr').each(function () {
-                var rowHit = false;
-                $(this).find('td').each(function () {
-                    if ($(this).text().toLowerCase().includes(filterText)) {
-                        rowHit = true;
-                        return false;
-                    }
-                });
-
-                $(this).toggle(rowHit);
-            });
-        });
-
-        $(".contact-search").on('input', function () {
-
-            var filterText = $(this).val().toLowerCase();
-
-            $('#contacts-table tbody tr').each(function () {
-                var rowHit = false;
-                $(this).find('td').each(function () {
-                    if ($(this).text().toLowerCase().includes(filterText)) {
-                        rowHit = true;
-                        return false;
-                    }
-                });
-
-                $(this).toggle(rowHit);
-            });
-        });
-
-        $(".group-search").on('input', function () {
-
-            var filterText = $(this).val().toLowerCase();
-
-            $('#group-table tbody tr').each(function () {
-                var rowHit = false;
-                $(this).find('td').each(function () {
-                    if ($(this).text().toLowerCase().includes(filterText)) {
-                        rowHit = true;
-                        return false;
-                    }
-                });
-
-                $(this).toggle(rowHit);
-            });
-        });
-
-        $(".import-contact-search").on('input', function () {
-
-            var filterText = $(this).val().toLowerCase();
-
-            $('#added-contacts-table tbody tr').each(function () {
-                var rowHit = false;
-                $(this).find('td').each(function () {
-                    if ($(this).text().toLowerCase().includes(filterText)) {
-                        rowHit = true;
-                        return false;
-                    }
-                });
-
-                $(this).toggle(rowHit);
-            });
-
-            $('#repeated-contacts-table tbody tr').each(function () {
-                var rowHit = false;
-                $(this).find('td').each(function () {
-                    if ($(this).text().toLowerCase().includes(filterText)) {
-                        rowHit = true;
-                        return false;
-                    }
-                });
-
-                $(this).toggle(rowHit);
-            });
-
-            $('#invalid-contacts-table tbody tr').each(function () {
-                var rowHit = false;
-                $(this).find('td').each(function () {
-                    if ($(this).text().toLowerCase().includes(filterText)) {
-                        rowHit = true;
-                        return false;
-                    }
-                });
-
-                $(this).toggle(rowHit);
-            });
-        });
-
-        $(".group-search-for-user").on('input', function () {
-
-            var filterText = $(this).val().toLowerCase();
-
-            $('#group-assign-contact-list-table tbody tr').each(function () {
-                var rowHit = false;
-                $(this).find('td').each(function () {
-                    if ($(this).text().toLowerCase().includes(filterText)) {
-                        rowHit = true;
-                        return false;
-                    }
-                });
-
-                $(this).toggle(rowHit);
-            });
-        });
-
-        $(".log-search").on('input', function () {
-
-            var filterText = $(this).val().toLowerCase();
-
-            $('#log-table tbody tr').each(function () {
-                var rowHit = false;
-                $(this).find('td').each(function () {
-                    if ($(this).text().toLowerCase().includes(filterText)) {
-                        rowHit = true;
-                        return false;
-                    }
-                });
-
-                $(this).toggle(rowHit);
-            });
-        });
 
         $("#ContactPostalNumber").on('input', function () {
 
