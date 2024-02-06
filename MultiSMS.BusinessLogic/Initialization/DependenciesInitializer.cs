@@ -12,8 +12,9 @@ namespace MultiSMS.BusinessLogic.Initialization
             serviceCollection.AddScoped<IAdministratorService, AdministratorService>();
             serviceCollection.AddScoped<IServerSmsService, ServerSmsService>();
             serviceCollection.AddScoped<ISmsApiService, SmsApiService>();
-            serviceCollection.AddScoped<IEntitiesValidationService, EntitiesValidationService>();
             serviceCollection.AddScoped<IImportExportEmployeesService, ImportExportEmployeesService>();
+            serviceCollection.AddScoped<ISMSMessageService, SMSMessageService>();
+            serviceCollection.AddScoped<IImportResultService, ImportResultService>();
         }
     }
 }

@@ -16,12 +16,13 @@ namespace MultiSMS.MVC.Controllers
         private readonly IAdministratorService _administratorService;
         private readonly IImportExportEmployeesService _ieService;
         private readonly ISMSMessageTemplateRepository _smsTemplateRepository;
+        private readonly ISMSMessageService _smsMessageService;
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IGroupRepository _groupRepository;
         private readonly IEmployeeGroupRepository _employeeGroupRepository;
         private readonly ILogRepository _logRepository;
-        private readonly IImportResultRepository _importRepository;
-        public HomeController(ISMSMessageTemplateRepository smsTemplateRepository, IEmployeeRepository employeeRepository, IGroupRepository groupRepository, IEmployeeGroupRepository employeeGroupRepository, ILogRepository logRepository, IAdministratorService administratorService, IImportExportEmployeesService ieService, IImportResultRepository importRepository)
+        private readonly IImportResultService _importResultService;
+        public HomeController(ISMSMessageTemplateRepository smsTemplateRepository, IEmployeeRepository employeeRepository, IGroupRepository groupRepository, IEmployeeGroupRepository employeeGroupRepository, ILogRepository logRepository, IAdministratorService administratorService, IImportExportEmployeesService ieService, IImportResultService importResultService, ISMSMessageService smsMessageService)
         {
             _smsTemplateRepository = smsTemplateRepository;
             _employeeRepository = employeeRepository;
@@ -30,7 +31,8 @@ namespace MultiSMS.MVC.Controllers
             _logRepository = logRepository;
             _administratorService = administratorService;
             _ieService = ieService;
-            _importRepository = importRepository;
+            _importResultService = importResultService;
+            _smsMessageService = smsMessageService;
         }
 
         [Authorize]
@@ -212,7 +214,7 @@ namespace MultiSMS.MVC.Controllers
 
             ImportResultDTO importResultDto = await _ieService.ImportContactsAsync(file);
 
-            var importResultObjectInDb = await _importRepository.AddEntityToDatabaseAsync(new ImportResult
+            var importResultObjectInDb = await _importResultService.AddEntityToDatabaseAsync(new ImportResult
             {
                 ImportStatus = importResultDto.ImportStatus,
                 ImportMessage = importResultDto.ImportMessage,
@@ -557,32 +559,35 @@ namespace MultiSMS.MVC.Controllers
             {
                 case "Szablony":
                     var template = await _smsTemplateRepository.GetByIdAsync(logRelatedObjects["Templates"]);
-                    return Json(new { Type = "Template", Template = template, Log = logSanitized, logCreator = logCreator });
+                    return Json(new { Type = "Template", Template = template, Log = logSanitized, LogCreator = logCreator });
                 case "Kontakty":
                     var employee = await _employeeRepository.GetByIdAsync(logRelatedObjects["Employees"]);
-                    return Json(new { Type = "Contact", Contact = employee, Log = logSanitized, logCreator = logCreator });
+                    return Json(new { Type = "Contact", Contact = employee, Log = logSanitized, LogCreator = logCreator });
                 case "Grupy":
                     var group = await _groupRepository.GetByIdAsync(logRelatedObjects["Groups"]);
                     try
                     {
                         var addedEmployee = await _employeeRepository.GetByIdAsync(logRelatedObjects["Employees"]);
-                        return Json(new { Type = "Groups-Assign", Group = group, Contact = addedEmployee, Log = logSanitized, logCreator = logCreator });
+                        return Json(new { Type = "Groups-Assign", Group = group, Contact = addedEmployee, Log = logSanitized, LogCreator = logCreator });
                     }
                     catch (Exception)
                     {
-                        return Json(new { Type = "Groups", Group = group, Log = logSanitized, logCreator = logCreator });
+                        return Json(new { Type = "Groups", Group = group, Log = logSanitized, LogCreator = logCreator });
                     }
                 case "SMS":
-                    var sms = await _smsTemplateRepository.GetByIdAsync(logRelatedObjects["SmsMessages"]);
+                    var smsDto = await _smsMessageService.GetSmsMessageDtoById(logRelatedObjects["SmsMessages"]);
                     try
                     {
                         var chosenGroup = await _groupRepository.GetByIdAsync(logRelatedObjects["Groups"]);
-                        return Json(new { Type = "SMS-Group", Sms = sms, Group = chosenGroup, Log = logSanitized, logCreator = logCreator });
+                        return Json(new { Type = "SMS-Group", Sms = smsDto, Group = chosenGroup, Log = logSanitized, LogCreator = logCreator });
                     }
                     catch (Exception)
                     {
-                        return Json(new { Type = "SMS-NoGroup", Sms = sms, Log = logSanitized, logCreator = logCreator });
+                        return Json(new { Type = "SMS-NoGroup", Sms = smsDto, Log = logSanitized, LogCreator = logCreator });
                     }
+                case "Import":
+                    var importDto = await _importResultService.GetImportResultDtoByIdAsync(logRelatedObjects["Imports"]);
+                    return Json(new { Type = "Import", Import = importDto, Log = logSanitized, LogCreator = logCreator });
                 default:
                     throw new Exception("Unknown case of log source");
             }

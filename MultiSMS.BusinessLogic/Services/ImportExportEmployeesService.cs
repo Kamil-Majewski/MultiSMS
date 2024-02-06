@@ -1,6 +1,7 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
 using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Tokens;
 using MultiSMS.BusinessLogic.DTO;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
@@ -16,18 +17,36 @@ namespace MultiSMS.BusinessLogic.Services
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IGroupRepository _groupRepository;
         private readonly IEmployeeGroupRepository _employeeGroupRepository;
-        private readonly IEntitiesValidationService _entitiesValidationService;
         private readonly IPathProvider _pathProvider;
 
 
-        public ImportExportEmployeesService(IEmployeeRepository employeeRepository, IGroupRepository groupRepository, IEmployeeGroupRepository employeeGroupRepository, IEntitiesValidationService entitiesValidationService, IPathProvider pathProvider)
+        public ImportExportEmployeesService(IEmployeeRepository employeeRepository, IGroupRepository groupRepository, IEmployeeGroupRepository employeeGroupRepository, IPathProvider pathProvider)
         {
             _employeeRepository = employeeRepository;
             _groupRepository = groupRepository;
             _employeeGroupRepository = employeeGroupRepository;
-            _entitiesValidationService = entitiesValidationService;
             _pathProvider = pathProvider;
 
+        }
+
+        private bool CheckEmployeeValidity(Employee employee)
+        {
+            var phoneNumberPattern = "^(\\+[0-9]{2} )?\\d{3} \\d{3} \\d{3}$";
+            Regex regex = new Regex(phoneNumberPattern);
+
+            if (employee.Name.IsNullOrEmpty() || employee.Surname.IsNullOrEmpty() || employee.PhoneNumber.IsNullOrEmpty())
+            {
+                return false;
+            }
+
+            Match match = regex.Match(employee.PhoneNumber);
+
+            if (!match.Success)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public async Task<ImportResultDTO> ImportContactsAsync(IFormFile file)
@@ -54,7 +73,7 @@ namespace MultiSMS.BusinessLogic.Services
 
                 if (requiredHeaders.Except(fileHeaders).Any())
                 {
-                    return new ImportResultDTO{ ImportStatus = "Failure", ImportMessage = "Struktura pliku .csv nie jest prawidłowa." };
+                    return new ImportResultDTO { ImportStatus = "Failure", ImportMessage = "Struktura pliku .csv nie jest prawidłowa." };
                 }
                 else
                 {
@@ -119,7 +138,7 @@ namespace MultiSMS.BusinessLogic.Services
                     {
                         repeatedEntries.Add(record);
                     }
-                    else if (_entitiesValidationService.CheckEmployeeValidity(record))
+                    else if (CheckEmployeeValidity(record))
                     {
                         validRecords.Add(record);
                     }
@@ -137,7 +156,7 @@ namespace MultiSMS.BusinessLogic.Services
 
             if (addedEmployees.Count() == 0)
             {
-                return new ImportResultDTO{ ImportStatus = "OK", ImportMessage = "Brak nowych kontaktów w pliku csv", RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords };
+                return new ImportResultDTO { ImportStatus = "OK", ImportMessage = "Brak nowych kontaktów w pliku csv", RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords };
             }
 
             var groupIdsInDb = _groupRepository.GetDictionaryWithGroupIdsAndNames();
@@ -179,11 +198,11 @@ namespace MultiSMS.BusinessLogic.Services
 
             if (anyFailedAssigns)
             {
-                return new ImportResultDTO{ ImportStatus = "Partial Success", ImportMessage = "Dodano nowe kontakty, ale nie wszystkie grupy były prawidłowe.", AddedEmployees = addedEmployees, RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords, NonExistantGroupIds = nonExistentGroupIds };
+                return new ImportResultDTO { ImportStatus = "Partial Success", ImportMessage = "Dodano nowe kontakty, ale nie wszystkie grupy były prawidłowe.", AddedEmployees = addedEmployees, RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords, NonExistantGroupIds = nonExistentGroupIds };
             }
             else
             {
-                return new ImportResultDTO{ ImportStatus = "Success", ImportMessage = "Poprawnie dodano nowe kontakty i przypisano je do grup.", AddedEmployees = addedEmployees, RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords };
+                return new ImportResultDTO { ImportStatus = "Success", ImportMessage = "Poprawnie dodano nowe kontakty i przypisano je do grup.", AddedEmployees = addedEmployees, RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords };
             }
         }
 
