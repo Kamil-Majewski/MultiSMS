@@ -137,7 +137,7 @@ namespace MultiSMS.BusinessLogic.Services
 
             if (addedEmployees.Count() == 0)
             {
-                return new ImportResultDTO{ ImportStatus = "OK", ImportMessage = "Nie dodano żadnych nowych kontaktów.", RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords };
+                return new ImportResultDTO{ ImportStatus = "OK", ImportMessage = "Brak nowych kontaktów w pliku csv", RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords };
             }
 
             var groupIdsInDb = _groupRepository.GetDictionaryWithGroupIdsAndNames();
@@ -179,7 +179,7 @@ namespace MultiSMS.BusinessLogic.Services
 
             if (anyFailedAssigns)
             {
-                return new ImportResultDTO{ ImportStatus = "Partial Success", ImportMessage = "Dodano nowe kontakty, ale nie wszystkie przypisania do grup zakończyły się powodzeniem.", AddedEmployees = addedEmployees, RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords, NonExistantGroupIds = nonExistentGroupIds };
+                return new ImportResultDTO{ ImportStatus = "Partial Success", ImportMessage = "Dodano nowe kontakty, ale nie wszystkie grupy były prawidłowe.", AddedEmployees = addedEmployees, RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords, NonExistantGroupIds = nonExistentGroupIds };
             }
             else
             {

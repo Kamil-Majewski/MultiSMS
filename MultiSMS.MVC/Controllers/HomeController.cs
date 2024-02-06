@@ -242,12 +242,12 @@ namespace MultiSMS.MVC.Controllers
             }
             else if(status == "Partial Success")
             {
-                logMessage = $"Zaimportowano nowe kontakty ({importResultDto.AddedEmployees!.Count()}), nie wszystkie przypisano do grup.";
+                logMessage = $"Zaimportowano nowe kontakty ({importResultDto.AddedEmployees!.Count()}), nie wszystkie grupy przypisano.";
                 logType = "Info";
             }
             else
             {
-                logMessage = $"Import nieudany ({importResultDto.ImportMessage})";
+                logMessage = $"Nie zaimportowano kontaktów ({importResultDto.ImportMessage})";
                 logType = "Błąd";
             }
 
