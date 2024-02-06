@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MultiSMS.Interface.Entities
@@ -19,7 +18,8 @@ namespace MultiSMS.Interface.Entities
         public string? HQAddress { get; set; }
         public bool IsActive { get; set; }
 
-        [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
         public ICollection<EmployeeGroup>? EmployeeGroups { get; set; }
 
         [NotMapped]

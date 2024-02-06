@@ -7,9 +7,9 @@ namespace MultiSMS.BusinessLogic.DTO
         public int ImportId { get; set; }
         public string ImportStatus { get; set; } = default!;
         public string ImportMessage { get; set; } = default!;
-        public List<Employee>? AddedEmployees { get; set; }
-        public List<Employee>? RepeatedEmployees { get; set; }
-        public List<Employee>? InvalidEmployees { get; set; }
-        public List<int>? NonExistantGroupIds { get; set; }
+        public IEnumerable<Employee>? AddedEmployees { get; set; }
+        public IEnumerable<Employee>? RepeatedEmployees { get; set; }
+        public IEnumerable<Employee>? InvalidEmployees { get; set; }
+        public IEnumerable<IEnumerable<string>>? NonExistantGroupIds { get; set; }
     }
 }

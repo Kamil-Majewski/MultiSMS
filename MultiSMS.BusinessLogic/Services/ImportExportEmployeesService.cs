@@ -1,6 +1,7 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
 using Microsoft.AspNetCore.Http;
+using MultiSMS.BusinessLogic.DTO;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Repositories.Interfaces;
@@ -29,7 +30,7 @@ namespace MultiSMS.BusinessLogic.Services
 
         }
 
-        public async Task<object> ImportContactsAsync(IFormFile file)
+        public async Task<ImportResultDTO> ImportContactsAsync(IFormFile file)
         {
             string[] requiredHeaders = { "osoba", "tel", "instytucja", "grupa" };
 
@@ -53,7 +54,7 @@ namespace MultiSMS.BusinessLogic.Services
 
                 if (requiredHeaders.Except(fileHeaders).Any())
                 {
-                    return new { Status = "Failure", Message = "Struktura pliku .csv nie jest prawidłowa." };
+                    return new ImportResultDTO{ ImportStatus = "Failure", ImportMessage = "Struktura pliku .csv nie jest prawidłowa." };
                 }
                 else
                 {
@@ -66,7 +67,7 @@ namespace MultiSMS.BusinessLogic.Services
             }
         }
 
-        public async Task<object> ImportContactsCsvByTypeAsync(IFormFile file, string type)
+        public async Task<ImportResultDTO> ImportContactsCsvByTypeAsync(IFormFile file, string type)
         {
             var phoneNumbersInDb = _employeeRepository.GetAllEntries().Select(e => e.PhoneNumber);
             List<Employee> allRecords = new List<Employee>();
@@ -136,7 +137,7 @@ namespace MultiSMS.BusinessLogic.Services
 
             if (addedEmployees.Count() == 0)
             {
-                return new { Status = "OK", Message = "Nie dodano żadnych nowych kontaktów.", RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords };
+                return new ImportResultDTO{ ImportStatus = "OK", ImportMessage = "Nie dodano żadnych nowych kontaktów.", RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords };
             }
 
             var groupIdsInDb = _groupRepository.GetDictionaryWithGroupIdsAndNames();
@@ -178,11 +179,11 @@ namespace MultiSMS.BusinessLogic.Services
 
             if (anyFailedAssigns)
             {
-                return new { Status = "Partial Success", Message = "Dodano nowe kontakty, ale nie wszystkie przypisania do grup zakończyły się powodzeniem.", AddedEmployees = addedEmployees, RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords, NonExistantGroupIds = nonExistentGroupIds };
+                return new ImportResultDTO{ ImportStatus = "Partial Success", ImportMessage = "Dodano nowe kontakty, ale nie wszystkie przypisania do grup zakończyły się powodzeniem.", AddedEmployees = addedEmployees, RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords, NonExistantGroupIds = nonExistentGroupIds };
             }
             else
             {
-                return new { Status = "Success", Message = "Poprawnie dodano nowe kontakty i przypisano je do grup.", AddedEmployees = addedEmployees, RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords };
+                return new ImportResultDTO{ ImportStatus = "Success", ImportMessage = "Poprawnie dodano nowe kontakty i przypisano je do grup.", AddedEmployees = addedEmployees, RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords };
             }
         }
 

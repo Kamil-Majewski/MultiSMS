@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MultiSMS.BusinessLogic.DTO;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Extensions;
@@ -30,18 +31,6 @@ namespace MultiSMS.MVC.Controllers
             _administratorService = administratorService;
             _ieService = ieService;
             _importRepository = importRepository;
-        }
-
-        private static object? GetPropertyValue(dynamic obj, string propertyName)
-        {
-            try
-            {
-                return obj?.GetType()?.GetProperty(propertyName)?.GetValue(obj, null);
-            }
-            catch (Microsoft.CSharp.RuntimeBinder.RuntimeBinderException)
-            {
-                return null;
-            }
         }
 
         [Authorize]
@@ -221,16 +210,16 @@ namespace MultiSMS.MVC.Controllers
                 return BadRequest("Invalid file");
             }
 
-            dynamic importResultObject = await _ieService.ImportContactsAsync(file);
+            ImportResultDTO importResultDto = await _ieService.ImportContactsAsync(file);
 
             var importResultObjectInDb = await _importRepository.AddEntityToDatabaseAsync(new ImportResult
             {
-                ImportStatus = GetPropertyValue(importResultObject, "Status"),
-                ImportMessage = GetPropertyValue(importResultObject, "Message"),
-                AddedEmployeesSerialized = JsonConvert.SerializeObject(GetPropertyValue(importResultObject, "AddedEmployees")),
-                RepeatedEmployeesSerialized = JsonConvert.SerializeObject(GetPropertyValue(importResultObject, "RepeatedEmployees")),
-                InvalidEmployeesSerialized = JsonConvert.SerializeObject(GetPropertyValue(importResultObject, "InvalidEmployees")),
-                NonExistantGroupIdsSerialized = JsonConvert.SerializeObject(GetPropertyValue(importResultObject, "NonExistantGroupIds"))
+                ImportStatus = importResultDto.ImportStatus,
+                ImportMessage = importResultDto.ImportMessage,
+                AddedEmployeesSerialized = JsonConvert.SerializeObject(importResultDto.AddedEmployees),
+                RepeatedEmployeesSerialized = JsonConvert.SerializeObject(importResultDto.RepeatedEmployees),
+                InvalidEmployeesSerialized = JsonConvert.SerializeObject(importResultDto.InvalidEmployees),
+                NonExistantGroupIdsSerialized = JsonConvert.SerializeObject(importResultDto.NonExistantGroupIds)
             });
 
 
@@ -246,19 +235,19 @@ namespace MultiSMS.MVC.Controllers
             if (status == "Success")
             {
 
-                logMessage = $"Zaimportowano nowe kontakty ({GetPropertyValue(importResultObject, "AddedEmployees").Count()}) i przypisano do grup.";
+                logMessage = $"Zaimportowano nowe kontakty ({importResultDto.AddedEmployees!.Count()}) i przypisano do grup.";
                 logType = "Info";
                 
 
             }
             else if(status == "Partial Success")
             {
-                logMessage = $"Zaimportowano nowe kontakty ({GetPropertyValue(importResultObject, "AddedEmployees").Count()}), nie wszystkie przypisano do grup.";
+                logMessage = $"Zaimportowano nowe kontakty ({importResultDto.AddedEmployees!.Count()}), nie wszystkie przypisano do grup.";
                 logType = "Info";
             }
             else
             {
-                logMessage = $"Import nieudany ({importResultObjectInDb.ImportMessage})";
+                logMessage = $"Import nieudany ({importResultDto.ImportMessage})";
                 logType = "Błąd";
             }
 
@@ -274,7 +263,7 @@ namespace MultiSMS.MVC.Controllers
                  }
              );
 
-            return Json(importResultObject);
+            return Json(new {Status = importResultDto.ImportStatus, Message = importResultDto.ImportMessage, AddedEmployees = importResultDto.AddedEmployees, RepeatedEmployees = importResultDto.RepeatedEmployees, InvalidEmployees = importResultDto.InvalidEmployees, NonExistantGroupIds = importResultDto.NonExistantGroupIds });
         }
 
         [Authorize]
