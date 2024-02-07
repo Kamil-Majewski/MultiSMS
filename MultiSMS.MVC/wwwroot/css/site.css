@@ -24,6 +24,10 @@ html {
         font-size: 14px !important;
     }
 
+    .user-picture {
+        width: 26px !important;
+    }
+
     .arrow-back {
         width: 20px !important;
     }
@@ -32,11 +36,11 @@ html {
         padding: .5rem .4rem !important;
     }
 
-    th{
+    th {
         font-size: 14px;
     }
 
-    .icon-list{
+    .icon-list {
         max-width: 18px !important;
         margin-left: 9px !important;
         margin-right: 9px !important;
@@ -53,32 +57,31 @@ html {
         margin-left: 20px !important;
     }
 
-    .search-for{
+    .search-for {
         height: 44px !important;
         background-size: 17px !important;
         margin-left: 20px !important;
-        padding-left:34px !important;
-        
+        padding-left: 34px !important;
     }
 
-    input{
+    input {
         font-size: 14px !important;
     }
 
-    input::placeholder{
-        font-size: 15px !important;
-    }
+        input::placeholder {
+            font-size: 15px !important;
+        }
 
-    .form-input{
+    .form-input {
         min-height: 40px !important;
         margin-bottom: 10px !important;
     }
 
-    .opion-name-placeholder{
+    .opion-name-placeholder {
         font-size: 20px !important;
     }
 
-    .form-subtitle{
+    .form-subtitle {
         font-size: 15px !important;
     }
 
@@ -86,12 +89,12 @@ html {
         font-size: 14px !important;
     }
 
-    label{
+    label {
         font-size: 14px !important;
         margin-bottom: 8px !important;
     }
 
-    #confirmDelete{
+    #confirmDelete {
         height: 37px !important;
     }
 
@@ -99,7 +102,7 @@ html {
         height: 37px !important;
     }
 
-    #closeModal{
+    #closeModal {
         height: 37px !important;
         margin-left: 4px !important;
     }
@@ -108,7 +111,7 @@ html {
         height: 37px !important;
     }
 
-    #GroupOfContacts{
+    #GroupOfContacts {
         font-size: 15px !important;
     }
 
@@ -120,7 +123,7 @@ html {
         font-size: 14px !important;
     }
 
-    .logo-text{
+    .logo-text {
         font-size: 17px !important;
     }
 
@@ -129,15 +132,15 @@ html {
         max-width: 21px !important;
     }
 
-    .text-nav{
+    .text-nav {
         font-size: 15px !important;
     }
 
-    .symbol-counter{
-        font-size: 14px !important; 
+    .symbol-counter {
+        font-size: 14px !important;
     }
 
-    .dropdown-item{
+    .dropdown-item {
         font-size: 14px !important;
     }
 
@@ -152,7 +155,6 @@ html {
     }
 
     .tiny-centered-cell {
-       
     }
 
     .centered-cell {
@@ -168,22 +170,23 @@ html {
     }
 
     .medium-cell {
-
     }
 
     .big-cell {
-
     }
 
     .header {
         font-size: 20px !important;
     }
-
 }
 
-@media screen and (max-width: 1024px){
+@media screen and (max-width: 1024px) {
     tbody {
         font-size: 12px !important;
+    }
+
+    .user-picture {
+        width: 24px !important;
     }
 
     .arrow-back {
@@ -204,7 +207,7 @@ html {
         margin-right: 8px !important;
     }
 
-    .option-content{
+    .option-content {
         max-width: 450px !important;
     }
 
@@ -228,6 +231,7 @@ html {
 
     input {
         font-size: 12px !important;
+        min-width: 148px !important;
     }
 
         input::placeholder {
@@ -336,7 +340,7 @@ html {
         min-width: 120px !important;
     }
 
-    .header{
+    .header {
         font-size: 14px !important;
     }
 
@@ -347,8 +351,6 @@ html {
     .error-pill {
         padding: 4px 14px !important;
     }
-
-
 }
 
 a {
@@ -357,6 +359,17 @@ a {
 
 hr {
     color: grey;
+}
+
+.details-span {
+    color: #5a6372;
+    font-family: 'Open Sans', sans-serif;
+    margin-left: 10px;
+    font-weight: 500;
+}
+
+.mb-10{
+    margin-bottom: 15px;
 }
 
 .dropdown-item {
@@ -510,6 +523,14 @@ hr {
     width: 100%
 }
 
+.user-picture {
+    width: 28px;
+}
+
+.templates-details-label {
+    min-width: 70px;
+}
+
 .active-pill {
     border-radius: 90px;
     background-color: #d2ebd3;
@@ -622,21 +643,21 @@ body {
     width: 100%
 }
 
-.arrow-back{
+.arrow-back {
     width: 22px;
 }
 
-    .form-input:focus {
-        border: 3px solid #6f5cc4;
-        outline: none;
-    }
+.form-input:focus {
+    border: 3px solid #6f5cc4;
+    outline: none;
+}
 
-    .form-input::placeholder {
-        font-family: 'Open Sans', sans-serif;
-        font-weight: 500;
-        color: #a5a5a5;
-        font-size: 15px;
-    }
+.form-input::placeholder {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 500;
+    color: #a5a5a5;
+    font-size: 15px;
+}
 
 label {
     color: #5a6372;

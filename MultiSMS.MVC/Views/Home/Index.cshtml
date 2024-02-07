@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Home";
+    ViewData["Title"] = "MultiSMS";
 }
 
 <div class="modal fade" id="deleteEntityModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="deleteEntityModal" aria-hidden="true">
@@ -229,6 +229,49 @@
                     </form>
                 </div>
             </div>
+            <div class="templates-details-container options-container" style="display:none; ">
+                <div class="option-content">
+                    <div class="options-header">
+                        <div class="previous-page" style="flex:1;">
+                            <button class="violet-button" id="templates-details-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToTemplateList()">
+                                <span class="arrow-back" style="max-width:24px;"><img src="~/icons/previous.png" /></span>
+                                <span>Powrót</span>
+                            </button>
+                        </div>
+                        <div class="option-name" style="flex:auto; text-align:center;">
+                            <span class="opion-name-placeholder" id="template-details-window-title">Szablon</span>
+                        </div>
+                        <div style="flex:1;"></div>
+                    </div>
+                    <hr />
+                    <div class="template-details-content-container" style="padding: 10px 30px 30px 30px;">
+                        <div class="row mb-10">
+                            <div class="col d-flex">
+                                <label class="templates-details-label" for="TemplateId">Id:</label>
+                                <span class="details-span" id="TemplateId"></span>
+                            </div>
+                        </div>
+                        <div class="row mb-10">
+                            <div class="col d-flex">
+                                <label class="templates-details-label" for="TemplateName">Nazwa:</label>
+                                <span class="details-span" id="TemplateName"></span>
+                            </div>
+                        </div>
+                        <div class="row mb-10">
+                            <div class="col d-flex">
+                                <label class="templates-details-label" for="TemplateDescription">Opis:</label>
+                                <span class="details-span" id="TemplateDescription"></span>
+                            </div>
+                        </div>
+                        <div class="row mb-10">
+                            <div class="col d-flex">
+                                <label class="templates-details-label" for="TemplateContent">Treść:</label>
+                                <span class="details-span" id="TemplateContent"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="tab-pane" id="contacts">
             <div class="contacts-container">
@@ -319,7 +362,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col">
-                                            <label for="ContactPostalNumber">Kod pocztowy</label>
+                                            <label for="ContactPostalNumber" style="white-space: nowrap;">Kod pocztowy</label>
                                             <input type="text" class="form-input" id="ContactPostalNumber" pattern="[0-9]{2}-[0-9]{3}" maxlength="6">
                                         </div>
                                         <div class="col" style="flex-grow: 3;">
@@ -1470,8 +1513,10 @@
         $("#createOrEditButtonTemplates").removeAttr("data-id");
         $(".templates-list-container").show();
         $(".templates-options-container").hide();
+        $(".templates-details-container").hide();
         $(".template-options-form").removeAttr('id');
         $(".template-options-form :input").val('');
+        $(".templates-details-container .details-span").text("");
     }
 
     function GoBackToContactList() {
@@ -1565,6 +1610,21 @@
 
                 $('#deleteEntityModal').modal('hide');
             });
+        });
+
+        $(document).on('click', '.template-details', function (e) {
+            e.preventDefault();
+            var id = $(this).attr('href').split('-')[1];
+            var name = $(this).closest('tr').find('.template-name').text();
+            var description = $(this).closest('tr').find('.template-description').text();
+            var content = $(this).closest('tr').find('.template-content').text();
+
+            $("#TemplateId").text(id);
+            $("#TemplateName").text(name);
+            $("#TemplateDescription").text(description);
+            $("#TemplateContent").text(content);
+            $(".templates-list-container").hide();
+            $(".templates-details-container").show();
         });
 
         $(document).on('click', '.options-hidden', function (e) {
