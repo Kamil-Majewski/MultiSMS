@@ -1,4 +1,6 @@
-﻿namespace MultiSMS.Interface.Repositories.Interfaces
+﻿using MultiSMS.Interface.Entities;
+
+namespace MultiSMS.Interface.Repositories.Interfaces
 {
     public interface IEmployeeGroupRepository
     {
@@ -9,5 +11,6 @@
         IQueryable<string> GetAllGroupNamesForEmployeeQueryable(int employeeId);
         IQueryable<string> GetAllPhoneNumbersForGroupQueryable(int groupId);
         IQueryable<string> GetAllActiveEmployeesPhoneNumbersForGroupQueryable(int groupId);
+        IQueryable<Employee> GetAllEmployeesForGroupQueryable(int groupId);
     }
 }

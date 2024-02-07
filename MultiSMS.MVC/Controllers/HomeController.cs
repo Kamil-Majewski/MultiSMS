@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MultiSMS.BusinessLogic.DTO;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
@@ -466,6 +467,13 @@ namespace MultiSMS.MVC.Controllers
              );
 
             return Json(group.GroupName);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> GetAllEmployeesForGroup(int groupId)
+        {
+            return Json(await _employeeGroupRepository.GetAllEmployeesForGroupQueryable(groupId).ToListAsync());
         }
 
         [Authorize]

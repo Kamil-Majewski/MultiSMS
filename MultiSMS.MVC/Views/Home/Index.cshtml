@@ -705,8 +705,8 @@
                     </div>
                 </div>
             </div>
-            <div class="groups-details-container options-container" style="margin: 20px; /* display:none; */">
-                <div class="option-content">
+            <div class="groups-details-container options-container" style="margin: 20px; display:none;">
+                <div class="option-content" style="max-width: 600px;">
                     <div class="options-header">
                         <div class="previous-page" style="flex:1;">
                             <button class="violet-button" id="groups-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToGroupList()">
@@ -726,19 +726,19 @@
                             <div class="form-group" style="margin-top:20px;">
                                 <div class="row mb-10">
                                     <div class="col d-flex">
-                                        <label for="groupIdDetail">Id:</label>
+                                        <label class="groups-detail-label" for="groupIdDetail">Id:</label>
                                         <span class="details-span" id="groupIdDetail"></span>
                                     </div>
                                 </div>
                                 <div class="row mb-10">
                                     <div class="col d-flex">
-                                        <label for="groupNameDetail">Nazwa grupy:</label>
+                                        <label class="groups-detail-label" for="groupNameDetail">Nazwa grupy:</label>
                                         <span class="details-span" id="groupNameDetail"></span>
                                     </div>
                                 </div>
                                 <div class="row mb-10">
                                     <div class="col d-flex">
-                                        <label for="groupDescriptionDetail">Opis grupy:</label>
+                                        <label class="groups-detail-label" for="groupDescriptionDetail">Opis grupy:</label>
                                         <span class="details-span" id="groupDescriptionDetail"></span>
                                     </div>
                                 </div>
@@ -748,7 +748,7 @@
                         <div class="group-members-data" style="margin-top:20px;">
                             <span class="form-subtitle">Członkowie grupy</span>
                             <div class="form-group" style="margin-top:20px;">
-                                <div class="table-responsive" style="border: 3px solid #f0f1f1;">
+                                <div class="table-responsive" style="border: 2px solid #f0f1f1; max-height: 29vh;">
                                     <table class="group-members-list table table-borderless" id="group-detail-members-table">
                                         <thead>
                                             <tr>
@@ -1695,8 +1695,10 @@
     function GoBackToGroupList() {
         $(".group-options-form").removeAttr('id');
         $(".group-options-form :input").val('');
+        $(".groups-details-container .details-span").text("");
         $(".groups-options-container").hide();
         $(".groups-options-container-assign").hide();
+        $(".groups-details-container").hide();
         $(".groups-list-container").show();
     }
 
@@ -1789,6 +1791,49 @@
             $("#TemplateContent").text(content);
             $(".templates-list-container").hide();
             $(".templates-details-container").show();
+        });
+
+        $(document).on('click', '.group-details', function (e) {
+            e.preventDefault();
+            var id = $(this).attr('href').split('-')[1];
+            var name = $(this).closest('tr').find('.group-name').text();
+            var description = $(this).closest('tr').find('.group-description').text();
+
+            $("#groupIdDetail").text(id);
+            $("#groupNameDetail").text(name);
+            $("#groupDescriptionDetail").text(description);
+
+            $("#group-detail-members-table tbody").empty();
+
+            $.ajax({
+                url: '@Url.Action("GetAllEmployeesForGroup", "Home")',
+                type: 'GET',
+                contentType: 'application/json',
+                data: { groupId: id },
+                success: function (employeesList) {
+
+                    $.each(employeesList, function (index, employee) {
+
+                        var statusClass = employee.isActive ? 'active-pill' : 'inactive-pill';
+                        var statusText = employee.isActive ? 'Aktywny' : 'Nieaktywny';
+
+                        var newRow = `<tr>
+                        <td class="tiny-cell">${employee.name}</td>
+                        <td class="tiny-cell">${employee.surname}</td>
+                        <td class="small-cell">${employee.phoneNumber}</td>
+                        <td class="tiny-centered-cell"><span class="${statusClass}">${statusText}</span></td>
+                        </tr>`
+
+                        $("#group-detail-members-table tbody").append(newRow);
+                    });
+
+                    $(".groups-list-container").hide();
+                    $(".groups-details-container").show();
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
         });
 
         $(document).on('click', '.options-hidden', function (e) {

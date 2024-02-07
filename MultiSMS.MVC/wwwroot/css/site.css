@@ -352,7 +352,7 @@ html {
         padding: 4px 14px !important;
     }
 
-    .big-cell{
+    .big-cell {
         min-width: 220px !important;
     }
 }
@@ -366,13 +366,13 @@ hr {
 }
 
 .details-span {
-    color: #5a6372;
+    color: #252525;
     font-family: 'Open Sans', sans-serif;
     margin-left: 10px;
     font-weight: 500;
 }
 
-.mb-10{
+.mb-10 {
     margin-bottom: 15px;
 }
 
@@ -535,8 +535,12 @@ hr {
     min-width: 66px;
 }
 
-.contacts-detail-label{
+.contacts-detail-label {
     min-width: 202px;
+}
+
+.groups-detail-label {
+    min-width: 115px;
 }
 
 .active-pill {
@@ -818,11 +822,14 @@ label {
 }
 
 tbody {
-    color: #5a6372;
     font-family: 'Open Sans', sans-serif;
     font-weight: 500;
     font-size: 16px;
 }
+
+    tbody td {
+        color: #252525 !important;
+    }
 
 .table thead th {
     color: #99a1af;
