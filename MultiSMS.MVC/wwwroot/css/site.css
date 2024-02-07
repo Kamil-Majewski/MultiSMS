@@ -531,6 +531,10 @@ hr {
     min-width: 70px;
 }
 
+.contacts-detail-label{
+    min-width: 202px;
+}
+
 .active-pill {
     border-radius: 90px;
     background-color: #d2ebd3;

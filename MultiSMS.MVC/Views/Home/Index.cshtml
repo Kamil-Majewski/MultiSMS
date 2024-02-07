@@ -397,9 +397,103 @@
                                 </div>
                             </div>
                             <div class="justify-content-center d-flex" style="margin-top: 20px;">
-                                <button type="submit" class="violet-button" id="createOrEditButtonContacts"></button>
+                                <button type="submit" class="violet-button" id="createOrEditButtonContacts"></button>\
                             </div>
                         </form>
+                    </div>
+                </div>
+
+                <div class="contacts-details-container options-container" style="margin: 20px; display: none;">
+                    <div class="option-content" style="max-width: 600px;">
+                        <div class="options-header">
+                            <div class="previous-page" style="flex:1;">
+                                <button class="violet-button" id="contacts-details-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToContactList()">
+                                    <span class="arrow-back" style="max-width:24px;"><img src="/icons/previous.png"></span>
+                                    <span>Powrót</span>
+                                </button>
+                            </div>
+                            <div class="option-name" style="flex:auto; text-align:center;">
+                                <span class="opion-name-placeholder" id="contact-details-window-title">Kontakt</span>
+                            </div>
+                            <div style="flex:1;"></div>
+                        </div>
+                        <hr />
+                        <div class="contact-details-content-container" style="padding: 10px 30px 30px 30px;">
+                            <div class="personal-data" style="margin-bottom:20px;">
+                                <span class="form-subtitle">Dane Personalne</span>
+                                <div class="form-group" style="margin-top: 20px;">
+                                    <div class="row mb-10">
+                                        <div class="col d-flex">
+                                            <label class="contacts-detail-label" for="contactIdDetail">Id:</label>
+                                            <span class="details-span" id="contactIdDetail"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-10">
+                                        <div class="col d-flex">
+                                            <label class="contacts-detail-label" for="contactNameDetail">Imię:</label>
+                                            <span class="details-span" id="contactNameDetail"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-10">
+                                        <div class="col d-flex">
+                                            <label class="contacts-detail-label" for="contactSurnameDetail">Nazwisko:</label>
+                                            <span class="details-span" id="contactSurnameDetail"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-10">
+                                        <div class="col d-flex">
+                                            <label class="contacts-detail-label" for="contactEmailDetail">Email:</label>
+                                            <span class="details-span" id="contactEmailDetail"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="contact-data" style="margin-top:20px; margin-bottom:20px;">
+                                <span class="form-subtitle">Dane Kontaktowe</span>
+                                <div class="form-group" style="margin-top:20px;">
+                                    <div class="row mb-10">
+                                        <div class="col d-flex">
+                                            <label class="contacts-detail-label" for="contactPhoneNumberDetail">Numer telefonu:</label>
+                                            <span class="details-span" id="contactPhoneNumberDetail"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-10">
+                                        <div class="col d-flex">
+                                            <label class="contacts-detail-label" for="contactHQAddressDetail">Adres miejsca pracy:</label>
+                                            <span class="details-span" id="contactHQAddressDetail"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-10">
+                                        <div class="col d-flex">
+                                            <label class="contacts-detail-label" for="ContactPostalNumberDetail" style="white-space: nowrap;">Kod pocztowy:</label>
+                                           <span class="details-span" id="ContactPostalNumberDetail"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-10">
+                                        <div class="col d-flex">
+                                            <label class="contacts-detail-label" for="ContactCityDetail">Miasto:</label>
+                                            <span class="details-span" id="ContactCityDetail"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-10">
+                                        <div class="col d-flex">
+                                            <label class="contacts-detail-label" for="contactDepartmentDetail">Jednostka organizacyjna:</label>
+                                            <span class="details-span" id="contactDepartmentDetail"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="other-data" style="margin-top: 20px;">
+                                <div class="row mb-10">
+                                    <div class="col d-flex">
+                                        <label class="contacts-detail-label" for="contactStatusDetail">Status:</label>
+                                        <span class="details-span" id="contactStatusDetail"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="import-report-container list-container" style="display:none;">
@@ -1524,6 +1618,9 @@
         $(".contact-options-form :input[type='text']").val('');
         $(".contact-options-form :input[type='email']").val('');
         $(".contact-options-form :input[type='tel']").val('');
+        $(".contacts-details-container .details-span").text('');
+
+        $(".contacts-details-container").hide();
         $(".contacts-options-container").hide();
         $(".contacts-list-container").show();
     }
@@ -1643,6 +1740,47 @@
             $(".options-shown").addClass("options-hidden");
             $(".options-shown").removeClass("options-shown");
 
+        });
+
+        $(document).on('click', '.contact-details', function (e) {
+            e.preventDefault();
+
+            var id = $(this).attr('href').split('-')[1];
+
+            $.ajax({
+                url: '@Url.Action("GetContactById", "Home")',
+                type: 'GET',
+                contentType: 'application/json',
+                data: { id: id },
+                success: function (contactEntity) {
+
+                    var email = contactEntity.email;
+                    var hqAddress = contactEntity.hqAddres;
+                    var postalNumber = contactEntity.postalNumber;
+                    var city = contactEntity.city;
+                    var department = contactEntity.department;
+
+                    $("#contactIdDetail").text(id);
+                    $("#contactNameDetail").text(contactEntity.name);
+                    $("#contactSurnameDetail").text(contactEntity.surname);
+                    $("#contactEmailDetail").text((email == null || email == "") ? "Brak danych" : email);
+                    $("#contactPhoneNumberDetail").text(contactEntity.phoneNumber);
+                    $("#contactHQAddressDetail").text((hqAddress == null || hqAddress == "") ? "Brak danych" : hqAddress);
+                    $("#ContactPostalNumberDetail").text((postalNumber == null || postalNumber == "") ? "Brak danych" : postalNumber);
+                    $("#ContactCityDetail").text((city == null || city == "") ? "Brak danych" : city);
+                    $("#contactDepartmentDetail").text((department == null || department == "") ? "Brak danych" : department);
+                    $("#contactStatusDetail").text(contactEntity.isActive ? "Aktywny" : "Nieaktywny");
+
+                    $("#contactStatusDetail").text() == "Aktywny" ? $("#contactStatusDetail").css('color', '#018707') : $("#contactStatusDetail").css('color', '#df3b15');
+
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+
+            $(".contacts-list-container ").hide();
+            $(".contacts-details-container").show();
         });
 
         $(document).on('click', '.contact-delete', function (e) {
