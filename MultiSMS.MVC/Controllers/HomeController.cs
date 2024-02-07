@@ -353,8 +353,9 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> GetContactById(int id)
         {
-            var template = await _employeeRepository.GetByIdAsync(id);
-            return Json(template);
+            var contact = await _employeeRepository.GetByIdAsync(id);
+            contact.EmployeeGroupNames = _employeeGroupRepository.GetAllGroupNamesForEmployeeQueryable(id).ToList();
+            return Json(contact);
         }
 
         [Authorize]

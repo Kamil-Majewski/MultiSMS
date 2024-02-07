@@ -329,7 +329,7 @@ html {
     }
 
     .centered-cell {
-        min-width: 130px !important;
+        min-width: 135px !important;
     }
 
     .tiny-cell {
@@ -350,6 +350,10 @@ html {
 
     .error-pill {
         padding: 4px 14px !important;
+    }
+
+    .big-cell{
+        min-width: 220px !important;
     }
 }
 
@@ -528,7 +532,7 @@ hr {
 }
 
 .templates-details-label {
-    min-width: 70px;
+    min-width: 66px;
 }
 
 .contacts-detail-label{

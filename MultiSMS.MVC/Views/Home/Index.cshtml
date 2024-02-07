@@ -230,7 +230,7 @@
                 </div>
             </div>
             <div class="templates-details-container options-container" style="display:none; ">
-                <div class="option-content">
+                <div class="option-content" style="max-width:600px;">
                     <div class="options-header">
                         <div class="previous-page" style="flex:1;">
                             <button class="violet-button" id="templates-details-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToTemplateList()">
@@ -402,7 +402,6 @@
                         </form>
                     </div>
                 </div>
-
                 <div class="contacts-details-container options-container" style="margin: 20px; display: none;">
                     <div class="option-content" style="max-width: 600px;">
                         <div class="options-header">
@@ -486,6 +485,12 @@
                             </div>
                             <hr />
                             <div class="other-data" style="margin-top: 20px;">
+                                <div class="row mb-10">
+                                    <div class="col d-flex">
+                                        <label class="contacts-detail-label" for="contactGroupsDetail">Przypisane grupy:</label>
+                                        <span class="details-span" id="contactGroupsDetail"></span>
+                                    </div>
+                                </div>
                                 <div class="row mb-10">
                                     <div class="col d-flex">
                                         <label class="contacts-detail-label" for="contactStatusDetail">Status:</label>
@@ -697,6 +702,68 @@
                             <tbody>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+            <div class="groups-details-container options-container" style="margin: 20px; /* display:none; */">
+                <div class="option-content">
+                    <div class="options-header">
+                        <div class="previous-page" style="flex:1;">
+                            <button class="violet-button" id="groups-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToGroupList()">
+                                <span class="arrow-back" style="max-width:24px;"><img src="/icons/previous.png"></span>
+                                <span>Powrót</span>
+                            </button>
+                        </div>
+                        <div class="option-name" style="flex:auto; text-align:center;">
+                            <span class="opion-name-placeholder" id="group-details-window-title">Grupa</span>
+                        </div>
+                        <div style="flex:1;"></div>
+                    </div>
+                    <hr />
+                    <div class="groups-details-content-container" style="padding: 10px 30px 30px 30px;">
+                        <div class="group-data" style="margin-bottom:20px;">
+                            <span class="form-subtitle">Informacje</span>
+                            <div class="form-group" style="margin-top:20px;">
+                                <div class="row mb-10">
+                                    <div class="col d-flex">
+                                        <label for="groupIdDetail">Id:</label>
+                                        <span class="details-span" id="groupIdDetail"></span>
+                                    </div>
+                                </div>
+                                <div class="row mb-10">
+                                    <div class="col d-flex">
+                                        <label for="groupNameDetail">Nazwa grupy:</label>
+                                        <span class="details-span" id="groupNameDetail"></span>
+                                    </div>
+                                </div>
+                                <div class="row mb-10">
+                                    <div class="col d-flex">
+                                        <label for="groupDescriptionDetail">Opis grupy:</label>
+                                        <span class="details-span" id="groupDescriptionDetail"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="group-members-data" style="margin-top:20px;">
+                            <span class="form-subtitle">Członkowie grupy</span>
+                            <div class="form-group" style="margin-top:20px;">
+                                <div class="table-responsive" style="border: 3px solid #f0f1f1;">
+                                    <table class="group-members-list table table-borderless" id="group-detail-members-table">
+                                        <thead>
+                                            <tr>
+                                                <th class="tiny-cell">Imię</th>
+                                                <th class="tiny-cell">Nazwisko</th>
+                                                <th class="small-cell" style="width: 150px;">Numer telefonu</th>
+                                                <th class="tiny-centered-cell">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1759,6 +1826,7 @@
                     var postalNumber = contactEntity.postalNumber;
                     var city = contactEntity.city;
                     var department = contactEntity.department;
+                    var groupNames = contactEntity.employeeGroupNames;
 
                     $("#contactIdDetail").text(id);
                     $("#contactNameDetail").text(contactEntity.name);
@@ -1770,17 +1838,18 @@
                     $("#ContactCityDetail").text((city == null || city == "") ? "Brak danych" : city);
                     $("#contactDepartmentDetail").text((department == null || department == "") ? "Brak danych" : department);
                     $("#contactStatusDetail").text(contactEntity.isActive ? "Aktywny" : "Nieaktywny");
+                    $("#contactGroupsDetail").text(groupNames.length == 0 ? "Nie przypisano" : groupNames.join(', '));
 
                     $("#contactStatusDetail").text() == "Aktywny" ? $("#contactStatusDetail").css('color', '#018707') : $("#contactStatusDetail").css('color', '#df3b15');
+
+                    $(".contacts-list-container ").hide();
+                    $(".contacts-details-container").show();
 
                 },
                 error: function (error) {
                     console.error(error);
                 }
             });
-
-            $(".contacts-list-container ").hide();
-            $(".contacts-details-container").show();
         });
 
         $(document).on('click', '.contact-delete', function (e) {
