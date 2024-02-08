@@ -947,6 +947,7 @@
                     $("#send-sms-form :input").val('');
                     document.getElementById('sms-text-symbol-counter').innerHTML = "";
                     $("#GroupOfContacts").removeAttr("data-id");
+                    $(".input-icons").hide();
 
                 }
             },
@@ -1181,6 +1182,39 @@
                 console.error("Export has failed");
             }
         });
+    }
+
+    function HandleTemplateTypeLog(templateEntity){
+
+        var relatedObjects =
+            `<div class="row mb-10">
+                <div class="col d-flex">
+                    <label class="logs-detail-label" for="logTemplate-TemplateIdDetail">Id:</label>
+                        <span class="details-span" id="logTemplate-TemplateIdDetail">${templateEntity.templateId}</span>
+                </div>
+             </div>
+            <div class="row mb-10">
+                <div class="col d-flex">
+                    <label class="logs-detail-label" for="logTemplate-TemplateNameDetail">Nazwa:</label>
+                    <span class="details-span" id="logTemplate-TemplateNameDetail">${templateEntity.templateName}</span>
+                </div>
+            </div>
+            <div class="row mb-10">
+                <div class="col d-flex">
+                    <label class="logs-detail-label" for="logTemplate-TemplateDescriptionDetail">Opis:</label>
+                            <span class="details-span" id="logTemplate-TemplateDescriptionDetail">${templateEntity.templateDescription == null ? "Brak opisu" : templateEntity.templateDescription}</span>
+                </div>
+            </div>
+            <div class="row mb-10">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logTemplate-TemplateContentDetail">Treść:</label>
+                                <span class="details-span" id="logTemplate-TemplateContentDetail">${templateEntity.templateContent}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        $("#log-related-objects-data-form-group").append(relatedObjects);
     }
 
     function SanitizePolishSymbols(inputId) {
@@ -1943,7 +1977,7 @@
 
 
                     if (logEntity.type == "Template") {
-                        HandleTemplateTypeLog(logEntity);
+                        HandleTemplateTypeLog(logEntity.template);
                     }
                     else if (logEntity.type == "Contact") {
                         HandleContactTypeLog(logEntity);

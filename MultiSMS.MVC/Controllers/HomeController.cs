@@ -572,7 +572,6 @@ namespace MultiSMS.MVC.Controllers
 
             switch (log.LogSource)
             {
-
                 case "Szablony":
                     var template = JsonConvert.DeserializeObject<SMSMessageTemplate>(logRelatedObjects["Templates"]);
                     return Json(new { Type = "Template", Template = template, Log = logSanitized, LogCreator = logCreator });
@@ -592,14 +591,14 @@ namespace MultiSMS.MVC.Controllers
                     }
                 case "SMS":
                     var smsDto = JsonConvert.DeserializeObject<SMSMessage>(logRelatedObjects["SmsMessages"]);
-                    try
+                    if(smsDto!.ChosenGroupId == 0)
+                    {
+                        return Json(new { Type = "SMS-NoGroup", Sms = smsDto, Log = logSanitized, LogCreator = logCreator });
+                    }
+                    else
                     {
                         var chosenGroup = JsonConvert.DeserializeObject<Group>(logRelatedObjects["Groups"]);
                         return Json(new { Type = "SMS-Group", Sms = smsDto, Group = chosenGroup, Log = logSanitized, LogCreator = logCreator });
-                    }
-                    catch (Exception)
-                    {
-                        return Json(new { Type = "SMS-NoGroup", Sms = smsDto, Log = logSanitized, LogCreator = logCreator });
                     }
                 case "Import":
                     var importDto = JsonConvert.DeserializeObject<ImportResult>(logRelatedObjects["Imports"]);
