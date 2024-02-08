@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
-using MultiSMS.BusinessLogic.DTO;
+using MultiSMS.Interface.Entities;
 
 namespace MultiSMS.BusinessLogic.Services.Interfaces
 {
     public interface IImportExportEmployeesService
     {
         string ExportContactsExcel();
-        Task<ImportResultDTO> ImportContactsAsync(IFormFile file);
-        Task<ImportResultDTO> ImportContactsCsvByTypeAsync(IFormFile file, string type);
+        Task<ImportResult> ImportContactsAsync(IFormFile file);
+        Task<ImportResult> ImportContactsCsvByTypeAsync(IFormFile file, string type);
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MultiSMS.Interface.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class LogsRework : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -101,30 +101,11 @@ namespace MultiSMS.Interface.Migrations
                     LogCreator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LogCreatorId = table.Column<int>(type: "int", nullable: false),
                     LogCreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LogRelatedObjectsDictionarySerialized = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    LogRelatedObjectsDictionarySerialized = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Logs", x => x.LogId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "SMSMessages",
-                columns: table => new
-                {
-                    SMSId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IssuerId = table.Column<int>(type: "int", nullable: false),
-                    ChosenGroupId = table.Column<int>(type: "int", nullable: false),
-                    AdditionalPhoneNumbers = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    MessageSentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AdditionalInformation = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DataDictionarySerialized = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ServerResponseSerialized = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SMSMessages", x => x.SMSId);
                 });
 
             migrationBuilder.CreateTable(
@@ -275,7 +256,7 @@ namespace MultiSMS.Interface.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "Surname", "TwoFactorEnabled", "UserName" },
-                values: new object[] { 1, 0, "", "gigaadmin@gmail.com", false, false, null, "Giga", "GIGAADMIN@GMAIL.COM", "GIGAADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAEGwKrUXc/sL0IW2E5+vXha2eJygeuYWXgP2Oaz360KqMwjNAB3juPbPWHOO7t8Y0lQ==", null, false, "TNBCLGFCJYR5XXCWQ6H3QE654HLJRIFN", "Admin", false, "gigaadmin@gmail.com" });
+                values: new object[] { 1, 0, "", "gigaadmin@gmail.com", false, false, null, "Giga", "GIGAADMIN@GMAIL.COM", "GIGAADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAEG3c32It8qfqxm0jnDOIe1qmSMVMx2w2vyD++8VaR0dIsLtUXPAOiXYBXEmr/tVgpQ==", null, false, "VXXZSLL7H62O4WLQJV4TRMS5X25QG24W", "Admin", false, "gigaadmin@gmail.com" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -345,9 +326,6 @@ namespace MultiSMS.Interface.Migrations
 
             migrationBuilder.DropTable(
                 name: "Logs");
-
-            migrationBuilder.DropTable(
-                name: "SMSMessages");
 
             migrationBuilder.DropTable(
                 name: "SMSMessageTemplates");

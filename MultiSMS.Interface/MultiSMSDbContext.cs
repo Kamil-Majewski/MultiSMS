@@ -13,9 +13,7 @@ namespace MultiSMS.Interface
         public virtual DbSet<Group> Groups { get; set; }
         public virtual DbSet<SMSMessageTemplate> SMSMessageTemplates { get; set; }
         public virtual DbSet<Log> Logs { get; set; }
-        public virtual DbSet<SMSMessage > SMSMessages { get; set; }
         public virtual DbSet<EmployeeGroup> EmployeeGroups { get; set; }
-        public virtual DbSet<ImportResult> Imports { get; set; }
 
         public MultiSMSDbContext(DbContextOptions options) : base(options)
         {

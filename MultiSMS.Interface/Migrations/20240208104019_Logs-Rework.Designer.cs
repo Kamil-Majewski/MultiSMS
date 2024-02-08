@@ -12,8 +12,8 @@ using MultiSMS.Interface;
 namespace MultiSMS.Interface.Migrations
 {
     [DbContext(typeof(MultiSMSDbContext))]
-    [Migration("20240126091742_Init")]
-    partial class Init
+    [Migration("20240208104019_Logs-Rework")]
+    partial class LogsRework
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -249,9 +249,9 @@ namespace MultiSMS.Interface.Migrations
                             Name = "Giga",
                             NormalizedEmail = "GIGAADMIN@GMAIL.COM",
                             NormalizedUserName = "GIGAADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGwKrUXc/sL0IW2E5+vXha2eJygeuYWXgP2Oaz360KqMwjNAB3juPbPWHOO7t8Y0lQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEG3c32It8qfqxm0jnDOIe1qmSMVMx2w2vyD++8VaR0dIsLtUXPAOiXYBXEmr/tVgpQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "TNBCLGFCJYR5XXCWQ6H3QE654HLJRIFN",
+                            SecurityStamp = "VXXZSLL7H62O4WLQJV4TRMS5X25QG24W",
                             Surname = "Admin",
                             TwoFactorEnabled = false,
                             UserName = "gigaadmin@gmail.com"
@@ -359,6 +359,7 @@ namespace MultiSMS.Interface.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LogRelatedObjectsDictionarySerialized")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LogSource")
@@ -372,42 +373,6 @@ namespace MultiSMS.Interface.Migrations
                     b.HasKey("LogId");
 
                     b.ToTable("Logs");
-                });
-
-            modelBuilder.Entity("MultiSMS.Interface.Entities.SMSMessage", b =>
-                {
-                    b.Property<int>("SMSId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SMSId"));
-
-                    b.Property<string>("AdditionalInformation")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AdditionalPhoneNumbers")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ChosenGroupId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DataDictionarySerialized")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("IssuerId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("MessageSentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ServerResponseSerialized")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("SMSId");
-
-                    b.ToTable("SMSMessages");
                 });
 
             modelBuilder.Entity("MultiSMS.Interface.Entities.SMSMessageTemplate", b =>

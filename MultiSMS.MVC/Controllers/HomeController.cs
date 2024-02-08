@@ -17,13 +17,11 @@ namespace MultiSMS.MVC.Controllers
         private readonly IAdministratorService _administratorService;
         private readonly IImportExportEmployeesService _ieService;
         private readonly ISMSMessageTemplateRepository _smsTemplateRepository;
-        private readonly ISMSMessageService _smsMessageService;
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IGroupRepository _groupRepository;
         private readonly IEmployeeGroupRepository _employeeGroupRepository;
         private readonly ILogRepository _logRepository;
-        private readonly IImportResultService _importResultService;
-        public HomeController(ISMSMessageTemplateRepository smsTemplateRepository, IEmployeeRepository employeeRepository, IGroupRepository groupRepository, IEmployeeGroupRepository employeeGroupRepository, ILogRepository logRepository, IAdministratorService administratorService, IImportExportEmployeesService ieService, IImportResultService importResultService, ISMSMessageService smsMessageService)
+        public HomeController(ISMSMessageTemplateRepository smsTemplateRepository, IEmployeeRepository employeeRepository, IGroupRepository groupRepository, IEmployeeGroupRepository employeeGroupRepository, ILogRepository logRepository, IAdministratorService administratorService, IImportExportEmployeesService ieService)
         {
             _smsTemplateRepository = smsTemplateRepository;
             _employeeRepository = employeeRepository;
@@ -32,8 +30,6 @@ namespace MultiSMS.MVC.Controllers
             _logRepository = logRepository;
             _administratorService = administratorService;
             _ieService = ieService;
-            _importResultService = importResultService;
-            _smsMessageService = smsMessageService;
         }
 
         [Authorize]
@@ -47,7 +43,8 @@ namespace MultiSMS.MVC.Controllers
         public async Task AddUserToGroup(int groupId, int employeeId)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var adminUserName = User.GetLoggedInUserName();
+            var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);            
+
             var employee = await _employeeRepository.GetByIdAsync(employeeId);
             var group = await _groupRepository.GetByIdAsync(groupId);
 
@@ -60,11 +57,12 @@ namespace MultiSMS.MVC.Controllers
                     LogSource = "Grupy",
                     LogMessage = $"{employee.Name} {employee.Surname} został dodany do grupy {group.GroupName}",
                     LogCreatorId = adminId,
-                    LogCreator = adminUserName,
-                    LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, int>
+                    LogCreator = admin.UserName,
+                    LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>
                     {
-                        {"Employees", employeeId },
-                        {"Groups", groupId }
+                        {"Employees", JsonConvert.SerializeObject(employee) },
+                        {"Groups", JsonConvert.SerializeObject(new {GroupId = group.GroupId, GroupName = group.GroupName, GroupDescription = group.GroupDescription}) },
+                        {"Creator", JsonConvert.SerializeObject(admin) }
 
                     })
                 }
@@ -76,7 +74,8 @@ namespace MultiSMS.MVC.Controllers
         public async Task RemoveUserFromGroup(int groupId, int employeeId)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var adminUserName = User.GetLoggedInUserName();
+            var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
+
             var employee = await _employeeRepository.GetByIdAsync(employeeId);
             var group = await _groupRepository.GetByIdAsync(groupId);
 
@@ -89,11 +88,12 @@ namespace MultiSMS.MVC.Controllers
                     LogSource = "Grupy",
                     LogMessage = $"{employee.Name} {employee.Surname} został usunięty z grupy {group.GroupName}",
                     LogCreatorId = adminId,
-                    LogCreator = adminUserName,
-                    LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, int>
+                    LogCreator = admin.UserName,
+                    LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>
                     {
-                        {"Employees", employeeId },
-                        {"Groups", groupId }
+                        {"Employees", JsonConvert.SerializeObject(employee) },
+                        {"Groups", JsonConvert.SerializeObject(group) },
+                        {"Creator", JsonConvert.SerializeObject(admin) }
                     })
                 }
             );
@@ -105,7 +105,7 @@ namespace MultiSMS.MVC.Controllers
         {
 
             var adminId = User.GetLoggedInUserId<int>();
-            var adminUserName = User.GetLoggedInUserName();
+            var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
 
             var template = new SMSMessageTemplate() { TemplateName = templateName, TemplateDescription = templateDescription, TemplateContent = templateContent };
             var addedTemplate = await _smsTemplateRepository.AddEntityToDatabaseAsync(template);
@@ -116,11 +116,12 @@ namespace MultiSMS.MVC.Controllers
                     LogType = "Info",
                     LogSource = "Szablony",
                     LogMessage = $"Szablon {addedTemplate.TemplateName} został utworzony",
-                    LogCreator = adminUserName,
+                    LogCreator = admin.UserName,
                     LogCreatorId = adminId,
-                    LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, int>
+                    LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>
                     {
-                        { "Templates", template.TemplateId }
+                        {"Templates", JsonConvert.SerializeObject(addedTemplate) },
+                        {"Creator", JsonConvert.SerializeObject(admin) }
                     })
                 }
             ); 
@@ -133,7 +134,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> CreateNewContact(string contactName, string contactSurname, string email, string phone, string address, string zip, string city, string department, string isActive)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var adminUserName = User.GetLoggedInUserName();
+            var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
 
             bool activeValue = isActive == "yes" ? true : false;
 
@@ -157,11 +158,12 @@ namespace MultiSMS.MVC.Controllers
                       LogType = "Info",
                       LogSource = "Kontakty",
                       LogMessage = $"Kontakt {addedContact.Name} {addedContact.Surname} został utworzony",
-                      LogCreator = adminUserName,
+                      LogCreator = admin.UserName,
                       LogCreatorId = adminId,
-                      LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, int>
+                      LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>
                       {
-                        { "Employees", addedContact.EmployeeId }
+                        {"Employees", JsonConvert.SerializeObject(addedContact) },
+                        {"Creator", JsonConvert.SerializeObject(admin) }
                       })
 
                   }
@@ -175,7 +177,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> CreateNewGroup(string groupName, string groupDescription)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var adminUserName = User.GetLoggedInUserName();
+            var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
 
             var group = new Group() { GroupName = groupName, GroupDescription = groupDescription };
             var addedGroup =  await _groupRepository.AddEntityToDatabaseAsync(group);
@@ -186,11 +188,12 @@ namespace MultiSMS.MVC.Controllers
                      LogType = "Info",
                      LogSource = "Grupy",
                      LogMessage = $"Grupa {addedGroup.GroupName} została utworzona",
-                     LogCreator = adminUserName,
+                     LogCreator = admin.UserName,
                      LogCreatorId = adminId,
-                     LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, int>
+                     LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>
                      {
-                        { "Groups", addedGroup.GroupId}
+                        {"Groups", JsonConvert.SerializeObject(addedGroup) },
+                        {"Creator", JsonConvert.SerializeObject(admin) }
                      })
 
                  }
@@ -205,34 +208,23 @@ namespace MultiSMS.MVC.Controllers
         {
 
             var adminId = User.GetLoggedInUserId<int>();
-            var adminUserName = User.GetLoggedInUserName();
+            var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
 
             if (file == null || file.Length == 0)
             {
                 return BadRequest("Invalid file");
             }
 
-            ImportResultDTO importResultDto = await _ieService.ImportContactsAsync(file);
+            ImportResult importResultDto = await _ieService.ImportContactsAsync(file);
 
-            var importResultObjectInDb = await _importResultService.AddEntityToDatabaseAsync(new ImportResult
-            {
-                ImportStatus = importResultDto.ImportStatus,
-                ImportMessage = importResultDto.ImportMessage,
-                AddedEmployeesSerialized = JsonConvert.SerializeObject(importResultDto.AddedEmployees),
-                RepeatedEmployeesSerialized = JsonConvert.SerializeObject(importResultDto.RepeatedEmployees),
-                InvalidEmployeesSerialized = JsonConvert.SerializeObject(importResultDto.InvalidEmployees),
-                NonExistantGroupIdsSerialized = JsonConvert.SerializeObject(importResultDto.NonExistantGroupIds)
-            });
-
-
-            var status = importResultObjectInDb.ImportStatus;
+            var status = importResultDto.ImportStatus;
             string logMessage;
             string logType;
-            string logRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, int>
+            string logRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>
                      {
-                        { "Imports", importResultObjectInDb.ImportId}
+                        {"Imports", JsonConvert.SerializeObject(importResultDto) },
+                        {"Creator", JsonConvert.SerializeObject(admin) }
                      });
-
 
             if (status == "Success")
             {
@@ -259,7 +251,7 @@ namespace MultiSMS.MVC.Controllers
                      LogType = logType,
                      LogSource = "Import",
                      LogMessage = logMessage,
-                     LogCreator = adminUserName,
+                     LogCreator = admin.UserName,
                      LogCreatorId = adminId,
                      LogRelatedObjectsDictionarySerialized = logRelatedObjectsDictionarySerialized
                  }
@@ -372,7 +364,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> EditTemplate(int id, string name, string description, string content)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var adminUserName = User.GetLoggedInUserName();
+            var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
 
             var template = new SMSMessageTemplate { TemplateId = id, TemplateName = name, TemplateDescription = description, TemplateContent = content};
             
@@ -384,11 +376,12 @@ namespace MultiSMS.MVC.Controllers
                      LogType = "Info",
                      LogSource = "Szablony",
                      LogMessage = $"Szablon {editedTemplate.TemplateName} został zedytowany",
-                     LogCreator = adminUserName,
+                     LogCreator = admin.UserName,
                      LogCreatorId = adminId,
-                     LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, int>
+                     LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>
                      {
-                        { "Templates", editedTemplate.TemplateId}
+                        {"Templates", JsonConvert.SerializeObject(editedTemplate) },
+                        {"Creator", JsonConvert.SerializeObject(admin) }
                      })
 
                  }
@@ -402,7 +395,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> EditContact(int contactId, string contactName, string contactSurname, string email, string phone, string address, string zip, string city, string department, string isActive)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var adminUserName = User.GetLoggedInUserName();
+            var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
 
             bool activeValue = isActive == "yes" ? true : false;
 
@@ -427,11 +420,12 @@ namespace MultiSMS.MVC.Controllers
                      LogType = "Info",
                      LogSource = "Kontakty",
                      LogMessage = $"Kontakt {editedContact.Name} {editedContact.Surname} został zedytowany",
-                     LogCreator = adminUserName,
+                     LogCreator = admin.UserName,
                      LogCreatorId = adminId,
-                     LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, int>
+                     LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>
                      {
-                        { "Employees", editedContact.EmployeeId}
+                        {"Employees", JsonConvert.SerializeObject(editedContact) },
+                        {"Creator", JsonConvert.SerializeObject(admin) }
                      })
 
                  }
@@ -445,7 +439,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> EditGroup(int id, string name, string description)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var adminUserName = User.GetLoggedInUserName();
+            var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
 
             var group = new Group { GroupId = id, GroupName = name, GroupDescription = description};
 
@@ -456,11 +450,12 @@ namespace MultiSMS.MVC.Controllers
                      LogType = "Info",
                      LogSource = "Grupy",
                      LogMessage = $"Grupa {editedGroup.GroupName} została zedytowana",
-                     LogCreator = adminUserName,
+                     LogCreator = admin.UserName,
                      LogCreatorId = adminId,
-                     LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject( new Dictionary<string, int>
+                     LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject( new Dictionary<string, string>
                      {
-                         {"Groups", editedGroup.GroupId}
+                         {"Groups", JsonConvert.SerializeObject(editedGroup) },
+                         {"Creator", JsonConvert.SerializeObject(admin) }
                      })
                  }
              );
@@ -480,7 +475,8 @@ namespace MultiSMS.MVC.Controllers
         public async Task DeleteTemplate(int id)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var adminUserName = User.GetLoggedInUserName();
+            var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
+
             var template = await _smsTemplateRepository.GetByIdAsync(id);
             await _logRepository.AddEntityToDatabaseAsync(
                 new Log
@@ -488,8 +484,14 @@ namespace MultiSMS.MVC.Controllers
                     LogType = "Info",
                     LogSource = "Szablony",
                     LogMessage = $"Szablon {template.TemplateName} został usunięty",
-                    LogCreator = adminUserName,
+                    LogCreator = admin.UserName,
                     LogCreatorId = adminId,
+                    LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>
+                    {
+                         {"Templates", JsonConvert.SerializeObject(template) },
+                         {"Creator", JsonConvert.SerializeObject(admin) }
+                    })
+
                 }
             );
 
@@ -501,16 +503,22 @@ namespace MultiSMS.MVC.Controllers
         public async Task DeleteContact(int id)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var adminUserName = User.GetLoggedInUserName();
+            var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
+
             var contact = await _employeeRepository.GetByIdAsync(id);
             await _logRepository.AddEntityToDatabaseAsync(
                new Log
                {
                    LogType = "Info",
                    LogSource = "Kontakty",
-                   LogMessage = $"Kontakt {contact.Name} {contact.Surname} ({contact.PhoneNumber}) został usunięty",
-                   LogCreator = adminUserName,
+                   LogMessage = $"Kontakt {contact.Name} {contact.Surname} został usunięty",
+                   LogCreator = admin.UserName,
                    LogCreatorId = adminId,
+                   LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>
+                   {
+                         {"Employees", JsonConvert.SerializeObject(contact) },
+                         {"Creator", JsonConvert.SerializeObject(admin) }
+                   })
                }
            );
             await _employeeRepository.DeleteEntityAsync(id);
@@ -521,7 +529,8 @@ namespace MultiSMS.MVC.Controllers
         public async Task DeleteGroup(int id)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var adminUserName = User.GetLoggedInUserName();
+            var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
+
             var group = await _groupRepository.GetByIdAsync(id);
             await _logRepository.AddEntityToDatabaseAsync(
                new Log
@@ -529,8 +538,13 @@ namespace MultiSMS.MVC.Controllers
                    LogType = "Info",
                    LogSource = "Grupy",
                    LogMessage = $"Grupa {group.GroupName} została usunięta",
-                   LogCreator = adminUserName,
+                   LogCreator = admin.UserName,
                    LogCreatorId = adminId,
+                   LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>
+                   {
+                         {"Groups", JsonConvert.SerializeObject(group) },
+                         {"Creator", JsonConvert.SerializeObject(admin) }
+                   })
                }
            );
             await _groupRepository.DeleteEntityAsync(id);
@@ -540,42 +554,36 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> GetLog(int logId)
         {
-            Dictionary<string, int> logRelatedObjects;
+            Dictionary<string, string> logRelatedObjects;
 
             var log = await _logRepository.GetByIdAsync(logId);
-            var logSanitized = new { LogType = log.LogType, LogSource = log.LogSource, LogMessage = log.LogMessage, LogCreationDate = log.LogCreationDate };
-            var logCreator = await _administratorService.GetAdministratorDtoByIdAsync(log.LogCreatorId);
+            var logSanitized = new { LogType = log.LogType, LogSource = log.LogSource, LogMessage = log.LogMessage, LogCreationDate = log.LogCreationDate };            
 
             if (log.LogRelatedObjectsDictionarySerialized == null)
             {
-                
-                if (log.LogSource == "Szablony" || log.LogSource == "Kontakty" || log.LogSource == "Grupy")
-                {
-                    return Json(new { Type = "Entity-Delete", Log = logSanitized, LogCreator = logCreator });
-                }
-                else
-                {
-                    throw new Exception("Error: LogRelatedObjects is null where it shouldn't be");
-                }
+                throw new Exception("Error: LogRelatedObjects is null where it shouldn't be");
             }
             else
             {
-                logRelatedObjects = JsonConvert.DeserializeObject<Dictionary<string, int>>(log.LogRelatedObjectsDictionarySerialized)!;
+                logRelatedObjects = JsonConvert.DeserializeObject<Dictionary<string, string>>(log.LogRelatedObjectsDictionarySerialized)!;
             }
-            
+
+            var logCreator = JsonConvert.DeserializeObject<AdministratorDTO>(logRelatedObjects["Creator"]);
+
             switch (log.LogSource)
             {
+
                 case "Szablony":
-                    var template = await _smsTemplateRepository.GetByIdAsync(logRelatedObjects["Templates"]);
+                    var template = JsonConvert.DeserializeObject<SMSMessageTemplate>(logRelatedObjects["Templates"]);
                     return Json(new { Type = "Template", Template = template, Log = logSanitized, LogCreator = logCreator });
                 case "Kontakty":
-                    var employee = await _employeeRepository.GetByIdAsync(logRelatedObjects["Employees"]);
+                    var employee = JsonConvert.DeserializeObject<Employee>(logRelatedObjects["Employees"]);
                     return Json(new { Type = "Contact", Contact = employee, Log = logSanitized, LogCreator = logCreator });
                 case "Grupy":
-                    var group = await _groupRepository.GetByIdAsync(logRelatedObjects["Groups"]);
+                    var group = JsonConvert.DeserializeObject<Group>(logRelatedObjects["Groups"]);
                     try
                     {
-                        var addedEmployee = await _employeeRepository.GetByIdAsync(logRelatedObjects["Employees"]);
+                        var addedEmployee = JsonConvert.DeserializeObject<Employee>(logRelatedObjects["Employees"]);
                         return Json(new { Type = "Groups-Assign", Group = group, Contact = addedEmployee, Log = logSanitized, LogCreator = logCreator });
                     }
                     catch (Exception)
@@ -583,10 +591,10 @@ namespace MultiSMS.MVC.Controllers
                         return Json(new { Type = "Groups", Group = group, Log = logSanitized, LogCreator = logCreator });
                     }
                 case "SMS":
-                    var smsDto = await _smsMessageService.GetSmsMessageDtoById(logRelatedObjects["SmsMessages"]);
+                    var smsDto = JsonConvert.DeserializeObject<SMSMessage>(logRelatedObjects["SmsMessages"]);
                     try
                     {
-                        var chosenGroup = await _groupRepository.GetByIdAsync(logRelatedObjects["Groups"]);
+                        var chosenGroup = JsonConvert.DeserializeObject<Group>(logRelatedObjects["Groups"]);
                         return Json(new { Type = "SMS-Group", Sms = smsDto, Group = chosenGroup, Log = logSanitized, LogCreator = logCreator });
                     }
                     catch (Exception)
@@ -594,7 +602,7 @@ namespace MultiSMS.MVC.Controllers
                         return Json(new { Type = "SMS-NoGroup", Sms = smsDto, Log = logSanitized, LogCreator = logCreator });
                     }
                 case "Import":
-                    var importDto = await _importResultService.GetImportResultDtoByIdAsync(logRelatedObjects["Imports"]);
+                    var importDto = JsonConvert.DeserializeObject<ImportResult>(logRelatedObjects["Imports"]);
                     return Json(new { Type = "Import", Import = importDto, Log = logSanitized, LogCreator = logCreator });
                 default:
                     throw new Exception("Unknown case of log source");

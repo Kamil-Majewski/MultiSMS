@@ -246,9 +246,9 @@ namespace MultiSMS.Interface.Migrations
                             Name = "Giga",
                             NormalizedEmail = "GIGAADMIN@GMAIL.COM",
                             NormalizedUserName = "GIGAADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEnMhlKHlSb0yZlOas5jY4h+as1Je1Dt0EcWEgDt+rKSMjHQPFWf+BACzdqmg51X5g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEG3c32It8qfqxm0jnDOIe1qmSMVMx2w2vyD++8VaR0dIsLtUXPAOiXYBXEmr/tVgpQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "RJWDQFKUESWKVBKOH67VZ6HC2NJ2NIVV",
+                            SecurityStamp = "VXXZSLL7H62O4WLQJV4TRMS5X25QG24W",
                             Surname = "Admin",
                             TwoFactorEnabled = false,
                             UserName = "gigaadmin@gmail.com"
@@ -333,39 +333,6 @@ namespace MultiSMS.Interface.Migrations
                     b.ToTable("Groups");
                 });
 
-            modelBuilder.Entity("MultiSMS.Interface.Entities.ImportResult", b =>
-                {
-                    b.Property<int>("ImportId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ImportId"));
-
-                    b.Property<string>("AddedEmployeesSerialized")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImportMessage")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImportStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("InvalidEmployeesSerialized")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NonExistantGroupIdsSerialized")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RepeatedEmployeesSerialized")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ImportId");
-
-                    b.ToTable("Imports");
-                });
-
             modelBuilder.Entity("MultiSMS.Interface.Entities.Log", b =>
                 {
                     b.Property<int>("LogId")
@@ -389,6 +356,7 @@ namespace MultiSMS.Interface.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LogRelatedObjectsDictionarySerialized")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LogSource")
@@ -402,42 +370,6 @@ namespace MultiSMS.Interface.Migrations
                     b.HasKey("LogId");
 
                     b.ToTable("Logs");
-                });
-
-            modelBuilder.Entity("MultiSMS.Interface.Entities.SMSMessage", b =>
-                {
-                    b.Property<int>("SMSId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SMSId"));
-
-                    b.Property<string>("AdditionalInformation")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AdditionalPhoneNumbers")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ChosenGroupId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DataDictionarySerialized")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("IssuerId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("MessageSentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ServerResponseSerialized")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("SMSId");
-
-                    b.ToTable("SMSMessages");
                 });
 
             modelBuilder.Entity("MultiSMS.Interface.Entities.SMSMessageTemplate", b =>

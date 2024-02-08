@@ -12,16 +12,18 @@ namespace MultiSMS.MVC.Controllers
     public class ServerSmsApiController : Controller
     {
         private readonly IServerSmsService _smsService;
-        private readonly ISMSMessageRepository _smsRepository;
         private readonly ILogRepository _logRepository;
         private readonly IEmployeeGroupRepository _employeeGroupRepository;
+        private readonly IAdministratorService _administratorService;
+        private readonly IGroupRepository _groupRepository;
 
-        public ServerSmsApiController(IServerSmsService smsService, ISMSMessageRepository smsRepository, ILogRepository logRepository, IEmployeeGroupRepository employeeGroupRepository)
+        public ServerSmsApiController(IServerSmsService smsService, ILogRepository logRepository, IEmployeeGroupRepository employeeGroupRepository, IAdministratorService administratorService, IGroupRepository groupRepository)
         {
             _smsService = smsService;
-            _smsRepository = smsRepository;
             _logRepository = logRepository;
             _employeeGroupRepository = employeeGroupRepository;
+            _administratorService = administratorService;
+            _groupRepository = groupRepository;
         }
 
         [Authorize]
@@ -29,7 +31,14 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> SendSmsMessage(string text, int chosenGroupId, string chosenGroupName, string additionalPhoneNumbers, string additionalInfo)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var adminUsername = User.GetLoggedInUserName();
+            var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
+
+            Group chosenGroup = new Group();
+
+            if (chosenGroupId > 0)
+            {
+                chosenGroup = await _groupRepository.GetByIdAsync(chosenGroupId);
+            }
             
             var groupPhoneNumbers = _employeeGroupRepository.GetAllActiveEmployeesPhoneNumbersForGroupQueryable(chosenGroupId).ToList();
 
@@ -45,31 +54,19 @@ namespace MultiSMS.MVC.Controllers
 
             var data = new Dictionary<string, string>();
 
-            var dataForSmsEntity = new Dictionary<string, string>
-            {
-                {"details", "true"},
-                {"speed", "1"},
-                {"test", "true" }
-            };
-
-
             var phoneNumbersString = string.Join(',', groupPhoneNumbers);
 
             var response = await _smsService.SendSmsAsync(phoneNumbersString, text, data); //Call API
 
-            dataForSmsEntity.Add("phone", phoneNumbersString);
-            dataForSmsEntity.Add("text", text);
-            dataForSmsEntity.Add("sender", "Toruń WOL");
-
-            var smsMessage = await _smsRepository.AddEntityToDatabaseAsync(new SMSMessage //Save SMSMessage entity to database in order to link it to the log entity
+            var dataForSmsEntity = new Dictionary<string, string>
             {
-                IssuerId = adminId,
-                ChosenGroupId = chosenGroupId,
-                AdditionalPhoneNumbers = string.Join(',', additionalPhoneNumbers),
-                AdditionalInformation = additionalInfo,
-                DataDictionarySerialized = JsonConvert.SerializeObject(dataForSmsEntity),
-                ServerResponseSerialized = response
-            });
+                {"details", "true"},
+                {"speed", "1"},
+                {"test", "true" },
+                {"phone", phoneNumbersString },
+                {"text", text },
+                {"sender", "Toruń WOL" }
+            };
 
             try //try to deserialize response into entities that correspond with response structure and then act depending on the outcome
             {
@@ -83,17 +80,28 @@ namespace MultiSMS.MVC.Controllers
                     logMessage = $"Sms został wysłany do grupy {chosenGroupName}";
                 }
                 ServerSmsSuccessResponse successResponse = JsonConvert.DeserializeObject<ServerSmsSuccessResponse>(response) ?? throw new Exception("Deserialization failed");
+
+                var smsMessage = new SMSMessage
+                {
+                    ChosenGroupId = chosenGroupId,
+                    AdditionalPhoneNumbers = string.Join(',', additionalPhoneNumbers),
+                    AdditionalInformation = additionalInfo,
+                    Settings = dataForSmsEntity,
+                    ServerResponse = successResponse
+                };
+
                 await _logRepository.AddEntityToDatabaseAsync(new Log
                 {
                     LogType = "Info",
                     LogSource = "SMS",
                     LogMessage = logMessage,
-                    LogCreator = adminUsername,
+                    LogCreator = admin.UserName,
                     LogCreatorId = adminId,
-                    LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, int>()
+                    LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>()
                     {
-                        { "SmsMessages", smsMessage.SMSId },
-                        { "Groups", chosenGroupId }
+                        { "SmsMessages", JsonConvert.SerializeObject(smsMessage) },
+                        { "Groups", JsonConvert.SerializeObject(chosenGroup) },
+                        { "Creator", JsonConvert.SerializeObject(admin) }
                     })
                 });
 
@@ -113,17 +121,28 @@ namespace MultiSMS.MVC.Controllers
                         logMessage = $"Nie udało się wysłać sms'a do grupy {chosenGroupName}";
                     }
                     ServerSmsErrorResponse errorResponse = JsonConvert.DeserializeObject<ServerSmsErrorResponse>(response) ?? throw new Exception("Deserialization failed");
+
+                    var smsMessage = new SMSMessage
+                    {
+                        ChosenGroupId = chosenGroupId,
+                        AdditionalPhoneNumbers = string.Join(',', additionalPhoneNumbers),
+                        AdditionalInformation = additionalInfo,
+                        Settings = dataForSmsEntity,
+                        ServerResponse = errorResponse
+                    };
+
                     await _logRepository.AddEntityToDatabaseAsync(new Log
                     {
                         LogType = "Błąd",
                         LogSource = "SMS",
                         LogMessage = logMessage,
-                        LogCreator = adminUsername,
+                        LogCreator = admin.UserName,
                         LogCreatorId = adminId,
-                        LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, int>()
+                        LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>()
                         {
-                            { "SmsMessages", smsMessage.SMSId },
-                            { "Groups", chosenGroupId }
+                            { "SmsMessages", JsonConvert.SerializeObject(smsMessage) },
+                            { "Groups", JsonConvert.SerializeObject(chosenGroup) },
+                            { "Creator", JsonConvert.SerializeObject(admin) }
                         })
                     });
 
