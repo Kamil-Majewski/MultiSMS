@@ -748,7 +748,7 @@
                         <div class="group-members-data" style="margin-top:20px;">
                             <span class="form-subtitle">Członkowie grupy</span>
                             <div class="form-group" style="margin-top:20px;">
-                                <div class="table-responsive" style="border: 2px solid #f0f1f1; max-height: 29vh;">
+                                <div class="table-responsive" style="border: 2px solid #f0f1f1; max-height: 17em;">
                                     <table class="group-members-list table table-borderless" id="group-detail-members-table">
                                         <thead>
                                             <tr>
@@ -792,6 +792,96 @@
                             <tbody>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+            <div class="logs-details-container options-container" style="margin: 20px; /* display:none; */">
+                <div class="option-content" style="max-width: 600px;">
+                    <div class="options-header">
+                        <div class="previous-page" style="flex:1;">
+                            <button class="violet-button" id="groups-previous-button" type="button" style="display: flex; align-items:center;" onclick="">
+                                <span class="arrow-back" style="max-width:24px;"><img src="/icons/previous.png"></span>
+                                <span>Powrót</span>
+                            </button>
+                        </div>
+                        <div class="option-name" style="flex:auto; text-align:center;">
+                            <span class="opion-name-placeholder" id="group-details-window-title">Log</span>
+                        </div>
+                        <div style="flex:1;"></div>
+                    </div>
+                    <hr />
+                    <div class="logs-details-content-container" style="padding: 10px 30px 30px 30px;">
+                        <div class="log-data" style="margin-bottom:20px;">
+                            <span class="form-subtitle">Informacje</span>
+                            <div class="form-group" style="margin-top:20px;">
+                                <div class="row mb-10">
+                                    <div class="col d-flex">
+                                        <label class="logs-detail-label" for="logIdDetail">Id:</label>
+                                        <span class="details-span" id="logIdDetail"></span>
+                                    </div>
+                                </div>
+                                <div class="row mb-10">
+                                    <div class="col d-flex">
+                                        <label class="logs-detail-label" for="logTypeDetail">Typ:</label>
+                                        <span class="details-span" id="logTypeDetail"></span>
+                                    </div>
+                                </div>
+                                <div class="row mb-10">
+                                    <div class="col d-flex">
+                                        <label class="logs-detail-label" for="logSourceDetail">Źródło:</label>
+                                        <span class="details-span" id="logSourceDetail"></span>
+                                    </div>
+                                </div>
+                                <div class="row mb-10">
+                                    <div class="col d-flex">
+                                        <label class="logs-detail-label" for="logMessageDetail">Wiadomość:</label>
+                                        <span class="details-span" id="logMessageDetail"></span>
+                                    </div>
+                                </div>
+                                <div class="row mb-10">
+                                    <div class="col d-flex">
+                                        <label class="logs-detail-label" for="logCreationDateDetail">Data:</label>
+                                        <span class="details-span" id="logCreationDateDetail"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="log-creator-data" style="margin-bottom:20px;">
+                            <span class="form-subtitle">Inicjator</span>
+                            <div class="form-group" style="margin-top:20px;">
+                                <div class="row mb-10">
+                                    <div class="col d-flex">
+                                        <label class="logs-detail-label" for="logCreatorNameDetail">Imię:</label>
+                                        <span class="details-span" id="logCreatorNameDetail"></span>
+                                    </div>
+                                </div>
+                                <div class="row mb-10">
+                                    <div class="col d-flex">
+                                        <label class="logs-detail-label" for="logCreatorSurnameDetail">Nazwisko:</label>
+                                        <span class="details-span" id="logCreatorSurnameDetail"></span>
+                                    </div>
+                                </div>
+                                <div class="row mb-10">
+                                    <div class="col d-flex">
+                                        <label class="logs-detail-label" for="logCreatorUsernameDetail">Email:</label>
+                                        <span class="details-span" id="logCreatorUsernameDetail"></span>
+                                    </div>
+                                </div>
+                                <div class="row mb-10">
+                                    <div class="col d-flex">
+                                        <label class="logs-detail-label" for="logCreatorPhoneNumberDetail">Numer telefonu:</label>
+                                        <span class="details-span" id="logCreatorPhoneNumberDetail"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="log-related-objects-data" style="margin-top:20px;">
+                            <span class="form-subtitle">Obiekty powiązane</span>
+                            <div class="form-group" id="log-related-objects-data-form-group" style="margin-top:20px;">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

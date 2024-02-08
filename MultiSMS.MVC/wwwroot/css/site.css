@@ -582,6 +582,9 @@ tr td {
     border-bottom: none;
 }
 
+.logs-detail-label{
+    min-width: 138px;
+}
 
 .table td {
     vertical-align: middle;
