@@ -816,12 +816,6 @@
                             <div class="form-group" style="margin-top:20px;">
                                 <div class="row mb-10">
                                     <div class="col d-flex">
-                                        <label class="logs-detail-label" for="logIdDetail">Id:</label>
-                                        <span class="details-span" id="logIdDetail"></span>
-                                    </div>
-                                </div>
-                                <div class="row mb-10">
-                                    <div class="col d-flex">
                                         <label class="logs-detail-label" for="logTypeDetail">Typ:</label>
                                         <span class="details-span" id="logTypeDetail"></span>
                                     </div>
@@ -1479,7 +1473,7 @@
                         <td class="big-cell">${item.logMessage}</td>
                         <td class="centered-cell" style="min-width:105px;">${new Date(item.logCreationDate).toLocaleString('en-GB')}</td>
                         <td class="tiny-centered-cell">
-                        <a href="#details-${item.logId}" class="icon-list template-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
+                        <a href="#details-${item.logId}" class="icon-list log-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
                         </td>
                         </tr>`;
 
@@ -1919,6 +1913,59 @@
 
                     $(".groups-list-container").hide();
                     $(".groups-details-container").show();
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        });
+
+        $(document).on('click', '.log-details', function (e) {
+            e.preventDefault();
+            var id = $(this).attr('href').split('-')[1];
+
+            $.ajax({
+                url: '@Url.Action("GetLog", "Home")',
+                type: 'GET',
+                contentType: 'application/json',
+                data: { logId: id },
+                success: function (logEntity) {
+
+                    $("#logTypeDetail").text(logEntity.log.logType);
+                    $("#logSourceDetail").text(logEntity.log.logSource);
+                    $("#logMessageDetail").text(logEntity.log.logMessage);
+                    $("#logCreationDateDetail").text(new Date(logEntity.log.logCreationDate).toLocaleString('en-GB'));
+
+                    $("#logCreatorNameDetail").text(logEntity.logCreator.name);
+                    $("#logCreatorSurnameDetail").text(logEntity.logCreator.surname);
+                    $("#logCreatorUsernameDetail").text(logEntity.logCreator.userName);
+                    $("#logCreatorPhoneNumberDetail").text(logEntity.logCreator.phoneNumber == null ? "Brak danych" : logEntity.logCreator.phoneNumber);
+
+
+                    if (logEntity.type == "Template") {
+                        HandleTemplateTypeLog(logEntity);
+                    }
+                    else if (logEntity.type == "Contact") {
+                        HandleContactTypeLog(logEntity);
+                    }
+                    else if (logEntity.type == "Groups-Assign") {
+                        HandleGroupsAssignTypeLog(logEntity);
+                    }
+                    else if (logEntity.type == "Groups") {
+                        HandleGroupsTypeLog(logEntity);
+                    }
+                    else if (logEntity.type == "SMS-Group") {
+                        handleSMSGroupTypeLog(logEntity);
+                    }
+                    else if (logEntity.type == "SMS-NoGroup") {
+                        handleSMSNoGroupTypeLog(logEntity);
+                    }
+                    else if (logEntity.type == "Import") {
+                        handleImportTypeLog(logEntity);
+                    }
+                    else {
+                        console.error("500 - Internal Server Error");
+                    }
                 },
                 error: function (error) {
                     console.error(error);

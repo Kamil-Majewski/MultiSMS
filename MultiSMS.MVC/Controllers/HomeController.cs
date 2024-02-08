@@ -122,7 +122,6 @@ namespace MultiSMS.MVC.Controllers
                     {
                         { "Templates", template.TemplateId }
                     })
-
                 }
             ); 
 
@@ -539,11 +538,11 @@ namespace MultiSMS.MVC.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> GetLog(int id)
+        public async Task<IActionResult> GetLog(int logId)
         {
             Dictionary<string, int> logRelatedObjects;
 
-            var log = await _logRepository.GetByIdAsync(id);
+            var log = await _logRepository.GetByIdAsync(logId);
             var logSanitized = new { LogType = log.LogType, LogSource = log.LogSource, LogMessage = log.LogMessage, LogCreationDate = log.LogCreationDate };
             var logCreator = await _administratorService.GetAdministratorDtoByIdAsync(log.LogCreatorId);
 
