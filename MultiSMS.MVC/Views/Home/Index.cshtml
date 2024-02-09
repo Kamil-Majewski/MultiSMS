@@ -841,7 +841,7 @@
                             </div>
                         </div>
                         <hr />
-                        <div class="log-creator-data" style="margin-bottom:20px;">
+                        <div class="log-creator-data" style="margin-bottom:20px; margin-top: 4px;">
                             <span class="form-subtitle">Inicjator</span>
                             <div class="form-group" style="margin-top:20px;">
                                 <div class="row mb-10">
@@ -872,7 +872,8 @@
                         </div>
                         <hr />
                         <div class="log-related-objects-data" style="margin-top:20px;">
-                            <span class="form-subtitle" id="relatedObjectsTitle">Obiekty powiązane</span>
+                            <span class="form-subtitle" id="relatedObjectsTitle" style="width: 100%; display: flex; justify-content: center;">Obiekty powiązane</span>
+                            <hr style="margin-top: 20px;" />
                             <div class="form-group" id="log-related-objects-data-form-group" style="margin-top:20px;">
                             </div>
                         </div>
@@ -1186,10 +1187,9 @@
 
     function HandleTemplateTypeLog(templateEntity){
 
-        $("#relatedObjectsTitle").text("Szablon");
-
         var relatedObjects =
-            `<div class="row mb-10">
+            `<span class="form-subtitle">Szablon</span>
+            <div class="row mb-10" style="margin-top: 20px;">
                 <div class="col d-flex">
                     <label class="logs-detail-label" for="logTemplate-TemplateIdDetail">Id:</label>
                     <span class="details-span" id="logTemplate-TemplateIdDetail">${templateEntity.templateId}</span>
@@ -1218,9 +1218,111 @@
         $("#log-related-objects-data-form-group").append(relatedObjects);
     }
 
-    function HandleContactTypeLog(contactEntity){
+    function HandleGroupsAssignTypeLog(groupAssignObject){
 
-        $("#relatedObjectsTitle").text("Kontakt");
+        var groupDescription = groupAssignObject.group.groupDescription;
+
+        var email = groupAssignObject.contact.email;
+        var hqAddress = groupAssignObject.contact.hqAddress;
+        var postalNumber = groupAssignObject.contact.postalNumber;
+        var city = groupAssignObject.contact.city;
+        var department = groupAssignObject.contact.department;
+
+        var relatedObjects = 
+            `<span class="form-subtitle">Grupa</span>
+            <div class="row mb-10" style="margin-top: 20px;">
+                <div class="col d-flex">
+                    <label class="logs-detail-label" for="logGroupAssign-GroupIdDetail">Id:</label>
+                    <span class="details-span" id="logGroupAssign-GroupIdDetail">${groupAssignObject.group.groupId}</span>
+                </div>
+            </div>
+            <div class="row mb-10">
+                <div class="col d-flex">
+                    <label class="logs-detail-label" for="logGroupAssign-GroupNameDetail">Nazwa:</label>
+                    <span class="details-span" id="logGroupAssign-GroupNameDetail">${groupAssignObject.group.groupName}</span>
+                </div>
+            </div>
+            <div class="row mb-10">
+                <div class="col d-flex">
+                    <label class="logs-detail-label" for="logGroupAssign-GroupDescriptionDetail">Opis:</label>
+                    <span class="details-span" id="logGroupAssign-GroupDescriptionDetail">${(groupDescription == null || groupDescription == "") ? "Brak opisu" : groupDescription}</span>
+                </div>
+            </div>
+            <hr />
+            <span class="form-subtitle">Kontakt</span>
+            <div class="row mb-10" style="margin-top: 20px;">
+                <div class="col d-flex">
+                    <label class="logs-detail-label" for="logGroupAssign-EmployeeIdDetail">Id:</label>
+                    <span class="details-span" id="logGroupAssign-EmployeeIdDetail">${groupAssignObject.contact.employeeId}</span>
+                </div>
+            </div>
+            <div class="row mb-10">
+                <div class="col d-flex">
+                    <label class="logs-detail-label" for="logGroupAssign-EmployeeNameDetail">Imię:</label>
+                    <span class="details-span" id="logGroupAssign-EmployeeNameDetail">${groupAssignObject.contact.name}</span>
+                </div>
+            </div>
+            <div class="row mb-10">
+                <div class="col d-flex">
+                    <label class="logs-detail-label" for="logGroupAssign-EmployeeSurnameDetail">Nazwisko:</label>
+                        <span class="details-span" id="logGroupAssign-EmployeeSurnameDetail">${groupAssignObject.contact.surname}</span>
+                </div>
+            </div>
+            <div class="row mb-10" style="margin-bottom: 30px;">
+                <div class="col d-flex">
+                    <label class="logs-detail-label" for="logGroupAssign-EmployeeEmailDetail">Email:</label>
+                        <span class="details-span" id="logGroupAssign-EmployeeEmailDetail">${(email == null || email == "") ? "Brak danych" : email}</span>
+                </div>
+            </div>
+            <div class="row mb-10">
+                <div class="col d-flex">
+                    <label class="logs-detail-label" for="logGroupAssign-EmployeePhonenumberDetail">Numer telefonu:</label>
+                        <span class="details-span" id="logGroupAssign-EmployeePhonenumberDetail">${groupAssignObject.contact.phoneNumber}</span>
+                </div>
+            </div>
+            <div class="row mb-10">
+                <div class="col d-flex">
+                    <label class="logs-detail-label" for="logGroupAssign-EmployeeHQAddressDetail">Adres miejsca pracy:</label>
+                    <span class="details-span" id="logGroupAssign-EmployeeHQAddressDetail">${(hqAddress == null || hqAddress == "") ? "Brak danych" : hqAddress}</span>
+                </div>
+            </div>
+            <div class="row mb-10">
+                <div class="col d-flex">
+                    <label class="logs-detail-label" for="logGroupAssign-EmployeePostalNumberDetail">Kod pocztowy:</label>
+                    <span class="details-span" id="logGroupAssign-EmployeePostalNumberDetail">${(postalNumber == null || postalNumber == "") ? "Brak danych" : postalNumber}</span>
+                </div>
+            </div>
+            <div class="row mb-10">
+                <div class="col d-flex">
+                    <label class="logs-detail-label" for="logGroupAssign-EmployeeCityDetail">Miasto:</label>
+                    <span class="details-span" id="logGroupAssign-EmployeeCityDetail">${(city == null || city == "") ? "Brak danych" : city}</span>
+                </div>
+            </div>
+            <div class="row mb-10" style="margin-bottom: 30px;">
+                <div class="col d-flex">
+                    <label class="logs-detail-label" for="logGroupAssign-EmployeeDepartmentDetail">Jednostka organizacyjna:</label>
+                    <span class="details-span" id="logGroupAssign-EmployeeDepartmentDetail">${(department == null || department == "") ? "Brak danych" : department}</span>
+                </div>
+            </div>
+            <div class="row mb-10">
+                <div class="col d-flex">
+                    <label class="logs-detail-label" for="logGroupAssign-EmployeeStatusDetail">Status:</label>
+                        <span class="details-span" id="logGroupAssign-EmployeeStatusDetail">${groupAssignObject.contact.isActive ? "Aktywny" : "Nieaktywny"}</span>
+                </div>
+            </div>
+            `;
+
+        $("#log-related-objects-data-form-group").append(relatedObjects);
+
+        $("#logGroupAssign-EmployeeStatusDetail").text() == "Aktywny" ? $("#logGroupAssign-EmployeeStatusDetail").css('color', '#018707') : $("#logGroupAssign-EmployeeStatusDetail").css('color', '#df3b15');
+
+        $(".logs-detail-label").css({
+            "min-width": "172px",
+            "max-width": "172px"
+        });
+    }
+
+    function HandleContactTypeLog(contactEntity){
 
         var email = contactEntity.email;
         var hqAddress = contactEntity.hqAddress;
@@ -1230,7 +1332,8 @@
 
 
         var relatedObjects =
-            `<div class="row mb-10">
+            `<span class="form-subtitle">Kontakt</span>
+            <div class="row mb-10" style="margin-top: 20px;">
                 <div class="col d-flex">
                     <label class="logs-detail-label" for="logContact-EmployeeIdDetail">Id:</label>
                     <span class="details-span" id="logContact-EmployeeIdDetail">${contactEntity.employeeId}</span>
@@ -1251,7 +1354,7 @@
             <div class="row mb-10" style="margin-bottom: 30px;">
                 <div class="col d-flex">
                     <label class="logs-detail-label" for="logContact-EmployeeEmailDetail">Email:</label>
-                        <span class="details-span" id="logContact-EmployeeEmailDetail">${(email == null || email == "") ? "Brak danych" : contactEntity.email}</span>
+                        <span class="details-span" id="logContact-EmployeeEmailDetail">${(email == null || email == "") ? "Brak danych" : email}</span>
                 </div>
             </div>
             <div class="row mb-10">
@@ -1263,31 +1366,25 @@
             <div class="row mb-10">
                 <div class="col d-flex">
                     <label class="logs-detail-label" for="logContact-EmployeeHQAddressDetail">Adres miejsca pracy:</label>
-                        <span class="details-span" id="logContact-EmployeeHQAddressDetail">${(hqAddress == null || hqAddress == "") ? "Brak danych" : contactEntity.hqAddress}</span>
+                        <span class="details-span" id="logContact-EmployeeHQAddressDetail">${(hqAddress == null || hqAddress == "") ? "Brak danych" : hqAddress}</span>
                 </div>
             </div>
             <div class="row mb-10">
                 <div class="col d-flex">
                     <label class="logs-detail-label" for="logContact-EmployeePostalNumberDetail">Kod pocztowy:</label>
-                        <span class="details-span" id="logContact-EmployeePostalNumberDetail">${(postalNumber == null || postalNumber == "") ? "Brak danych" : contactEntity.postalNumber}</span>
+                        <span class="details-span" id="logContact-EmployeePostalNumberDetail">${(postalNumber == null || postalNumber == "") ? "Brak danych" : postalNumber}</span>
                 </div>
             </div>
             <div class="row mb-10">
                 <div class="col d-flex">
                     <label class="logs-detail-label" for="logContact-EmployeeCityDetail">Miasto:</label>
-                        <span class="details-span" id="logContact-EmployeeCityDetail">${(city == null || city == "") ? "Brak danych" : contactEntity.city}</span>
+                        <span class="details-span" id="logContact-EmployeeCityDetail">${(city == null || city == "") ? "Brak danych" : city}</span>
                 </div>
             </div>
             <div class="row mb-10" style="margin-bottom: 30px;">
                 <div class="col d-flex">
                     <label class="logs-detail-label" for="logContact-EmployeeDepartmentDetail">Jednostka organizacyjna:</label>
-                        <span class="details-span" id="logContact-EmployeeDepartmentDetail">${(department == null || department == "") ? "Brak danych" : contactEntity.department}</span>
-                </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logContact-EmployeeGroupsDetail">Przypisane grupy:</label>
-                    <span class="details-span" id="logContact-EmployeeGroupsDetail">${contactEntity.employeeGroupNames.length == 0 ? "Nie przypisano" : contactEntity.employeeGroupNames.join(", ")}</span>
+                        <span class="details-span" id="logContact-EmployeeDepartmentDetail">${(department == null || department == "") ? "Brak danych" : department}</span>
                 </div>
             </div>
             <div class="row mb-10">
@@ -1302,7 +1399,10 @@
 
         $("#logContact-EmployeeStatusDetail").text() == "Aktywny" ? $("#logContact-EmployeeStatusDetail").css('color', '#018707') : $("#logContact-EmployeeStatusDetail").css('color', '#df3b15');
 
-        $(".logs-detail-label").css("min-width", "172px", "max-width", "172px");
+        $(".logs-detail-label").css({
+            "min-width": "172px",
+            "max-width": "172px"
+        });
     }
 
     function SanitizePolishSymbols(inputId) {
@@ -2071,7 +2171,7 @@
                         HandleContactTypeLog(logEntity.contact);
                     }
                     else if (logEntity.type == "Groups-Assign") {
-                        HandleGroupsAssignTypeLog(logEntity);
+                        HandleGroupsAssignTypeLog({group: logEntity.group, contact: logEntity.contact});
                     }
                     else if (logEntity.type == "Groups") {
                         HandleGroupsTypeLog(logEntity);
