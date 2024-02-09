@@ -799,7 +799,7 @@
                 <div class="option-content" style="max-width: 600px;">
                     <div class="options-header">
                         <div class="previous-page" style="flex:1;">
-                            <button class="violet-button" id="groups-previous-button" type="button" style="display: flex; align-items:center;" onclick="">
+                            <button class="violet-button" id="groups-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToLogsList()">
                                 <span class="arrow-back" style="max-width:24px;"><img src="/icons/previous.png"></span>
                                 <span>Powrót</span>
                             </button>
@@ -2160,6 +2160,13 @@
         $(".groups-list-container").show();
     }
 
+    function GoBackToLogsList() {
+        $(".logs-details-container").hide();
+        $(".logs-list-container").show();
+        $(".details-span").text("");
+        $("#log-related-objects-data-form-group").empty();
+    }
+
     function GoBackToGroupListFromAssign() {
         FetchAllGroupsAndPopulateTable();
         $(".groups-options-container-assign").hide();
@@ -2340,6 +2347,10 @@
                     else {
                         console.error("500 - Internal Server Error");
                     }
+
+                    $(".logs-list-container").hide();
+                    $(".logs-details-container").show();
+
                 },
                 error: function (error) {
                     console.error(error);
