@@ -4,10 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using MultiSMS.BusinessLogic.DTO;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
+using MultiSMS.Interface.Entities.ServerSms;
 using MultiSMS.Interface.Extensions;
 using MultiSMS.Interface.Repositories.Interfaces;
 using MultiSMS.MVC.Models;
 using Newtonsoft.Json;
+using NuGet.Protocol;
 using System.Diagnostics;
 
 namespace MultiSMS.MVC.Controllers
@@ -591,7 +593,17 @@ namespace MultiSMS.MVC.Controllers
                     }
                 case "SMS":
                     var smsDto = JsonConvert.DeserializeObject<SMSMessage>(logRelatedObjects["SmsMessages"]);
-                    if(smsDto!.ChosenGroupId == 0)
+
+                    if (smsDto!.ServerResponse.ToJToken().SelectToken("error") != null)
+                    {
+                        smsDto.ServerResponse = JsonConvert.DeserializeObject<ServerSmsErrorResponse>(smsDto.ServerResponse.ToString()!)!;
+                    }
+                    else
+                    {
+                        smsDto.ServerResponse = JsonConvert.DeserializeObject<ServerSmsSuccessResponse>(smsDto.ServerResponse.ToString()!)!;
+                    }
+
+                    if (smsDto!.ChosenGroupId == 0)
                     {
                         return Json(new { Type = "SMS-NoGroup", Sms = smsDto, Log = logSanitized, LogCreator = logCreator });
                     }
