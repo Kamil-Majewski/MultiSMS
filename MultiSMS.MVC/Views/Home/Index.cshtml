@@ -1322,6 +1322,39 @@
         });
     }
 
+    function HandleGroupsTypeLog(groupEntity){
+
+        var groupDescription = groupEntity.groupDescription;
+
+        var relatedObjects =
+            `<span class="form-subtitle">Grupa</span>
+            <div class="row mb-10" style="margin-top: 20px;">
+                <div class="col d-flex">
+                    <label class="logs-detail-label" for="logGroupAssign-GroupIdDetail">Id:</label>
+                    <span class="details-span" id="logGroupAssign-GroupIdDetail">${groupEntity.groupId}</span>
+                </div>
+            </div>
+            <div class="row mb-10">
+                <div class="col d-flex">
+                    <label class="logs-detail-label" for="logGroupAssign-GroupNameDetail">Nazwa:</label>
+                    <span class="details-span" id="logGroupAssign-GroupNameDetail">${groupEntity.groupName}</span>
+                </div>
+            </div>
+            <div class="row mb-10">
+                <div class="col d-flex">
+                    <label class="logs-detail-label" for="logGroupAssign-GroupDescriptionDetail">Opis:</label>
+                    <span class="details-span" id="logGroupAssign-GroupDescriptionDetail">${(groupDescription == null || groupDescription == "") ? "Brak opisu" : groupDescription}</span>
+                </div>
+            </div>`;
+
+        $("#log-related-objects-data-form-group").append(relatedObjects);
+
+        $(".logs-detail-label").css({
+            "min-width": "148px",
+            "max-width": "148px"
+        });
+    }
+
     function HandleContactTypeLog(contactEntity){
 
         var email = contactEntity.email;
@@ -2174,16 +2207,16 @@
                         HandleGroupsAssignTypeLog({group: logEntity.group, contact: logEntity.contact});
                     }
                     else if (logEntity.type == "Groups") {
-                        HandleGroupsTypeLog(logEntity);
+                        HandleGroupsTypeLog(logEntity.group);
                     }
                     else if (logEntity.type == "SMS-Group") {
-                        handleSMSGroupTypeLog(logEntity);
+                        handleSMSGroupTypeLog({sms: logEntity.sms, group: logEntity.group });
                     }
                     else if (logEntity.type == "SMS-NoGroup") {
-                        handleSMSNoGroupTypeLog(logEntity);
+                        handleSMSNoGroupTypeLog(logEntity.sms);
                     }
                     else if (logEntity.type == "Import") {
-                        handleImportTypeLog(logEntity);
+                        handleImportTypeLog(logEntity.import);
                     }
                     else {
                         console.error("500 - Internal Server Error");
