@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Entities.ServerSms;
@@ -38,6 +39,7 @@ namespace MultiSMS.MVC.Controllers
             if (chosenGroupId > 0)
             {
                 chosenGroup = await _groupRepository.GetByIdAsync(chosenGroupId);
+                chosenGroup.Members = await _employeeGroupRepository.GetAllEmployeesForGroupQueryable(chosenGroupId).ToListAsync();
             }
             
             var groupPhoneNumbers = _employeeGroupRepository.GetAllActiveEmployeesPhoneNumbersForGroupQueryable(chosenGroupId).ToList();

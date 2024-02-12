@@ -704,6 +704,16 @@ label {
     padding: 10px 30px 30px 30px;
 }
 
+.log-related-object-title {
+    font-weight: 600;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 20px;
+    color: #606060;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
 .input-icons {
     position: absolute;
     top: 47%;

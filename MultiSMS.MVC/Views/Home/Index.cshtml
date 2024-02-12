@@ -245,7 +245,8 @@
                     </div>
                     <hr />
                     <div class="template-details-content-container" style="padding: 10px 30px 30px 30px;">
-                        <div class="row mb-10">
+                        <span class="form-subtitle">Informacje</span>
+                        <div class="row mb-10" style="margin-top: 20px;">
                             <div class="col d-flex">
                                 <label class="templates-details-label" for="TemplateId">Id:</label>
                                 <span class="details-span" id="TemplateId"></span>
@@ -466,7 +467,7 @@
                                     <div class="row mb-10">
                                         <div class="col d-flex">
                                             <label class="contacts-detail-label" for="ContactPostalNumberDetail" style="white-space: nowrap;">Kod pocztowy:</label>
-                                           <span class="details-span" id="ContactPostalNumberDetail"></span>
+                                            <span class="details-span" id="ContactPostalNumberDetail"></span>
                                         </div>
                                     </div>
                                     <div class="row mb-10">
@@ -809,7 +810,7 @@
                         </div>
                         <div style="flex:1;"></div>
                     </div>
-                    <hr />
+                    <hr style="margin-bottom: 10px;" />
                     <div class="logs-details-content-container" style="padding: 10px 30px 30px 30px;">
                         <div class="log-data" style="margin-bottom:20px;">
                             <span class="form-subtitle">Informacje</span>
@@ -872,9 +873,7 @@
                         </div>
                         <hr />
                         <div class="log-related-objects-data" style="margin-top:20px;">
-                            <span class="form-subtitle" id="relatedObjectsTitle" style="width: 100%; display: flex; justify-content: center;">Obiekty powiązane</span>
-                            <hr style="margin-top: 20px;" />
-                            <div class="form-group" id="log-related-objects-data-form-group" style="margin-top:20px;">
+                            <div class="form-group" id="log-related-objects-data-form-group">
                             </div>
                         </div>
                     </div>
@@ -972,16 +971,16 @@
                 var statusText = employee.isActive ? 'Aktywny' : 'Nieaktywny';
 
                 var newRow = `<tr>
-                    <td class="tiny-cell">${employee.name}</td>
-                    <td class="tiny-cell">${employee.surname}</td>
-                    <td class="small-cell">${email}</td>
-                    <td class="small-cell">${employee.phoneNumber}</td>
-                    <td class="tiny-centered-cell"><span class="${statusClass}">${statusText}</span></td>`;
+                        <td class="tiny-cell">${employee.name}</td>
+                        <td class="tiny-cell">${employee.surname}</td>
+                        <td class="small-cell">${email}</td>
+                        <td class="small-cell">${employee.phoneNumber}</td>
+                        <td class="tiny-centered-cell"><span class="${statusClass}">${statusText}</span></td>`;
 
                 if (typeof object.ListOfNonExistantGroupIds == 'undefined' && tableId == "added-contacts-table") {
                     newRow += `<td class="centered-cell">${group}</td>
-                        <td class="tiny-centered-cell">Brak</td>
-                        </tr>`;
+                            <td class="tiny-centered-cell">Brak</td>
+                            </tr>`;
                 }
                 else if (typeof object.ListOfNonExistantGroupIds != 'undefined') {
                     var nonExistantGroups = object.ListOfNonExistantGroupIds;
@@ -991,11 +990,11 @@
 
                     if (nonExistentGroupsForContact.length == 0 || typeof nonExistentGroupsForContact == "string" || nonExistentGroupsForContact == "") {
                         newRow += `<td class="tiny-centered-cell">Brak</td>
-                            </tr>`;
+                                </tr>`;
                     }
                     else {
                         newRow += `<td class="tiny-centered-cell">${nonExistentGroupsForContact.join(', ')}</td>
-                            </tr>`;
+                                </tr>`;
                     }
                 }
                 $(`#${tableId} tbody`).append(newRow);
@@ -1114,10 +1113,10 @@
             }
         }
 
-        function handleAddedContacts(status ,addedEmployees, nonExistantGroupIds) {
+        function handleAddedContacts(status, addedEmployees, nonExistantGroupIds) {
             var addedLength = addedEmployees ? addedEmployees.length : 0;
 
-            if (addedLength == 0){
+            if (addedLength == 0) {
                 $("#import-added-contacts-container").hide();
             }
 
@@ -1153,7 +1152,7 @@
             $("#closeModal").on("click", function () {
                 $("#viewReportModal").modal("hide");
                 $("#import-modal-footer").removeClass("justify-content-center");
-                
+
             });
 
             resetFileInput();
@@ -1185,40 +1184,42 @@
         });
     }
 
-    function HandleTemplateTypeLog(templateEntity){
+    function HandleTemplateTypeLog(templateEntity) {
 
         var relatedObjects =
-            `<span class="form-subtitle">Szablon</span>
-            <div class="row mb-10" style="margin-top: 20px;">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logTemplate-TemplateIdDetail">Id:</label>
-                    <span class="details-span" id="logTemplate-TemplateIdDetail">${templateEntity.templateId}</span>
+            `<span class="log-related-object-title">Szablon</span>
+                <hr style="margin-top: 20px";/>
+                <span class="form-subtitle">Informacje</span>
+                <div class="row mb-10" style="margin-top: 20px;">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logTemplate-TemplateIdDetail">Id:</label>
+                        <span class="details-span" id="logTemplate-TemplateIdDetail">${templateEntity.templateId}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logTemplate-TemplateNameDetail">Nazwa:</label>
-                    <span class="details-span" id="logTemplate-TemplateNameDetail">${templateEntity.templateName}</span>
+                <div class="row mb-10">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logTemplate-TemplateNameDetail">Nazwa:</label>
+                        <span class="details-span" id="logTemplate-TemplateNameDetail">${templateEntity.templateName}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logTemplate-TemplateDescriptionDetail">Opis:</label>
-                    <span class="details-span" id="logTemplate-TemplateDescriptionDetail">${templateEntity.templateDescription == null ? "Brak opisu" : templateEntity.templateDescription}</span>
+                <div class="row mb-10">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logTemplate-TemplateDescriptionDetail">Opis:</label>
+                        <span class="details-span" id="logTemplate-TemplateDescriptionDetail">${templateEntity.templateDescription == null ? "Brak opisu" : templateEntity.templateDescription}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logTemplate-TemplateContentDetail">Treść:</label>
-                    <span class="details-span" id="logTemplate-TemplateContentDetail">${templateEntity.templateContent}</span>
+                <div class="row mb-10">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logTemplate-TemplateContentDetail">Treść:</label>
+                        <span class="details-span" id="logTemplate-TemplateContentDetail">${templateEntity.templateContent}</span>
+                    </div>
                 </div>
-            </div>
-            `;
+                `;
 
         $("#log-related-objects-data-form-group").append(relatedObjects);
     }
 
-    function HandleGroupsAssignTypeLog(groupAssignObject){
+    function HandleGroupsAssignTypeLog(groupAssignObject) {
 
         var groupDescription = groupAssignObject.group.groupDescription;
 
@@ -1228,89 +1229,96 @@
         var city = groupAssignObject.contact.city;
         var department = groupAssignObject.contact.department;
 
-        var relatedObjects = 
-            `<span class="form-subtitle">Grupa</span>
-            <div class="row mb-10" style="margin-top: 20px;">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logGroupAssign-GroupIdDetail">Id:</label>
-                    <span class="details-span" id="logGroupAssign-GroupIdDetail">${groupAssignObject.group.groupId}</span>
+        var relatedObjects =
+            `<span class="log-related-object-title">Grupa</span>
+                <hr style="margin-top: 20px";/>
+                <span class="form-subtitle">Informacje</span>
+                <div class="row mb-10" style="margin-top: 20px;">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logGroupAssign-GroupIdDetail">Id:</label>
+                        <span class="details-span" id="logGroupAssign-GroupIdDetail">${groupAssignObject.group.groupId}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logGroupAssign-GroupNameDetail">Nazwa:</label>
-                    <span class="details-span" id="logGroupAssign-GroupNameDetail">${groupAssignObject.group.groupName}</span>
+                <div class="row mb-10">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logGroupAssign-GroupNameDetail">Nazwa:</label>
+                        <span class="details-span" id="logGroupAssign-GroupNameDetail">${groupAssignObject.group.groupName}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logGroupAssign-GroupDescriptionDetail">Opis:</label>
-                    <span class="details-span" id="logGroupAssign-GroupDescriptionDetail">${(groupDescription == null || groupDescription == "") ? "Brak opisu" : groupDescription}</span>
+                <div class="row mb-10">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logGroupAssign-GroupDescriptionDetail">Opis:</label>
+                        <span class="details-span" id="logGroupAssign-GroupDescriptionDetail">${(groupDescription == null || groupDescription == "") ? "Brak opisu" : groupDescription}</span>
+                    </div>
                 </div>
-            </div>
-            <hr />
-            <span class="form-subtitle">Kontakt</span>
-            <div class="row mb-10" style="margin-top: 20px;">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logGroupAssign-EmployeeIdDetail">Id:</label>
-                    <span class="details-span" id="logGroupAssign-EmployeeIdDetail">${groupAssignObject.contact.employeeId}</span>
+                <hr />
+                <span class="log-related-object-title">Kontakt</span>
+                <hr style="margin-top: 20px";/>
+                <span class="form-subtitle">Dane personalne</span>
+                <div class="row mb-10" style="margin-top: 20px;">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logGroupAssign-EmployeeIdDetail">Id:</label>
+                        <span class="details-span" id="logGroupAssign-EmployeeIdDetail">${groupAssignObject.contact.employeeId}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logGroupAssign-EmployeeNameDetail">Imię:</label>
-                    <span class="details-span" id="logGroupAssign-EmployeeNameDetail">${groupAssignObject.contact.name}</span>
+                <div class="row mb-10">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logGroupAssign-EmployeeNameDetail">Imię:</label>
+                        <span class="details-span" id="logGroupAssign-EmployeeNameDetail">${groupAssignObject.contact.name}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logGroupAssign-EmployeeSurnameDetail">Nazwisko:</label>
-                        <span class="details-span" id="logGroupAssign-EmployeeSurnameDetail">${groupAssignObject.contact.surname}</span>
+                <div class="row mb-10">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logGroupAssign-EmployeeSurnameDetail">Nazwisko:</label>
+                            <span class="details-span" id="logGroupAssign-EmployeeSurnameDetail">${groupAssignObject.contact.surname}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="row mb-10" style="margin-bottom: 30px;">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logGroupAssign-EmployeeEmailDetail">Email:</label>
-                        <span class="details-span" id="logGroupAssign-EmployeeEmailDetail">${(email == null || email == "") ? "Brak danych" : email}</span>
+                <div class="row mb-10">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logGroupAssign-EmployeeEmailDetail">Email:</label>
+                            <span class="details-span" id="logGroupAssign-EmployeeEmailDetail">${(email == null || email == "") ? "Brak danych" : email}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logGroupAssign-EmployeePhonenumberDetail">Numer telefonu:</label>
-                        <span class="details-span" id="logGroupAssign-EmployeePhonenumberDetail">${groupAssignObject.contact.phoneNumber}</span>
+                <hr />
+                <span class="form-subtitle">Dane kontaktowe</span>
+                    <div class="row mb-10" style="margin-top: 20px;">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logGroupAssign-EmployeePhonenumberDetail">Numer telefonu:</label>
+                            <span class="details-span" id="logGroupAssign-EmployeePhonenumberDetail">${groupAssignObject.contact.phoneNumber}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logGroupAssign-EmployeeHQAddressDetail">Adres miejsca pracy:</label>
-                    <span class="details-span" id="logGroupAssign-EmployeeHQAddressDetail">${(hqAddress == null || hqAddress == "") ? "Brak danych" : hqAddress}</span>
+                <div class="row mb-10">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logGroupAssign-EmployeeHQAddressDetail">Adres miejsca pracy:</label>
+                        <span class="details-span" id="logGroupAssign-EmployeeHQAddressDetail">${(hqAddress == null || hqAddress == "") ? "Brak danych" : hqAddress}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logGroupAssign-EmployeePostalNumberDetail">Kod pocztowy:</label>
-                    <span class="details-span" id="logGroupAssign-EmployeePostalNumberDetail">${(postalNumber == null || postalNumber == "") ? "Brak danych" : postalNumber}</span>
+                <div class="row mb-10">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logGroupAssign-EmployeePostalNumberDetail">Kod pocztowy:</label>
+                        <span class="details-span" id="logGroupAssign-EmployeePostalNumberDetail">${(postalNumber == null || postalNumber == "") ? "Brak danych" : postalNumber}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logGroupAssign-EmployeeCityDetail">Miasto:</label>
-                    <span class="details-span" id="logGroupAssign-EmployeeCityDetail">${(city == null || city == "") ? "Brak danych" : city}</span>
+                <div class="row mb-10">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logGroupAssign-EmployeeCityDetail">Miasto:</label>
+                        <span class="details-span" id="logGroupAssign-EmployeeCityDetail">${(city == null || city == "") ? "Brak danych" : city}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="row mb-10" style="margin-bottom: 30px;">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logGroupAssign-EmployeeDepartmentDetail">Jednostka organizacyjna:</label>
-                    <span class="details-span" id="logGroupAssign-EmployeeDepartmentDetail">${(department == null || department == "") ? "Brak danych" : department}</span>
+                <div class="row mb-10">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logGroupAssign-EmployeeDepartmentDetail">Jednostka organizacyjna:</label>
+                        <span class="details-span" id="logGroupAssign-EmployeeDepartmentDetail">${(department == null || department == "") ? "Brak danych" : department}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logGroupAssign-EmployeeStatusDetail">Status:</label>
-                        <span class="details-span" id="logGroupAssign-EmployeeStatusDetail">${groupAssignObject.contact.isActive ? "Aktywny" : "Nieaktywny"}</span>
+                <hr />
+                    <div class="row mb-10" style="margin-top: 20px;">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logGroupAssign-EmployeeStatusDetail">Status:</label>
+                            <span class="details-span" id="logGroupAssign-EmployeeStatusDetail">${groupAssignObject.contact.isActive ? "Aktywny" : "Nieaktywny"}</span>
+                    </div>
                 </div>
-            </div>
-            `;
+                `;
 
         $("#log-related-objects-data-form-group").append(relatedObjects);
 
@@ -1322,30 +1330,32 @@
         });
     }
 
-    function HandleGroupsTypeLog(groupEntity){
+    function HandleGroupsTypeLog(groupEntity) {
 
         var groupDescription = groupEntity.groupDescription;
 
         var relatedObjects =
-            `<span class="form-subtitle">Grupa</span>
-            <div class="row mb-10" style="margin-top: 20px;">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logGroupAssign-GroupIdDetail">Id:</label>
-                    <span class="details-span" id="logGroupAssign-GroupIdDetail">${groupEntity.groupId}</span>
+            `<span class="log-related-object-title">Grupa</span>
+                <hr style="margin-top: 20px";/>
+                <span class="form-subtitle">Informacje</span>
+                <div class="row mb-10" style="margin-top: 20px;">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logGroupAssign-GroupIdDetail">Id:</label>
+                        <span class="details-span" id="logGroupAssign-GroupIdDetail">${groupEntity.groupId}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logGroupAssign-GroupNameDetail">Nazwa:</label>
-                    <span class="details-span" id="logGroupAssign-GroupNameDetail">${groupEntity.groupName}</span>
+                <div class="row mb-10">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logGroupAssign-GroupNameDetail">Nazwa:</label>
+                        <span class="details-span" id="logGroupAssign-GroupNameDetail">${groupEntity.groupName}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logGroupAssign-GroupDescriptionDetail">Opis:</label>
-                    <span class="details-span" id="logGroupAssign-GroupDescriptionDetail">${(groupDescription == null || groupDescription == "") ? "Brak opisu" : groupDescription}</span>
-                </div>
-            </div>`;
+                <div class="row mb-10">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logGroupAssign-GroupDescriptionDetail">Opis:</label>
+                        <span class="details-span" id="logGroupAssign-GroupDescriptionDetail">${(groupDescription == null || groupDescription == "") ? "Brak opisu" : groupDescription}</span>
+                    </div>
+                </div>`;
 
         $("#log-related-objects-data-form-group").append(relatedObjects);
 
@@ -1355,7 +1365,7 @@
         });
     }
 
-    function  handleSMSGroupTypeLog(smsGroupObject) {
+    function handleSMSGroupTypeLog(smsGroupObject) {
         var type = $("#logTypeDetail").text();
 
         console.log(smsGroupObject);
@@ -1371,124 +1381,129 @@
         var groupDescription = smsGroupObject.group.groupDescription;
 
         var relatedObjects =
-            `<span class="form-subtitle">Wiadomość SMS</span>
-                <div class="row mb-10" style="margin-top: 20px;">
-                    <div class="col d-flex">
-                        <label class="logs-detail-label" for="logSMSNoGroup-ChosenGroupIdDetail">Id grupy:</label>
-                        <span class="details-span" id="logSMSNoGroup-ChosenGroupIdDetail">${chosenGroupId == 0 ? "Nie wybrano grupy" : chosenGroupId}</span>
+            `<span class="log-related-object-title">Wiadomość SMS</span>
+                <hr style="margin-top: 20px";/>
+                <span class="form-subtitle">Informacje</span>
+                    <div class="row mb-10" style="margin-top: 20px;">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSGroup-SenderDetail">Nazwa nadawcy:</label>
+                            <span class="details-span" id="logSMSGroup-SenderDetail">${smsGroupObject.sms.settings["sender"] == null ? "Nie określono" : smsGroupObject.sms.settings["sender"]}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="row mb-10">
-                    <div class="col d-flex">
-                        <label class="logs-detail-label" for="logSMSNoGroup-MessageDetail">Treść wiadomości:</label>
-                            <span class="details-span" id="logSMSNoGroup-MessageDetail">${(smsMessage == "" || smsMessage == null) ? "Nie wpisano treści" : smsMessage}</span>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSGroup-ChosenGroupIdDetail">Id wybranej grupy:</label>
+                            <span class="details-span" id="logSMSGroup-ChosenGroupIdDetail">${chosenGroupId == 0 ? "Nie wybrano grupy" : chosenGroupId}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="row mb-10">
-                    <div class="col d-flex">
-                        <label class="logs-detail-label" for="logSMSNoGroup-AdditionalPhoneNumbersDetail">Dodatkowe numery:</label>
-                         <span class="details-span" id="logSMSNoGroup-AdditionalPhoneNumbersDetail">${additionalPhoneNumbers.length == 0 ? "Nie podano" : additionalPhoneNumbers.split(',').join(", ")}</span>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSGroup-MessageDetail">Treść wiadomości:</label>
+                                <span class="details-span" id="logSMSGroup-MessageDetail">${(smsMessage == "" || smsMessage == null) ? "Nie wpisano treści" : smsMessage}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="row mb-10" style="margin-bottom: 30px;">
-                    <div class="col d-flex">
-                        <label class="logs-detail-label" for="logSMSNoGroup-AdditionalInformationDetail">Komentarz:</label>
-                        <span class="details-span" id="logSMSNoGroup-AdditionalInformationDetail">${(additionalInformation == null || additionalInformation == "") ? "Brak" : additionalInformation}</span>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSGroup-AdditionalPhoneNumbersDetail">Dodatkowe numery:</label>
+                             <span class="details-span" id="logSMSGroup-AdditionalPhoneNumbersDetail">${additionalPhoneNumbers.length == 0 ? "Nie podano" : additionalPhoneNumbers.split(',').join(", ")}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="row mb-10">
-                    <div class="col d-flex">
-                        <label class="logs-detail-label" for="logSMSNoGroup-DetailsDetail">Szczegóły w odp.:</label>
-                        <span class="details-span" id="logSMSNoGroup-DetailsDetail">${smsGroupObject.sms.settings["details"] == "true" ? "Tak" : "Nie"}</span>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSGroup-AdditionalInformationDetail">Komentarz:</label>
+                            <span class="details-span" id="logSMSGroup-AdditionalInformationDetail">${(additionalInformation == null || additionalInformation == "") ? "Brak" : additionalInformation}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="row mb-10">
-                    <div class="col d-flex">
-                        <label class="logs-detail-label" for="logSMSNoGroup-SpeedDetail">Szybki kanał:</label>
-                        <span class="details-span" id="logSMSNoGroup-SpeedDetail">${smsGroupObject.sms.settings["speed"] == "1" ? "Tak" : "Nie"}</span>
+                    <hr style="margin-top: 20px";/>
+                    <span class="form-subtitle">Ustawienia</span>
+                    <div class="row mb-10" style="margin-top: 20px;">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSGroup-TestDetail">Wiadomośc testowa:</label>
+                            <span class="details-span" id="logSMSGroup-TestDetail">${smsGroupObject.sms.settings["test"] == "true" ? "Tak" : "Nie"}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="row mb-10">
-                    <div class="col d-flex">
-                        <label class="logs-detail-label" for="logSMSNoGroup-TestDetail">Wiadomośc testowa:</label>
-                            <span class="details-span" id="logSMSNoGroup-TestDetail">${smsGroupObject.sms.settings["test"] == "true" ? "Tak" : "Nie"}</span>
+                    <div class="row mb-10" >
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSGroup-SpeedDetail">Kanał priorytetowy:</label>
+                            <span class="details-span" id="logSMSGroup-SpeedDetail">${smsGroupObject.sms.settings["speed"] == "1" ? "Tak" : "Nie"}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="row mb-10" style="margin-bottom: 30px;">
-                    <div class="col d-flex">
-                        <label class="logs-detail-label" for="logSMSNoGroup-SenderDetail">Nazwa nadawcy:</label>
-                            <span class="details-span" id="logSMSNoGroup-SenderDetail">${smsGroupObject.sms.settings["sender"] == null ? "Nie określono" : smsGroupObject.sms.settings["sender"]}</span>
-                    </div>
-                </div>`;
+                    <hr style="margin-top: 20px";/>
+                    <span class="form-subtitle">Odpowiedź servera</span>
+                    `;
 
         if (type == "Błąd") {
             relatedObjects +=
                 `
-                <div class="row mb-10">
-                    <div class="col d-flex">
-                        <label class="logs-detail-label" for="logSMSNoGroup-CodeDetail">Kod błędu:</label>
-                            <span class="details-span" id="logSMSNoGroup-CodeDetail">${responseError['code']}</span>
+                    <div class="row mb-10" style="margin-top: 20px;">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSGroup-CodeDetail">Kod błędu:</label>
+                                <span class="details-span" id="logSMSGroup-CodeDetail">${responseError['code']}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="row mb-10">
-                    <div class="col d-flex">
-                        <label class="logs-detail-label" for="logSMSNoGroup-ErrorTypeDetail">Typ błędu:</label>
-                        <span class="details-span" id="logSMSNoGroup-ErrorTypeDetail">${responseError['type']}</span>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSGroup-ErrorTypeDetail">Typ błędu:</label>
+                            <span class="details-span" id="logSMSGroup-ErrorTypeDetail">${responseError['type']}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="row mb-10">
-                    <div class="col d-flex">
-                        <label class="logs-detail-label" for="logSMSNoGroup-ErrorMessageDetail">Wiadomość błędu:</label>
-                        <span class="details-span" id="logSMSNoGroup-ErrorMessageDetail">${responseError['message']}</span>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSGroup-ErrorMessageDetail">Wiadomość błędu:</label>
+                            <span class="details-span" id="logSMSGroup-ErrorMessageDetail">${responseError['message']}</span>
+                        </div>
                     </div>
-                </div>
-                `;
+                    `;
         }
         else {
             relatedObjects +=
-                `<div class="row mb-10">
-                    <div class="col d-flex">
-                        <label class="logs-detail-label" for="logSMSNoGroup-StatusDetail">Status:</label>
-                        <span class="details-span" id="logSMSNoGroup-StatusDetail">${responseSuccess['success'] ? "Sukces" : "Błąd"}</span>
+                `<div class="row mb-10" style="margin-top: 20px;">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSGroup-StatusDetail">Status:</label>
+                            <span class="details-span" id="logSMSGroup-StatusDetail">${responseSuccess['success'] ? "Sukces" : "Błąd"}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="row mb-10">
-                    <div class="col d-flex">
-                        <label class="logs-detail-label" for="logSMSNoGroup-SentDetail">Wysłano:</label>
-                        <span class="details-span" id="logSMSNoGroup-SentDetail">${responseSuccess['queued']}</span>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSGroup-SentDetail">Wysłano:</label>
+                            <span class="details-span" id="logSMSGroup-SentDetail">${responseSuccess['queued']}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="row mb-10">
-                    <div class="col d-flex">
-                        <label class="logs-detail-label" for="logSMSNoGroup-UnsentDetail">Nie wysłano:</label>
-                        <span class="details-span" id="logSMSNoGroup-UnsentDetail">${responseSuccess['unsent']}</span>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSGroup-UnsentDetail">Nie wysłano:</label>
+                            <span class="details-span" id="logSMSGroup-UnsentDetail">${responseSuccess['unsent']}</span>
+                        </div>
                     </div>
-                </div>
-                `;
+                    `;
         }
         relatedObjects +=
-            `<hr style="margin-bottom: 20px;" />
-            <span class="form-subtitle">Grupa</span>
-            <div class="row mb-10" style="margin-top: 20px;">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logGroupAssign-GroupIdDetail">Id:</label>
-                        <span class="details-span" id="logGroupAssign-GroupIdDetail">${smsGroupObject.group.groupId}</span>
+            `<hr style="margin-top: 20px;" />
+                <span class="log-related-object-title">Grupa</span>
+                <hr style="margin-top: 20px;" />
+                <span class="form-subtitle">Informacje</span>
+                <div class="row mb-10" style="margin-top: 20px;">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logSMSGroup-GroupIdDetail">Id:</label>
+                        <span class="details-span" id="logSMSGroup-GroupIdDetail">${smsGroupObject.group.groupId}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logGroupAssign-GroupNameDetail">Nazwa:</label>
-                        <span class="details-span" id="logGroupAssign-GroupNameDetail">${smsGroupObject.group.groupName}</span>
+                <div class="row mb-10">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logSMSGroup-GroupNameDetail">Nazwa:</label>
+                        <span class="details-span" id="logSMSGroup-GroupNameDetail">${smsGroupObject.group.groupName}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logGroupAssign-GroupDescriptionDetail">Opis:</label>
-                    <span class="details-span" id="logGroupAssign-GroupDescriptionDetail">${(groupDescription == null || groupDescription == "") ? "Brak opisu" : groupDescription}</span>
+                <div class="row mb-10">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logSMSGroup-GroupDescriptionDetail">Opis:</label>
+                        <span class="details-span" id="logSMSGroup-GroupDescriptionDetail">${(groupDescription == null || groupDescription == "") ? "Brak opisu" : groupDescription}</span>
+                    </div>
                 </div>
-            </div>
-                <div class="table-responsive" style="border: 2px solid #f0f1f1; max-height: 17em;">
-                    <table class="group-members-list table table-borderless" id="log-detail-smsgroup-members-table">
+                <hr style="margin-top: 20px;"/>
+                <span class="form-subtitle">Członkowie grupy</span>
+                <div class="table-responsive" style="border: 2px solid #f0f1f1; margin-top:20px;">
+                    <table class="log-group-members-list table table-borderless" id="log-detail-smsgroup-members-table">
                         <thead>
                             <tr>
                                 <th class="tiny-cell">Imię</th>
@@ -1501,15 +1516,24 @@
                         </tbody>
                     </table>
                 </div>
-            `;
-
-        $("#log-detail-smsgroup-members-table tbody").empty();
-
-        $("#log-detail-smsgroup-members-table tbody").append(newRow);
-
-
+                `;
 
         $("#log-related-objects-data-form-group").append(relatedObjects);
+
+        $.each(smsGroupObject.group.members, function (index, employee) {
+
+            var statusClass = employee.isActive ? 'active-pill' : 'inactive-pill';
+            var statusText = employee.isActive ? 'Aktywny' : 'Nieaktywny';
+
+            var newRow = `<tr>
+                        <td class="tiny-cell">${employee.name}</td>
+                        <td class="tiny-cell">${employee.surname}</td>
+                        <td class="small-cell">${employee.phoneNumber}</td>
+                        <td class="tiny-centered-cell"><span class="${statusClass}">${statusText}</span></td>
+                        </tr>`
+
+            $("#log-detail-smsgroup-members-table tbody").append(newRow);
+        });
 
         $(".logs-detail-label").css({
             "min-width": "172px",
@@ -1524,106 +1548,107 @@
         var additionalPhoneNumbers = smsNoGroupObject.additionalPhoneNumbers;
         var additionalInformation = smsNoGroupObject.additionalInformation;
         var smsMessage = smsNoGroupObject.settings["text"];
-        
+
         var responseError = smsNoGroupObject.serverResponse.error;
         var responseSuccess = smsNoGroupObject.serverResponse;
 
         var relatedObjects =
-            `<span class="form-subtitle">Wiadomość SMS</span>
-            <div class="row mb-10" style="margin-top: 20px;">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logSMSNoGroup-ChosenGroupIdDetail">Id grupy:</label>
-                    <span class="details-span" id="logSMSNoGroup-ChosenGroupIdDetail">${chosenGroupId == 0 ? "Nie wybrano grupy" : chosenGroupId}</span>
-                </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logSMSNoGroup-MessageDetail">Treść wiadomości:</label>
-                        <span class="details-span" id="logSMSNoGroup-MessageDetail">${(smsMessage == "" || smsMessage == null) ? "Nie wpisano treści" : smsMessage}</span>
-                </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logSMSNoGroup-AdditionalPhoneNumbersDetail">Dodatkowe numery:</label>
-                     <span class="details-span" id="logSMSNoGroup-AdditionalPhoneNumbersDetail">${additionalPhoneNumbers.length == 0 ? "Nie podano" : additionalPhoneNumbers.split(',').join(", ")}</span>
-                </div>
-            </div>
-            <div class="row mb-10" style="margin-bottom: 30px;">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logSMSNoGroup-AdditionalInformationDetail">Komentarz:</label>
-                    <span class="details-span" id="logSMSNoGroup-AdditionalInformationDetail">${(additionalInformation == null || additionalInformation == "") ? "Brak" : additionalInformation}</span>
-                </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logSMSNoGroup-DetailsDetail">Szczegóły w odp.:</label>
-                    <span class="details-span" id="logSMSNoGroup-DetailsDetail">${smsNoGroupObject.settings["details"] == "true" ? "Tak" : "Nie"}</span>
-                </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logSMSNoGroup-SpeedDetail">Szybki kanał:</label>
-                    <span class="details-span" id="logSMSNoGroup-SpeedDetail">${smsNoGroupObject.settings["speed"] == "1" ? "Tak" : "Nie"}</span>
-                </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logSMSNoGroup-TestDetail">Wiadomośc testowa:</label>
-                        <span class="details-span" id="logSMSNoGroup-TestDetail">${smsNoGroupObject.settings["test"] == "true" ? "Tak" : "Nie"}</span>
-                </div>
-            </div>
-            <div class="row mb-10" style="margin-bottom: 30px;">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logSMSNoGroup-SenderDetail">Nazwa nadawcy:</label>
-                        <span class="details-span" id="logSMSNoGroup-SenderDetail">${smsNoGroupObject.settings["sender"] == null ? "Nie określono" : smsNoGroupObject.settings["sender"]}</span>
-                </div>
-            </div>`;
+            `<span class="log-related-object-title">Wiadomość SMS</span>
+                    <hr style="margin-top: 20px";/>
+                    <span class="form-subtitle">Informacje</span>
+                        <div class="row mb-10" style="margin-top: 20px;">
+                            <div class="col d-flex">
+                                <label class="logs-detail-label" for="logSMSNoGroup-SenderDetail">Nazwa nadawcy:</label>
+                                <span class="details-span" id="logSMSNoGroup-SenderDetail">${smsNoGroupObject.settings["sender"] == null ? "Nie określono" : smsNoGroupObject.settings["sender"]}</span>
+                            </div>
+                        </div>
+                        <div class="row mb-10">
+                            <div class="col d-flex">
+                                <label class="logs-detail-label" for="logSMSNoGroup-ChosenGroupIdDetail">Id wybranej grupy:</label>
+                                <span class="details-span" id="logSMSNoGroup-ChosenGroupIdDetail">${chosenGroupId == 0 ? "Nie wybrano grupy" : chosenGroupId}</span>
+                            </div>
+                        </div>
+                        <div class="row mb-10">
+                            <div class="col d-flex">
+                                <label class="logs-detail-label" for="logSMSNoGroup-MessageDetail">Treść wiadomości:</label>
+                                    <span class="details-span" id="logSMSNoGroup-MessageDetail">${(smsMessage == "" || smsMessage == null) ? "Nie wpisano treści" : smsMessage}</span>
+                            </div>
+                        </div>
+                        <div class="row mb-10">
+                            <div class="col d-flex">
+                                <label class="logs-detail-label" for="logSMSNoGroup-AdditionalPhoneNumbersDetail">Dodatkowe numery:</label>
+                                 <span class="details-span" id="logSMSNoGroup-AdditionalPhoneNumbersDetail">${additionalPhoneNumbers.length == 0 ? "Nie podano" : additionalPhoneNumbers.split(',').join(", ")}</span>
+                            </div>
+                        </div>
+                        <div class="row mb-10">
+                            <div class="col d-flex">
+                                <label class="logs-detail-label" for="logSMSNoGroup-AdditionalInformationDetail">Komentarz:</label>
+                                <span class="details-span" id="logSMSNoGroup-AdditionalInformationDetail">${(additionalInformation == null || additionalInformation == "") ? "Brak" : additionalInformation}</span>
+                            </div>
+                        </div>
+                        <hr style="margin-top: 20px";/>
+                        <span class="form-subtitle">Ustawienia</span>
+                        <div class="row mb-10" style="margin-top: 20px;">
+                            <div class="col d-flex">
+                                <label class="logs-detail-label" for="logSMSNoGroup-TestDetail">Wiadomośc testowa:</label>
+                                <span class="details-span" id="logSMSNoGroup-TestDetail">${smsNoGroupObject.settings["test"] == "true" ? "Tak" : "Nie"}</span>
+                            </div>
+                        </div>
+                        <div class="row mb-10" >
+                            <div class="col d-flex">
+                                <label class="logs-detail-label" for="logSMSNoGroup-SpeedDetail">Kanał priorytetowy:</label>
+                                <span class="details-span" id="logSMSNoGroup-SpeedDetail">${smsNoGroupObject.settings["speed"] == "1" ? "Tak" : "Nie"}</span>
+                            </div>
+                        </div>
+                        <hr style="margin-top: 20px";/>
+                        <span class="form-subtitle">Odpowiedź servera</span>
+                        `;
 
-            if(type == "Błąd"){
-                relatedObjects +=
-                    `
-                    <div class="row mb-10">
-                        <div class="col d-flex">
-                            <label class="logs-detail-label" for="logSMSNoGroup-CodeDetail">Kod błędu:</label>
-                                <span class="details-span" id="logSMSNoGroup-CodeDetail">${responseError['code']}</span>
+        if (type == "Błąd") {
+            relatedObjects +=
+                `
+                        <div class="row mb-10" style="margin-top: 20px;">
+                            <div class="col d-flex">
+                                <label class="logs-detail-label" for="logSMSNoGroup-CodeDetail">Kod błędu:</label>
+                                    <span class="details-span" id="logSMSNoGroup-CodeDetail">${responseError['code']}</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row mb-10">
-                        <div class="col d-flex">
-                            <label class="logs-detail-label" for="logSMSNoGroup-ErrorTypeDetail">Typ błędu:</label>
-                            <span class="details-span" id="logSMSNoGroup-ErrorTypeDetail">${responseError['type']}</span>
+                        <div class="row mb-10">
+                            <div class="col d-flex">
+                                <label class="logs-detail-label" for="logSMSNoGroup-ErrorTypeDetail">Typ błędu:</label>
+                                <span class="details-span" id="logSMSNoGroup-ErrorTypeDetail">${responseError['type']}</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row mb-10">
-                        <div class="col d-flex">
-                            <label class="logs-detail-label" for="logSMSNoGroup-ErrorMessageDetail">Wiadomość błędu:</label>
-                            <span class="details-span" id="logSMSNoGroup-ErrorMessageDetail">${responseError['message']}</span>
+                        <div class="row mb-10">
+                            <div class="col d-flex">
+                                <label class="logs-detail-label" for="logSMSNoGroup-ErrorMessageDetail">Wiadomość błędu:</label>
+                                <span class="details-span" id="logSMSNoGroup-ErrorMessageDetail">${responseError['message']}</span>
+                            </div>
                         </div>
-                    </div>
-                    `;
-            }
-            else{
-                relatedObjects += 
-                    `<div class="row mb-10">
-                        <div class="col d-flex">
-                            <label class="logs-detail-label" for="logSMSNoGroup-StatusDetail">Status:</label>
-                            <span class="details-span" id="logSMSNoGroup-StatusDetail">${responseSuccess['success'] ? "Sukces" : "Błąd"}</span>
+                        `;
+        }
+        else {
+            relatedObjects +=
+                `<div class="row mb-10" style="margin-top: 20px;">
+                            <div class="col d-flex">
+                                <label class="logs-detail-label" for="logSMSNoGroup-StatusDetail">Status:</label>
+                                <span class="details-span" id="logSMSNoGroup-StatusDetail">${responseSuccess['success'] ? "Sukces" : "Błąd"}</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row mb-10">
-                        <div class="col d-flex">
-                            <label class="logs-detail-label" for="logSMSNoGroup-SentDetail">Wysłano:</label>
-                            <span class="details-span" id="logSMSNoGroup-SentDetail">${responseSuccess['queued']}</span>
+                        <div class="row mb-10">
+                            <div class="col d-flex">
+                                <label class="logs-detail-label" for="logSMSNoGroup-SentDetail">Wysłano:</label>
+                                <span class="details-span" id="logSMSNoGroup-SentDetail">${responseSuccess['queued']}</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row mb-10">
-                        <div class="col d-flex">
-                            <label class="logs-detail-label" for="logSMSNoGroup-UnsentDetail">Nie wysłano:</label>
-                            <span class="details-span" id="logSMSNoGroup-UnsentDetail">${responseSuccess['unsent']}</span>
+                        <div class="row mb-10">
+                            <div class="col d-flex">
+                                <label class="logs-detail-label" for="logSMSNoGroup-UnsentDetail">Nie wysłano:</label>
+                                <span class="details-span" id="logSMSNoGroup-UnsentDetail">${responseSuccess['unsent']}</span>
+                            </div>
                         </div>
-                    </div>
-                    `;
-            }
+                        `;
+        }
 
         $("#log-related-objects-data-form-group").append(relatedObjects);
 
@@ -1633,7 +1658,7 @@
         });
     }
 
-    function HandleContactTypeLog(contactEntity){
+    function HandleContactTypeLog(contactEntity) {
 
         var email = contactEntity.email;
         var hqAddress = contactEntity.hqAddress;
@@ -1643,68 +1668,73 @@
 
 
         var relatedObjects =
-            `<span class="form-subtitle">Kontakt</span>
-            <div class="row mb-10" style="margin-top: 20px;">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logContact-EmployeeIdDetail">Id:</label>
-                    <span class="details-span" id="logContact-EmployeeIdDetail">${contactEntity.employeeId}</span>
-                </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logContact-EmployeeNameDetail">Imię:</label>
-                    <span class="details-span" id="logContact-EmployeeNameDetail">${contactEntity.name}</span>
-                </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logContact-EmployeeSurnameDetail">Nazwisko:</label>
-                    <span class="details-span" id="logContact-EmployeeSurnameDetail">${contactEntity.surname}</span>
-                </div>
-            </div>
-            <div class="row mb-10" style="margin-bottom: 30px;">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logContact-EmployeeEmailDetail">Email:</label>
-                        <span class="details-span" id="logContact-EmployeeEmailDetail">${(email == null || email == "") ? "Brak danych" : email}</span>
-                </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logContact-EmployeePhonenumberDetail">Numer telefonu:</label>
-                    <span class="details-span" id="logContact-EmployeePhonenumberDetail">${contactEntity.phoneNumber}</span>
-                </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logContact-EmployeeHQAddressDetail">Adres miejsca pracy:</label>
-                        <span class="details-span" id="logContact-EmployeeHQAddressDetail">${(hqAddress == null || hqAddress == "") ? "Brak danych" : hqAddress}</span>
-                </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logContact-EmployeePostalNumberDetail">Kod pocztowy:</label>
-                        <span class="details-span" id="logContact-EmployeePostalNumberDetail">${(postalNumber == null || postalNumber == "") ? "Brak danych" : postalNumber}</span>
-                </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logContact-EmployeeCityDetail">Miasto:</label>
-                        <span class="details-span" id="logContact-EmployeeCityDetail">${(city == null || city == "") ? "Brak danych" : city}</span>
-                </div>
-            </div>
-            <div class="row mb-10" style="margin-bottom: 30px;">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logContact-EmployeeDepartmentDetail">Jednostka organizacyjna:</label>
-                        <span class="details-span" id="logContact-EmployeeDepartmentDetail">${(department == null || department == "") ? "Brak danych" : department}</span>
-                </div>
-            </div>
-            <div class="row mb-10">
-                <div class="col d-flex">
-                    <label class="logs-detail-label" for="logContact-EmployeeStatusDetail">Status:</label>
-                    <span class="details-span" id="logContact-EmployeeStatusDetail">${contactEntity.isActive ? "Aktywny" : "Nieaktywny"}</span>
-                </div>
-            </div>
-            `;
+            `       <span class="log-related-object-title">Kontakt</span>
+                    <hr style="margin-top: 20px";/>
+                    <span class="form-subtitle">Dane personalne</span>
+                    <div class="row mb-10" style="margin-top: 20px;">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logContact-EmployeeIdDetail">Id:</label>
+                            <span class="details-span" id="logContact-EmployeeIdDetail">${contactEntity.employeeId}</span>
+                        </div>
+                    </div>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logContact-EmployeeNameDetail">Imię:</label>
+                            <span class="details-span" id="logContact-EmployeeNameDetail">${contactEntity.name}</span>
+                        </div>
+                    </div>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logContact-EmployeeSurnameDetail">Nazwisko:</label>
+                            <span class="details-span" id="logContact-EmployeeSurnameDetail">${contactEntity.surname}</span>
+                        </div>
+                    </div>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logContact-EmployeeEmailDetail">Email:</label>
+                            <span class="details-span" id="logDontact-EmployeeEmailDetail">${(email == null || email == "") ? "Brak danych" : email}</span>
+                        </div>
+                    </div>
+                    <hr />
+                    <span class="form-subtitle">Dane kontaktowe</span>
+                    <div class="row mb-10" style="margin-top: 20px;">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logContact-EmployeePhonenumberDetail">Numer telefonu:</label>
+                            <span class="details-span" id="logContact-EmployeePhonenumberDetail">${contactEntity.phoneNumber}</span>
+                        </div>
+                    </div>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logContact-EmployeeHQAddressDetail">Adres miejsca pracy:</label>
+                            <span class="details-span" id="logContact-EmployeeHQAddressDetail">${(hqAddress == null || hqAddress == "") ? "Brak danych" : hqAddress}</span>
+                        </div>
+                    </div>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logContact-EmployeePostalNumberDetail">Kod pocztowy:</label>
+                            <span class="details-span" id="logContact-EmployeePostalNumberDetail">${(postalNumber == null || postalNumber == "") ? "Brak danych" : postalNumber}</span>
+                        </div>
+                    </div>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logContact-EmployeeCityDetail">Miasto:</label>
+                            <span class="details-span" id="logContact-EmployeeCityDetail">${(city == null || city == "") ? "Brak danych" : city}</span>
+                        </div>
+                    </div>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logContact-EmployeeDepartmentDetail">Jednostka organizacyjna:</label>
+                            <span class="details-span" id="logContact-EmployeeDepartmentDetail">${(department == null || department == "") ? "Brak danych" : department}</span>
+                        </div>
+                    </div>
+                    <hr />
+                        <div class="row mb-10" style="margin-top: 20px;">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logContact-EmployeeStatusDetail">Status:</label>
+                            <span class="details-span" id="logContact-EmployeeStatusDetail">${contactEntity.isActive ? "Aktywny" : "Nieaktywny"}</span>
+                        </div>
+                    </div>
+                    `;
 
         $("#log-related-objects-data-form-group").append(relatedObjects);
 
@@ -1886,15 +1916,15 @@
                     }
 
                     var newRow = `<tr>
-                        <td class="small-cell template-name">${item.templateName}</td>
-                        <td class="medium-cell template-description">${description}</td>
-                        <td class="big-cell template-content">${item.templateContent}</td>
-                        <td class="centered-cell">
-                        <a href="#details-${item.templateId}" class="icon-list template-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
-                        <a href="#edit-${item.templateId}" class="icon-list template-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
-                        <a href="#delete-${item.templateId}" class="icon-list template-delete"><img src="/icons/trash.png" title="Usuń"/></a>
-                        </td>
-                        </tr>`;
+                            <td class="small-cell template-name">${item.templateName}</td>
+                            <td class="medium-cell template-description">${description}</td>
+                            <td class="big-cell template-content">${item.templateContent}</td>
+                            <td class="centered-cell">
+                            <a href="#details-${item.templateId}" class="icon-list template-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
+                            <a href="#edit-${item.templateId}" class="icon-list template-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
+                            <a href="#delete-${item.templateId}" class="icon-list template-delete"><img src="/icons/trash.png" title="Usuń"/></a>
+                            </td>
+                            </tr>`;
 
 
                     $('.template-list tbody').append(newRow);
@@ -1926,18 +1956,18 @@
                     var isActiveRow = item.isActive ? '<td class="centered-cell"><span class="active-pill">Aktywny<span></td>' : '<td class="centered-cell"><span class="inactive-pill">Nieaktywny<span></td>'
 
                     var newRow = `<tr>
-                        <td class="tiny-cell contact-name">${item.name}</td>
-                        <td class="tiny-cell contact-surname">${item.surname}</td>
-                        <td class="small-cell">${email}</td>
-                        <td class="small-cell">${item.phoneNumber}</td>
-                        ${isActiveRow}
-                        <td class="centered-cell">${groupNames}</td>
-                        <td class="centered-cell">
-                        <a href="#details-${item.employeeId}" class="icon-list contact-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
-                        <a href="#edit-${item.employeeId}" class="icon-list contact-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
-                        <a href="#delete-${item.employeeId}" class="icon-list contact-delete"><img src="/icons/trash.png" title="Usuń"/></a> 
-                        </td>
-                        </tr>`;
+                            <td class="tiny-cell contact-name">${item.name}</td>
+                            <td class="tiny-cell contact-surname">${item.surname}</td>
+                            <td class="small-cell">${email}</td>
+                            <td class="small-cell">${item.phoneNumber}</td>
+                            ${isActiveRow}
+                            <td class="centered-cell">${groupNames}</td>
+                            <td class="centered-cell">
+                            <a href="#details-${item.employeeId}" class="icon-list contact-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
+                            <a href="#edit-${item.employeeId}" class="icon-list contact-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
+                            <a href="#delete-${item.employeeId}" class="icon-list contact-delete"><img src="/icons/trash.png" title="Usuń"/></a>
+                            </td>
+                            </tr>`;
 
 
                     $('.contacts-list tbody').append(newRow);
@@ -1961,20 +1991,20 @@
 
                 $.each(listOfGroups, function (index, item) {
                     var groupDescription = item.groupDescription;
-                    
+
                     groupDescription = groupDescription == null ? "Brak opisu" : groupDescription;
 
                     var newRow = `<tr>
-                        <td class="small-cell group-name">${item.groupName}</td>
-                        <td class="big-cell group-description">${groupDescription}</td>
-                        <td class="tiny-centered-cell">${item.membersIds.length}</td>
-                            <td class="centered-cell"" style="min-width: 205px;">
-                        <a href="#assign-${item.groupId}" class="icon-list group-assign"><img src="/icons/assign-users.png" title="Przypisz użytkowników"/></a>
-                        <a href="#details-${item.groupId}" class="icon-list group-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
-                        <a href="#edit-${item.groupId}" class="icon-list group-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
-                        <a href="#delete-${item.groupId}" class="icon-list group-delete"><img src="/icons/trash.png" title="Usuń"/></a>
-                        </td>
-                        </tr>`;
+                            <td class="small-cell group-name">${item.groupName}</td>
+                            <td class="big-cell group-description">${groupDescription}</td>
+                            <td class="tiny-centered-cell">${item.membersIds.length}</td>
+                                <td class="centered-cell"" style="min-width: 205px;">
+                            <a href="#assign-${item.groupId}" class="icon-list group-assign"><img src="/icons/assign-users.png" title="Przypisz użytkowników"/></a>
+                            <a href="#details-${item.groupId}" class="icon-list group-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
+                            <a href="#edit-${item.groupId}" class="icon-list group-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
+                            <a href="#delete-${item.groupId}" class="icon-list group-delete"><img src="/icons/trash.png" title="Usuń"/></a>
+                            </td>
+                            </tr>`;
 
 
                     $('.group-list tbody').append(newRow);
@@ -2001,14 +2031,14 @@
                     var logTypeRow = item.logType == "Błąd" ? `<td class="tiny-centered-cell"><span class="error-pill">${item.logType}</span></td>` : `<td class="tiny-centered-cell"><span class="info-pill">${item.logType}</span></td>`
 
                     var newRow = `<tr>
-                        ${logTypeRow}
-                        <td class="tiny-cell">${item.logSource}</td>
-                        <td class="big-cell">${item.logMessage}</td>
-                        <td class="centered-cell" style="min-width:105px;">${new Date(item.logCreationDate).toLocaleString('en-GB')}</td>
-                        <td class="tiny-centered-cell">
-                        <a href="#details-${item.logId}" class="icon-list log-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
-                        </td>
-                        </tr>`;
+                            ${logTypeRow}
+                            <td class="tiny-cell">${item.logSource}</td>
+                            <td class="big-cell">${item.logMessage}</td>
+                            <td class="centered-cell" style="min-width:105px;">${new Date(item.logCreationDate).toLocaleString('en-GB')}</td>
+                            <td class="tiny-centered-cell">
+                            <a href="#details-${item.logId}" class="icon-list log-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
+                            </td>
+                            </tr>`;
 
 
                     $('#log-table tbody').append(newRow);
@@ -2035,13 +2065,13 @@
                     var description = item.groupDescription == null ? "Brak opisu" : item.groupDescription
 
                     var newRow = `<tr>
-                        <td class="small-cell">${item.groupName}</td>
-                        <td class="big-cell">${description}</td>
-                        <td class="tiny-centered-cell">${item.membersIds.length}</td>
-                        <td class="tiny-centered-cell">
-                        <a href="#pick-${item.groupId}" class="icon-list group-pick-me"><img src="/icons/pick-me.png" title="Wybierz grupę"/></a>
-                        </td>
-                        </tr>`;
+                            <td class="small-cell">${item.groupName}</td>
+                            <td class="big-cell">${description}</td>
+                            <td class="tiny-centered-cell">${item.membersIds.length}</td>
+                            <td class="tiny-centered-cell">
+                            <a href="#pick-${item.groupId}" class="icon-list group-pick-me"><img src="/icons/pick-me.png" title="Wybierz grupę"/></a>
+                            </td>
+                            </tr>`;
 
 
                     $('#choose-group-for-sms-table tbody').append(newRow);
@@ -2067,13 +2097,13 @@
                     var templateDescription = item.templateDescription == null ? "Brak opisu" : item.templateDescription
 
                     var newRow = `<tr>
-                        <td class="small-cell">${item.templateName}</td>
-                        <td class="medium-cell">${templateDescription}</td>
-                        <td class="big-cell">${item.templateContent}</td>
-                        <td class="tiny-centered-cell">
-                        <a href="#pick-${item.templateId}" class="icon-list template-pick-me"><img src="/icons/pick-me.png" title="Wybierz szablon"/></a>
-                        </td>
-                        </tr>`;
+                            <td class="small-cell">${item.templateName}</td>
+                            <td class="medium-cell">${templateDescription}</td>
+                            <td class="big-cell">${item.templateContent}</td>
+                            <td class="tiny-centered-cell">
+                            <a href="#pick-${item.templateId}" class="icon-list template-pick-me"><img src="/icons/pick-me.png" title="Wybierz szablon"/></a>
+                            </td>
+                            </tr>`;
 
 
                     $('#choose-template-for-sms-table tbody').append(newRow);
@@ -2099,10 +2129,10 @@
                 $("#group-assign-chosen-group-table tbody").empty();
 
                 var newRow = `<tr>
-                    <td class="small-cell">${groupEntity.groupName}</td>
-                    <td class="big-cell">${groupDescription}</td>
-                    <td class="tiny-centered-cell">${groupEntity.membersIds.length}</td>
-                    </tr>`;
+                        <td class="small-cell">${groupEntity.groupName}</td>
+                        <td class="big-cell">${groupDescription}</td>
+                        <td class="tiny-centered-cell">${groupEntity.membersIds.length}</td>
+                        </tr>`;
 
                 $('#group-assign-chosen-group-table').append(newRow);
 
@@ -2122,23 +2152,23 @@
                             var isActiveRow = item.isActive ? '<td class="tiny-centered-cell"><span class="active-pill">Aktywny<span></td>' : '<td class="tiny-centered-cell"><span class="inactive-pill">Nieaktywny<span></td>'
 
                             var newRow = `<tr>
-                                <td class="tiny-cell">${item.name}</td>
-                                <td class="tiny-cell">${item.surname}</td>
-                                <td class="tiny-cell">${item.phoneNumber}</td>
-                                ${isActiveRow}
-                                <td class="centered-cell">${groupNames}</td> 
-                                <td class="tiny-centered-cell">`
+                                    <td class="tiny-cell">${item.name}</td>
+                                    <td class="tiny-cell">${item.surname}</td>
+                                    <td class="tiny-cell">${item.phoneNumber}</td>
+                                    ${isActiveRow}
+                                    <td class="centered-cell">${groupNames}</td>
+                                    <td class="tiny-centered-cell">`
 
                             if (groupEntity.membersIds.includes(item.employeeId)) {
 
                                 newRow += `<a href="#unassign-${item.employeeId}-${groupEntity.groupId}" class="icon-list contact-unassign"><img src="/icons/unassign-user.png" title="Wypisz z grupy"/></a>
-                                    </td>
-                                    </tr>`;
+                                        </td>
+                                        </tr>`;
                             }
                             else {
                                 newRow += `<a href="#assign-${item.employeeId}-${groupEntity.groupId}" class="icon-list contact-assign"><img src="/icons/assign-user.png" title="Dopisz do grupy" /></a>
-                                    </td>
-                                    </tr>`;
+                                        </td>
+                                        </tr>`;
                             }
 
                             $('#group-assign-contact-list-table tbody').append(newRow);
@@ -2357,14 +2387,14 @@
         const resizeObserver = new ResizeObserver(entries => {
             for (const entry of entries) {
                 const { width, height } = entry.contentRect;
-               CalculateHeaderWidthAndToolbarHeight();
+                CalculateHeaderWidthAndToolbarHeight();
             }
         });
 
         resizeObserver.observe($("#content-render")[0]);
 
-         var initialToolboxContextWidthInPx = 50;
-         var hoveredWidthInPx = 201;
+        var initialToolboxContextWidthInPx = 50;
+        var hoveredWidthInPx = 201;
 
         $(".option-list-item").hover(
             function () {
@@ -2442,11 +2472,11 @@
                         var statusText = employee.isActive ? 'Aktywny' : 'Nieaktywny';
 
                         var newRow = `<tr>
-                        <td class="tiny-cell">${employee.name}</td>
-                        <td class="tiny-cell">${employee.surname}</td>
-                        <td class="small-cell">${employee.phoneNumber}</td>
-                        <td class="tiny-centered-cell"><span class="${statusClass}">${statusText}</span></td>
-                        </tr>`
+                            <td class="tiny-cell">${employee.name}</td>
+                            <td class="tiny-cell">${employee.surname}</td>
+                            <td class="small-cell">${employee.phoneNumber}</td>
+                            <td class="tiny-centered-cell"><span class="${statusClass}">${statusText}</span></td>
+                            </tr>`
 
                         $("#group-detail-members-table tbody").append(newRow);
                     });
@@ -2489,13 +2519,13 @@
                         HandleContactTypeLog(logEntity.contact);
                     }
                     else if (logEntity.type == "Groups-Assign") {
-                        HandleGroupsAssignTypeLog({group: logEntity.group, contact: logEntity.contact});
+                        HandleGroupsAssignTypeLog({ group: logEntity.group, contact: logEntity.contact });
                     }
                     else if (logEntity.type == "Groups") {
                         HandleGroupsTypeLog(logEntity.group);
                     }
                     else if (logEntity.type == "SMS-Group") {
-                        handleSMSGroupTypeLog({sms: logEntity.sms, group: logEntity.group });
+                        handleSMSGroupTypeLog({ sms: logEntity.sms, group: logEntity.group });
                     }
                     else if (logEntity.type == "SMS-NoGroup") {
                         handleSMSNoGroupTypeLog(logEntity.sms);
@@ -2949,7 +2979,7 @@
             GoBackToGroupList();
 
         });
-        
+
         OnInputFilterTable(".template-search", "#template-table");
 
         OnInputFilterTable(".search-for-group-for-sms", "#choose-group-for-sms-table");
