@@ -796,8 +796,8 @@
                     </div>
                 </div>
             </div>
-            <div class="logs-details-container options-container" style="margin: 20px; /* display:none; */">
-                <div class="option-content" style="max-width: 600px;">
+            <div class="logs-details-container options-container" style="margin: 20px; display:none;">
+                <div class="option-content" id="log-details-window" style="max-width: 600px;">
                     <div class="options-header">
                         <div class="previous-page" style="flex:1;">
                             <button class="violet-button" id="groups-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToLogsList()">
@@ -1416,7 +1416,7 @@
             `;
 
         $("#log-related-objects-data-form-group").append(relatedObjects);
-        $("#log-related-objects-data-form-group").closest('.option-content').css('max-width', '750px');
+        $("#log-details-window").css('max-width', '750px');
 
         if (importEntity.importStatus == "Failure") {
             $("#log-import-tables").hide();
@@ -2519,6 +2519,7 @@
         $(".logs-list-container").show();
         $(".details-span").text("");
         $("#log-related-objects-data-form-group").empty();
+        $("#log-details-window").css("max-width", "600px")
     }
 
     function GoBackToGroupListFromAssign() {
