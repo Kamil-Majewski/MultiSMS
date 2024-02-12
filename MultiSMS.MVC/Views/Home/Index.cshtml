@@ -1416,13 +1416,14 @@
             `;
 
         $("#log-related-objects-data-form-group").append(relatedObjects);
-        $("#log-details-window").css('max-width', '750px');
 
         if (importEntity.importStatus == "Failure") {
             $("#log-import-tables").hide();
         }
 
         if (importEntity.addedEmployees != null && importEntity.addedEmployees.length > 0){
+
+            $("#log-details-window").css('max-width', '750px');
 
             $.each(importEntity.addedEmployees, function (index, employee) {
 
