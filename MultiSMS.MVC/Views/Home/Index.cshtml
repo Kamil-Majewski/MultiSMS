@@ -1330,6 +1330,171 @@
         });
     }
 
+    function handleImportTypeLog(importEntity) {
+        console.log(importEntity);
+        var importStatus;
+
+        if(importEntity.importStatus == "Success"){
+            importStatus = "Sukces";
+        }
+        else if (importEntity.importStatus == "Partial Success"){
+            importStatus = "Częściowy sukces";
+        }
+        else{
+            importStatus = "Niepowodzenie";
+        }
+
+        var relatedObjects =
+            `<span class="log-related-object-title">Import</span>
+            <hr style="margin-top: 20px";/>
+            <span class="form-subtitle">Informacje</span>
+            <div class="row mb-10" style="margin-top: 20px;">
+                <div class="col d-flex">
+                    <label class="logs-detail-label" for="logImport-StatusDetail">Status:</label>
+                    <span class="details-span" id="logImport-StatusDetail">${importStatus}</span>
+                </div>
+            </div>
+            <div class="row mb-10" style="margin-top: 20px;">
+                <div class="col d-flex">
+                    <label class="logs-detail-label" for="logImport-messageDetail">Wiadomość:</label>
+                    <span class="details-span" id="logImport-messageDetail">${importEntity.importMessage}</span>
+                </div>
+            </div>
+            <div id="log-import-tables">
+                <hr style="margin-top:20px;"/>
+                <span class="form-subtitle">Tabelaryczny rozkład kontaktów</span>
+                <br />
+                <div style="margin-top: 20px;">
+                    <span class="logs-detail-label" id="log-added-contacts-title"">Dodane kontakty:</span>
+                </div>
+                <div class="table-responsive" style="border: 2px solid #f0f1f1; margin-top:20px; margin-bottom: 20px; max-height: 250px;">
+                    <table class="log-import-members-list table table-borderless" id="log-detail-import-addedContacts-table">
+                        <thead>
+                            <tr>
+                                <th class="tiny-cell">Imię</th>
+                                <th class="tiny-cell">Nazwisko</th>
+                                <th class="small-cell" style="width: 150px;">Numer telefonu</th>
+                                <th class="tiny-centered-cell">Status</th>
+                                <th class="tiny-centered-cell" style="min-width: 185px;">Nieprawidłowe grupy</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <span class="logs-detail-label" id="log-repeated-contacts-title">Powtórzone kontakty:</span>
+                <div class="table-responsive" style="border: 2px solid #f0f1f1; margin-top:20px; margin-bottom: 20px; max-height: 250px;">
+                    <table class="log-import-members-list table table-borderless" id="log-detail-import-repeatedContacts-table">
+                        <thead>
+                            <tr>
+                                <th class="tiny-cell">Imię</th>
+                                <th class="tiny-cell">Nazwisko</th>
+                                <th class="small-cell" style="width: 150px;">Numer telefonu</th>
+                                <th class="tiny-centered-cell">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <span class="logs-detail-label" id="log-invalid-contacts-title">Nieprawidłowe kontakty:</span>
+                <div class="table-responsive" style="border: 2px solid #f0f1f1; margin-top:20px; margin-bottom: 20px; max-height: 250px;">
+                    <table class="log-import-members-list table table-borderless" id="log-detail-import-invalidContacts-table">
+                        <thead>
+                            <tr>
+                                <th class="tiny-cell">Imię</th>
+                                <th class="tiny-cell">Nazwisko</th>
+                                <th class="small-cell" style="width: 150px;">Numer telefonu</th>
+                                <th class="tiny-centered-cell">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            `;
+
+        $("#log-related-objects-data-form-group").append(relatedObjects);
+        $("#log-related-objects-data-form-group").closest('.option-content').css('max-width', '750px');
+
+        if (importEntity.importStatus == "Failure") {
+            $("#log-import-tables").hide();
+        }
+
+        if (importEntity.addedEmployees != null && importEntity.addedEmployees.length > 0){
+
+            $.each(importEntity.addedEmployees, function (index, employee) {
+
+                var statusClass = employee.isActive ? 'active-pill' : 'inactive-pill';
+                var statusText = employee.isActive ? 'Aktywny' : 'Nieaktywny';
+
+                var newRow = `<tr>
+                                <td class="tiny-cell">${employee.name}</td>
+                                <td class="tiny-cell">${employee.surname}</td>
+                                <td class="small-cell">${employee.phoneNumber}</td>
+                                <td class="tiny-centered-cell"><span class="${statusClass}">${statusText}</span></td>
+                                <td class="tiny-centered-cell">${importEntity.nonExistantGroupIds[index] == "" ? "Brak" : importEntity.nonExistantGroupIds[index].join(', ')}</td>
+                                </tr>`
+
+                $("#log-detail-import-addedContacts-table tbody").append(newRow);
+            });
+        }
+        else{
+            $("#log-detail-import-addedContacts-table").parent().hide();
+            $("#log-added-contacts-title").hide();
+        }
+
+        if (importEntity.repeatedEmployees != null && importEntity.repeatedEmployees.length > 0) {
+
+            $.each(importEntity.repeatedEmployees, function (index, employee) {
+
+                var statusClass = employee.isActive ? 'active-pill' : 'inactive-pill';
+                var statusText = employee.isActive ? 'Aktywny' : 'Nieaktywny';
+
+                var newRow = `<tr>
+                                    <td class="tiny-cell">${employee.name}</td>
+                                    <td class="tiny-cell">${employee.surname}</td>
+                                    <td class="small-cell">${employee.phoneNumber}</td>
+                                    <td class="tiny-centered-cell"><span class="${statusClass}">${statusText}</span></td>
+                                    </tr>`
+
+                $("#log-detail-import-repeatedContacts-table tbody").append(newRow);
+            });
+        }
+        else{
+            $("#log-detail-import-repeatedContacts-table").parent().hide();
+            $("#log-repeated-contacts-title").hide();
+        }
+
+        if (importEntity.invalidEmployees != null && importEntity.invalidEmployees.length > 0) {
+
+            $.each(importEntity.invalidEmployees, function (index, employee) {
+
+                var statusClass = employee.isActive ? 'active-pill' : 'inactive-pill';
+                var statusText = employee.isActive ? 'Aktywny' : 'Nieaktywny';
+
+                var newRow = `<tr>
+                                        <td class="tiny-cell">${employee.name}</td>
+                                        <td class="tiny-cell">${employee.surname}</td>
+                                        <td class="small-cell">${employee.phoneNumber}</td>
+                                        <td class="tiny-centered-cell"><span class="${statusClass}">${statusText}</span></td>
+                                        </tr>`
+
+                $("#log-detail-import-invalidContacts-table tbody").append(newRow);
+            });
+        }
+        else {
+            $("#log-detail-import-invalidContacts-table").parent().hide();
+            $("#log-invalid-contacts-title").hide();
+        }
+
+        $(".logs-detail-label").css({
+            "min-width": "148px",
+            "max-width": "148px"
+        });
+}
+
     function HandleGroupsTypeLog(groupEntity) {
 
         var groupDescription = groupEntity.groupDescription;

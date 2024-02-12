@@ -583,8 +583,12 @@ tr td {
     border-bottom: none;
 }
 
-.logs-detail-label{
+.logs-detail-label {
     min-width: 138px;
+    color: #5a6372;
+    font-family: 'Open Sans', sans-serif;
+    margin-bottom: 0.25rem;
+    font-weight: 600;
 }
 
 .table td {
