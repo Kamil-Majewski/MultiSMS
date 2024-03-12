@@ -40,5 +40,11 @@
     $("#toolbar-user-settings").show();
     $(".active-tab").removeClass("active-tab");
     $("#email-tab").parent().toggleClass("active-tab");
+
+    $(document).ready(function () {
+        $(document).on('click', "#dismiss-alert-button", function () {
+            CalculateHeaderWidthAndToolbarHeight();
+        });
+    });  
 </script>
 

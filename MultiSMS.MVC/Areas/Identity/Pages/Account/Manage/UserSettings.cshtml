@@ -76,6 +76,10 @@
     $(document).ready(function () {
         FormatPhoneNumberOnLoad();
 
+        $(document).on('click', "#dismiss-alert-button", function () {
+            CalculateHeaderWidthAndToolbarHeight();
+        });
+
         $("#change-email-button").on('click', function () {
             window.location.replace("./Email");
         });
