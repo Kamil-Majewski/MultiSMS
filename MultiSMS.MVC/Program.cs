@@ -8,6 +8,7 @@ using MultiSMS.BusinessLogic.Initialization;
 using MultiSMS.BusinessLogic.Settings;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.MVC.Models;
+using MultiSMS.MVC.Areas;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +34,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddDefaultIdentity<Administrator>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<MultiSMSDbContext>()
+    .AddErrorDescriber<CustomIdentityErrorDescriber>()
     .AddDefaultTokenProviders();
 
 builder.Services.InitializeInfrastructureDependencies();
