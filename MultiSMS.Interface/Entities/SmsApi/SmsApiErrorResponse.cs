@@ -4,8 +4,8 @@ namespace MultiSMS.Interface.Entities.SmsApi
 {
     public class SmsApiErrorResponse
     {
-        [JsonProperty(PropertyName = "invalid_numbers", Required = Required.Always)]
-        public List<InvalidNumber> InvalidNumbers { get; set; } = new List<InvalidNumber>();
+        [JsonProperty(PropertyName = "invalid_numbers", Required = Required.Default)]
+        public List<InvalidNumber>? InvalidNumbers { get; set; } = new List<InvalidNumber>();
 
         [JsonProperty(PropertyName = "error", Required = Required.Always)]
         public int ErrorCode { get; set; }

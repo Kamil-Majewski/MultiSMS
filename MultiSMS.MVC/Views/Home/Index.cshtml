@@ -952,7 +952,10 @@
                 }
             },
             error: function (error) {
-                console.error(error);
+                $("#status-message-sms").addClass("failed-status");
+                $("#status-message-sms").html(`Wystąpił wewnętrzny błąd servera! Skontaktuj się z obsługą. <button type='button' class='btn-close text-dark' aria-label='Close' onclick='CloseAlert()'></button>`);
+                $("#status-message-sms").show();
+                console.error(error.message);
             }
         });
     }
