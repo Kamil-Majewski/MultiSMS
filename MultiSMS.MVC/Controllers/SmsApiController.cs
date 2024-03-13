@@ -9,6 +9,7 @@ using MultiSMS.BusinessLogic.Strategy;
 using MultiSMS.BusinessLogic.Strategy.Intefaces;
 using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Entities.ServerSms;
+using MultiSMS.Interface.Entities.SmsApi;
 using MultiSMS.Interface.Extensions;
 using MultiSMS.Interface.Repositories.Interfaces;
 using Newtonsoft.Json;
@@ -69,7 +70,7 @@ namespace MultiSMS.MVC.Controllers
                 {
                     logMessage = $"Sms został wysłany do grupy {chosenGroupName}";
                 }
-                ServerSmsSuccessResponse successResponse = JsonConvert.DeserializeObject<ServerSmsSuccessResponse>(response) ?? throw new Exception("Deserialization failed");
+                ServerSmsSuccessResponse successResponse = JsonConvert.DeserializeObject<ServerSmsSuccessResponse>(response) ?? throw new Exception("Deserialization to ServerSmsSuccessResponse failed");
 
                 var smsMessage = new SMSMessage
                 {
@@ -83,7 +84,7 @@ namespace MultiSMS.MVC.Controllers
                 await _logRepository.AddEntityToDatabaseAsync(new Log
                 {
                     LogType = "Info",
-                    LogSource = "SMS",
+                    LogSource = "ServerSms",
                     LogMessage = logMessage,
                     LogCreator = admin.UserName,
                     LogCreatorId = adminId,
@@ -110,7 +111,7 @@ namespace MultiSMS.MVC.Controllers
                     {
                         logMessage = $"Nie udało się wysłać sms'a do grupy {chosenGroupName}";
                     }
-                    ServerSmsErrorResponse errorResponse = JsonConvert.DeserializeObject<ServerSmsErrorResponse>(response) ?? throw new Exception("Deserialization failed");
+                    ServerSmsErrorResponse errorResponse = JsonConvert.DeserializeObject<ServerSmsErrorResponse>(response) ?? throw new Exception("Deserialization to ServerSmsErrorResponse failed");
 
                     var smsMessage = new SMSMessage
                     {
@@ -124,7 +125,7 @@ namespace MultiSMS.MVC.Controllers
                     await _logRepository.AddEntityToDatabaseAsync(new Log
                     {
                         LogType = "Błąd",
-                        LogSource = "SMS",
+                        LogSource = "ServerSms",
                         LogMessage = logMessage,
                         LogCreator = admin.UserName,
                         LogCreatorId = adminId,
@@ -171,7 +172,82 @@ namespace MultiSMS.MVC.Controllers
                 {
                     logMessage = $"Sms został wysłany do grupy {chosenGroupName}";
                 }
+
+                SmsApiSuccessResponse successResponse = JsonConvert.DeserializeObject<SmsApiSuccessResponse>(response) ?? throw new Exception("Deserialization to SmsApiSuccessResponse failed");
+
+                var smsMessage = new SMSMessage
+                {
+                    ChosenGroupId = chosenGroupId,
+                    AdditionalPhoneNumbers = string.Join(',', additionalPhoneNumbers),
+                    AdditionalInformation = additionalInfo,
+                    Settings = dataForSmsEntity,
+                    ServerResponse = successResponse
+                };
+
+                await _logRepository.AddEntityToDatabaseAsync(new Log
+                {
+                    LogType = "Info",
+                    LogSource = "SmsApi",
+                    LogMessage = logMessage,
+                    LogCreator = admin.UserName,
+                    LogCreatorId = adminId,
+                    LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>()
+                        {
+                            { "SmsMessages", JsonConvert.SerializeObject(smsMessage) },
+                            { "Groups", JsonConvert.SerializeObject(chosenGroup) },
+                            { "Creator", JsonConvert.SerializeObject(admin) }
+                        })
+                });
+
+                return Json(new { Status = "success", Queued = successResponse.Details.Count(d => d.Status == "QUEUE"), Unsent = successResponse.Details.Count(d => d.Status != "QUEUE") });
             }
+            catch (JsonException)
+            {
+                try //deserialization into SuccessResponse failed, try to deserialize into ErrorResponse
+                {
+                    string logMessage;
+                    if (chosenGroupName == null && chosenGroupId == 0)
+                    {
+                        logMessage = "Nie udało się wysłać sms'a do pojedyńczych numerów";
+                    }
+                    else
+                    {
+                        logMessage = $"Nie udało się wysłać sms'a do grupy {chosenGroupName}";
+                    }
+                    SmsApiErrorResponse errorResponse = JsonConvert.DeserializeObject<SmsApiErrorResponse>(response) ?? throw new Exception("Deserialization to SmsApiErrorResponse failed");
+
+                    var smsMessage = new SMSMessage
+                    {
+                        ChosenGroupId = chosenGroupId,
+                        AdditionalPhoneNumbers = string.Join(',', additionalPhoneNumbers),
+                        AdditionalInformation = additionalInfo,
+                        Settings = dataForSmsEntity,
+                        ServerResponse = errorResponse
+                    };
+
+                    await _logRepository.AddEntityToDatabaseAsync(new Log
+                    {
+                        LogType = "Błąd",
+                        LogSource = "SmsApi",
+                        LogMessage = logMessage,
+                        LogCreator = admin.UserName,
+                        LogCreatorId = adminId,
+                        LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>()
+                            {
+                                { "SmsMessages", JsonConvert.SerializeObject(smsMessage) },
+                                { "Groups", JsonConvert.SerializeObject(chosenGroup) },
+                                { "Creator", JsonConvert.SerializeObject(admin) }
+                            })
+                    });
+
+                    return Json(new { Status = "failed", Code = errorResponse.ErrorCode, Message = errorResponse.ErrorMessage });
+                }
+                catch (JsonException)
+                {
+                    throw new Exception("Error deserializing objects: response structure doesn't fit the object structure.");
+                }
+            }
+        }
 
         [Authorize]
         [HttpGet]
@@ -204,8 +280,12 @@ namespace MultiSMS.MVC.Controllers
 
             var phoneNumbersString = string.Join(',', groupPhoneNumbers);
 
+            //if(settings.activeApi == "ServerSms"){
+
             return await SendSmsMessageThroughServerSMS(chosenGroupName, chosenGroup, chosenGroupId, additionalInfo, additionalPhoneNumbers, adminId, admin, phoneNumbersString, text, data);
 
+            //else if (settings.activeApi == "SmsApi"){
+            //return await sendSmsMessageTroughSmsApi(chosenGroupName, chosenGroup, chosenGroupId, additionalInfo, additionalPhoneNumbers, adminId, admin, phoneNumbersString, text, data);
         }
     }
 }

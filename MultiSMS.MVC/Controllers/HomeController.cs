@@ -636,7 +636,7 @@ namespace MultiSMS.MVC.Controllers
                     {
                         return Json(new { Type = "Groups", Group = group, Log = logSanitized, LogCreator = logCreator });
                     }
-                case "SMS":
+                case "ServerSms":
                     var smsDto = JsonConvert.DeserializeObject<SMSMessage>(logRelatedObjects["SmsMessages"]);
 
                     if (smsDto!.ServerResponse.ToJToken().SelectToken("error") != null)

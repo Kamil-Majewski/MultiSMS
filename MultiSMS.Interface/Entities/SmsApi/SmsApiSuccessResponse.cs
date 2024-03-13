@@ -7,8 +7,8 @@ namespace MultiSMS.Interface.Entities.SmsApi
        [JsonProperty(PropertyName = "count", Required = Required.Always)]
        public int SentCount { get; set; }
 
-       [JsonProperty(PropertyName = "list", Required = Required.Always)]
-       public List<SuccessDetail> Details { get; set; } = new List<SuccessDetail>()
+        [JsonProperty(PropertyName = "list", Required = Required.Always)]
+        public List<SuccessDetail> Details { get; set; } = new List<SuccessDetail>();
 
     }
 

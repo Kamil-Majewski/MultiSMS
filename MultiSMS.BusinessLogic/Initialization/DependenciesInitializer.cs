@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MultiSMS.BusinessLogic.Services;
 using MultiSMS.BusinessLogic.Services.Interfaces;
+using MultiSMS.BusinessLogic.Strategy;
+using MultiSMS.BusinessLogic.Strategy.Intefaces;
 
 namespace MultiSMS.BusinessLogic.Initialization
 {
@@ -10,9 +12,8 @@ namespace MultiSMS.BusinessLogic.Initialization
         {
             serviceCollection.AddScoped<IEmailService, EmailService>();
             serviceCollection.AddScoped<IAdministratorService, AdministratorService>();
-            serviceCollection.AddScoped<IServerSmsService, ServerSmsService>();
-            serviceCollection.AddScoped<ISmsApiService, SmsApiService>();
             serviceCollection.AddScoped<IImportExportEmployeesService, ImportExportEmployeesService>();
+            serviceCollection.AddScoped<ISendSMSContext, SendSMSContext>();
         }
     }
 }

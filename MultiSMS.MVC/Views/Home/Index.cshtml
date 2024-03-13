@@ -928,7 +928,7 @@
 
     function SendSMS(text, chosenGroupId, chosenGroupName, additionalPhoneNumbers, additionalInfo) {
         $.ajax({
-            url: '@Url.Action("SendSmsMessage", "ServerSmsApi")',
+            url: '@Url.Action("SendSmsMessage", "SmsApi")',
             type: 'GET',
             contentType: 'application/json',
             data: { text: text, chosenGroupId: chosenGroupId, chosenGroupName: chosenGroupName, additionalPhoneNumbers: additionalPhoneNumbers, additionalInfo: additionalInfo },
