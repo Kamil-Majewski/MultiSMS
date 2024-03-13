@@ -159,7 +159,19 @@ namespace MultiSMS.MVC.Controllers
                     { "fast", "1" },
                     { "test",  "true"}
                 };
-        }
+
+            try //try to deserialize response into entities that correspond with response structure and then act depending on the outcome
+            {
+                string logMessage;
+                if (chosenGroupName == null && chosenGroupId == 0)
+                {
+                    logMessage = "Sms został wysłany do pojedyńczych numerów";
+                }
+                else
+                {
+                    logMessage = $"Sms został wysłany do grupy {chosenGroupName}";
+                }
+            }
 
         [Authorize]
         [HttpGet]
