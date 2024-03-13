@@ -1,6 +1,8 @@
-﻿namespace MultiSMS.BusinessLogic.Strategy
+﻿using MultiSMS.BusinessLogic.Strategy.Intefaces;
+
+namespace MultiSMS.BusinessLogic.Strategy
 {
-    public class SendSMSContext
+    public class SendSMSContext : ISendSMSContext
     {
         private SendSmsStrategy? _smsStrategy;
 
