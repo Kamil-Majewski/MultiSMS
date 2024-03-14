@@ -2694,7 +2694,7 @@
                     else if (logEntity.type == "Groups") {
                         HandleGroupsTypeLog(logEntity.group);
                     }
-                    else if (logEntity.type == "SMS-Group") {
+                    else if (logEntity.type == "SMS-ServerSms-Group" || logEntity.type == "SMS-SmsApi-Group") {
                         handleSMSGroupTypeLog({ sms: logEntity.sms, group: logEntity.group });
                     }
                     else if (logEntity.type == "SMS-NoGroup") {

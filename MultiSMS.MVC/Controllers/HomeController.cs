@@ -5,6 +5,7 @@ using MultiSMS.BusinessLogic.DTO;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Entities.ServerSms;
+using MultiSMS.Interface.Entities.SmsApi;
 using MultiSMS.Interface.Extensions;
 using MultiSMS.Interface.Repositories.Interfaces;
 using MultiSMS.MVC.Models;
@@ -637,25 +638,46 @@ namespace MultiSMS.MVC.Controllers
                         return Json(new { Type = "Groups", Group = group, Log = logSanitized, LogCreator = logCreator });
                     }
                 case "ServerSms":
-                    var smsDto = JsonConvert.DeserializeObject<SMSMessage>(logRelatedObjects["SmsMessages"]);
+                    var serverSmsDto = JsonConvert.DeserializeObject<SMSMessage>(logRelatedObjects["SmsMessages"]);
 
-                    if (smsDto!.ServerResponse.ToJToken().SelectToken("error") != null)
+                    if (serverSmsDto!.ServerResponse.ToJToken().SelectToken("error") != null)
                     {
-                        smsDto.ServerResponse = JsonConvert.DeserializeObject<ServerSmsErrorResponse>(smsDto.ServerResponse.ToString()!)!;
+                        serverSmsDto.ServerResponse = JsonConvert.DeserializeObject<ServerSmsErrorResponse>(serverSmsDto.ServerResponse.ToString()!)!;
                     }
                     else
                     {
-                        smsDto.ServerResponse = JsonConvert.DeserializeObject<ServerSmsSuccessResponse>(smsDto.ServerResponse.ToString()!)!;
+                        serverSmsDto.ServerResponse = JsonConvert.DeserializeObject<ServerSmsSuccessResponse>(serverSmsDto.ServerResponse.ToString()!)!;
                     }
 
-                    if (smsDto!.ChosenGroupId == 0)
+                    if (serverSmsDto!.ChosenGroupId == 0)
                     {
-                        return Json(new { Type = "SMS-NoGroup", Sms = smsDto, Log = logSanitized, LogCreator = logCreator });
+                        return Json(new { Type = "SMS-ServerSms-NoGroup", Sms = serverSmsDto, Log = logSanitized, LogCreator = logCreator });
                     }
                     else
                     {
                         var chosenGroup = JsonConvert.DeserializeObject<Group>(logRelatedObjects["Groups"]);
-                        return Json(new { Type = "SMS-Group", Sms = smsDto, Group = chosenGroup, Log = logSanitized, LogCreator = logCreator });
+                        return Json(new { Type = "SMS-ServerSms-Group", Sms = serverSmsDto, Group = chosenGroup, Log = logSanitized, LogCreator = logCreator });
+                    }
+                case "SmsApi":
+                    var smsApiDto = JsonConvert.DeserializeObject<SMSMessage>(logRelatedObjects["SmsMessages"]);
+
+                    if(smsApiDto!.ServerResponse.ToJToken().SelectToken("error") != null)
+                    {
+                        smsApiDto.ServerResponse = JsonConvert.DeserializeObject<SmsApiErrorResponse>(smsApiDto.ServerResponse.ToString()!)!;
+                    }
+                    else
+                    {
+                        smsApiDto.ServerResponse = JsonConvert.DeserializeObject<SmsApiSuccessResponse>(smsApiDto.ServerResponse.ToString()!)!;
+                    }
+
+                    if(smsApiDto.ChosenGroupId == 0)
+                    {
+                        return Json(new { Type = "SMS-SmsApi-NoGroup", Sms = smsApiDto, Log = logSanitized, LogCreator = logCreator });
+                    }
+                    else
+                    {
+                        var chosenGroup = JsonConvert.DeserializeObject<Group>(logRelatedObjects["Groups"]);
+                        return Json(new { Type = "SMS-SmsApi-Group", Sms = smsApiDto, Group = chosenGroup, Log = logSanitized, LogCreator = logCreator });
                     }
                 case "Import":
                     var importDto = JsonConvert.DeserializeObject<ImportResult>(logRelatedObjects["Imports"]);
