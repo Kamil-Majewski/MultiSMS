@@ -1544,7 +1544,8 @@
         var additionalInformation = smsGroupObject.sms.additionalInformation;
         var smsMessage = smsGroupObject.sms.settings["text"];
 
-        var responseError = smsGroupObject.sms.serverResponse.error;
+        var responseErrorServerSms = smsGroupObject.sms.serverResponse.error;
+        var responseErrorSmsApi = smsGroupObject.sms.serverResponse;
         var responseSuccess = smsGroupObject.sms.serverResponse;
 
         var groupDescription = smsGroupObject.group.groupDescription;
@@ -1602,49 +1603,94 @@
                     `;
 
         if (type == "Błąd") {
-            relatedObjects +=
+            if(smsGroupObject.apiUsed == "ServerSms"){
+                relatedObjects +=
                 `
                     <div class="row mb-10" style="margin-top: 20px;">
                         <div class="col d-flex">
                             <label class="logs-detail-label" for="logSMSGroup-CodeDetail">Kod błędu:</label>
-                                <span class="details-span" id="logSMSGroup-CodeDetail">${responseError['code']}</span>
+                                <span class="details-span" id="logSMSGroup-CodeDetail">${responseErrorServerSms.code}</span>
                         </div>
                     </div>
                     <div class="row mb-10">
                         <div class="col d-flex">
                             <label class="logs-detail-label" for="logSMSGroup-ErrorTypeDetail">Typ błędu:</label>
-                            <span class="details-span" id="logSMSGroup-ErrorTypeDetail">${responseError['type']}</span>
+                                <span class="details-span" id="logSMSGroup-ErrorTypeDetail">${responseErrorServerSms.type}</span>
                         </div>
                     </div>
                     <div class="row mb-10">
                         <div class="col d-flex">
                             <label class="logs-detail-label" for="logSMSGroup-ErrorMessageDetail">Wiadomość błędu:</label>
-                            <span class="details-span" id="logSMSGroup-ErrorMessageDetail">${responseError['message']}</span>
+                            <span class="details-span" id="logSMSGroup-ErrorMessageDetail">${responseErrorServerSms.message}</span>
                         </div>
                     </div>
-                    `;
+                `;
+            }
+            else{
+                relatedObjects +=
+                `
+                    <div class="row mb-10" style="margin-top: 20px;">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSGroup-CodeDetail">Kod błędu:</label>
+                                <span class="details-span" id="logSMSGroup-CodeDetail">${responseErrorSmsApi.errorCode}</span>
+                        </div>
+                    </div>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSGroup-ErrorMessageDetail">Wiadomość błędu:</label>
+                                <span class="details-span" id="logSMSGroup-ErrorMessageDetail">${responseErrorSmsApi.errorMessage}</span>
+                        </div>
+                    </div>
+                `;
+            }
+            
         }
         else {
-            relatedObjects +=
+            if(smsGroupObject.apiUsed == "ServerSms"){
+                console.log(responseSuccess)
+                relatedObjects +=
                 `<div class="row mb-10" style="margin-top: 20px;">
-                        <div class="col d-flex">
-                            <label class="logs-detail-label" for="logSMSGroup-StatusDetail">Status:</label>
-                            <span class="details-span" id="logSMSGroup-StatusDetail">${responseSuccess['success'] ? "Sukces" : "Błąd"}</span>
-                        </div>
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logSMSGroup-StatusDetail">Status:</label>
+                        <span class="details-span" id="logSMSGroup-StatusDetail">${responseSuccess.success ? "Sukces" : "Błąd"}</span>
                     </div>
-                    <div class="row mb-10">
-                        <div class="col d-flex">
-                            <label class="logs-detail-label" for="logSMSGroup-SentDetail">Wysłano:</label>
-                            <span class="details-span" id="logSMSGroup-SentDetail">${responseSuccess['queued']}</span>
-                        </div>
+                </div>
+                <div class="row mb-10">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logSMSGroup-SentDetail">Wysłano:</label>
+                        <span class="details-span" id="logSMSGroup-SentDetail">${responseSuccess.queued}</span>
                     </div>
-                    <div class="row mb-10">
-                        <div class="col d-flex">
-                            <label class="logs-detail-label" for="logSMSGroup-UnsentDetail">Nie wysłano:</label>
-                            <span class="details-span" id="logSMSGroup-UnsentDetail">${responseSuccess['unsent']}</span>
-                        </div>
+                </div>
+                <div class="row mb-10">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logSMSGroup-UnsentDetail">Nie wysłano:</label>
+                        <span class="details-span" id="logSMSGroup-UnsentDetail">${responseSuccess.unsent}</span>
                     </div>
-                    `;
+                </div>
+                `;
+            }
+            else{
+                relatedObjects +=
+                `<div class="row mb-10" style="margin-top: 20px;">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logSMSGroup-StatusDetail">Status:</label>
+                        <span class="details-span" id="logSMSGroup-StatusDetail">Sukces</span>
+                    </div>
+                </div>
+                <div class="row mb-10">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logSMSGroup-SentDetail">Wysłano:</label>
+                        <span class="details-span" id="logSMSGroup-SentDetail">${responseSuccess.details.filter(r => r.status == "QUEUE").length}</span>
+                    </div>
+                </div>
+                <div class="row mb-10">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logSMSGroup-UnsentDetail">Nie wysłano:</label>
+                        <span class="details-span" id="logSMSGroup-UnsentDetail">${responseSuccess.details.filter(r => r.status != "QUEUE").length}</span>
+                    </div>
+                </div>
+                `;
+            }
         }
         relatedObjects +=
             `<hr style="margin-top: 20px;" />
@@ -2695,7 +2741,7 @@
                         HandleGroupsTypeLog(logEntity.group);
                     }
                     else if (logEntity.type == "SMS-ServerSms-Group" || logEntity.type == "SMS-SmsApi-Group") {
-                        handleSMSGroupTypeLog({ sms: logEntity.sms, group: logEntity.group });
+                        handleSMSGroupTypeLog({ apiUsed: logEntity.type.split("-")[1], sms: logEntity.sms, group: logEntity.group });
                     }
                     else if (logEntity.type == "SMS-NoGroup") {
                         handleSMSNoGroupTypeLog(logEntity.sms);
