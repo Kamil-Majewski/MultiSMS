@@ -14,6 +14,7 @@ namespace MultiSMS.Interface
         public virtual DbSet<SMSMessageTemplate> SMSMessageTemplates { get; set; }
         public virtual DbSet<Log> Logs { get; set; }
         public virtual DbSet<EmployeeGroup> EmployeeGroups { get; set; }
+        public virtual DbSet<ApiSettings> ApiSettings { get; set; }
 
         public MultiSMSDbContext(DbContextOptions options) : base(options)
         {
@@ -23,6 +24,7 @@ namespace MultiSMS.Interface
             base.OnModelCreating(builder);
 
             builder.Entity<Administrator>().HasData(SeedAdmin.GetAdminSeed());
+            builder.Entity<ApiSettings>().HasData(SeedApiSettings.GetApiSettingsSeed());
         }
     }
 }
