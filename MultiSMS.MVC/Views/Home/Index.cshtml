@@ -1759,110 +1759,158 @@
     function handleSMSNoGroupTypeLog(smsNoGroupObject) {
         var type = $("#logTypeDetail").text();
 
-        var chosenGroupId = smsNoGroupObject.chosenGroupId;
-        var additionalPhoneNumbers = smsNoGroupObject.additionalPhoneNumbers;
-        var additionalInformation = smsNoGroupObject.additionalInformation;
-        var smsMessage = smsNoGroupObject.settings["text"];
+        var chosenGroupId = smsNoGroupObject.sms.chosenGroupId;
+        var additionalPhoneNumbers = smsNoGroupObject.sms.additionalPhoneNumbers;
+        var additionalInformation = smsNoGroupObject.sms.additionalInformation;
+        var smsMessage = smsNoGroupObject.sms.settings["text"];
 
-        var responseError = smsNoGroupObject.serverResponse.error;
-        var responseSuccess = smsNoGroupObject.serverResponse;
+        var responseErrorServerSms = smsNoGroupObject.sms.serverResponse.error;
+        var responseErrorSmsApi = smsNoGroupObject.sms.serverResponse;
+        var responseSuccess = smsNoGroupObject.sms.serverResponse;
 
         var relatedObjects =
-            `<span class="log-related-object-title">Wiadomość SMS</span>
-                    <hr style="margin-top: 20px";/>
-                    <span class="form-subtitle">Informacje</span>
-                        <div class="row mb-10" style="margin-top: 20px;">
-                            <div class="col d-flex">
-                                <label class="logs-detail-label" for="logSMSNoGroup-SenderDetail">Nazwa nadawcy:</label>
-                                <span class="details-span" id="logSMSNoGroup-SenderDetail">${smsNoGroupObject.settings["sender"] == null ? "Nie określono" : smsNoGroupObject.settings["sender"]}</span>
-                            </div>
-                        </div>
-                        <div class="row mb-10">
-                            <div class="col d-flex">
-                                <label class="logs-detail-label" for="logSMSNoGroup-ChosenGroupIdDetail">Id wybranej grupy:</label>
-                                <span class="details-span" id="logSMSNoGroup-ChosenGroupIdDetail">${chosenGroupId == 0 ? "Nie wybrano grupy" : chosenGroupId}</span>
-                            </div>
-                        </div>
-                        <div class="row mb-10">
-                            <div class="col d-flex">
-                                <label class="logs-detail-label" for="logSMSNoGroup-MessageDetail">Treść wiadomości:</label>
-                                    <span class="details-span" id="logSMSNoGroup-MessageDetail">${(smsMessage == "" || smsMessage == null) ? "Nie wpisano treści" : smsMessage}</span>
-                            </div>
-                        </div>
-                        <div class="row mb-10">
-                            <div class="col d-flex">
-                                <label class="logs-detail-label" for="logSMSNoGroup-AdditionalPhoneNumbersDetail">Dodatkowe numery:</label>
-                                 <span class="details-span" id="logSMSNoGroup-AdditionalPhoneNumbersDetail">${additionalPhoneNumbers.length == 0 ? "Nie podano" : additionalPhoneNumbers.split(',').join(", ")}</span>
-                            </div>
-                        </div>
-                        <div class="row mb-10">
-                            <div class="col d-flex">
-                                <label class="logs-detail-label" for="logSMSNoGroup-AdditionalInformationDetail">Komentarz:</label>
-                                <span class="details-span" id="logSMSNoGroup-AdditionalInformationDetail">${(additionalInformation == null || additionalInformation == "") ? "Brak" : additionalInformation}</span>
-                            </div>
-                        </div>
-                        <hr style="margin-top: 20px";/>
-                        <span class="form-subtitle">Ustawienia</span>
-                        <div class="row mb-10" style="margin-top: 20px;">
-                            <div class="col d-flex">
-                                <label class="logs-detail-label" for="logSMSNoGroup-TestDetail">Wiadomośc testowa:</label>
-                                <span class="details-span" id="logSMSNoGroup-TestDetail">${smsNoGroupObject.settings["test"] == "true" ? "Tak" : "Nie"}</span>
-                            </div>
-                        </div>
-                        <div class="row mb-10" >
-                            <div class="col d-flex">
-                                <label class="logs-detail-label" for="logSMSNoGroup-SpeedDetail">Kanał priorytetowy:</label>
-                                <span class="details-span" id="logSMSNoGroup-SpeedDetail">${smsNoGroupObject.settings["speed"] == "1" ? "Tak" : "Nie"}</span>
-                            </div>
-                        </div>
-                        <hr style="margin-top: 20px";/>
-                        <span class="form-subtitle">Odpowiedź servera</span>
-                        `;
+            `
+            <span class="log-related-object-title">Wiadomość SMS</span>
+            <hr style="margin-top: 20px";/>
+            <span class="form-subtitle">Informacje</span>
+            <div class="row mb-10" style="margin-top: 20px;">
+                <div class="col d-flex">
+                    <label class="logs-detail-label" for="logSMSNoGroup-SenderDetail">Nazwa nadawcy:</label>
+                    <span class="details-span" id="logSMSNoGroup-SenderDetail">${smsNoGroupObject.sms.settings.sender == null ? "Nie określono" : smsNoGroupObject.sms.settings.sender}</span>
+                </div>
+            </div>
+            <div class="row mb-10">
+                <div class="col d-flex">
+                    <label class="logs-detail-label" for="logSMSNoGroup-ChosenGroupIdDetail">Id wybranej grupy:</label>
+                    <span class="details-span" id="logSMSNoGroup-ChosenGroupIdDetail">${chosenGroupId == 0 ? "Nie wybrano grupy" : chosenGroupId}</span>
+                </div>
+            </div>
+            <div class="row mb-10">
+                <div class="col d-flex">
+                    <label class="logs-detail-label" for="logSMSNoGroup-MessageDetail">Treść wiadomości:</label>
+                        <span class="details-span" id="logSMSNoGroup-MessageDetail">${(smsMessage == "" || smsMessage == null) ? "Nie wpisano treści" : smsMessage}</span>
+                </div>
+            </div>
+            <div class="row mb-10">
+                <div class="col d-flex">
+                    <label class="logs-detail-label" for="logSMSNoGroup-AdditionalPhoneNumbersDetail">Dodatkowe numery:</label>
+                        <span class="details-span" id="logSMSNoGroup-AdditionalPhoneNumbersDetail">${additionalPhoneNumbers.length == 0 ? "Nie podano" : additionalPhoneNumbers.split(',').join(", ")}</span>
+                </div>
+            </div>
+            <div class="row mb-10">
+                <div class="col d-flex">
+                    <label class="logs-detail-label" for="logSMSNoGroup-AdditionalInformationDetail">Komentarz:</label>
+                    <span class="details-span" id="logSMSNoGroup-AdditionalInformationDetail">${(additionalInformation == null || additionalInformation == "") ? "Brak" : additionalInformation}</span>
+                </div>
+            </div>
+            <hr style="margin-top: 20px";/>
+            <span class="form-subtitle">Ustawienia</span>
+            <div class="row mb-10" style="margin-top: 20px;">
+                <div class="col d-flex">
+                    <label class="logs-detail-label" for="logSMSNoGroup-TestDetail">Wiadomośc testowa:</label>
+                    <span class="details-span" id="logSMSNoGroup-TestDetail">${smsNoGroupObject.sms.settings.test == "true" ? "Tak" : "Nie"}</span>
+                </div>
+            </div>
+            <div class="row mb-10" >
+                <div class="col d-flex">
+                    <label class="logs-detail-label" for="logSMSNoGroup-SpeedDetail">Kanał priorytetowy:</label>
+                    <span class="details-span" id="logSMSNoGroup-SpeedDetail">${smsNoGroupObject.sms.settings.speed == "1" ? "Tak" : "Nie"}</span>
+                </div>
+            </div>
+            <hr style="margin-top: 20px";/>
+            <span class="form-subtitle">Odpowiedź servera</span>
+            `;
 
         if (type == "Błąd") {
-            relatedObjects +=
+            if(smsNoGroupObject.apiUsed = "ServerSms"){
+                relatedObjects +=
                 `
-                        <div class="row mb-10" style="margin-top: 20px;">
-                            <div class="col d-flex">
-                                <label class="logs-detail-label" for="logSMSNoGroup-CodeDetail">Kod błędu:</label>
-                                    <span class="details-span" id="logSMSNoGroup-CodeDetail">${responseError['code']}</span>
-                            </div>
-                        </div>
-                        <div class="row mb-10">
-                            <div class="col d-flex">
-                                <label class="logs-detail-label" for="logSMSNoGroup-ErrorTypeDetail">Typ błędu:</label>
-                                <span class="details-span" id="logSMSNoGroup-ErrorTypeDetail">${responseError['type']}</span>
-                            </div>
-                        </div>
-                        <div class="row mb-10">
-                            <div class="col d-flex">
-                                <label class="logs-detail-label" for="logSMSNoGroup-ErrorMessageDetail">Wiadomość błędu:</label>
-                                <span class="details-span" id="logSMSNoGroup-ErrorMessageDetail">${responseError['message']}</span>
-                            </div>
-                        </div>
-                        `;
+                <div class="row mb-10" style="margin-top: 20px;">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logSMSNoGroup-CodeDetail">Kod błędu:</label>
+                        <span class="details-span" id="logSMSNoGroup-CodeDetail">${responseErrorServerSms.code}</span>
+                    </div>
+                </div>
+                <div class="row mb-10">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logSMSNoGroup-ErrorTypeDetail">Typ błędu:</label>
+                        <span class="details-span" id="logSMSNoGroup-ErrorTypeDetail">${responseErrorServerSms.type}</span>
+                    </div>
+                </div>
+                <div class="row mb-10">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logSMSNoGroup-ErrorMessageDetail">Wiadomość błędu:</label>
+                        <span class="details-span" id="logSMSNoGroup-ErrorMessageDetail">${responseErrorServerSms.message}</span>
+                    </div>
+                </div>
+                `;
+            }
+            else{
+                relatedObjects +=
+                `
+                <div class="row mb-10" style="margin-top: 20px;">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logSMSNoGroup-CodeDetail">Kod błędu:</label>
+                        <span class="details-span" id="logSMSNoGroup-CodeDetail">${responseErrorSmsApi.errorCode}</span>
+                    </div>
+                </div>
+                <div class="row mb-10">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logSMSNoGroup-ErrorMessageDetail">Wiadomość błędu:</label>
+                        <span class="details-span" id="logSMSNoGroup-ErrorMessageDetail">${responseErrorSmsApi.errorMessage}</span>
+                    </div>
+                </div>
+                `;
+            }
+            
         }
         else {
-            relatedObjects +=
-                `<div class="row mb-10" style="margin-top: 20px;">
-                            <div class="col d-flex">
-                                <label class="logs-detail-label" for="logSMSNoGroup-StatusDetail">Status:</label>
-                                <span class="details-span" id="logSMSNoGroup-StatusDetail">${responseSuccess['success'] ? "Sukces" : "Błąd"}</span>
-                            </div>
+            if(smsNoGroupObject.apiUsed = "ServerSms"){
+                relatedObjects +=
+                `
+                    <div class="row mb-10" style="margin-top: 20px;">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSNoGroup-StatusDetail">Status:</label>
+                            <span class="details-span" id="logSMSNoGroup-StatusDetail">${responseSuccess.success ? "Sukces" : "Błąd"}</span>
                         </div>
-                        <div class="row mb-10">
-                            <div class="col d-flex">
-                                <label class="logs-detail-label" for="logSMSNoGroup-SentDetail">Wysłano:</label>
-                                <span class="details-span" id="logSMSNoGroup-SentDetail">${responseSuccess['queued']}</span>
-                            </div>
+                    </div>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSNoGroup-SentDetail">Wysłano:</label>
+                            <span class="details-span" id="logSMSNoGroup-SentDetail">${responseSuccess.queued}</span>
                         </div>
-                        <div class="row mb-10">
-                            <div class="col d-flex">
-                                <label class="logs-detail-label" for="logSMSNoGroup-UnsentDetail">Nie wysłano:</label>
-                                <span class="details-span" id="logSMSNoGroup-UnsentDetail">${responseSuccess['unsent']}</span>
-                            </div>
+                    </div>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSNoGroup-UnsentDetail">Nie wysłano:</label>
+                            <span class="details-span" id="logSMSNoGroup-UnsentDetail">${responseSuccess.unsent}</span>
                         </div>
-                        `;
+                    </div>
+                `;
+            }
+            else{
+                relatedObjects +=
+                `
+                    <div class="row mb-10" style="margin-top: 20px;">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSNoGroup-StatusDetail">Status:</label>
+                            <span class="details-span" id="logSMSNoGroup-StatusDetail">Sukces</span>
+                        </div>
+                    </div>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSNoGroup-SentDetail">Wysłano:</label>
+                            <span class="details-span" id="logSMSNoGroup-SentDetail">${responseSuccess.details.filter(r => r.status == "QUEUE").length}</span>
+                        </div>
+                    </div>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSNoGroup-UnsentDetail">Nie wysłano:</label>
+                            <span class="details-span" id="logSMSNoGroup-UnsentDetail">${responseSuccess.details.filter(r => r.status != "QUEUE").length}</span>
+                        </div>
+                    </div>
+                `;
+            }
         }
 
         $("#log-related-objects-data-form-group").append(relatedObjects);
@@ -2743,8 +2791,8 @@
                     else if (logEntity.type == "SMS-ServerSms-Group" || logEntity.type == "SMS-SmsApi-Group") {
                         handleSMSGroupTypeLog({ apiUsed: logEntity.type.split("-")[1], sms: logEntity.sms, group: logEntity.group });
                     }
-                    else if (logEntity.type == "SMS-NoGroup") {
-                        handleSMSNoGroupTypeLog(logEntity.sms);
+                    else if (logEntity.type == "SMS-ServerSms-NoGroup" || logEntity.type == "SMS-SmsApi-NoGroup") {
+                        handleSMSNoGroupTypeLog({ apiUsed: logEntity.type.split("-")[1], sms: logEntity.sms });
                     }
                     else if (logEntity.type == "Import") {
                         handleImportTypeLog(logEntity.import);

@@ -20,6 +20,7 @@ namespace MultiSMS.BusinessLogic.Initialization
             serviceCollection.AddScoped<IGroupService, GroupService>();
             serviceCollection.AddScoped<ILogService, LogService>();
             serviceCollection.AddScoped<ISMSMessageTemplateService, SMSMessageTemplateService>();
+            serviceCollection.AddScoped<IApiSettingsService, ApiSettingsService>();
         }
     }
 }

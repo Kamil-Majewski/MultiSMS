@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MultiSMS.BusinessLogic.DTO;
 using MultiSMS.BusinessLogic.Services.Interfaces;
@@ -11,7 +10,6 @@ using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Entities.ServerSms;
 using MultiSMS.Interface.Entities.SmsApi;
 using MultiSMS.Interface.Extensions;
-using MultiSMS.Interface.Repositories.Interfaces;
 using Newtonsoft.Json;
 
 namespace MultiSMS.MVC.Controllers
@@ -20,43 +18,45 @@ namespace MultiSMS.MVC.Controllers
     {
         private readonly IOptions<ServerSmsSettings> _serverSmsSettings;
         private readonly IOptions<SmsApiSettings> _smsApiSettings;
-        private readonly ILogRepository _logRepository;
-        private readonly IEmployeeGroupRepository _employeeGroupRepository;
+        private readonly ILogService _logService;
+        private readonly IEmployeeGroupService _employeeGroupService;
         private readonly IAdministratorService _administratorService;
-        private readonly IGroupRepository _groupRepository;
+        private readonly IGroupService _groupService;
         private readonly ISendSMSContext _smsContext;
+        private readonly IApiSettingsService _apiSettingsService;
 
         public SmsApiController(IOptions<ServerSmsSettings> serverSmsSettings,
                                 IOptions<SmsApiSettings> smsApiSettings,
-                                ILogRepository logRepository,
-                                IEmployeeGroupRepository employeeGroupRepository,
+                                ILogService logService,
+                                IEmployeeGroupService employeeGroupService,
                                 IAdministratorService administratorService,
-                                IGroupRepository groupRepository,
-                                ISendSMSContext smsContext)
+                                IGroupService groupService,
+                                ISendSMSContext smsContext,
+                                IApiSettingsService apiSettingsService)
         {
             _serverSmsSettings = serverSmsSettings;
             _smsApiSettings = smsApiSettings;
-            _logRepository = logRepository;
-            _employeeGroupRepository = employeeGroupRepository;
+            _logService = logService;
+            _employeeGroupService = employeeGroupService;
             _administratorService = administratorService;
-            _groupRepository = groupRepository;
+            _groupService = groupService;
             _smsContext = smsContext;
+            _apiSettingsService = apiSettingsService;
         }
 
-
-        private async Task<IActionResult> SendSmsMessageThroughServerSMS(string chosenGroupName, Group chosenGroup, int chosenGroupId, string additionalInfo, string? additionalPhoneNumbers, int adminId, AdministratorDTO admin, string phoneNumbersString, string text, Dictionary<string, string> data)
+        private async Task<IActionResult> SendSmsMessageThroughServerSMS(string chosenGroupName, Group chosenGroup, int chosenGroupId, string additionalInfo, string? additionalPhoneNumbers, int adminId, AdministratorDTO admin, string phoneNumbersString, string text, Dictionary<string, string> data, ApiSettings activeApiSettings)
         {
-            _smsContext.SetSmsStrategy(new SendSmsTroughServerSms(_serverSmsSettings));
+            _smsContext.SetSmsStrategy(new SendSmsTroughServerSms(_serverSmsSettings, _apiSettingsService));
             var response = await _smsContext.SendSMSAsync(phoneNumbersString, text, data);
 
             var dataForSmsEntity = new Dictionary<string, string>
                 {
                     {"details", "true"},
-                    {"speed", "1"},
-                    {"test", "true" },
                     {"phone", phoneNumbersString },
                     {"text", text },
-                    {"sender", "Toruń WOL" }
+                    { "speed", activeApiSettings.FastChannel ? "1" : "0" },
+                    { "test", activeApiSettings.TestMode ? "true" : "false" },
+                    { "sender", $"{activeApiSettings.SenderName}" }
                 };
 
             try //try to deserialize response into entities that correspond with response structure and then act depending on the outcome
@@ -81,7 +81,7 @@ namespace MultiSMS.MVC.Controllers
                     ServerResponse = successResponse
                 };
 
-                await _logRepository.AddEntityToDatabaseAsync(new Log
+                await _logService.AddEntityToDatabaseAsync(new Log
                 {
                     LogType = "Info",
                     LogSource = "ServerSms",
@@ -122,7 +122,7 @@ namespace MultiSMS.MVC.Controllers
                         ServerResponse = errorResponse
                     };
 
-                    await _logRepository.AddEntityToDatabaseAsync(new Log
+                    await _logService.AddEntityToDatabaseAsync(new Log
                     {
                         LogType = "Błąd",
                         LogSource = "ServerSms",
@@ -146,9 +146,9 @@ namespace MultiSMS.MVC.Controllers
             }
         }
 
-        private async Task<IActionResult> SendSmsMessageThroughSmsApi(string chosenGroupName, Group chosenGroup, int chosenGroupId, string additionalInfo, string? additionalPhoneNumbers, int adminId, AdministratorDTO admin, string phoneNumbersString, string text, Dictionary<string, string> data)
+        private async Task<IActionResult> SendSmsMessageThroughSmsApi(string chosenGroupName, Group chosenGroup, int chosenGroupId, string additionalInfo, string? additionalPhoneNumbers, int adminId, AdministratorDTO admin, string phoneNumbersString, string text, Dictionary<string, string> data, ApiSettings activeApiSettings)
         {
-            _smsContext.SetSmsStrategy(new SendSmsTroughSmsApi(_smsApiSettings));
+            _smsContext.SetSmsStrategy(new SendSmsTroughSmsApi(_smsApiSettings, _apiSettingsService));
             var response = await _smsContext.SendSMSAsync(phoneNumbersString, text, data);
 
             var dataForSmsEntity = new Dictionary<string, string>
@@ -156,9 +156,9 @@ namespace MultiSMS.MVC.Controllers
                     { "to", phoneNumbersString },
                     { "message", text },
                     { "format", "json" },
-                    { "from", "Toruń WOL" },
-                    { "fast", "1" },
-                    { "test",  "true"}
+                    { "from", $"{activeApiSettings.SenderName}" },
+                    { "fast", activeApiSettings.FastChannel ? "1" : "0" },
+                    { "test",  activeApiSettings.TestMode ? "true" : "false" },
                 };
 
             try //try to deserialize response into entities that correspond with response structure and then act depending on the outcome
@@ -184,7 +184,7 @@ namespace MultiSMS.MVC.Controllers
                     ServerResponse = successResponse
                 };
 
-                await _logRepository.AddEntityToDatabaseAsync(new Log
+                await _logService.AddEntityToDatabaseAsync(new Log
                 {
                     LogType = "Info",
                     LogSource = "SmsApi",
@@ -225,7 +225,7 @@ namespace MultiSMS.MVC.Controllers
                         ServerResponse = errorResponse
                     };
 
-                    await _logRepository.AddEntityToDatabaseAsync(new Log
+                    await _logService.AddEntityToDatabaseAsync(new Log
                     {
                         LogType = "Błąd",
                         LogSource = "SmsApi",
@@ -256,15 +256,17 @@ namespace MultiSMS.MVC.Controllers
             var adminId = User.GetLoggedInUserId<int>();
             var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
 
+            var activeApiSettings = await _apiSettingsService.GetActiveSettingsAsync();
+
             Group chosenGroup = new Group();
 
             if (chosenGroupId > 0)
             {
-                chosenGroup = await _groupRepository.GetByIdAsync(chosenGroupId);
-                chosenGroup.Members = await _employeeGroupRepository.GetAllEmployeesForGroupQueryable(chosenGroupId).ToListAsync();
+                chosenGroup = await _groupService.GetByIdAsync(chosenGroupId);
+                chosenGroup.Members = await _employeeGroupService.GetAllEmployeesForGroupListAsync(chosenGroupId);
             }
 
-            var groupPhoneNumbers = _employeeGroupRepository.GetAllActiveEmployeesPhoneNumbersForGroupQueryable(chosenGroupId).ToList();
+            var groupPhoneNumbers = await _employeeGroupService.GetAllActiveEmployeesPhoneNumbersForGroupListAsync(chosenGroupId);
 
             if (additionalPhoneNumbers != null)
             {
@@ -280,12 +282,18 @@ namespace MultiSMS.MVC.Controllers
 
             var phoneNumbersString = string.Join(',', groupPhoneNumbers);
 
-            //if(settings.activeApi == "ServerSms"){
-
-            //return await SendSmsMessageThroughServerSMS(chosenGroupName, chosenGroup, chosenGroupId, additionalInfo, additionalPhoneNumbers, adminId, admin, phoneNumbersString, text, data);
-
-            //else if (settings.activeApi == "SmsApi"){
-            return await SendSmsMessageThroughSmsApi(chosenGroupName, chosenGroup, chosenGroupId, additionalInfo, additionalPhoneNumbers, adminId, admin, phoneNumbersString, text, data);
+            if (activeApiSettings.ApiName == "ServerSms")
+            {
+                return await SendSmsMessageThroughServerSMS(chosenGroupName, chosenGroup, chosenGroupId, additionalInfo, additionalPhoneNumbers, adminId, admin, phoneNumbersString, text, data, activeApiSettings);
+            }
+            else if (activeApiSettings.ApiName == "SmsApi")
+            {
+                return await SendSmsMessageThroughSmsApi(chosenGroupName, chosenGroup, chosenGroupId, additionalInfo, additionalPhoneNumbers, adminId, admin, phoneNumbersString, text, data, activeApiSettings);
+            }
+            else
+            {
+                throw new Exception("Wrong API name was received when fetching active API settings");
+            }
         }
     }
 }
