@@ -9,10 +9,5 @@ namespace MultiSMS.Interface.Repositories
         public EmployeeRepository(MultiSMSDbContext context) : base(context)
         {
         }
-
-        public async Task<Employee> GetByNameAsync(string name)
-        {
-            return await GetAllEntries().FirstOrDefaultAsync(e => e.Name == name) ?? throw new Exception($"Could not find employee with provided name: {name}");
-        }
     }
 }

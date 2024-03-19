@@ -17,6 +17,7 @@ namespace MultiSMS.Interface.Initialization
             serviceCollection.AddScoped<ISMSMessageRepository, SMSMessageRepository>();
             serviceCollection.AddScoped<IImportResultRepository, ImportResultRepository>();
             serviceCollection.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            serviceCollection.AddScoped<IApiSettingsRepository, ApiSettingsRepository>();
 
         }
     }

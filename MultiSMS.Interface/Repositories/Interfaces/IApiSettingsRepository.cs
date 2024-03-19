@@ -2,7 +2,8 @@
 
 namespace MultiSMS.Interface.Repositories.Interfaces
 {
-    public interface IEmployeeRepository : IGenericRepository<Employee>
+    public interface IApiSettingsRepository : IGenericRepository<ApiSettings>
     {
+
     }
 }
