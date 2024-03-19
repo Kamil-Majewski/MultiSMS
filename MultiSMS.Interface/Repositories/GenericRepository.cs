@@ -5,10 +5,10 @@ namespace MultiSMS.Interface.Repositories
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        private readonly DbContext _dbContext;
+        private readonly MultiSMSDbContext _dbContext;
         private readonly DbSet<T> _dbSet;
 
-        public GenericRepository(DbContext dbcontext)
+        public GenericRepository(MultiSMSDbContext dbcontext)
         {
             _dbContext = dbcontext ?? throw new ArgumentNullException(nameof(dbcontext));
             this._dbSet = dbcontext.Set<T>();

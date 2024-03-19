@@ -1,13 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using MultiSMS.BusinessLogic.DTO;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Entities.ServerSms;
 using MultiSMS.Interface.Entities.SmsApi;
 using MultiSMS.Interface.Extensions;
-using MultiSMS.Interface.Repositories.Interfaces;
 using MultiSMS.MVC.Models;
 using Newtonsoft.Json;
 using NuGet.Protocol;
@@ -19,18 +17,18 @@ namespace MultiSMS.MVC.Controllers
     {
         private readonly IAdministratorService _administratorService;
         private readonly IImportExportEmployeesService _ieService;
-        private readonly ISMSMessageTemplateRepository _smsTemplateRepository;
-        private readonly IEmployeeRepository _employeeRepository;
-        private readonly IGroupRepository _groupRepository;
-        private readonly IEmployeeGroupRepository _employeeGroupRepository;
-        private readonly ILogRepository _logRepository;
-        public HomeController(ISMSMessageTemplateRepository smsTemplateRepository, IEmployeeRepository employeeRepository, IGroupRepository groupRepository, IEmployeeGroupRepository employeeGroupRepository, ILogRepository logRepository, IAdministratorService administratorService, IImportExportEmployeesService ieService)
+        private readonly ISMSMessageTemplateService _smsTemplateService;
+        private readonly IEmployeeService _employeeService;
+        private readonly IGroupService _groupService;
+        private readonly IEmployeeGroupService _employeeGroupService;
+        private readonly ILogService _logService;
+        public HomeController(ISMSMessageTemplateService smsTemplateRepository, IEmployeeService employeeRepository, IGroupService groupRepository, IEmployeeGroupService employeeGroupRepository, ILogService logRepository, IAdministratorService administratorService, IImportExportEmployeesService ieService)
         {
-            _smsTemplateRepository = smsTemplateRepository;
-            _employeeRepository = employeeRepository;
-            _groupRepository = groupRepository;
-            _employeeGroupRepository = employeeGroupRepository;
-            _logRepository = logRepository;
+            _smsTemplateService = smsTemplateRepository;
+            _employeeService = employeeRepository;
+            _groupService = groupRepository;
+            _employeeGroupService = employeeGroupRepository;
+            _logService = logRepository;
             _administratorService = administratorService;
             _ieService = ieService;
         }
@@ -58,9 +56,9 @@ namespace MultiSMS.MVC.Controllers
             var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
 
             var template = new SMSMessageTemplate() { TemplateName = templateName, TemplateDescription = templateDescription, TemplateContent = templateContent };
-            var addedTemplate = await _smsTemplateRepository.AddEntityToDatabaseAsync(template);
+            var addedTemplate = await _smsTemplateService.AddEntityToDatabaseAsync(template);
 
-            await _logRepository.AddEntityToDatabaseAsync(
+            await _logService.AddEntityToDatabaseAsync(
                 new Log
                 {
                     LogType = "Info",
@@ -83,7 +81,7 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> FetchAllTemplates()
         {
-            var templates = await Task.FromResult(_smsTemplateRepository.GetAllEntries());
+            var templates = await Task.FromResult(_smsTemplateService.GetAllEntries());
             return Json(templates);
         }
 
@@ -91,7 +89,7 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTemplateById(int id)
         {
-            var template = await _smsTemplateRepository.GetByIdAsync(id);
+            var template = await _smsTemplateService.GetByIdAsync(id);
             return Json(template);
         }
 
@@ -104,9 +102,9 @@ namespace MultiSMS.MVC.Controllers
 
             var template = new SMSMessageTemplate { TemplateId = id, TemplateName = name, TemplateDescription = description, TemplateContent = content };
 
-            var editedTemplate = await _smsTemplateRepository.UpdateEntityAsync(template);
+            var editedTemplate = await _smsTemplateService.UpdateEntityAsync(template);
 
-            await _logRepository.AddEntityToDatabaseAsync(
+            await _logService.AddEntityToDatabaseAsync(
                  new Log
                  {
                      LogType = "Info",
@@ -133,8 +131,8 @@ namespace MultiSMS.MVC.Controllers
             var adminId = User.GetLoggedInUserId<int>();
             var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
 
-            var template = await _smsTemplateRepository.GetByIdAsync(id);
-            await _logRepository.AddEntityToDatabaseAsync(
+            var template = await _smsTemplateService.GetByIdAsync(id);
+            await _logService.AddEntityToDatabaseAsync(
                 new Log
                 {
                     LogType = "Info",
@@ -151,7 +149,7 @@ namespace MultiSMS.MVC.Controllers
                 }
             );
 
-            await _smsTemplateRepository.DeleteEntityAsync(id);
+            await _smsTemplateService.DeleteEntityAsync(id);
         }
 
         #endregion
@@ -178,9 +176,9 @@ namespace MultiSMS.MVC.Controllers
                 Department = department,
                 IsActive = activeValue,
             };
-            var addedContact = await _employeeRepository.AddEntityToDatabaseAsync(contact);
+            var addedContact = await _employeeService.AddEntityToDatabaseAsync(contact);
 
-            await _logRepository.AddEntityToDatabaseAsync(
+            await _logService.AddEntityToDatabaseAsync(
                   new Log
                   {
                       LogType = "Info",
@@ -204,10 +202,10 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> FetchAllContacts()
         {
-            var contacts = await Task.FromResult(_employeeRepository.GetAllEntries().ToList());
+            var contacts = await Task.FromResult(_employeeService.GetAllEntries().ToList());
             foreach (var contact in contacts)
             {
-                contact.EmployeeGroupNames = _employeeGroupRepository.GetAllGroupNamesForEmployeeQueryable(contact.EmployeeId).ToList();
+                contact.EmployeeGroupNames = await _employeeGroupService.GetAllGroupNamesForEmployeeListAsync(contact.EmployeeId);
             }
             return Json(contacts);
         }
@@ -216,8 +214,8 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> GetContactById(int id)
         {
-            var contact = await _employeeRepository.GetByIdAsync(id);
-            contact.EmployeeGroupNames = _employeeGroupRepository.GetAllGroupNamesForEmployeeQueryable(id).ToList();
+            var contact = await _employeeService.GetByIdAsync(id);
+            contact.EmployeeGroupNames = await _employeeGroupService.GetAllGroupNamesForEmployeeListAsync(id);
             return Json(contact);
         }
 
@@ -244,8 +242,8 @@ namespace MultiSMS.MVC.Controllers
                 IsActive = activeValue,
             };
 
-            var editedContact = await _employeeRepository.UpdateEntityAsync(contact);
-            await _logRepository.AddEntityToDatabaseAsync(
+            var editedContact = await _employeeService.UpdateEntityAsync(contact);
+            await _logService.AddEntityToDatabaseAsync(
                  new Log
                  {
                      LogType = "Info",
@@ -272,8 +270,8 @@ namespace MultiSMS.MVC.Controllers
             var adminId = User.GetLoggedInUserId<int>();
             var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
 
-            var contact = await _employeeRepository.GetByIdAsync(id);
-            await _logRepository.AddEntityToDatabaseAsync(
+            var contact = await _employeeService.GetByIdAsync(id);
+            await _logService.AddEntityToDatabaseAsync(
                new Log
                {
                    LogType = "Info",
@@ -288,7 +286,7 @@ namespace MultiSMS.MVC.Controllers
                    })
                }
            );
-            await _employeeRepository.DeleteEntityAsync(id);
+            await _employeeService.DeleteEntityAsync(id);
         }
         #endregion
 
@@ -302,9 +300,9 @@ namespace MultiSMS.MVC.Controllers
             var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
 
             var group = new Group() { GroupName = groupName, GroupDescription = groupDescription };
-            var addedGroup = await _groupRepository.AddEntityToDatabaseAsync(group);
+            var addedGroup = await _groupService.AddEntityToDatabaseAsync(group);
 
-            await _logRepository.AddEntityToDatabaseAsync(
+            await _logService.AddEntityToDatabaseAsync(
                  new Log
                  {
                      LogType = "Info",
@@ -328,10 +326,10 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> FetchAllGroups()
         {
-            var groups = await Task.FromResult(_groupRepository.GetAllEntries().ToList());
+            var groups = await Task.FromResult(_groupService.GetAllEntries().ToList());
             foreach (var group in groups)
             {
-                group.MembersIds = _employeeGroupRepository.GetAllEmployeesIdsForGroupQueryable(group.GroupId).ToList();
+                group.MembersIds = await _employeeGroupService.GetAllEmployeesIdsForGroupListAsync(group.GroupId);
             }
             return Json(groups);
         }
@@ -340,12 +338,12 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> FetchAllValidGroups()
         {
-            var groups = await Task.FromResult(_groupRepository.GetAllGroupsWithGroupMembersQueryable().ToList());
+            var groups = await Task.FromResult(_groupService.GetAllGroupsWithGroupMembersList());
             int amountOfInactives = 0;
             List<Group> validGroups = new List<Group>();
             foreach (var group in groups)
             {
-                group.MembersIds = _employeeGroupRepository.GetAllEmployeesIdsForGroupQueryable(group.GroupId).ToList();
+                group.MembersIds = await _employeeGroupService.GetAllEmployeesIdsForGroupListAsync(group.GroupId);
 
                 if (group.GroupMembers != null)
                 {
@@ -374,8 +372,8 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> GetGroupById(int id)
         {
-            var group = await _groupRepository.GetByIdAsync(id);
-            group.MembersIds = _employeeGroupRepository.GetAllEmployeesIdsForGroupQueryable(group.GroupId).ToList();
+            var group = await _groupService.GetByIdAsync(id);
+            group.MembersIds = await _employeeGroupService.GetAllEmployeesIdsForGroupListAsync(group.GroupId);
             return Json(group);
         }
 
@@ -387,10 +385,10 @@ namespace MultiSMS.MVC.Controllers
             var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
 
             var group = new Group { GroupId = id, GroupName = name, GroupDescription = description };
-            group.Members = await _employeeGroupRepository.GetAllEmployeesForGroupQueryable(id).ToListAsync();
+            group.Members = await _employeeGroupService.GetAllEmployeesForGroupListAsync(id);
 
-            var editedGroup = await _groupRepository.UpdateEntityAsync(group);
-            await _logRepository.AddEntityToDatabaseAsync(
+            var editedGroup = await _groupService.UpdateEntityAsync(group);
+            await _logService.AddEntityToDatabaseAsync(
                  new Log
                  {
                      LogType = "Info",
@@ -416,9 +414,9 @@ namespace MultiSMS.MVC.Controllers
             var adminId = User.GetLoggedInUserId<int>();
             var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
 
-            var group = await _groupRepository.GetByIdAsync(id);
-            group.Members = await _employeeGroupRepository.GetAllEmployeesForGroupQueryable(id).ToListAsync();
-            await _logRepository.AddEntityToDatabaseAsync(
+            var group = await _groupService.GetByIdAsync(id);
+            group.Members = await _employeeGroupService.GetAllEmployeesForGroupListAsync(id);
+            await _logService.AddEntityToDatabaseAsync(
                new Log
                {
                    LogType = "Info",
@@ -433,7 +431,7 @@ namespace MultiSMS.MVC.Controllers
                    })
                }
            );
-            await _groupRepository.DeleteEntityAsync(id);
+            await _groupService.DeleteEntityAsync(id);
         }
 
         #endregion
@@ -447,12 +445,12 @@ namespace MultiSMS.MVC.Controllers
             var adminId = User.GetLoggedInUserId<int>();
             var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
 
-            var employee = await _employeeRepository.GetByIdAsync(employeeId);
-            var group = await _groupRepository.GetByIdAsync(groupId);
+            var employee = await _employeeService.GetByIdAsync(employeeId);
+            var group = await _groupService.GetByIdAsync(groupId);
 
-            await _employeeGroupRepository.AddGroupMemberAsync(groupId, employeeId);
+            await _employeeGroupService.AddGroupMemberAsync(groupId, employeeId);
 
-            await _logRepository.AddEntityToDatabaseAsync(
+            await _logService.AddEntityToDatabaseAsync(
                 new Log
                 {
                     LogType = "Info",
@@ -478,12 +476,12 @@ namespace MultiSMS.MVC.Controllers
             var adminId = User.GetLoggedInUserId<int>();
             var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
 
-            var employee = await _employeeRepository.GetByIdAsync(employeeId);
-            var group = await _groupRepository.GetByIdAsync(groupId);
+            var employee = await _employeeService.GetByIdAsync(employeeId);
+            var group = await _groupService.GetByIdAsync(groupId);
 
-            await _employeeGroupRepository.RemoveGroupMember(groupId, employeeId);
+            await _employeeGroupService.RemoveGroupMember(groupId, employeeId);
 
-            await _logRepository.AddEntityToDatabaseAsync(
+            await _logService.AddEntityToDatabaseAsync(
                 new Log
                 {
                     LogType = "Info",
@@ -505,7 +503,7 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllEmployeesForGroup(int groupId)
         {
-            return Json(await _employeeGroupRepository.GetAllEmployeesForGroupQueryable(groupId).ToListAsync());
+            return Json(await _employeeGroupService.GetAllEmployeesForGroupListAsync(groupId));
         }
 
         #endregion
@@ -555,7 +553,7 @@ namespace MultiSMS.MVC.Controllers
                 logType = "Błąd";
             }
 
-            await _logRepository.AddEntityToDatabaseAsync(
+            await _logService.AddEntityToDatabaseAsync(
                  new Log
                  {
                      LogType = logType,
@@ -604,7 +602,7 @@ namespace MultiSMS.MVC.Controllers
         {
             Dictionary<string, string> logRelatedObjects;
 
-            var log = await _logRepository.GetByIdAsync(logId);
+            var log = await _logService.GetByIdAsync(logId);
             var logSanitized = new { LogType = log.LogType, LogSource = log.LogSource, LogMessage = log.LogMessage, LogCreationDate = log.LogCreationDate };
 
             if (log.LogRelatedObjectsDictionarySerialized == null)
@@ -691,7 +689,7 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> FetchAllLogs()
         {
-            var logs = await Task.FromResult(_logRepository.GetAllEntries());
+            var logs = await Task.FromResult(_logService.GetAllEntries());
             return Json(logs);
         }
 

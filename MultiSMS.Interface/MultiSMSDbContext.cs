@@ -19,6 +19,7 @@ namespace MultiSMS.Interface
         public MultiSMSDbContext(DbContextOptions options) : base(options)
         {
         }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

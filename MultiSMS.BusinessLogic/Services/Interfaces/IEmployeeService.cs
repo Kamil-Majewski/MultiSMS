@@ -2,7 +2,7 @@
 
 namespace MultiSMS.BusinessLogic.Services.Interfaces
 {
-    public interface IEmployeeService
+    public interface IEmployeeService : IGenericService<Employee>
     {
         Task<Employee> GetEmployeeByNameAsync(string name);
     }

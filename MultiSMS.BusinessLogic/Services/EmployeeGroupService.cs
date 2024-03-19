@@ -21,7 +21,7 @@ namespace MultiSMS.BusinessLogic.Services
 
         public async Task<List<int>> GetAllEmployeesIdsForGroupListAsync(int groupId)
         {
-            return await _repository.GetAllGroupIdsForEmployeeQueryable(groupId).ToListAsync();
+            return await _repository.GetAllEmployeesIdsForGroupQueryable(groupId).ToListAsync();
         }
 
         public async Task<List<int>> GetAllGroupIdsForEmployeeListAsync(int employeeId)
