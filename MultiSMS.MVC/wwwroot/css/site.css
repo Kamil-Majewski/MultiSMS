@@ -892,6 +892,15 @@ tbody {
     margin-bottom: 10px;
 }
 
+    .model-alert-font ul {
+        padding-left: 0;
+        margin-bottom: 0;
+    }
+
+    .model-alert-font li {
+        margin-bottom: 5px;
+    }
+
 
 .link:visited {
     text-decoration: none;

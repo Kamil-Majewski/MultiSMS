@@ -151,7 +151,7 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account
                 //}
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Błędny email lub hasło");
+                    ModelState.AddModelError(string.Empty, "Niepoprawny email lub hasło");
                     return Page();
                 }
             }
