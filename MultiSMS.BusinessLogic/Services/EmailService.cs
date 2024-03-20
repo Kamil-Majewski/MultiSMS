@@ -44,7 +44,7 @@ namespace MultiSMS.BusinessLogic.Services
             {
                 try
                 {
-                    client.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.SslOnConnect);
+                    client.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
                     client.AuthenticationMechanisms.Remove("XOAUTH2");
                     client.Authenticate(_mailSettings.MailAddress, _mailSettings.Password);
                     client.Send(mailMessage);

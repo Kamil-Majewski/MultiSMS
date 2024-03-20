@@ -2,17 +2,14 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.Encodings.Web;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
 
 namespace MultiSMS.MVC.Areas.Identity.Pages.Account
@@ -20,9 +17,9 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account
     public class ForgotPasswordModel : PageModel
     {
         private readonly UserManager<Administrator> _userManager;
-        private readonly IEmailSender _emailSender;
+        private readonly IEmailService _emailSender;
 
-        public ForgotPasswordModel(UserManager<Administrator> userManager, IEmailSender emailSender)
+        public ForgotPasswordModel(UserManager<Administrator> userManager, IEmailService emailSender)
         {
             _userManager = userManager;
             _emailSender = emailSender;
@@ -55,7 +52,7 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(Input.Email);
-                if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+                if (user == null)
                 {
                     // Don't reveal that the user does not exist or is not confirmed
                     return RedirectToPage("./ForgotPasswordConfirmation");
@@ -71,14 +68,15 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account
                     values: new { area = "Identity", code },
                     protocol: Request.Scheme);
 
-                await _emailSender.SendEmailAsync(
-                    Input.Email,
-                    "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
+                _emailSender.SendEmail(new Message
+                {
+                    To = new List<string> { Input.Email },
+                    Subject = "Zresetuj hasło",
+                    MessageContent = $"Zresetuj swoje hasło do systemu wysyłki smsów klikając <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>tutaj</a>."
+                });
+                 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }
-
             return Page();
         }
     }

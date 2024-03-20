@@ -55,7 +55,10 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "Zmiana hasła nie powiodła się.");
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
                 return Page();
             }
         }
