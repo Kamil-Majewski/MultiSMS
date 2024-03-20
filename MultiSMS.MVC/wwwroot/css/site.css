@@ -24,6 +24,16 @@ html {
         font-size: 14px !important;
     }
 
+    .model-alert-font {
+        font-size: 13px !important;
+    }
+
+    .input-icons {
+        top: 47% !important;
+        width: 21.5px !important;
+        height: 21.5px !important;
+    }
+
     .user-picture {
         width: 26px !important;
     }
@@ -183,6 +193,16 @@ html {
 @media screen and (max-width: 1024px) {
     tbody {
         font-size: 12px !important;
+    }
+
+    .model-alert-font {
+        font-size: 12px !important;
+    }
+
+    .input-icons {
+        top: 51% !important;
+        width: 20px !important;
+        height: 20px !important;
     }
 
     .user-picture {
@@ -720,7 +740,7 @@ label {
 
 .input-icons {
     position: absolute;
-    top: 47%;
+    top: 46.5%;
     right: 15px;
     transform: translateY(-60%);
     cursor: pointer;
@@ -863,6 +883,13 @@ tbody {
 .text-nav:hover {
     cursor: default;
     text-decoration: none;
+}
+
+.model-alert-font {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 13px;
+    padding-left: 17px;
+    margin-bottom: 10px;
 }
 
 
