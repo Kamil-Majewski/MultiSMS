@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using MultiSMS.BusinessLogic.Services.Interfaces;
+using MultiSMS.BusinessLogic.Settings;
 using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Repositories.Interfaces;
 
@@ -8,10 +10,12 @@ namespace MultiSMS.BusinessLogic.Services
     public class ApiSettingsService : GenericService<ApiSettings>, IApiSettingsService
     {
         private readonly IApiSettingsRepository _settingsRepository;
+        private readonly ApiSettingsSettings _apiSettingsPassword;
 
-        public ApiSettingsService(IApiSettingsRepository settingsRepository, IGenericRepository<ApiSettings> genericRepository) : base(genericRepository)
+        public ApiSettingsService(IApiSettingsRepository settingsRepository, IGenericRepository<ApiSettings> genericRepository, IOptions<ApiSettingsSettings> apiSettingsPassword) : base(genericRepository)
         {
             _settingsRepository = settingsRepository;
+            _apiSettingsPassword = apiSettingsPassword.Value;
         }
 
         public async Task<ApiSettings> GetActiveSettingsAsync()
@@ -39,6 +43,11 @@ namespace MultiSMS.BusinessLogic.Services
             {
                 return await UpdateEntityAsync(newSettings);
             }
+        }
+
+        public bool CheckIfAuthorizationSuccessful(string password)
+        {
+            return password == _apiSettingsPassword.Password ? true : false;
         }
     }
 }

@@ -22,7 +22,8 @@ namespace MultiSMS.MVC.Controllers
         private readonly IGroupService _groupService;
         private readonly IEmployeeGroupService _employeeGroupService;
         private readonly ILogService _logService;
-        public HomeController(ISMSMessageTemplateService smsTemplateRepository, IEmployeeService employeeRepository, IGroupService groupRepository, IEmployeeGroupService employeeGroupRepository, ILogService logRepository, IAdministratorService administratorService, IImportExportEmployeesService ieService)
+        private readonly IApiSettingsService _apiSettingsService;
+        public HomeController(ISMSMessageTemplateService smsTemplateRepository, IEmployeeService employeeRepository, IGroupService groupRepository, IEmployeeGroupService employeeGroupRepository, ILogService logRepository, IAdministratorService administratorService, IImportExportEmployeesService ieService, IApiSettingsService apiSettingsService)
         {
             _smsTemplateService = smsTemplateRepository;
             _employeeService = employeeRepository;
@@ -31,6 +32,7 @@ namespace MultiSMS.MVC.Controllers
             _logService = logRepository;
             _administratorService = administratorService;
             _ieService = ieService;
+            _apiSettingsService = apiSettingsService;
         }
 
         [Authorize]
@@ -695,6 +697,25 @@ namespace MultiSMS.MVC.Controllers
 
         #endregion
 
-        
+        #region ApiSettings
+        [Authorize]
+        [HttpGet]
+        public IActionResult CheckIfAuthorizationSuccessful(string password)
+        {
+            var authSuccessful = _apiSettingsService.CheckIfAuthorizationSuccessful(password);
+
+            if (authSuccessful)
+            {
+                return Content("<h1>LEL</h1>", "text/html");
+            }
+            else
+            {
+                string failureMessage = $"<span class='text-danger model-alert-font' role='alert' style='display:block; padding:0;'>Nieudana próba autoryzacji</div>";
+                return Content(failureMessage, "text/html");
+            }
+        }
+        #endregion
+
+
     }
 }

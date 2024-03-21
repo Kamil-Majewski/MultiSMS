@@ -7,5 +7,6 @@ namespace MultiSMS.BusinessLogic.Services.Interfaces
         Task<ApiSettings> ChangeSettingsAsync(ApiSettings newSettings);
         Task<ApiSettings> GetSettingsByNameAsync(string settingsName);
         Task<ApiSettings> GetActiveSettingsAsync();
+        bool CheckIfAuthorizationSuccessful(string password);
     }
 }

@@ -73,6 +73,27 @@ function SendSMS(text, chosenGroupId, chosenGroupName, additionalPhoneNumbers, a
     });
 }
 
+function checkIfAuthorizationSuccessful(password) {
+    $.ajax({
+        url: '/Home/CheckIfAuthorizationSuccessful',
+        type: 'GET',
+        data: { password: password },
+        contentType: 'application/json',
+        success: function (response) {
+            if (response.includes("Nieudana")) {
+                $("#settings-password-form").prepend(response);
+                $("#settings-password-input").empty();
+            }
+            else {
+                $("#settings-form").append(response);
+            }
+        },
+        error: function (error) {
+            console.error(error);
+        }
+    });
+}
+
 function importContacts() {
 
     function IterateOverListOfObjectsAndAppendToTable(object, tableId) {
