@@ -880,12 +880,52 @@
                 </div>
             </div>
         </div>
+        <div class="tab-pane" id="settings">
+            <div class="settings-options-container options-container" style="height:31vh; align-items: center;">
+                <div class="option-content" id="settings-password" style="height: 15vh;">
+                    <div class="options-header" style="display:none;">
+                        <div style="flex:1;"></div>
+                        <div class="option-name" style="flex:auto; text-align:center;">
+                            <span class="opion-name-placeholder" id="group-details-window-title">Ustawienia</span>
+                        </div>
+                        <div style="flex:1;"></div>
+                    </div>
+                    <hr id="settings-hr" style="margin-bottom: 10px; display:none;" />
+                    <form class="setting-options-password-form, options-form" id="settings-password-form" style="width: 100%; height: 15vh; padding-top:30px;">
+                        <label class="form-subtitle" for="settings-password-input">Hasło</label>
+                        <div class="password-input-container" id="enter-password-window" style="display: flex; justify-content: center; flex-direction:column">
+                            <input type="password" class="form-input" id="settings-password-input" aria-required="true" placeholder="Wprowadź hasło" required />
+                            <img src="~/icons/closed-eye.png" class="input-icons" id="settings-eye-icon" alt="Toggle Password Visibility" onclick="togglePasswordVisibility()">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 <script defer>
 
+    function togglePasswordVisibility() {
+        var passwordInput = document.getElementById('settings-password-input');
+        var eyeIcon = document.getElementById('settings-eye-icon');
+
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            eyeIcon.src = window.location.origin + "/icons/eye.png";
+        } else {
+            passwordInput.type = 'password';
+            eyeIcon.src = window.location.origin + "/icons/closed-eye.png";
+        }
+    }
+
     $(document).ready(function () {
+
+        $("#settings-password-input").on('input', function () {
+            if ($("#settings-password-input").val().length > 0) {
+                $("#settings-eye-icon").css('display', 'block')
+            };
+        });
 
         CalculateHeaderWidthAndToolbarHeight();
         FetchAllTemplatesAndPopulateTable();

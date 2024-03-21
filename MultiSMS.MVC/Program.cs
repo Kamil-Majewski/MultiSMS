@@ -28,7 +28,7 @@ builder.Services.AddDbContext<MultiSMSDbContext>(options =>
 builder.Services.Configure<EmailSettings>(configuration.GetSection("MailSettings"));
 builder.Services.Configure<ServerSmsSettings>(configuration.GetSection("SMSServerSettings"));
 builder.Services.Configure<SmsApiSettings>(configuration.GetSection("SMSAPI"));
-
+builder.Services.Configure<ApiSettingsSettings>(configuration.GetSection("ApiSettingsSettings"));
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
