@@ -884,18 +884,19 @@
             <div class="settings-options-password-container options-container" id="settings-password" style="height:320px; align-items: center;">
                 <div class="option-content">
                     <form class="setting-options-password-form, options-form" id="settings-password-form" style="width: 100%; padding-top:30px;">
+                        <span class="text-danger model-alert-font" id="authorization-failed-message" role='alert' style='display:block; padding:0;'></span>
                         <label class="form-subtitle" for="settings-password-input">Hasło</label>
                         <div class="password-input-container" id="enter-password-window" style="display: flex; justify-content: center; flex-direction:column">
                             <input type="password" class="form-input" id="settings-password-input" aria-required="true" placeholder="Wprowadź hasło" required style="margin-bottom:25px !important;"/>
                             <img src="~/icons/closed-eye.png" class="input-icons" id="settings-eye-icon" alt="Toggle Password Visibility" onclick="togglePasswordVisibility()" style="top: 36.5%">
                         </div>
                         <div style="display:flex; justify-content:center; width:100%;">
-                            <button id="settings-password-submit-button" type="submit" class="violet-button" style="width:50%; display:flex; justify-content:center; font-size:19px; height:44px;">Autoryzacja</button>
+                            <button id="settings-password-submit-button" type="submit" class="violet-button" style="width:50%; display:flex; justify-content:center; font-size:19px; height:44px;">Autoryzuj</button>
                         </div>
                     </form>
                 </div>
             </div>
-            <div class="settings-options-container options-container" id="settings-container" style="display:none;">
+            <div class="settings-options-container options-container" id="settings-container" @* style="display:none; "*@>
                 <div class="option-content">
                     <div class="options-header">
                         <div style="flex:1;"></div>
@@ -906,7 +907,6 @@
                     </div>
                     <hr style="margin-bottom: 10px;"/>
                     <form class="settings-options-form options-form" id="settings-form">
-
                     </form>
                 </div>
             </div>
@@ -1454,14 +1454,13 @@
         $(document).on('submit', "#settings-password-form", function (e) {
             var form = document.getElementById("settings-password-form");
             e.preventDefault();
-            
+
             if(form.checkValidity() == false){
                 form.reportValidity()
                 return
             }
-
+            
             var password = $("#settings-password-input").val();
-
             checkIfAuthorizationSuccessful(password);
         });
 

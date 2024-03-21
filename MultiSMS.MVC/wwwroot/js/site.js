@@ -81,11 +81,13 @@ function checkIfAuthorizationSuccessful(password) {
         contentType: 'application/json',
         success: function (response) {
             if (response.includes("Nieudana")) {
-                $("#settings-password-form").prepend(response);
-                $("#settings-password-input").empty();
+                $("#authorization-failed-message").html(response);
+                $("#settings-password-input").val("");
             }
             else {
                 $("#settings-form").append(response);
+                $("#authorization-failed-message").html("");
+                $("#settings-password-input").val("");
             }
         },
         error: function (error) {

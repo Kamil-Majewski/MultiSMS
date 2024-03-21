@@ -706,11 +706,66 @@ namespace MultiSMS.MVC.Controllers
 
             if (authSuccessful)
             {
-                return Content("<h1>LEL</h1>", "text/html");
+                var apiSettings = _apiSettingsService.GetAllEntries();
+                var activeApiSettings = apiSettings.FirstOrDefault(a => a.ApiActive == true) ?? throw new Exception("There are no active API's");
+                apiSettings.Remove(activeApiSettings);
+
+                var htmlContent = $@"<div class=""active-api"">
+                    <span class=""form-subtitle"">API</span>
+                    <div class=""form-group"" style=""margin-top:20px;"">
+                        <div class=""row mb-10"">
+                            <div class=""col"" style=""display: flex; justify-content: space-between; align-items:center;"">
+                                <label style=""min-width:180px"">Wybrane API</label>
+                                <select class=""form-input"" id=""select-active-api"" style=""margin-bottom: 0"">
+                                    <option selected value=""{activeApiSettings.ApiName}"">{activeApiSettings.ApiName}</option>";
+
+                foreach(var apiSetting in apiSettings)
+                {
+                    htmlContent += $@"<option value=""{apiSetting.ApiName}"">{apiSetting.ApiName}</option>";
+                }
+                htmlContent +=$@"</select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr style=""margin: 20px;"" />
+                <div class=""active-api-settings"" style=""margin-bottom:20px;"">
+                    <span class=""form-subtitle"">Konfiguracja API</span>
+                    <div class=""form-group"" style=""margin-top:20px;"">
+                        <div class=""row"" style=""margin-bottom:20px;"">
+                            <div class=""col"" style=""display: flex; justify-content: space-between; align-items:center;"">
+                                <label for=""api-sender-name"" style=""min-width:180px"" style=""display:inline;"">Nazwa nadawcy</label>
+                                <input type=""text"" value=""{activeApiSettings.SenderName}"" class=""form-input"" id=""api-sender-name"" style=""margin-bottom:0;"" required>
+                            </div>
+                        </div>
+                        <div class=""row"" style=""margin-bottom:20px;"">
+                            <div class=""col"">
+                                <label style=""min-width:180px;"">Kanał priorytetowy</label>
+                                <label class=""switch"">
+                                    <input value=""{activeApiSettings.FastChannel}"" type=""checkbox"" {(activeApiSettings.FastChannel == true ? "checked" : "")}>
+                                    <span class=""slider round""></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class=""row"" style=""margin-bottom:36px;"">
+                            <div class=""col"">
+                                <label style=""min-width:180px;"">Tryb testowy</label>
+                                <label class=""switch"">
+                                    <input value=""{activeApiSettings.TestMode}"" type=""checkbox"" {(activeApiSettings.TestMode == true ? "checked" : "")}>
+                                    <span class=""slider round""></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class=""d-flex justify-content-center"">
+                    <button type=""submit"" class=""violet-button"" id=""submit-settings-form-button"">Zapisz zmiany</button>
+                </div>";
+                return Content(htmlContent, "text/html");
             }
             else
             {
-                string failureMessage = $"<span class='text-danger model-alert-font' role='alert' style='display:block; padding:0;'>Nieudana próba autoryzacji</div>";
+                string failureMessage = "Nieudana próba autoryzacji";
                 return Content(failureMessage, "text/html");
             }
         }
