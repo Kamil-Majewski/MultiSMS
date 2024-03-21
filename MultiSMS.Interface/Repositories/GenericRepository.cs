@@ -66,5 +66,10 @@ namespace MultiSMS.Interface.Repositories
             _dbSet.Remove(entity);
             await _dbContext.SaveChangesAsync();
         }
+
+        public void DetachEntity(T entity)
+        {
+            _dbContext.Entry(entity).State = EntityState.Detached;
+        }
     }
 }

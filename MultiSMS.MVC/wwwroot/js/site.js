@@ -88,10 +88,33 @@ function checkIfAuthorizationSuccessful(password) {
                 $("#settings-form").append(response);
                 $("#authorization-failed-message").html("");
                 $("#settings-password-input").val("");
+                $("#settings-password").hide();
+                $("#settings-container").show();
+
             }
         },
         error: function (error) {
             console.error(error);
+        }
+    });
+}
+
+function updateApiSettings() {
+    var activeApi = $("#select-active-api").val();
+    var senderName = $("#api-sender-name").val();
+    var fastChannel = $("#fast-channel-checkbox").prop("checked") ? true : false;
+    var testMode = $("#test-mode-checkbox").prop("checked") ? true : false;
+
+    $.ajax({
+        url: '/Home/UpdateApiSettings',
+        type: 'POST',
+        data: JSON.stringify({ ActiveApiName: activeApi, SenderName: senderName, FastChannel: fastChannel, TestMode: testMode }),
+        contentType: 'application/json; charset=utf-8',
+        success: function () {
+            console.log("Api settings updated successfuly");
+        },
+        error: function (errorData) {
+            console.error(errorData);
         }
     });
 }

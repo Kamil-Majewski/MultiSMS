@@ -742,7 +742,7 @@ namespace MultiSMS.MVC.Controllers
                             <div class=""col"">
                                 <label style=""min-width:180px;"">Kanał priorytetowy</label>
                                 <label class=""switch"">
-                                    <input value=""{activeApiSettings.FastChannel}"" type=""checkbox"" {(activeApiSettings.FastChannel == true ? "checked" : "")}>
+                                    <input type=""checkbox"" id=""fast-channel-checkbox"" {(activeApiSettings.FastChannel == true ? "checked" : "")}>
                                     <span class=""slider round""></span>
                                 </label>
                             </div>
@@ -751,7 +751,7 @@ namespace MultiSMS.MVC.Controllers
                             <div class=""col"">
                                 <label style=""min-width:180px;"">Tryb testowy</label>
                                 <label class=""switch"">
-                                    <input value=""{activeApiSettings.TestMode}"" type=""checkbox"" {(activeApiSettings.TestMode == true ? "checked" : "")}>
+                                    <input type=""checkbox"" id=""test-mode-checkbox"" {(activeApiSettings.TestMode == true ? "checked" : "")}>
                                     <span class=""slider round""></span>
                                 </label>
                             </div>
@@ -759,7 +759,7 @@ namespace MultiSMS.MVC.Controllers
                     </div>
                 </div>
                 <div class=""d-flex justify-content-center"">
-                    <button type=""submit"" class=""violet-button"" id=""submit-settings-form-button"">Zapisz zmiany</button>
+                    <button type=""submit"" class=""violet-button w-50"" id=""submit-settings-form-button"">Zapisz zmiany</button>
                 </div>";
                 return Content(htmlContent, "text/html");
             }
@@ -768,6 +768,20 @@ namespace MultiSMS.MVC.Controllers
                 string failureMessage = "Nieudana próba autoryzacji";
                 return Content(failureMessage, "text/html");
             }
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> UpdateApiSettings([FromBody]UpdateApiSettingsModel model)
+        {
+            return Json(await _apiSettingsService.ChangeSettingsAsync(new ApiSettings
+            {
+                ApiName = model.ActiveApiName,
+                ApiActive = true,
+                SenderName = model.SenderName,
+                FastChannel = model.FastChannel,
+                TestMode = model.TestMode
+            }));
         }
         #endregion
 

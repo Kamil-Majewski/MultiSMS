@@ -30,13 +30,16 @@ namespace MultiSMS.BusinessLogic.Services
 
         public async Task<ApiSettings> ChangeSettingsAsync(ApiSettings newSettings)
         {
-            if (newSettings.ApiActive == false)
+            var settingsFromDatabase = await GetSettingsByNameAsync(newSettings.ApiName);
+            newSettings.ApiSettingsId = settingsFromDatabase.ApiSettingsId;
+            _settingsRepository.DetachEntity(settingsFromDatabase);
+
+            if (!settingsFromDatabase.ApiActive)
             {
                 var previousApi = await GetActiveSettingsAsync();
                 previousApi.ApiActive = false;
-                await UpdateEntityAsync(newSettings);
+                await UpdateEntityAsync(previousApi);
 
-                newSettings.ApiActive = true;
                 return await UpdateEntityAsync(newSettings);
             }
             else

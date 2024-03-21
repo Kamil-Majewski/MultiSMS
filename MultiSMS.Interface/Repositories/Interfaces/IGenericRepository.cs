@@ -8,5 +8,6 @@
         IQueryable<T> GetAllEntries();
         Task<T> GetByIdAsync(int id);
         Task<T> UpdateEntityAsync(T entity);
+        void DetachEntity(T entity);
     }
 }

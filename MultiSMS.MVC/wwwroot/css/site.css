@@ -82,6 +82,14 @@ html {
             font-size: 15px !important;
         }
 
+    select {
+        font-size: 14px !important;
+    }
+
+    option {
+        font-size: 14px !important;
+    }
+
     .form-input {
         min-height: 40px !important;
         margin-bottom: 10px !important;
@@ -257,6 +265,15 @@ html {
         input::placeholder {
             font-size: 12px !important;
         }
+
+    select {
+        font-size: 12px !important;
+        min-width: 148px !important;
+    }
+
+    option {
+        font-size: 12px !important;
+    }
 
     .form-input {
         min-height: 36px !important;
@@ -1046,8 +1063,8 @@ img {
 .switch {
     position: relative;
     display: inline-block;
-    width: 60px;
-    height: 28px;
+    width: 53px;
+    height: 25px;
 }
 
     .switch input {
@@ -1059,8 +1076,8 @@ img {
 .slider {
     position: absolute;
     cursor: pointer;
-    top: 0;
-    left: 0;
+    top: 0%;
+    left: -10%;
     right: 0;
     bottom: 0;
     background-color: #ccc;
@@ -1071,8 +1088,8 @@ img {
     .slider:before {
         position: absolute;
         content: "";
-        height: 20px;
-        width: 26px;
+        height: 18px;
+        width: 24px;
         left: 4px;
         bottom: 4px;
         background-color: white;
