@@ -698,6 +698,7 @@ namespace MultiSMS.MVC.Controllers
         #endregion
 
         #region ApiSettings
+
         [Authorize]
         [HttpPost]
         public IActionResult CheckIfAuthorizationSuccessful([FromBody]string password)

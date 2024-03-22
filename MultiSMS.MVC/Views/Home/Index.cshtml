@@ -896,6 +896,7 @@
                     </form>
                 </div>
             </div>
+            <div class="alert alert-dismissible" id="status-message-settings" role="alert" style="border-radius: 50px; display:none;"></div>
             <div class="settings-options-container options-container" id="settings-container" style="display:none; ">
                 <div class="option-content">
                     <div class="options-header">
@@ -1470,6 +1471,9 @@
         });
 
         $(document).on('submit', "#settings-form", function (e) {
+            $("#status-message-settings").hide();
+            $("#status-message-settings").removeClass("success-status");
+            $("#status-message-settings").removeClass("failed-status");
             var form = document.getElementById("settings-form");
             e.preventDefault();
 
@@ -1525,6 +1529,10 @@
         });
 
         $(document).on('submit', '#send-sms-form', function (e) {
+            $("#status-message-sms").hide();
+            $("#status-message-sms").removeClass("failed-status");
+            $("#status-message-sms").removeClass("success-status");
+
             var form = document.getElementById("send-sms-form");
             e.preventDefault();
 

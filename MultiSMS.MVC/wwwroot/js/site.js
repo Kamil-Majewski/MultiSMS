@@ -77,7 +77,7 @@ function checkIfAuthorizationSuccessful(password) {
     $.ajax({
         url: '/Home/CheckIfAuthorizationSuccessful',
         type: 'POST',
-        data: JSON.stringify({ password: password }),
+        data: JSON.stringify(password),
         contentType: 'application/json; charset=utf-8',
         success: function (response) {
             if (response.includes("Nieudana")) {
@@ -111,10 +111,14 @@ function updateApiSettings() {
         data: JSON.stringify({ ActiveApiName: activeApi, SenderName: senderName, FastChannel: fastChannel, TestMode: testMode }),
         contentType: 'application/json; charset=utf-8',
         success: function () {
-            console.log("Api settings updated successfuly");
+            $("#status-message-settings").addClass("success-status");
+            $("#status-message-settings").html("Pomyślnie zapisano zmiany ustawień API. <button type='button' class='btn-close text-dark' aria-label='Close' onclick='CloseSettingsAlert()'></button>");
+            $("#status-message-settings").show();
         },
         error: function (errorData) {
-            console.error(errorData);
+            $("#status-message-settings").addClass("failed-status");
+            $("#status-message-settings").html("Wystąpił błąd podczas zapisywania zmian. Zmiany nie zostały zapisane. <button type='button' class='btn-close text-dark' aria-label='Close' onclick='CloseSettingsAlert()'></button>");
+            $("#status-message-settings").show();
         }
     });
 }
@@ -1233,6 +1237,10 @@ function DeleteTemplate(templateId) {
 
 function CloseAlert() {
     $("#status-message-sms").hide();
+}
+
+function CloseSettingsAlert() {
+    $("#status-message-settings").hide();
 }
 
 function DeleteContact(contactId) {
