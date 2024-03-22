@@ -699,8 +699,8 @@ namespace MultiSMS.MVC.Controllers
 
         #region ApiSettings
         [Authorize]
-        [HttpGet]
-        public IActionResult CheckIfAuthorizationSuccessful(string password)
+        [HttpPost]
+        public IActionResult CheckIfAuthorizationSuccessful([FromBody]string password)
         {
             var authSuccessful = _apiSettingsService.CheckIfAuthorizationSuccessful(password);
 
@@ -715,7 +715,7 @@ namespace MultiSMS.MVC.Controllers
                     <div class=""form-group"" style=""margin-top:20px;"">
                         <div class=""row mb-10"">
                             <div class=""col"" style=""display: flex; justify-content: space-between; align-items:center;"">
-                                <label style=""min-width:180px"">Wybrane API</label>
+                                <label style=""min-width:180px"">Aktywne API</label>
                                 <select class=""form-input"" id=""select-active-api"" style=""margin-bottom: 0"">
                                     <option selected value=""{activeApiSettings.ApiName}"">{activeApiSettings.ApiName}</option>";
 
@@ -782,6 +782,13 @@ namespace MultiSMS.MVC.Controllers
                 FastChannel = model.FastChannel,
                 TestMode = model.TestMode
             }));
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> FetchApiSettingsByName(string apiName)
+        {
+            return Json(await _apiSettingsService.GetSettingsByNameAsync(apiName));
         }
         #endregion
 

@@ -76,9 +76,9 @@ function SendSMS(text, chosenGroupId, chosenGroupName, additionalPhoneNumbers, a
 function checkIfAuthorizationSuccessful(password) {
     $.ajax({
         url: '/Home/CheckIfAuthorizationSuccessful',
-        type: 'GET',
-        data: { password: password },
-        contentType: 'application/json',
+        type: 'POST',
+        data: JSON.stringify({ password: password }),
+        contentType: 'application/json; charset=utf-8',
         success: function (response) {
             if (response.includes("Nieudana")) {
                 $("#authorization-failed-message").html(response);
@@ -117,6 +117,23 @@ function updateApiSettings() {
             console.error(errorData);
         }
     });
+}
+
+function fetchApiSettingsByName(apiName) {
+    $.ajax({
+        url: '/Home/FetchApiSettingsByName',
+        type: 'GET',
+        data: { apiName: apiName },
+        contentType: 'application/json',
+        success: function (apiSettingsObject) {
+            $("#api-sender-name").val(apiSettingsObject.senderName);
+            $("#fast-channel-checkbox").prop("checked", apiSettingsObject.fastChannel);
+            $("#test-mode-checkbox").prop("checked", apiSettingsObject.testMode);
+        },
+        error: function (errorData) {
+            console.error(errorData)
+        }
+    })
 }
 
 function importContacts() {

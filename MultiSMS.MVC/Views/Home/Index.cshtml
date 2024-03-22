@@ -983,6 +983,11 @@
             importContacts();
         });
 
+        $(document).on('change', "#select-active-api", function () {
+            var apiName = $("#select-active-api").val();
+            fetchApiSettingsByName(apiName);
+        });
+
         $(document).on('click', '.template-delete', function (e) {
             e.preventDefault();
             var templateId = $(this).attr("href").split('-')[1];
