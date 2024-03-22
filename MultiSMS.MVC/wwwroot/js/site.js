@@ -68,7 +68,7 @@ function SendSMS(text, chosenGroupId, chosenGroupName, additionalPhoneNumbers, a
             $("#status-message-sms").addClass("failed-status");
             $("#status-message-sms").html(`Wystąpił wewnętrzny błąd servera! Skontaktuj się z obsługą. <button type='button' class='btn-close text-dark' aria-label='Close' onclick='CloseAlert()'></button>`);
             $("#status-message-sms").show();
-            console.error(error.message);
+            console.error(error.responseText);
         }
     });
 }
@@ -94,7 +94,7 @@ function checkIfAuthorizationSuccessful(password) {
             }
         },
         error: function (error) {
-            console.error(error);
+            console.error(error.responseText);
         }
     });
 }
@@ -116,6 +116,7 @@ function updateApiSettings() {
             $("#status-message-settings").show();
         },
         error: function (errorData) {
+            console.error(errorData.responseText);
             $("#status-message-settings").addClass("failed-status");
             $("#status-message-settings").html("Wystąpił błąd podczas zapisywania zmian. Zmiany nie zostały zapisane. <button type='button' class='btn-close text-dark' aria-label='Close' onclick='CloseSettingsAlert()'></button>");
             $("#status-message-settings").show();
@@ -135,7 +136,7 @@ function fetchApiSettingsByName(apiName) {
             $("#test-mode-checkbox").prop("checked", apiSettingsObject.testMode);
         },
         error: function (errorData) {
-            console.error(errorData)
+            console.error(errorData.responseText)
         }
     })
 }
@@ -326,7 +327,7 @@ function importContacts() {
     }
 
     function handleImportError(error) {
-        console.error(error);
+        console.error(error.responseText);
         $("#closeModal").show();
         $("#import-modal-content-text").text("Wystąpił niespodziewany błąd!");
         $("#import-modal-footer").addClass("justify-content-center");
@@ -362,7 +363,8 @@ function ExportContactsAndDownloadExcel() {
             window.URL.revokeObjectURL(downloadLink.href);
         },
         error: function (error) {
-            console.error("Export has failed");
+            alert("Wystąpił błąd poczas eksportu danych do dokumentu Excel")
+            console.error(error.responseText);
         }
     });
 }
@@ -1226,7 +1228,7 @@ function DeleteTemplate(templateId) {
             FetchAllTemplatesAndPopulateTable();
         },
         error: function (error) {
-            console.error(error);
+            console.error(error.responseText);
         }
     });
 }
@@ -1250,7 +1252,7 @@ function DeleteContact(contactId) {
             FetchAllContactsAndPopulateTable();
         },
         error: function (error) {
-            console.error(error);
+            console.error(error.responseText);
         }
     });
 }
@@ -1266,7 +1268,7 @@ function DeleteGroup(groupId) {
             FetchAllGroupsAndPopulateTable();
         },
         error: function (error) {
-            console.error(error);
+            console.error(error.responseText);
         }
     });
 }
@@ -1286,7 +1288,7 @@ function EditTemplate() {
 
         },
         error: function (error) {
-            console.error(error);
+            console.error(error.responseText);
         }
     });
 }
@@ -1315,7 +1317,7 @@ function EditContact() {
 
         },
         error: function (error) {
-            console.error(error);
+            console.error(error.responseText);
         }
     });
 }
@@ -1333,7 +1335,7 @@ function EditGroup() {
             FetchAllGroupsAndPopulateTable();
         },
         error: function (error) {
-            console.error(error);
+            console.error(error.responseText);
         }
     });
 }
@@ -1369,7 +1371,7 @@ function FetchAllTemplatesAndPopulateTable() {
 
         },
         error: function (error) {
-            console.error(error);
+            console.error(error.responseText);
         }
     })
 }
@@ -1411,7 +1413,7 @@ function FetchAllContactsAndPopulateTable() {
 
         },
         error: function (error) {
-            console.error(error);
+            console.error(error.responseText);
         }
     })
 }
@@ -1447,7 +1449,7 @@ function FetchAllGroupsAndPopulateTable() {
 
         },
         error: function (error) {
-            console.error(error);
+            console.error(error.responseText);
         }
     })
 }
@@ -1480,7 +1482,7 @@ function FetchAllLogsAndPopulateTable() {
 
         },
         error: function (error) {
-            console.error(error);
+            console.error(error.responseText);
         }
     })
 }
@@ -1511,7 +1513,7 @@ function PopulateTableForChooseGroupForSMS() {
             });
         },
         error: function (error) {
-            console.error(error);
+            console.error(error.responseText);
         }
     })
 }
@@ -1543,7 +1545,7 @@ function PopulateTableForChooseTemplateForSMS() {
 
         },
         error: function (error) {
-            console.error(error);
+            console.error(error.responseText);
         }
     });
 }
@@ -1607,7 +1609,7 @@ function PopulateTablesForAssigningUsersToGroups(groupId) {
                     });
                 },
                 error: function (error) {
-                    console.error(error);
+                    console.error(error.responseText);
                 }
             });
 
@@ -1615,7 +1617,7 @@ function PopulateTablesForAssigningUsersToGroups(groupId) {
             $(".groups-options-container-assign").show();
         },
         error: function (error) {
-            console.error(error);
+            console.error(error.responseText);
         }
     });
 }
@@ -1634,7 +1636,7 @@ function CreateNewTemplate() {
             FetchAllTemplatesAndPopulateTable();
         },
         error: function (error) {
-            console.error(error);
+            console.error(error.responseText);
         }
     });
 }
@@ -1659,7 +1661,7 @@ function CreateNewContact() {
             FetchAllContactsAndPopulateTable();
         },
         error: function (error) {
-            console.error(error);
+            console.error(error.responseText);
         }
     });
 }
@@ -1677,7 +1679,7 @@ function CreateNewGroup() {
             FetchAllGroupsAndPopulateTable();
         },
         error: function (error) {
-            console.error(error);
+            console.error(error.responseText);
         }
     });
 }

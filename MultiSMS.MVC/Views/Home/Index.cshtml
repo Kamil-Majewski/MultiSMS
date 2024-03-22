@@ -1064,7 +1064,7 @@
                     $(".groups-details-container").show();
                 },
                 error: function (error) {
-                    console.error(error);
+                    console.error(error.responseText);
                 }
             });
         });
@@ -1113,7 +1113,7 @@
                         handleImportTypeLog(logEntity.import);
                     }
                     else {
-                        console.error("500 - Internal Server Error");
+                        console.error("Unknown log type");
                     }
 
                     $(".logs-list-container").hide();
@@ -1121,7 +1121,7 @@
 
                 },
                 error: function (error) {
-                    console.error(error);
+                    console.error(error.responseText);
                 }
             });
         });
@@ -1182,7 +1182,7 @@
 
                 },
                 error: function (error) {
-                    console.error(error);
+                    console.error(error.responseText);
                 }
             });
         });
@@ -1304,7 +1304,7 @@
                     $(".contacts-list-container").hide();
                 },
                 error: function (error) {
-                    console.error(error);
+                    console.error(error.responseText);
                 }
             });
         });
@@ -1355,7 +1355,7 @@
                     $("#GroupOfContacts").attr('data-id', groupEntity.groupId);
                 },
                 error: function (error) {
-                    console.error(error);
+                    console.error(error.responseText);
                 }
             });
             GoBackToSMSWindow();
@@ -1396,7 +1396,7 @@
                     document.getElementById('sms-text-symbol-counter').innerHTML = messageEle.value.length + "/" + messageEle.getAttribute('maxlength');
                 },
                 error: function (error) {
-                    console.error(error);
+                    console.error(error.responseText);
                 }
             });
             GoBackToSMSWindow();
@@ -1412,12 +1412,11 @@
                 data: { groupId: assignContactIdGroupId[2], employeeId: assignContactIdGroupId[1] },
                 contentType: 'application/json',
                 success: function () {
-                    console.log("Successfully added contact to group");
                     PopulateTablesForAssigningUsersToGroups(assignContactIdGroupId[2]);
                     FetchAllContactsAndPopulateTable();
                 },
                 error: function (error) {
-                    console.error(error);
+                    console.error(error.responseText);
                 }
             });
         });
@@ -1432,12 +1431,11 @@
                 data: { groupId: assignContactIdGroupId[2], employeeId: assignContactIdGroupId[1] },
                 contentType: 'application/json',
                 success: function () {
-                    console.log("Successfully removed contact from group");
                     PopulateTablesForAssigningUsersToGroups(assignContactIdGroupId[2]);
                     FetchAllContactsAndPopulateTable();
                 },
                 error: function (error) {
-                    console.error(error);
+                    console.error(error.responseText);
                 }
             });
         });

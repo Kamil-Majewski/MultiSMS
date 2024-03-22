@@ -14,8 +14,15 @@ namespace MultiSMS.Interface.Repositories
         }
         public async Task AddGroupMemberAsync(int groupId, int employeeId)
         {
-            await _dbContext.AddAsync(new EmployeeGroup { EmployeeId = employeeId, GroupId = groupId });
-            await _dbContext.SaveChangesAsync();
+            try
+            {
+                await _dbContext.AddAsync(new EmployeeGroup { EmployeeId = employeeId, GroupId = groupId });
+                await _dbContext.SaveChangesAsync();
+            }
+            catch
+            {
+                throw new Exception("Error occured while trying to add group member");
+            };
         }
 
         public IQueryable<int> GetAllEmployeesIdsForGroupQueryable(int groupId)
