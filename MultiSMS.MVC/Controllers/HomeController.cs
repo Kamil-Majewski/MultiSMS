@@ -76,7 +76,7 @@ namespace MultiSMS.MVC.Controllers
                 }
             );
 
-            return Json(addedTemplate);
+            return Ok("Successfully created new template");
         }
 
         [Authorize]
@@ -123,12 +123,12 @@ namespace MultiSMS.MVC.Controllers
                  }
              );
 
-            return Json(template.TemplateName);
+            return Ok("Successfully edited template");
         }
 
         [Authorize]
         [HttpGet]
-        public async Task DeleteTemplate(int id)
+        public async Task<IActionResult> DeleteTemplate(int id)
         {
             var adminId = User.GetLoggedInUserId<int>();
             var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
@@ -152,6 +152,7 @@ namespace MultiSMS.MVC.Controllers
             );
 
             await _smsTemplateService.DeleteEntityAsync(id);
+            return Ok("Successfully deleted template");
         }
 
         #endregion
@@ -197,7 +198,7 @@ namespace MultiSMS.MVC.Controllers
                   }
               );
 
-            return Json(contact.Name);
+            return Ok("Succesfully created new contact");
         }
 
         [Authorize]
@@ -262,12 +263,12 @@ namespace MultiSMS.MVC.Controllers
                  }
              );
 
-            return Json(contact.Name);
+            return Ok("Successfully edited contact");
         }
 
         [Authorize]
         [HttpGet]
-        public async Task DeleteContact(int id)
+        public async Task<IActionResult> DeleteContact(int id)
         {
             var adminId = User.GetLoggedInUserId<int>();
             var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
@@ -289,6 +290,8 @@ namespace MultiSMS.MVC.Controllers
                }
            );
             await _employeeService.DeleteEntityAsync(id);
+
+            return Ok("Successfully deleted contact");
         }
         #endregion
 
@@ -321,7 +324,7 @@ namespace MultiSMS.MVC.Controllers
                  }
              );
 
-            return Json(group.GroupName);
+            return Ok("Successfully created new group");
         }
 
         [Authorize]
@@ -406,12 +409,12 @@ namespace MultiSMS.MVC.Controllers
                  }
              );
 
-            return Json(group.GroupName);
+            return Ok("Successfully edited group");
         }
 
         [Authorize]
         [HttpGet]
-        public async Task DeleteGroup(int id)
+        public async Task<IActionResult> DeleteGroup(int id)
         {
             var adminId = User.GetLoggedInUserId<int>();
             var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
@@ -434,6 +437,7 @@ namespace MultiSMS.MVC.Controllers
                }
            );
             await _groupService.DeleteEntityAsync(id);
+            return Ok("Successfully deleted group");
         }
 
         #endregion
@@ -442,7 +446,7 @@ namespace MultiSMS.MVC.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task AddUserToGroup(int groupId, int employeeId)
+        public async Task<IActionResult> AddUserToGroup(int groupId, int employeeId)
         {
             var adminId = User.GetLoggedInUserId<int>();
             var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
@@ -469,11 +473,12 @@ namespace MultiSMS.MVC.Controllers
                     })
                 }
             );
+            return Ok("Successfully added contact to group");
         }
 
         [Authorize]
         [HttpGet]
-        public async Task RemoveUserFromGroup(int groupId, int employeeId)
+        public async Task<IActionResult> RemoveUserFromGroup(int groupId, int employeeId)
         {
             var adminId = User.GetLoggedInUserId<int>();
             var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
@@ -499,6 +504,7 @@ namespace MultiSMS.MVC.Controllers
                     })
                 }
             );
+            return Ok("Successfully removed user from group");
         }
 
         [Authorize]
@@ -609,7 +615,7 @@ namespace MultiSMS.MVC.Controllers
 
             if (log.LogRelatedObjectsDictionarySerialized == null)
             {
-                throw new Exception("Error: LogRelatedObjects is null where it shouldn't be");
+                return StatusCode(500, "NullReference: Log related objects is null");
             }
             else
             {
@@ -683,7 +689,7 @@ namespace MultiSMS.MVC.Controllers
                     var importDto = JsonConvert.DeserializeObject<ImportResult>(logRelatedObjects["Imports"]);
                     return Json(new { Type = "Import", Import = importDto, Log = logSanitized, LogCreator = logCreator });
                 default:
-                    throw new Exception("Unknown case of log source");
+                    return StatusCode(500, "Unknown case of source log");
             }
         }
 
@@ -708,7 +714,17 @@ namespace MultiSMS.MVC.Controllers
             if (authSuccessful)
             {
                 var apiSettings = _apiSettingsService.GetAllEntries();
-                var activeApiSettings = apiSettings.FirstOrDefault(a => a.ApiActive == true) ?? throw new Exception("There are no active API's");
+                ApiSettings activeApiSettings = null!;
+
+                try
+                {
+                    activeApiSettings = apiSettings.FirstOrDefault(a => a.ApiActive == true) ?? throw new Exception("Could not find active API");
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(500, ex.Message);
+                }
+
                 apiSettings.Remove(activeApiSettings);
 
                 var htmlContent = $@"<div class=""active-api"">
@@ -775,14 +791,16 @@ namespace MultiSMS.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateApiSettings([FromBody]UpdateApiSettingsModel model)
         {
-            return Json(await _apiSettingsService.ChangeSettingsAsync(new ApiSettings
+            await _apiSettingsService.ChangeSettingsAsync(new ApiSettings
             {
                 ApiName = model.ActiveApiName,
                 ApiActive = true,
                 SenderName = model.SenderName,
                 FastChannel = model.FastChannel,
                 TestMode = model.TestMode
-            }));
+            });
+
+            return Ok("Successfully updated API settings");
         }
 
         [Authorize]

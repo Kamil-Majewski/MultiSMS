@@ -47,7 +47,7 @@ function SendSMS(text, chosenGroupId, chosenGroupName, additionalPhoneNumbers, a
         data: { text: text, chosenGroupId: chosenGroupId, chosenGroupName: chosenGroupName, additionalPhoneNumbers: additionalPhoneNumbers, additionalInfo: additionalInfo },
         success: function (response) {
             if (response.status == "failed") {
-                console.log(`Operation failed, server responded with code ${response.code} - ${response.message}`);
+                console.error(`Operation failed, server responded with code ${response.code} - ${response.message}`);
                 $("#status-message-sms").addClass("failed-status");
                 $("#status-message-sms").html(`Operacja zakończyła się niepowodzeniem, błąd ${response.code} - ${response.message} <button type='button' class='btn-close text-dark' aria-label='Close' onclick='CloseAlert()'></button>`);
                 $("#status-message-sms").show();
@@ -514,7 +514,6 @@ function HandleGroupsAssignTypeLog(groupAssignObject) {
 }
 
 function handleImportTypeLog(importEntity) {
-    console.log(importEntity);
     var importStatus;
 
     if (importEntity.importStatus == "Success") {
@@ -717,7 +716,6 @@ function HandleGroupsTypeLog(groupEntity) {
 function handleSMSGroupTypeLog(smsGroupObject) {
     var type = $("#logTypeDetail").text();
 
-    console.log(smsGroupObject);
 
     var chosenGroupId = smsGroupObject.sms.chosenGroupId;
     var additionalPhoneNumbers = smsGroupObject.sms.additionalPhoneNumbers;
@@ -827,7 +825,6 @@ function handleSMSGroupTypeLog(smsGroupObject) {
     }
     else {
         if (smsGroupObject.apiUsed == "ServerSms") {
-            console.log(responseSuccess)
             relatedObjects +=
                 `<div class="row mb-10" style="margin-top: 20px;">
                     <div class="col d-flex">
@@ -1226,7 +1223,6 @@ function DeleteTemplate(templateId) {
         contentType: 'application/json',
         data: { id: templateId },
         success: function () {
-            console.log("Successfully deleted template")
             FetchAllTemplatesAndPopulateTable();
         },
         error: function (error) {
@@ -1251,7 +1247,6 @@ function DeleteContact(contactId) {
         contentType: 'application/json',
         data: { id: contactId },
         success: function () {
-            console.log("Successfully deleted contact")
             FetchAllContactsAndPopulateTable();
         },
         error: function (error) {
@@ -1268,7 +1263,6 @@ function DeleteGroup(groupId) {
         contentType: 'application/json',
         data: { id: groupId },
         success: function () {
-            console.log("Successfully deleted group")
             FetchAllGroupsAndPopulateTable();
         },
         error: function (error) {
@@ -1287,8 +1281,7 @@ function EditTemplate() {
         type: 'GET',
         contentType: 'application/json',
         data: { id: templateId, name: templateName, description: templateDescription, content: templateContent },
-        success: function (templateName) {
-            console.log("Successfully edited template " + templateName)
+        success: function () {
             FetchAllTemplatesAndPopulateTable();
 
         },
@@ -1317,8 +1310,7 @@ function EditContact() {
         type: 'GET',
         contentType: 'application/json',
         data: { contactId: contactId, contactName: name, contactSurname: surname, email: email, phone: phoneNumber, address: address, zip: zip, city: city, department: department, isActive: isActive },
-        success: function (contactName) {
-            console.log("Successfully edited contact " + contactName)
+        success: function () {
             FetchAllContactsAndPopulateTable();
 
         },
@@ -1337,8 +1329,7 @@ function EditGroup() {
         type: 'GET',
         contentType: 'application/json',
         data: { id: groupId, name: groupName, description: groupDescription },
-        success: function (groupName) {
-            console.log("Successfully edited group " + groupName)
+        success: function () {
             FetchAllGroupsAndPopulateTable();
         },
         error: function (error) {
@@ -1353,7 +1344,6 @@ function FetchAllTemplatesAndPopulateTable() {
         type: 'GET',
         contentType: 'application/json',
         success: function (listOfTemplates) {
-            console.log("Successfully retrieved templates")
             $('.template-list tbody').empty();
 
             $.each(listOfTemplates, function (index, item) {
@@ -1390,7 +1380,6 @@ function FetchAllContactsAndPopulateTable() {
         type: 'GET',
         contentType: 'application/json',
         success: function (listOfContacts) {
-            console.log("Successfully retrieved contacts")
             $('.contacts-list tbody').empty();
 
             $.each(listOfContacts, function (index, item) {
@@ -1433,7 +1422,6 @@ function FetchAllGroupsAndPopulateTable() {
         type: 'GET',
         contentType: 'application/json',
         success: function (listOfGroups) {
-            console.log("Successfully retrieved groups")
             $('.group-list tbody').empty();
 
             $.each(listOfGroups, function (index, item) {
@@ -1470,7 +1458,6 @@ function FetchAllLogsAndPopulateTable() {
         type: 'GET',
         contentType: 'application/json',
         success: function (listOfLogs) {
-            console.log("Successfully retrieved logs")
             $('#log-table tbody').empty();
 
             $.each(listOfLogs, function (index, item) {
@@ -1504,7 +1491,6 @@ function PopulateTableForChooseGroupForSMS() {
         type: 'GET',
         contentType: 'application/json',
         success: function (listOfGroups) {
-            console.log("Successfully retrieved groups")
             $('#choose-group-for-sms-table tbody').empty();
 
             $.each(listOfGroups, function (index, item) {
@@ -1536,7 +1522,6 @@ function PopulateTableForChooseTemplateForSMS() {
         type: 'GET',
         contentType: 'application/json',
         success: function (listOfTemplates) {
-            console.log("Successfully retrieved templates")
             $('#choose-template-for-sms-table tbody').empty();
 
             $.each(listOfTemplates, function (index, item) {
@@ -1645,9 +1630,8 @@ function CreateNewTemplate() {
         type: 'GET',
         contentType: 'application/json',
         data: { templateName: name, templateDescription: description, templateContent: content },
-        success: function (templateEnitity) {
+        success: function () {
             FetchAllTemplatesAndPopulateTable();
-            console.log("Successfully added new template")
         },
         error: function (error) {
             console.error(error);
@@ -1671,9 +1655,8 @@ function CreateNewContact() {
         type: 'GET',
         contentType: 'application/json',
         data: { contactName: name, contactSurname: surname, email: email, phone: phoneNumber, address: address, zip: zip, city: city, department: department, isActive: isActive },
-        success: function (contactEnitityName) {
+        success: function () {
             FetchAllContactsAndPopulateTable();
-            console.log("Successfully added new contact: " + contactEnitityName)
         },
         error: function (error) {
             console.error(error);
@@ -1690,9 +1673,8 @@ function CreateNewGroup() {
         type: 'GET',
         contentType: 'application/json',
         data: { groupName: name, groupDescription: description },
-        success: function (groupName) {
+        success: function () {
             FetchAllGroupsAndPopulateTable();
-            console.log("Successfully added new template: " + groupName)
         },
         error: function (error) {
             console.error(error);

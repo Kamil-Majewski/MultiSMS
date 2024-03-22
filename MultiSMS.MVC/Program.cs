@@ -9,6 +9,7 @@ using MultiSMS.BusinessLogic.Settings;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.MVC.Models;
 using MultiSMS.MVC.Areas;
+using MultiSMS.MVC.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -59,6 +60,8 @@ else
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseRouting();
 
