@@ -1420,7 +1420,7 @@
                     link.children("img").attr("src", "/icons/unassign-user.png").attr("title", "Wypisz z grupy");
 
                     var nearestRow = link.closest('tr');
-                    var assignedGroups = nearestRow.find('td.centered-cell').html().split(", ");
+                    var assignedGroups = nearestRow.find('td.centered-cell').html() == "Nie przypisano" ? [] : nearestRow.find('td.centered-cell').html().split(", ");
                     assignedGroups.push($("#group-name").html());
                     nearestRow.find('td.centered-cell').html(assignedGroups.join(", "));
                     link.removeClass("disabled-link");
@@ -1454,7 +1454,7 @@
                     var assignedGroups = nearestRow.find('td.centered-cell').html().split(", ");
                     var index = assignedGroups.indexOf($("#group-name").html());
                     assignedGroups.splice(index, 1);
-                    nearestRow.find('td.centered-cell').html(assignedGroups.join(", "));
+                    nearestRow.find('td.centered-cell').html(assignedGroups.join(", ") == "" ? "Nie przypisano" : nearestRow.find('td.centered-cell').html(assignedGroups.join(", ")));
                     link.removeClass("disabled-link");
                 },
                 error: function (error) {

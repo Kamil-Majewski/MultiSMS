@@ -1301,8 +1301,10 @@ function EditTemplate() {
         contentType: 'application/json',
         data: { id: templateId, name: templateName, description: templateDescription, content: templateContent },
         success: function () {
-            FetchAllTemplatesAndPopulateTable();
-
+            var affectedRow = $("#template-table tr").find(`a[href="#details-${templateId}"]`).closest("tr");
+            affectedRow.find(".template-name").html(templateName);
+            affectedRow.find(".template-description").html(templateDescription);
+            affectedRow.find(".template-content").html(templateContent);
         },
         error: function (error) {
             console.error(error.responseText);
@@ -1321,8 +1323,6 @@ function EditContact() {
     let city = $("#ContactCity").val();
     let department = $("#contactDepartment").val();
     let isActive = document.querySelector('input[name="isActive?"]:checked').value;
-    let assignedRoles = null;
-    let assignedGroups = null;
 
     $.ajax({
         url: '/Home/EditContact',
@@ -1330,8 +1330,18 @@ function EditContact() {
         contentType: 'application/json',
         data: { contactId: contactId, contactName: name, contactSurname: surname, email: email, phone: phoneNumber, address: address, zip: zip, city: city, department: department, isActive: isActive },
         success: function () {
-            FetchAllContactsAndPopulateTable();
-
+            var affectedRow = $("#contacts-table tr").find(`a[href="#details-${contactId}"]`).closest("tr");
+            affectedRow.find(".contact-name").html(name);
+            affectedRow.find(".contact-surname").html(surname);
+            affectedRow.find(".contact-email").html(email);
+            affectedRow.find(".contact-phone").html(phoneNumber);
+            affectedRow.find("span").html(isActive == "yes" ? "Aktywny" : "Nieaktywny");
+            if (isActive == "yes") {
+                affectedRow.find("span").removeClass("active-pill").removeClass("inactive-pill").addClass("active-pill");
+            }
+            else {
+                affectedRow.find("span").removeClass("active-pill").removeClass("inactive-pill").addClass("inactive-pill");
+            }
         },
         error: function (error) {
             console.error(error.responseText);
@@ -1349,7 +1359,9 @@ function EditGroup() {
         contentType: 'application/json',
         data: { id: groupId, name: groupName, description: groupDescription },
         success: function () {
-            FetchAllGroupsAndPopulateTable();
+            var affectedRow = $("#group-table tr").find(`a[href="#details-${groupId}"]`).closest("tr");
+            affectedRow.find(".group-name").html(groupName);
+            affectedRow.find(".group-description").html(groupDescription);
         },
         error: function (error) {
             console.error(error.responseText);
@@ -1408,15 +1420,15 @@ function FetchAllContactsAndPopulateTable() {
 
                 groupNames = (groupNames == null || groupNames.length == 0) ? "Nie przypisano" : groupNames.join(", ")
                 email = (email == null || email == "") ? "Brak danych" : email
-                var isActiveRow = item.isActive ? '<td class="centered-cell"><span class="active-pill">Aktywny<span></td>' : '<td class="centered-cell"><span class="inactive-pill">Nieaktywny<span></td>'
+                var isActiveRow = item.isActive ? '<td class="centered-cell contact-activity"><span class="active-pill">Aktywny<span></td>' : '<td class="centered-cell contact-activity"><span class="inactive-pill">Nieaktywny<span></td>'
 
                 var newRow = `<tr>
                             <td class="tiny-cell contact-name">${item.name}</td>
                             <td class="tiny-cell contact-surname">${item.surname}</td>
-                            <td class="small-cell">${email}</td>
-                            <td class="small-cell">${item.phoneNumber}</td>
+                            <td class="small-cell contact-email">${email}</td>
+                            <td class="small-cell contact-phone">${item.phoneNumber}</td>
                             ${isActiveRow}
-                            <td class="centered-cell">${groupNames}</td>
+                            <td class="centered-cell contact-groups">${groupNames}</td>
                             <td class="centered-cell">
                             <a href="#details-${item.employeeId}" class="icon-list contact-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
                             <a href="#edit-${item.employeeId}" class="icon-list contact-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
@@ -1697,12 +1709,12 @@ function CreateNewContact() {
             <tr>
                 <td class="tiny-cell contact-name">${contact.name}</td>
                 <td class="tiny-cell contact-surname">${contact.surname}</td>
-                <td class="small-cell">${contact.email}</td>
-                <td class="small-cell">${contact.phoneNumber}</td>
-                <td class="centered-cell">
+                <td class="small-cell contact-email">${contact.email == null ? "Brak danych" : contact.email}</td>
+                <td class="small-cell contact-phone">${contact.phoneNumber}</td>
+                <td class="centered-cell contact-activity">
                     <span class="${contact.isActive ? "active-pill" : "inactive-pill"}">${contact.isActive ? "Aktywny" : "Nieaktywny"}</span>
                 </td>
-                <td class="centered-cell">Nie przypisano</td>
+                <td class="centered-cell contact-groups">Nie przypisano</td>
                 <td class="centered-cell">
                     <a href="#details-${contact.employeeId}" class="icon-list contact-details">
                         <img src="/icons/view-doc.png" title="Szczegóły">
