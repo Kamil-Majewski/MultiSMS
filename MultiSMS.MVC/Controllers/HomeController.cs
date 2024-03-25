@@ -186,26 +186,26 @@ namespace MultiSMS.MVC.Controllers
                 Department = department,
                 IsActive = activeValue,
             };
-            var addedContact = await _employeeService.AddEntityToDatabaseAsync(contact);
+            await _employeeService.AddEntityToDatabaseAsync(contact);
 
             await _logService.AddEntityToDatabaseAsync(
                   new Log
                   {
                       LogType = "Info",
                       LogSource = "Kontakty",
-                      LogMessage = $"Kontakt {addedContact.Name} {addedContact.Surname} został utworzony",
+                      LogMessage = $"Kontakt {contact.Name} {contact.Surname} został utworzony",
                       LogCreator = admin.UserName,
                       LogCreatorId = adminId,
                       LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>
                       {
-                        {"Employees", JsonConvert.SerializeObject(addedContact) },
+                        {"Employees", JsonConvert.SerializeObject(contact) },
                         {"Creator", JsonConvert.SerializeObject(admin) }
                       })
 
                   }
               );
 
-            return Ok("Succesfully created new contact");
+            return Json(contact);
         }
 
         [Authorize]
@@ -319,26 +319,26 @@ namespace MultiSMS.MVC.Controllers
             var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
 
             var group = new Group() { GroupName = groupName, GroupDescription = groupDescription };
-            var addedGroup = await _groupService.AddEntityToDatabaseAsync(group);
+            await _groupService.AddEntityToDatabaseAsync(group);
 
             await _logService.AddEntityToDatabaseAsync(
                  new Log
                  {
                      LogType = "Info",
                      LogSource = "Grupy",
-                     LogMessage = $"Grupa {addedGroup.GroupName} została utworzona",
+                     LogMessage = $"Grupa {group.GroupName} została utworzona",
                      LogCreator = admin.UserName,
                      LogCreatorId = adminId,
                      LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>
                      {
-                        {"Groups", JsonConvert.SerializeObject(addedGroup) },
+                        {"Groups", JsonConvert.SerializeObject(group) },
                         {"Creator", JsonConvert.SerializeObject(admin) }
                      })
 
                  }
              );
 
-            return Ok("Successfully created new group");
+            return Json(group);
         }
 
         [Authorize]

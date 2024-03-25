@@ -1225,7 +1225,7 @@ function DeleteTemplate(templateId) {
         contentType: 'application/json',
         data: { id: templateId },
         success: function () {
-            FetchAllTemplatesAndPopulateTable();
+            $("#template-table tr").find(`a[href="#details-${templateId}"]`).closest("tr").remove();
         },
         error: function (error) {
             console.error(error.responseText);
@@ -1249,7 +1249,7 @@ function DeleteContact(contactId) {
         contentType: 'application/json',
         data: { id: contactId },
         success: function () {
-            FetchAllContactsAndPopulateTable();
+            $("#contacts-table tr").find(`a[href="#details-${contactId}"]`).closest("tr").remove();
         },
         error: function (error) {
             console.error(error.responseText);
@@ -1265,7 +1265,7 @@ function DeleteGroup(groupId) {
         contentType: 'application/json',
         data: { id: groupId },
         success: function () {
-            FetchAllGroupsAndPopulateTable();
+            $("#group-table tr").find(`a[href="#details-${groupId}"]`).closest("tr").remove();
         },
         error: function (error) {
             console.error(error.responseText);
@@ -1675,8 +1675,31 @@ function CreateNewContact() {
         type: 'GET',
         contentType: 'application/json',
         data: { contactName: name, contactSurname: surname, email: email, phone: phoneNumber, address: address, zip: zip, city: city, department: department, isActive: isActive },
-        success: function () {
-            FetchAllContactsAndPopulateTable();
+        success: function (contact) {
+            var newRow = `
+            <tr>
+                <td class="tiny-cell contact-name">${contact.name}</td>
+                <td class="tiny-cell contact-surname">${contact.surname}</td>
+                <td class="small-cell">${contact.email}</td>
+                <td class="small-cell">${contact.phoneNumber}</td>
+                <td class="centered-cell">
+                    <span class="${contact.isActive ? "active-pill" : "inactive-pill"}">${contact.isActive ? "Aktywny" : "Nieaktywny"}</span>
+                </td>
+                <td class="centered-cell">Nie przypisano</td>
+                <td class="centered-cell">
+                    <a href="#details-${contact.employeeId}" class="icon-list contact-details">
+                        <img src="/icons/view-doc.png" title="Szczegóły">
+                    </a>
+                    <a href="#edit-${contact.employeeId}" class="icon-list contact-edit">
+                        <img src="/icons/edit.png" title="Edytuj">
+                    </a>
+                    <a href="#delete-${contact.employeeId}" class="icon-list contact-delete">
+                        <img src="/icons/trash.png" title="Usuń">
+                    </a>
+                </td>
+            </tr>
+            `;
+            $("#contacts-table tbody").append(newRow);
         },
         error: function (error) {
             console.error(error.responseText);
@@ -1693,8 +1716,29 @@ function CreateNewGroup() {
         type: 'GET',
         contentType: 'application/json',
         data: { groupName: name, groupDescription: description },
-        success: function () {
-            FetchAllGroupsAndPopulateTable();
+        success: function (group) {
+            var newRow = `
+            <tr>
+                <td class="small-cell group-name">${group.groupName}</td>
+                <td class="big-cell group-description">${group.groupDescription == null ? "Brak danych" : group.groupDescription}</td>
+                <td class="tiny-centered-cell">0</td>
+                <td class="centered-cell" style="minwidth: 205px;">
+                    <a href="#assign-${group.groupId}" class="icon-list group-assign">
+                        <img src="/icons/assign-users.png" title="Przypisz użytkowników">
+                    </a>
+                    <a href="#details-${group.groupId}" class="icon-list group-details">
+                        <img src="/icons/view-doc.png" title="Szczegóły">
+                    </a>
+                    <a href="#edit-${group.groupId}" class="icon-list group-edit">
+                        <img src="/icons/edit.png" title="Edytuj">
+                    </a>
+                    <a href="#delete-${group.groupId}" class="icon-list group-delete">
+                        <img src="/icons/trash.png" title="Usuń">
+                    </a>
+                </td>
+            </tr>
+            `;
+            $("#group-table tbody").append(newRow);
         },
         error: function (error) {
             console.error(error.responseText);
