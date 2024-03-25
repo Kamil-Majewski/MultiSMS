@@ -141,7 +141,7 @@ namespace MultiSMS.MVC.Controllers
                 }
                 catch (JsonException)
                 {
-                    throw new Exception("Error deserializing objects: response structure doesn't fit the object structure.");
+                    throw new Exception("Error deserializing objects: response structure doesn't fit the expected object structure.");
                 }
             }
         }

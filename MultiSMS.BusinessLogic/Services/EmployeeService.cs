@@ -17,5 +17,10 @@ namespace MultiSMS.BusinessLogic.Services
         {
             return await _repository.GetAllEntries().FirstOrDefaultAsync(e => e.Name == name) ?? throw new Exception($"Could not find employee with provided name: {name}");
         }
+
+        public async Task<List<Employee>> PaginateEmployeeDataAsync(int lastId, int pageSize)
+        {
+            return await _repository.GetAllEntries().OrderBy(e => e.EmployeeId).Where(e => e.EmployeeId > lastId).Take(pageSize).ToListAsync();
+        }
     }
 }

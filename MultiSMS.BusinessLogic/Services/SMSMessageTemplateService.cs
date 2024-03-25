@@ -18,5 +18,10 @@ namespace MultiSMS.BusinessLogic.Services
         {
             return await _repository.GetAllEntries().FirstOrDefaultAsync(t => t.TemplateName == name) ?? throw new Exception($"Could not find template with given name: {name}");
         }
+
+        public async Task<List<SMSMessageTemplate>> PaginateTemplateDataAsync(int lastId, int pageSize)
+        {
+            return await _repository.GetAllEntries().OrderBy(t => t.TemplateId).Where(t => t.TemplateId > lastId).Take(pageSize).ToListAsync();
+        }
     }
 }

@@ -89,6 +89,13 @@ namespace MultiSMS.MVC.Controllers
 
         [Authorize]
         [HttpGet]
+        public async Task<IActionResult> PaginateTemplates(int lastId, int pageSize)
+        {
+            return Json(await _smsTemplateService.PaginateTemplateDataAsync(lastId, pageSize));
+        }
+
+        [Authorize]
+        [HttpGet]
         public async Task<IActionResult> GetTemplateById(int id)
         {
             var template = await _smsTemplateService.GetByIdAsync(id);
@@ -215,6 +222,13 @@ namespace MultiSMS.MVC.Controllers
 
         [Authorize]
         [HttpGet]
+        public async Task<IActionResult> PaginateContacts(int lastId, int pageSize)
+        {
+            return Json(await _employeeService.PaginateEmployeeDataAsync(lastId, pageSize));
+        }
+
+        [Authorize]
+        [HttpGet]
         public async Task<IActionResult> GetContactById(int id)
         {
             var contact = await _employeeService.GetByIdAsync(id);
@@ -337,6 +351,13 @@ namespace MultiSMS.MVC.Controllers
                 group.MembersIds = await _employeeGroupService.GetAllEmployeesIdsForGroupListAsync(group.GroupId);
             }
             return Json(groups);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> PaginateGroups(int lastId, int pageSize)
+        {
+            return Json(await _groupService.PaginateGroupDataAsync(lastId, pageSize));
         }
 
         [Authorize]
@@ -699,6 +720,13 @@ namespace MultiSMS.MVC.Controllers
         {
             var logs = await Task.FromResult(_logService.GetAllEntries());
             return Json(logs);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> PaginateLogs(int lastId, int pageSize)
+        {
+            return Json(await _logService.PaginateLogDataAsync(lastId, pageSize));
         }
 
         #endregion

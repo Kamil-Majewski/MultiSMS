@@ -4,5 +4,6 @@ namespace MultiSMS.BusinessLogic.Services.Interfaces
 {
     public interface ILogService : IGenericService<Log>
     {
+        Task<List<Log>> PaginateLogDataAsync(int lastId, int pageSize);
     }
 }
