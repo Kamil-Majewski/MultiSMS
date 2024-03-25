@@ -718,16 +718,23 @@ function HandleGroupsTypeLog(groupEntity) {
 function handleSMSGroupTypeLog(smsGroupObject) {
     var type = $("#logTypeDetail").text();
 
+    if (smsGroupObject.apiUsed == "ServerSms") {
+        var smsMessage = smsGroupObject.sms.settings.text;
+        var responseError = smsGroupObject.sms.serverResponse.error;
+        var senderName = smsGroupObject.sms.settings.sender;
+        var fastChannel = smsGroupObject.sms.settings.speed;
+    }
+    else {
+        var smsMessage = smsGroupObject.sms.settings.message;
+        var responseError = smsGroupObject.sms.serverResponse;
+        var senderName = smsGroupObject.sms.settings.from;
+        var fastChannel = smsGroupObject.sms.settings.fast;
+    }
 
     var chosenGroupId = smsGroupObject.sms.chosenGroupId;
     var additionalPhoneNumbers = smsGroupObject.sms.additionalPhoneNumbers;
     var additionalInformation = smsGroupObject.sms.additionalInformation;
-    var smsMessage = smsGroupObject.sms.settings["text"];
-
-    var responseErrorServerSms = smsGroupObject.sms.serverResponse.error;
-    var responseErrorSmsApi = smsGroupObject.sms.serverResponse;
     var responseSuccess = smsGroupObject.sms.serverResponse;
-
     var groupDescription = smsGroupObject.group.groupDescription;
 
     var relatedObjects =
@@ -737,7 +744,7 @@ function handleSMSGroupTypeLog(smsGroupObject) {
                     <div class="row mb-10" style="margin-top: 20px;">
                         <div class="col d-flex">
                             <label class="logs-detail-label" for="logSMSGroup-SenderDetail">Nazwa nadawcy:</label>
-                            <span class="details-span" id="logSMSGroup-SenderDetail">${smsGroupObject.sms.settings["sender"] == null ? "Nie określono" : smsGroupObject.sms.settings["sender"]}</span>
+                            <span class="details-span" id="logSMSGroup-SenderDetail">${senderName == null ? "Nie określono" : senderName}</span>
                         </div>
                     </div>
                     <div class="row mb-10">
@@ -749,7 +756,7 @@ function handleSMSGroupTypeLog(smsGroupObject) {
                     <div class="row mb-10">
                         <div class="col d-flex">
                             <label class="logs-detail-label" for="logSMSGroup-MessageDetail">Treść wiadomości:</label>
-                                <span class="details-span" id="logSMSGroup-MessageDetail">${(smsMessage == "" || smsMessage == null) ? "Nie wpisano treści" : smsMessage}</span>
+                            <span class="details-span" id = "logSMSGroup-MessageDetail" > ${ (smsMessage == "" || smsMessage == null) ? "Nie wpisano treści" : smsMessage }</span>
                         </div>
                     </div>
                     <div class="row mb-10">
@@ -775,7 +782,7 @@ function handleSMSGroupTypeLog(smsGroupObject) {
                     <div class="row mb-10" >
                         <div class="col d-flex">
                             <label class="logs-detail-label" for="logSMSGroup-SpeedDetail">Kanał priorytetowy:</label>
-                            <span class="details-span" id="logSMSGroup-SpeedDetail">${smsGroupObject.sms.settings["speed"] == "1" ? "Tak" : "Nie"}</span>
+                            <span class="details-span" id="logSMSGroup-SpeedDetail">${fastChannel == "1" ? "Tak" : "Nie"}</span>
                         </div>
                     </div>
                     <hr style="margin-top: 20px";/>
@@ -789,19 +796,19 @@ function handleSMSGroupTypeLog(smsGroupObject) {
                     <div class="row mb-10" style="margin-top: 20px;">
                         <div class="col d-flex">
                             <label class="logs-detail-label" for="logSMSGroup-CodeDetail">Kod błędu:</label>
-                                <span class="details-span" id="logSMSGroup-CodeDetail">${responseErrorServerSms.code}</span>
+                                <span class="details-span" id="logSMSGroup-CodeDetail">${responseError.code}</span>
                         </div>
                     </div>
                     <div class="row mb-10">
                         <div class="col d-flex">
                             <label class="logs-detail-label" for="logSMSGroup-ErrorTypeDetail">Typ błędu:</label>
-                                <span class="details-span" id="logSMSGroup-ErrorTypeDetail">${responseErrorServerSms.type}</span>
+                                <span class="details-span" id="logSMSGroup-ErrorTypeDetail">${responseError.type}</span>
                         </div>
                     </div>
                     <div class="row mb-10">
                         <div class="col d-flex">
                             <label class="logs-detail-label" for="logSMSGroup-ErrorMessageDetail">Wiadomość błędu:</label>
-                            <span class="details-span" id="logSMSGroup-ErrorMessageDetail">${responseErrorServerSms.message}</span>
+                            <span class="details-span" id="logSMSGroup-ErrorMessageDetail">${responseError.message}</span>
                         </div>
                     </div>
                 `;
@@ -812,13 +819,13 @@ function handleSMSGroupTypeLog(smsGroupObject) {
                     <div class="row mb-10" style="margin-top: 20px;">
                         <div class="col d-flex">
                             <label class="logs-detail-label" for="logSMSGroup-CodeDetail">Kod błędu:</label>
-                                <span class="details-span" id="logSMSGroup-CodeDetail">${responseErrorSmsApi.errorCode}</span>
+                                <span class="details-span" id="logSMSGroup-CodeDetail">${responseError.errorCode}</span>
                         </div>
                     </div>
                     <div class="row mb-10">
                         <div class="col d-flex">
                             <label class="logs-detail-label" for="logSMSGroup-ErrorMessageDetail">Wiadomość błędu:</label>
-                                <span class="details-span" id="logSMSGroup-ErrorMessageDetail">${responseErrorSmsApi.errorMessage}</span>
+                                <span class="details-span" id="logSMSGroup-ErrorMessageDetail">${responseError.errorMessage}</span>
                         </div>
                     </div>
                 `;
@@ -938,13 +945,22 @@ function handleSMSGroupTypeLog(smsGroupObject) {
 function handleSMSNoGroupTypeLog(smsNoGroupObject) {
     var type = $("#logTypeDetail").text();
 
+    if (smsNoGroupObject.apiUsed == "ServerSms") {
+        var smsMessage = smsNoGroupObject.sms.settings.text;
+        var responseError = smsNoGroupObject.sms.serverResponse.error;
+        var senderName = smsNoGroupObject.sms.settings.sender;
+        var fastChannel = smsNoGroupObject.sms.settings.speed;
+    }
+    else {
+        var smsMessage = smsNoGroupObject.sms.settings.message;
+        var responseError = smsNoGroupObject.sms.serverResponse;
+        var senderName = smsNoGroupObject.sms.settings.from;
+        var fastChannel = smsNoGroupObject.sms.settings.fast;
+    }
+
     var chosenGroupId = smsNoGroupObject.sms.chosenGroupId;
     var additionalPhoneNumbers = smsNoGroupObject.sms.additionalPhoneNumbers;
     var additionalInformation = smsNoGroupObject.sms.additionalInformation;
-    var smsMessage = smsNoGroupObject.sms.settings["text"];
-
-    var responseErrorServerSms = smsNoGroupObject.sms.serverResponse.error;
-    var responseErrorSmsApi = smsNoGroupObject.sms.serverResponse;
     var responseSuccess = smsNoGroupObject.sms.serverResponse;
 
     var relatedObjects =
@@ -955,7 +971,7 @@ function handleSMSNoGroupTypeLog(smsNoGroupObject) {
             <div class="row mb-10" style="margin-top: 20px;">
                 <div class="col d-flex">
                     <label class="logs-detail-label" for="logSMSNoGroup-SenderDetail">Nazwa nadawcy:</label>
-                    <span class="details-span" id="logSMSNoGroup-SenderDetail">${smsNoGroupObject.sms.settings.sender == null ? "Nie określono" : smsNoGroupObject.sms.settings.sender}</span>
+                    <span class="details-span" id="logSMSNoGroup-SenderDetail">${senderName == null ? "Nie określono" : senderName}</span>
                 </div>
             </div>
             <div class="row mb-10">
@@ -967,7 +983,8 @@ function handleSMSNoGroupTypeLog(smsNoGroupObject) {
             <div class="row mb-10">
                 <div class="col d-flex">
                     <label class="logs-detail-label" for="logSMSNoGroup-MessageDetail">Treść wiadomości:</label>
-                        <span class="details-span" id="logSMSNoGroup-MessageDetail">${(smsMessage == "" || smsMessage == null) ? "Nie wpisano treści" : smsMessage}</span>
+                    <span class="details-span" id = "logSMSGroup-MessageDetail" > ${(smsMessage == "" || smsMessage == null) ? "Nie wpisano treści" : smsMessage}</span>
+
                 </div>
             </div>
             <div class="row mb-10">
@@ -993,7 +1010,7 @@ function handleSMSNoGroupTypeLog(smsNoGroupObject) {
             <div class="row mb-10" >
                 <div class="col d-flex">
                     <label class="logs-detail-label" for="logSMSNoGroup-SpeedDetail">Kanał priorytetowy:</label>
-                    <span class="details-span" id="logSMSNoGroup-SpeedDetail">${smsNoGroupObject.sms.settings.speed == "1" ? "Tak" : "Nie"}</span>
+                    <span class="details-span" id="logSMSNoGroup-SpeedDetail">${fastChannel == "1" ? "Tak" : "Nie"}</span>
                 </div>
             </div>
             <hr style="margin-top: 20px";/>
@@ -1001,25 +1018,25 @@ function handleSMSNoGroupTypeLog(smsNoGroupObject) {
             `;
 
     if (type == "Błąd") {
-        if (smsNoGroupObject.apiUsed = "ServerSms") {
+        if (smsNoGroupObject.apiUsed == "ServerSms") {
             relatedObjects +=
                 `
                 <div class="row mb-10" style="margin-top: 20px;">
                     <div class="col d-flex">
                         <label class="logs-detail-label" for="logSMSNoGroup-CodeDetail">Kod błędu:</label>
-                        <span class="details-span" id="logSMSNoGroup-CodeDetail">${responseErrorServerSms.code}</span>
+                        <span class="details-span" id="logSMSNoGroup-CodeDetail">${responseError.code}</span>
                     </div>
                 </div>
                 <div class="row mb-10">
                     <div class="col d-flex">
                         <label class="logs-detail-label" for="logSMSNoGroup-ErrorTypeDetail">Typ błędu:</label>
-                        <span class="details-span" id="logSMSNoGroup-ErrorTypeDetail">${responseErrorServerSms.type}</span>
+                        <span class="details-span" id="logSMSNoGroup-ErrorTypeDetail">${responseError.type}</span>
                     </div>
                 </div>
                 <div class="row mb-10">
                     <div class="col d-flex">
                         <label class="logs-detail-label" for="logSMSNoGroup-ErrorMessageDetail">Wiadomość błędu:</label>
-                        <span class="details-span" id="logSMSNoGroup-ErrorMessageDetail">${responseErrorServerSms.message}</span>
+                        <span class="details-span" id="logSMSNoGroup-ErrorMessageDetail">${responseError.message}</span>
                     </div>
                 </div>
                 `;
@@ -1030,13 +1047,13 @@ function handleSMSNoGroupTypeLog(smsNoGroupObject) {
                 <div class="row mb-10" style="margin-top: 20px;">
                     <div class="col d-flex">
                         <label class="logs-detail-label" for="logSMSNoGroup-CodeDetail">Kod błędu:</label>
-                        <span class="details-span" id="logSMSNoGroup-CodeDetail">${responseErrorSmsApi.errorCode}</span>
+                        <span class="details-span" id="logSMSNoGroup-CodeDetail">${responseError.errorCode}</span>
                     </div>
                 </div>
                 <div class="row mb-10">
                     <div class="col d-flex">
                         <label class="logs-detail-label" for="logSMSNoGroup-ErrorMessageDetail">Wiadomość błędu:</label>
-                        <span class="details-span" id="logSMSNoGroup-ErrorMessageDetail">${responseErrorSmsApi.errorMessage}</span>
+                        <span class="details-span" id="logSMSNoGroup-ErrorMessageDetail">${responseError.errorMessage}</span>
                     </div>
                 </div>
                 `;
@@ -1044,7 +1061,7 @@ function handleSMSNoGroupTypeLog(smsNoGroupObject) {
 
     }
     else {
-        if (smsNoGroupObject.apiUsed = "ServerSms") {
+        if (smsNoGroupObject.apiUsed == "ServerSms") {
             relatedObjects +=
                 `
                     <div class="row mb-10" style="margin-top: 20px;">
