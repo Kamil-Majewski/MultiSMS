@@ -58,25 +58,25 @@ namespace MultiSMS.MVC.Controllers
             var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
 
             var template = new SMSMessageTemplate() { TemplateName = templateName, TemplateDescription = templateDescription, TemplateContent = templateContent };
-            var addedTemplate = await _smsTemplateService.AddEntityToDatabaseAsync(template);
+            await _smsTemplateService.AddEntityToDatabaseAsync(template);
 
             await _logService.AddEntityToDatabaseAsync(
                 new Log
                 {
                     LogType = "Info",
                     LogSource = "Szablony",
-                    LogMessage = $"Szablon {addedTemplate.TemplateName} został utworzony",
+                    LogMessage = $"Szablon {template.TemplateName} został utworzony",
                     LogCreator = admin.UserName,
                     LogCreatorId = adminId,
                     LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>
                     {
-                        {"Templates", JsonConvert.SerializeObject(addedTemplate) },
+                        {"Templates", JsonConvert.SerializeObject(template) },
                         {"Creator", JsonConvert.SerializeObject(admin) }
                     })
                 }
             );
 
-            return Ok("Successfully created new template");
+            return Json(template);
         }
 
         [Authorize]

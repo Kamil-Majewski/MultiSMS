@@ -1563,9 +1563,9 @@ function PopulateTablesForAssigningUsersToGroups(groupId) {
             $("#group-assign-chosen-group-table tbody").empty();
 
             var newRow = `<tr>
-                        <td class="small-cell">${groupEntity.groupName}</td>
+                        <td class="small-cell" id="group-name">${groupEntity.groupName}</td>
                         <td class="big-cell">${groupDescription}</td>
-                        <td class="tiny-centered-cell">${groupEntity.membersIds.length}</td>
+                        <td class="tiny-centered-cell" id="group-members-count">${groupEntity.membersIds.length}</td>
                         </tr>`;
 
             $('#group-assign-chosen-group-table').append(newRow);
@@ -1632,8 +1632,26 @@ function CreateNewTemplate() {
         type: 'GET',
         contentType: 'application/json',
         data: { templateName: name, templateDescription: description, templateContent: content },
-        success: function () {
-            FetchAllTemplatesAndPopulateTable();
+        success: function (template) {
+            var newRow = `
+            <tr>
+                <td class="small-cell template-name">${template.templateName}</td>
+                <td class="medium-cell template-description">${template.templateDescription == null ? "Brak opisu" : template.templateDescription}</td>
+                <td class="big-cell template-content">${template.templateContent}</td>
+                <td class=centered-cell>
+                    <a href="#details-${template.templateId}" class="icon-list template-details">
+                        <img src="/icons/view-doc.png" title="Szczegóły">
+                    </a>
+                    <a href="#edit-${template.templateId}" class="icon-list template-edit">
+                        <img src="/icons/edit.png" title="Edytuj">
+                    </a>
+                    <a href="#delete-${template.templateId}" class="icon-list template-delete">
+                        <img src="/icons/trash.png" title="Usuń">
+                    </a>
+                </td>
+            </tr>
+            `
+            $("#template-table tbody").append(newRow);
         },
         error: function (error) {
             console.error(error.responseText);

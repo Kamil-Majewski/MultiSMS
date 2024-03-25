@@ -1413,8 +1413,17 @@
                 data: { groupId: assignContactIdGroupId[2], employeeId: assignContactIdGroupId[1] },
                 contentType: 'application/json',
                 success: function () {
-                    PopulateTablesForAssigningUsersToGroups(assignContactIdGroupId[2]);
-                    FetchAllContactsAndPopulateTable();
+                    var groupMembersCount = $("#group-members-count").html();
+                    $("#group-members-count").html(parseInt(groupMembersCount) + 1);
+                    link.removeClass("contact-assign").addClass("contact-unassign");
+                    link.attr("href", `#unassign-${assignContactIdGroupId[1]}-${assignContactIdGroupId[2]}`)
+                    link.children("img").attr("src", "/icons/unassign-user.png").attr("title", "Wypisz z grupy");
+
+                    var nearestRow = link.closest('tr');
+                    var assignedGroups = nearestRow.find('td.centered-cell').html().split(", ");
+                    assignedGroups.push($("#group-name").html());
+                    nearestRow.find('td.centered-cell').html(assignedGroups.join(", "));
+                    link.removeClass("disabled-link");
                 },
                 error: function (error) {
                     console.error(error.responseText);
@@ -1435,8 +1444,18 @@
                 data: { groupId: assignContactIdGroupId[2], employeeId: assignContactIdGroupId[1] },
                 contentType: 'application/json',
                 success: function () {
-                    PopulateTablesForAssigningUsersToGroups(assignContactIdGroupId[2]);
-                    FetchAllContactsAndPopulateTable();
+                    var groupMembersCount = $("#group-members-count").html();
+                    $("#group-members-count").html(parseInt(groupMembersCount) - 1);
+                    link.removeClass("contact-unassign").addClass("contact-assign");
+                    link.attr("href", `#assign-${assignContactIdGroupId[1]}-${assignContactIdGroupId[2]}`)
+                    link.children("img").attr("src", "/icons/assign-user.png").attr("title", "Dopisz do grupy");
+
+                    var nearestRow = link.closest('tr');
+                    var assignedGroups = nearestRow.find('td.centered-cell').html().split(", ");
+                    var index = assignedGroups.indexOf($("#group-name").html());
+                    assignedGroups.splice(index, 1);
+                    nearestRow.find('td.centered-cell').html(assignedGroups.join(", "));
+                    link.removeClass("disabled-link");
                 },
                 error: function (error) {
                     console.error(error.responseText);
