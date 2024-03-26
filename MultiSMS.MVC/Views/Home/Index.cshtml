@@ -185,6 +185,15 @@
                         </table>
                     </div>
                 </div>
+                <div class="list-footer" style="margin-top:15px; display:flex; align-items: center;">
+                    <div style="flex:1;" id="template-previous-button-container">
+                    </div>
+                    <div class="page-counter" style="flex:auto; text-align:center;">
+                        <span class="form-subtitle" id="template-page-counter" style="display:none;">0</span>
+                    </div>
+                    <div style="flex:1; display:flex; justify-content:right;" id="template-next-button-container">
+                    </div>
+                </div>
             </div>
             <div class="templates-options-container options-container" style="display:none;">
                 <div class="option-content">
@@ -305,6 +314,15 @@
                                 <tbody>
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                    <div class="list-footer" style="margin-top:15px; display:flex; align-items: center;">
+                        <div style="flex:1;" id="contact-previous-button-container">
+                        </div>
+                        <div class="page-counter" style="flex:auto; text-align:center;">
+                            <span class="form-subtitle" id="contact-page-counter" style="display:none;">0</span>
+                        </div>
+                        <div style="flex:1; display:flex; justify-content:right;" id="contact-next-button-container">
                         </div>
                     </div>
                 </div>
@@ -615,6 +633,15 @@
                         </table>
                     </div>
                 </div>
+                <div class="list-footer" style="margin-top:15px; display:flex; align-items: center;">
+                    <div style="flex:1;" id="group-previous-button-container">
+                    </div>
+                    <div class="page-counter" style="flex:auto; text-align:center;">
+                        <span class="form-subtitle" id="group-page-counter" style="display:none;">0</span>
+                    </div>
+                    <div style="flex:1; display:flex; justify-content:right;" id="group-next-button-container">
+                    </div>
+                </div>
             </div>
             <div class="groups-options-container options-container" style="display:none;">
                 <div class="option-content">
@@ -793,6 +820,15 @@
                             <tbody>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+                <div class="list-footer" style="margin-top:15px; display:flex; align-items: center;">
+                    <div style="flex:1;" id="log-previous-button-container">
+                    </div>
+                    <div class="page-counter" style="flex:auto; text-align:center;">
+                        <span class="form-subtitle" id="log-page-counter" style="display:none;">0</span>
+                    </div>
+                    <div style="flex:1; display:flex; justify-content:right;" id="log-next-button-container">
                     </div>
                 </div>
             </div>
@@ -1126,6 +1162,46 @@
             });
         });
 
+        $(document).on('click', '#templates-list-next-page-button', function () {
+            var lastId = $("#template-table").attr('lastid');
+            PaginateTemplatesAndPopulateTable(lastId, 11, true);
+        });
+
+        $(document).on('click', '#templates-list-previous-page-button', function () {
+            var lastId = $("#template-table").attr('lastid');
+            PaginateTemplatesAndPopulateTable(lastId, 11, false);
+        });
+
+        $(document).on('click', '#contacts-list-next-page-button', function () {
+            var lastId = $("#contacts-table").attr('lastid');
+            PaginateContactsAndPopulateTable(lastId, 11, true);
+        });
+
+        $(document).on('click', '#contacts-list-previous-page-button', function () {
+            var lastId = $("#contacts-table").attr('lastid');
+            PaginateContactsAndPopulateTable(lastId, 11, false);
+        });
+
+        $(document).on('click', '#groups-list-next-page-button', function () {
+            var lastId = $("#group-table").attr('lastid');
+            PaginateGroupsAndPopulateTable(lastId, 11, true);
+        });
+
+        $(document).on('click', '#groups-list-previous-page-button', function () {
+            var lastId = $("#group-table").attr('lastid');
+            PaginateGroupsAndPopulateTable(lastId, 11, false);
+        });
+
+        $(document).on('click', '#logs-list-next-page-button', function () {
+            var lastId = $("#log-table").attr('last-id');
+            PaginateLogsAndPopulateTable(lastId,  11, true);
+        });
+
+        $(document).on('click', '#logs-list-previous-page-button', function () {
+            var lastId = $("#log-table").attr('last-id');
+            PaginateLogsAndPopulateTable(lastId, 11, false);
+        });
+       
         $(document).on('click', '.options-hidden', function (e) {
             e.preventDefault();
             $(".options-hidden").text("Ukryj opcje");

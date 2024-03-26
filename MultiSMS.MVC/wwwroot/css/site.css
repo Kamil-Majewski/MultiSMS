@@ -1123,3 +1123,9 @@ input:checked + .slider:before {
 .disabled-link {
     pointer-events: none;
 }
+
+.arrow-button{
+    border: none;
+    background-color: transparent;
+    max-width: 46px;
+}

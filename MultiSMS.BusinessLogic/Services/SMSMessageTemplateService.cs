@@ -23,20 +23,18 @@ namespace MultiSMS.BusinessLogic.Services
         public async Task<(List<SMSMessageTemplate>, bool)> PaginateTemplateDataAsync(int lastId, int pageSize, bool moveForward)
         {
             IQueryable<SMSMessageTemplate> query;
-            bool hasMorePages;
 
             if (moveForward)
             {
                 query = _repository.GetAllEntries().OrderBy(t => t.TemplateId).Where(t => t.TemplateId > lastId);
-                hasMorePages = query.Count() > pageSize;
             }
             else
             {
                 query = _repository.GetAllEntries().OrderBy(t => t.TemplateId).Where(t => t.TemplateId <= lastId);
-                hasMorePages = true;
 
             }
             var paginatedList = await query.Take(pageSize).ToListAsync();
+            var hasMorePages = _repository.GetAllEntries().OrderBy(t => t.TemplateId).Where(t => t.TemplateId > lastId).Count() > pageSize;
 
             return (paginatedList, hasMorePages);
         }

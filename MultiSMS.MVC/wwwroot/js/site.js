@@ -1413,6 +1413,9 @@ function PaginateTemplatesAndPopulateTable(lastId, pageSize, moveForward) {
         contentType: 'application/json',
         success: function (response) {
             $('.template-list tbody').empty();
+            $("#template-next-button-container").html("");
+            $("#template-previous-button-container").html("");
+
             var listOfTemplates = response.paginatedTemplates;
             var hasMorePages = response.hasMorePages;
             $.each(listOfTemplates, function (index, template) {
@@ -1430,10 +1433,38 @@ function PaginateTemplatesAndPopulateTable(lastId, pageSize, moveForward) {
                     </td>
                 </tr>
                 `;
-
                 $('.template-list tbody').append(newRow);
-                $('.template-list').attr("lastId", `${listOfTemplates[listOfTemplates.length - 1].templateId}`);
             });
+
+            if (hasMorePages) {
+                $("#template-next-button-container").append(`
+                <button class="arrow-button" id="templates-list-next-page-button" type="button">
+                    <span class="list-arrow-forward">
+                        <img src="/icons/arrow-next.png" />
+                    </span>
+                </button>`);
+                $("#template-page-counter").show();
+            }
+
+            if (moveForward) {
+                $("#template-page-counter").html(`${parseInt($("#template-page-counter").html()) + 1}`);
+            }
+            else {
+                $("#template-page-counter").html(`${parseInt($("#template-page-counter").html()) - 1}`);
+            }
+
+            if (parseInt($("#template-page-counter").html()) != 1) {
+                $("#template-previous-button-container").append(`
+                <button class="arrow-button" id="templates-list-previous-page-button" type="button">
+                    <span class="list-arrow-back">
+                        <img src="/icons/arrow-previous.png"/>
+                    </span>
+                </button>
+                `);
+                $("#template-page-counter").show();
+            }
+
+            $('.template-list').attr("lastId", `${listOfTemplates[listOfTemplates.length - 1].templateId}`);
         },
         error: function (errorData) {
             console.error(errorData.responseText);
@@ -1448,7 +1479,6 @@ function FetchAllContactsAndPopulateTable() {
         contentType: 'application/json',
         success: function (listOfContacts) {
             $('.contacts-list tbody').empty();
-
             $.each(listOfContacts, function (index, item) {
 
                 var groupNames = item.employeeGroupNames;
@@ -1475,7 +1505,6 @@ function FetchAllContactsAndPopulateTable() {
 
                 $('.contacts-list tbody').append(newRow);
             });
-
         },
         error: function (error) {
             console.error(error.responseText);
@@ -1490,8 +1519,10 @@ function PaginateContactsAndPopulateTable(lastId, pageSize, moveForward) {
         data: { lastId: lastId, pageSize: pageSize, moveForward: moveForward },
         contentType: 'application/json',
         success: function (response) {
-
             $('.contacts-list tbody').empty();
+            $("#contact-next-button-container").html("");
+            $("#contact-previous-button-container").html("");
+
             var listOfContacts = response.paginatedContacts;
             var hasMorePages = response.hasMorePages;
 
@@ -1518,8 +1549,37 @@ function PaginateContactsAndPopulateTable(lastId, pageSize, moveForward) {
                             </tr>`;
 
                 $('.contacts-list tbody').append(newRow);
-                $('.contacts-list').attr("lastId", `${listOfContacts[listOfContacts.length - 1].employeeId}`);
             });
+
+            if (hasMorePages) {
+                $("#contact-next-button-container").append(`
+                <button class="arrow-button" id="contacts-list-next-page-button" type="button">
+                    <span class="list-arrow-forward">
+                        <img src="/icons/arrow-next.png" />
+                    </span>
+                </button>`);
+                $("#contact-page-counter").show();
+            }
+
+            if (moveForward) {
+                $("#contact-page-counter").html(`${parseInt($("#contact-page-counter").html()) + 1}`);
+            }
+            else {
+                $("#contact-page-counter").html(`${parseInt($("#contact-page-counter").html()) - 1}`);
+            }
+
+            if (parseInt($("#contact-page-counter").html()) != 1) {
+                $("#contact-previous-button-container").append(`
+                <button class="arrow-button" id="contacts-list-previous-page-button" type="button">
+                    <span class="list-arrow-back">
+                        <img src="/icons/arrow-previous.png"/>
+                    </span>
+                </button>
+            `);
+                $("#contact-page-counter").show();
+            }
+
+            $('.contacts-list').attr("lastId", `${listOfContacts[listOfContacts.length - 1].employeeId}`);
         },
         error: function (error) {
             console.error(error.responseText);
@@ -1555,7 +1615,6 @@ function FetchAllGroupsAndPopulateTable() {
 
                 $('.group-list tbody').append(newRow);
             });
-
         },
         error: function (error) {
             console.error(error.responseText);
@@ -1571,6 +1630,9 @@ function PaginateGroupsAndPopulateTable(lastId, pageSize, moveForward) {
         contentType: 'application/json',
         success: function (response) {
             $('.group-list tbody').empty();
+            $("#group-next-button-container").html("");
+            $("#group-previous-button-container").html("");
+
             var listOfGroups = response.paginatedGroups;
             var hasMorePages = response.hasMorePages;
 
@@ -1593,6 +1655,36 @@ function PaginateGroupsAndPopulateTable(lastId, pageSize, moveForward) {
 
                 $('.group-list tbody').append(newRow);
             });
+
+            if (hasMorePages) {
+                $("#group-next-button-container").append(`
+                <button class="arrow-button" id="groups-list-next-page-button" type="button">
+                    <span class="list-arrow-forward">
+                        <img src="/icons/arrow-next.png" />
+                    </span>
+                </button>`);
+                $("#group-page-counter").show();
+            }
+
+            if (moveForward) {
+                $("#group-page-counter").html(`${parseInt($("#group-page-counter").html()) + 1}`);
+            }
+            else {
+                $("#group-page-counter").html(`${parseInt($("#group-page-counter").html()) - 1}`);
+            }
+
+            if (parseInt($("#group-page-counter").html()) != 1) {
+                $("#group-previous-button-container").append(`
+                <button class="arrow-button" id="groups-list-previous-page-button" type="button">
+                    <span class="list-arrow-back">
+                        <img src="/icons/arrow-previous.png"/>
+                    </span>
+                </button>
+            `);
+                $("#group-page-counter").show();
+            }
+
+            $('.group-list').attr("lastId", `${listOfGroups[listOfGroups.length - 1].groupId}`);
         },
         error: function (error) {
             console.error(error.responseText);
@@ -1641,6 +1733,8 @@ function PaginateLogsAndPopulateTable(lastId, pageSize, moveForward) {
         contentType: 'application/json',
         success: function (response) {
             $('#log-table tbody').empty();
+            $("#log-next-button-container").html("");
+            $("#log-previous-button-container").html("");
 
             var listOfLogs = response.paginatedLogs;
             var hasMorePages = response.hasMorePages;
@@ -1662,6 +1756,37 @@ function PaginateLogsAndPopulateTable(lastId, pageSize, moveForward) {
 
                 $('#log-table tbody').append(newRow);
             });
+
+            if (hasMorePages) {
+                $("#log-next-button-container").append(`
+                <button class="arrow-button" id="logs-list-next-page-button" type="button">
+                    <span class="list-arrow-forward">
+                        <img src="/icons/arrow-next.png" />
+                    </span>
+                </button>`);
+                $("#log-page-counter").show();
+            }
+
+            if (moveForward) {
+                $("#log-page-counter").html(`${parseInt($("#log-page-counter").html()) + 1}`);
+            }
+            else {
+                $("#log-page-counter").html(`${parseInt($("#log-page-counter").html()) - 1}`);
+            }
+
+            if (parseInt($("#log-page-counter").html()) != 1) {
+                $("#log-previous-button-container").append(`
+                <button class="arrow-button" id="logs-list-previous-page-button" type="button">
+                    <span class="list-arrow-back">
+                        <img src="/icons/arrow-previous.png"/>
+                    </span>
+                </button>
+            `);
+
+                $("#log-page-counter").show();
+            }
+
+            $('.log-list').attr("last-id", `${lastId}`);
         },
         error: function (error) {
             console.error(error.responseText);

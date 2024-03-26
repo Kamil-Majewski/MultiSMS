@@ -32,19 +32,16 @@ namespace MultiSMS.BusinessLogic.Services
         public async Task<(List<Group>, bool)> PaginateGroupDataAsync(int lastId, int pageSize, bool moveForward)
         {
             IQueryable<Group> query;
-            bool hasMorePages;
 
             if (moveForward)
             {
                 query = _groupRepository.GetAllEntries().OrderBy(t => t.GroupId).Where(t => t.GroupId > lastId);
-                hasMorePages = query.Count() > pageSize;
             }
             else
             {
                 query = _groupRepository.GetAllEntries().OrderBy(t => t.GroupId).Where(t => t.GroupId <= lastId);
-                hasMorePages = true;
             }
-
+            var hasMorePages = _groupRepository.GetAllEntries().OrderBy(t => t.GroupId).Where(t => t.GroupId > lastId).Count() > pageSize;
             var paginatedList = await query.Take(pageSize).ToListAsync();
 
             return (paginatedList, hasMorePages);
