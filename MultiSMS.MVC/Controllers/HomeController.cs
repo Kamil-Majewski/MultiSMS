@@ -10,7 +10,6 @@ using MultiSMS.MVC.Models;
 using Newtonsoft.Json;
 using NuGet.Protocol;
 using System.Diagnostics;
-using System.Text.RegularExpressions;
 
 namespace MultiSMS.MVC.Controllers
 {
@@ -234,6 +233,8 @@ namespace MultiSMS.MVC.Controllers
             return Json(new { paginatedContacts, hasMorePages });
         }
 
+        
+
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetContactById(int id)
@@ -365,10 +366,10 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> PaginateGroups(int lastId, int pageSize, bool moveForward)
         {
             var (paginatedGroups, hasMorePages) = await _groupService.PaginateGroupDataAsync(lastId, pageSize, moveForward);
-            foreach (var group in paginatedGroups)
+            foreach(var group in paginatedGroups)
             {
                 group.MembersIds = await _employeeGroupService.GetAllEmployeesIdsForGroupListAsync(group.GroupId);
-            }
+            };
             return Json(new {paginatedGroups, hasMorePages});
         }
 
@@ -736,9 +737,10 @@ namespace MultiSMS.MVC.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> PaginateLogs(int lastId, int pageSize)
+        public async Task<IActionResult> PaginateLogs(int lastId, int pageSize, bool moveForward)
         {
-            return Json(await _logService.PaginateLogDataAsync(lastId, pageSize));
+            var (paginatedLogs, hasMorePages) = await _logService.PaginateLogDataAsync(lastId, pageSize, moveForward);
+            return Json(new {paginatedLogs, hasMorePages});
         }
 
         #endregion

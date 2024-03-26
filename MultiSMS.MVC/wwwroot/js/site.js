@@ -1633,6 +1633,42 @@ function FetchAllLogsAndPopulateTable() {
     })
 }
 
+function PaginateLogsAndPopulateTable(lastId, pageSize, moveForward) {
+    $.ajax({
+        url: '/Home/PaginateLogs',
+        type: 'GET',
+        data: { lastId: lastId, pageSize: pageSize, moveForward: moveForward },
+        contentType: 'application/json',
+        success: function (response) {
+            $('#log-table tbody').empty();
+
+            var listOfLogs = response.paginatedLogs;
+            var hasMorePages = response.hasMorePages;
+
+            $.each(listOfLogs, function (index, log) {
+
+                var logTypeRow = log.logType == "Błąd" ? `<td class="tiny-centered-cell"><span class="error-pill">${log.logType}</span></td>` : `<td class="tiny-centered-cell"><span class="info-pill">${log.logType}</span></td>`
+
+                var newRow = `
+                <tr>
+                    ${logTypeRow}
+                    <td class="tiny-cell">${log.logSource}</td>
+                    <td class="big-cell">${log.logMessage}</td>
+                    <td class="centered-cell" style="min-width:105px;">${new Date(log.logCreationDate).toLocaleString('en-GB')}</td>
+                    <td class="tiny-centered-cell">
+                        <a href="#details-${log.logId}" class="icon-list log-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
+                    </td>
+                </tr>`;
+
+                $('#log-table tbody').append(newRow);
+            });
+        },
+        error: function (error) {
+            console.error(error.responseText);
+        }
+    });
+}
+
 function PopulateTableForChooseGroupForSMS() {
     $.ajax({
         url: '/Home/FetchAllValidGroups',
