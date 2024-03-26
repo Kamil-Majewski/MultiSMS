@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
+using MultiSMS.Interface.Repositories;
 using MultiSMS.Interface.Repositories.Interfaces;
 
 namespace MultiSMS.BusinessLogic.Services
@@ -28,9 +29,25 @@ namespace MultiSMS.BusinessLogic.Services
             return _groupRepository.GetDictionaryWithGroupIdsAndNames();
         }
 
-        public async Task<List<Group>> PaginateGroupDataAsync(int lastId, int pageSize)
+        public async Task<(List<Group>, bool)> PaginateGroupDataAsync(int lastId, int pageSize, bool moveForward)
         {
-            return await _groupRepository.GetAllEntries().OrderBy(g => g.GroupId).Where(g => g.GroupId > lastId).Take(pageSize).ToListAsync();
+            IQueryable<Group> query;
+            bool hasMorePages;
+
+            if (moveForward)
+            {
+                query = _groupRepository.GetAllEntries().OrderBy(t => t.GroupId).Where(t => t.GroupId > lastId);
+                hasMorePages = query.Count() > pageSize;
+            }
+            else
+            {
+                query = _groupRepository.GetAllEntries().OrderBy(t => t.GroupId).Where(t => t.GroupId <= lastId);
+                hasMorePages = true;
+            }
+
+            var paginatedList = await query.Take(pageSize).ToListAsync();
+
+            return (paginatedList, hasMorePages);
         }
     }
 }

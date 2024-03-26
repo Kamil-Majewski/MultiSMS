@@ -939,9 +939,9 @@
         });
 
         CalculateHeaderWidthAndToolbarHeight();
-        FetchAllTemplatesAndPopulateTable();
-        FetchAllContactsAndPopulateTable();
-        FetchAllGroupsAndPopulateTable();
+        PaginateTemplatesAndPopulateTable(0, 11, true);
+        PaginateContactsAndPopulateTable(0, 11, true);
+        PaginateGroupsAndPopulateTable(0, 11, true);
         FetchAllLogsAndPopulateTable();
 
         let resizeTimer;

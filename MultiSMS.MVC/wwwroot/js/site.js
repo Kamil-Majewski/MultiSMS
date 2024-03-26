@@ -1405,6 +1405,42 @@ function FetchAllTemplatesAndPopulateTable() {
     })
 }
 
+function PaginateTemplatesAndPopulateTable(lastId, pageSize, moveForward) {
+    $.ajax({
+        url: '/Home/PaginateTemplates',
+        type: 'GET',
+        data: { lastId: lastId, pageSize: pageSize, moveForward: moveForward },
+        contentType: 'application/json',
+        success: function (response) {
+            $('.template-list tbody').empty();
+            var listOfTemplates = response.paginatedTemplates;
+            var hasMorePages = response.hasMorePages;
+            $.each(listOfTemplates, function (index, template) {
+                var description = template.templateDescription == null ? "Brak opisu" : template.templateDescription;
+
+                var newRow = `
+                <tr>
+                    <td class="small-cell template-name">${template.templateName}</td>
+                    <td class="medium-cell template-description">${description}</td>
+                    <td class="big-cell template-content">${template.templateContent}</td>
+                    <td class="centered-cell">
+                        <a href="#details-${template.templateId}" class="icon-list template-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
+                        <a href="#edit-${template.templateId}" class="icon-list template-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
+                        <a href="#delete-${template.templateId}" class="icon-list template-delete"><img src="/icons/trash.png" title="Usuń"/></a>
+                    </td>
+                </tr>
+                `;
+
+                $('.template-list tbody').append(newRow);
+                $('.template-list').attr("lastId", `${listOfTemplates[listOfTemplates.length - 1].templateId}`);
+            });
+        },
+        error: function (errorData) {
+            console.error(errorData.responseText);
+        }
+    })
+}
+
 function FetchAllContactsAndPopulateTable() {
     $.ajax({
         url: '/Home/FetchAllContacts',
@@ -1444,7 +1480,51 @@ function FetchAllContactsAndPopulateTable() {
         error: function (error) {
             console.error(error.responseText);
         }
-    })
+    });
+}
+
+function PaginateContactsAndPopulateTable(lastId, pageSize, moveForward) {
+    $.ajax({
+        url: 'Home/PaginateContacts',
+        type: 'GET',
+        data: { lastId: lastId, pageSize: pageSize, moveForward: moveForward },
+        contentType: 'application/json',
+        success: function (response) {
+
+            $('.contacts-list tbody').empty();
+            var listOfContacts = response.paginatedContacts;
+            var hasMorePages = response.hasMorePages;
+
+            $.each(listOfContacts, function (index, contact) {
+                var groupNames = contact.employeeGroupNames;
+                var email = contact.email;
+
+                groupNames = (groupNames == null || groupNames.length == 0) ? "Nie przypisano" : groupNames.join(", ")
+                email = (email == null || email == "") ? "Brak danych" : email
+                var isActiveRow = contact.isActive ? '<td class="centered-cell contact-activity"><span class="active-pill">Aktywny<span></td>' : '<td class="centered-cell contact-activity"><span class="inactive-pill">Nieaktywny<span></td>'
+
+                var newRow = `<tr>
+                            <td class="tiny-cell contact-name">${contact.name}</td>
+                            <td class="tiny-cell contact-surname">${contact.surname}</td>
+                            <td class="small-cell contact-email">${email}</td>
+                            <td class="small-cell contact-phone">${contact.phoneNumber}</td>
+                            ${isActiveRow}
+                            <td class="centered-cell contact-groups">${groupNames}</td>
+                            <td class="centered-cell">
+                            <a href="#details-${contact.employeeId}" class="icon-list contact-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
+                            <a href="#edit-${contact.employeeId}" class="icon-list contact-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
+                            <a href="#delete-${contact.employeeId}" class="icon-list contact-delete"><img src="/icons/trash.png" title="Usuń"/></a>
+                            </td>
+                            </tr>`;
+
+                $('.contacts-list tbody').append(newRow);
+                $('.contacts-list').attr("lastId", `${listOfContacts[listOfContacts.length - 1].employeeId}`);
+            });
+        },
+        error: function (error) {
+            console.error(error.responseText);
+        }
+    });
 }
 
 function FetchAllGroupsAndPopulateTable() {
@@ -1481,6 +1561,43 @@ function FetchAllGroupsAndPopulateTable() {
             console.error(error.responseText);
         }
     })
+}
+
+function PaginateGroupsAndPopulateTable(lastId, pageSize, moveForward) {
+    $.ajax({
+        url: '/Home/PaginateGroups',
+        type: 'GET',
+        data: { lastId: lastId, pageSize: pageSize, moveForward: moveForward },
+        contentType: 'application/json',
+        success: function (response) {
+            $('.group-list tbody').empty();
+            var listOfGroups = response.paginatedGroups;
+            var hasMorePages = response.hasMorePages;
+
+            $.each(listOfGroups, function (index, group) {
+
+                var groupDescription = group.groupDescription == null ? "Brak opsiu" : group.groupDescription;
+
+                var newRow = `
+                <tr>
+                    <td class="small-cell group-name">${group.groupName}</td>
+                    <td class="big-cell group-description">${groupDescription}</td>
+                    <td class="tiny-centered-cell">${group.membersIds.length}</td>
+                    <td class="centered-cell"" style="min-width: 205px;">
+                        <a href="#assign-${group.groupId}" class="icon-list group-assign"><img src="/icons/assign-users.png" title="Przypisz użytkowników"/></a>
+                        <a href="#details-${group.groupId}" class="icon-list group-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
+                        <a href="#edit-${group.groupId}" class="icon-list group-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
+                        <a href="#delete-${group.groupId}" class="icon-list group-delete"><img src="/icons/trash.png" title="Usuń"/></a>
+                    </td>
+                </tr>`;
+
+                $('.group-list tbody').append(newRow);
+            });
+        },
+        error: function (error) {
+            console.error(error.responseText);
+        }
+    });
 }
 
 function FetchAllLogsAndPopulateTable() {

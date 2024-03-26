@@ -4,8 +4,8 @@ namespace MultiSMS.Interface.Entities.SmsApi
 {
     public class SmsApiSuccessResponse
     {
-       [JsonProperty(PropertyName = "count", Required = Required.Always)]
-       public int SentCount { get; set; }
+        [JsonProperty(PropertyName = "count", Required = Required.Always)]
+        public int SentCount { get; set; }
 
         [JsonProperty(PropertyName = "list", Required = Required.Always)]
         public List<SuccessDetail> Details { get; set; } = new List<SuccessDetail>();
