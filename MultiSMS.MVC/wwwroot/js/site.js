@@ -1405,11 +1405,11 @@ function FetchAllTemplatesAndPopulateTable() {
     })
 }
 
-function PaginateTemplatesAndPopulateTable(lastId, pageSize, moveForward) {
+function PaginateTemplatesAndPopulateTable(firstId, lastId, pageSize, moveForward) {
     $.ajax({
         url: '/Home/PaginateTemplates',
         type: 'GET',
-        data: { lastId: lastId, pageSize: pageSize, moveForward: moveForward },
+        data: {firstId: firstId, lastId: lastId, pageSize: pageSize, moveForward: moveForward },
         contentType: 'application/json',
         success: function (response) {
             $('.template-list tbody').empty();
@@ -1464,7 +1464,8 @@ function PaginateTemplatesAndPopulateTable(lastId, pageSize, moveForward) {
                 $("#template-page-counter").show();
             }
 
-            $('.template-list').attr("lastId", `${listOfTemplates[listOfTemplates.length - 1].templateId}`);
+            $('.template-list').attr("last-id", `${listOfTemplates[listOfTemplates.length - 1].templateId}`);
+            $('.template-list').attr("first-id", `${listOfTemplates[0].templateId}`)
         },
         error: function (errorData) {
             console.error(errorData.responseText);
@@ -1512,11 +1513,11 @@ function FetchAllContactsAndPopulateTable() {
     });
 }
 
-function PaginateContactsAndPopulateTable(lastId, pageSize, moveForward) {
+function PaginateContactsAndPopulateTable(firstId, lastId, pageSize, moveForward) {
     $.ajax({
         url: 'Home/PaginateContacts',
         type: 'GET',
-        data: { lastId: lastId, pageSize: pageSize, moveForward: moveForward },
+        data: {firstId, firstId, lastId: lastId, pageSize: pageSize, moveForward: moveForward },
         contentType: 'application/json',
         success: function (response) {
             $('.contacts-list tbody').empty();
@@ -1579,7 +1580,8 @@ function PaginateContactsAndPopulateTable(lastId, pageSize, moveForward) {
                 $("#contact-page-counter").show();
             }
 
-            $('.contacts-list').attr("lastId", `${listOfContacts[listOfContacts.length - 1].employeeId}`);
+            $('.contacts-list').attr("last-id", `${listOfContacts[listOfContacts.length - 1].employeeId}`);
+            $('.contacts-list').attr("first-id", `${listOfContacts[0].employeeId}`);
         },
         error: function (error) {
             console.error(error.responseText);
@@ -1622,11 +1624,11 @@ function FetchAllGroupsAndPopulateTable() {
     })
 }
 
-function PaginateGroupsAndPopulateTable(lastId, pageSize, moveForward) {
+function PaginateGroupsAndPopulateTable(firstId, lastId, pageSize, moveForward) {
     $.ajax({
         url: '/Home/PaginateGroups',
         type: 'GET',
-        data: { lastId: lastId, pageSize: pageSize, moveForward: moveForward },
+        data: {firstId: firstId, lastId: lastId, pageSize: pageSize, moveForward: moveForward },
         contentType: 'application/json',
         success: function (response) {
             $('.group-list tbody').empty();
@@ -1684,7 +1686,8 @@ function PaginateGroupsAndPopulateTable(lastId, pageSize, moveForward) {
                 $("#group-page-counter").show();
             }
 
-            $('.group-list').attr("lastId", `${listOfGroups[listOfGroups.length - 1].groupId}`);
+            $('.group-list').attr("last-id", `${listOfGroups[listOfGroups.length - 1].groupId}`);
+            $('.group-list').attr("first-id", `${listOfGroups[0].groupId}`);
         },
         error: function (error) {
             console.error(error.responseText);
@@ -1725,11 +1728,11 @@ function FetchAllLogsAndPopulateTable() {
     })
 }
 
-function PaginateLogsAndPopulateTable(lastId, pageSize, moveForward) {
+function PaginateLogsAndPopulateTable(firstId, lastId, pageSize, moveForward) {
     $.ajax({
         url: '/Home/PaginateLogs',
         type: 'GET',
-        data: { lastId: lastId, pageSize: pageSize, moveForward: moveForward },
+        data: {firstId: firstId, lastId: lastId, pageSize: pageSize, moveForward: moveForward },
         contentType: 'application/json',
         success: function (response) {
             $('#log-table tbody').empty();
@@ -1786,7 +1789,9 @@ function PaginateLogsAndPopulateTable(lastId, pageSize, moveForward) {
                 $("#log-page-counter").show();
             }
 
-            $('.log-list').attr("last-id", `${lastId}`);
+            $('.log-list').attr("last-id", `${listOfLogs[listOfLogs.length - 1].logId}`);
+            $('.log-list').attr("first-id", `${listOfLogs[0].logId}`)
+            $('')
         },
         error: function (error) {
             console.error(error.responseText);

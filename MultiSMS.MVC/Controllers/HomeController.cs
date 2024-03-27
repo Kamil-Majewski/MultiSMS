@@ -89,9 +89,9 @@ namespace MultiSMS.MVC.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> PaginateTemplates(int lastId, int pageSize, bool moveForward)
+        public async Task<IActionResult> PaginateTemplates(int firstId, int lastId, int pageSize, bool moveForward)
         {
-            var (paginatedTemplates, hasMorePages) = await _smsTemplateService.PaginateTemplateDataAsync(lastId, pageSize, moveForward);
+            var (paginatedTemplates, hasMorePages) = await _smsTemplateService.PaginateTemplateDataAsync(firstId, lastId, pageSize, moveForward);
             return Json(new {paginatedTemplates, hasMorePages});
         }
 
@@ -223,9 +223,9 @@ namespace MultiSMS.MVC.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> PaginateContacts(int lastId, int pageSize, bool moveForward)
+        public async Task<IActionResult> PaginateContacts(int firstId, int lastId, int pageSize, bool moveForward)
         {
-            var (paginatedContacts, hasMorePages) = await _employeeService.PaginateEmployeeDataAsync(lastId, pageSize, moveForward);
+            var (paginatedContacts, hasMorePages) = await _employeeService.PaginateEmployeeDataAsync(firstId,lastId, pageSize, moveForward);
             foreach (var contact in paginatedContacts)
             {
                 contact.EmployeeGroupNames = await _employeeGroupService.GetAllGroupNamesForEmployeeListAsync(contact.EmployeeId);
@@ -363,9 +363,9 @@ namespace MultiSMS.MVC.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> PaginateGroups(int lastId, int pageSize, bool moveForward)
+        public async Task<IActionResult> PaginateGroups(int firstId, int lastId, int pageSize, bool moveForward)
         {
-            var (paginatedGroups, hasMorePages) = await _groupService.PaginateGroupDataAsync(lastId, pageSize, moveForward);
+            var (paginatedGroups, hasMorePages) = await _groupService.PaginateGroupDataAsync(firstId, lastId, pageSize, moveForward);
             foreach(var group in paginatedGroups)
             {
                 group.MembersIds = await _employeeGroupService.GetAllEmployeesIdsForGroupListAsync(group.GroupId);
@@ -737,9 +737,9 @@ namespace MultiSMS.MVC.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> PaginateLogs(int lastId, int pageSize, bool moveForward)
+        public async Task<IActionResult> PaginateLogs(int firstId, int lastId, int pageSize, bool moveForward)
         {
-            var (paginatedLogs, hasMorePages) = await _logService.PaginateLogDataAsync(lastId, pageSize, moveForward);
+            var (paginatedLogs, hasMorePages) = await _logService.PaginateLogDataAsync(firstId, lastId, pageSize, moveForward);
             return Json(new {paginatedLogs, hasMorePages});
         }
 

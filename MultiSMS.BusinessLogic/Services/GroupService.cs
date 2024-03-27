@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
-using MultiSMS.Interface.Repositories;
 using MultiSMS.Interface.Repositories.Interfaces;
 
 namespace MultiSMS.BusinessLogic.Services
@@ -29,21 +28,22 @@ namespace MultiSMS.BusinessLogic.Services
             return _groupRepository.GetDictionaryWithGroupIdsAndNames();
         }
 
-        public async Task<(List<Group>, bool)> PaginateGroupDataAsync(int lastId, int pageSize, bool moveForward)
+        public async Task<(List<Group>, bool)> PaginateGroupDataAsync(int firstId, int lastId, int pageSize, bool moveForward)
         {
-            IQueryable<Group> query;
+            List<Group> paginatedList;
+            bool hasMorePages;
 
             if (moveForward)
             {
-                query = _groupRepository.GetAllEntries().OrderBy(t => t.GroupId).Where(t => t.GroupId > lastId);
+                var query = _groupRepository.GetAllEntries().OrderBy(g => g.GroupId).Where(g => g.GroupId > lastId);
+                paginatedList = await query.Take(pageSize).ToListAsync();
+                hasMorePages = query.Count() > pageSize;
             }
             else
             {
-                query = _groupRepository.GetAllEntries().OrderBy(t => t.GroupId).Where(t => t.GroupId <= lastId);
+                paginatedList = await _groupRepository.GetAllEntries().OrderBy(g => g.GroupId).Reverse().Where(g => g.GroupId < firstId).Take(pageSize).Reverse().ToListAsync();
+                hasMorePages = _groupRepository.GetAllEntries().OrderBy(g => g.GroupId).Where(g => g.GroupId > paginatedList.Last().GroupId).Count() > 0;
             }
-            var hasMorePages = _groupRepository.GetAllEntries().OrderBy(t => t.GroupId).Where(t => t.GroupId > lastId).Count() > pageSize;
-            var paginatedList = await query.Take(pageSize).ToListAsync();
-
             return (paginatedList, hasMorePages);
         }
     }

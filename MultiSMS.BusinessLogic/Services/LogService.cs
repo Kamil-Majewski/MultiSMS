@@ -13,29 +13,22 @@ namespace MultiSMS.BusinessLogic.Services
             _logRepository = logRepository;
         }
 
-        public async Task<(List<Log>, bool)> PaginateLogDataAsync(int lastId, int pageSize, bool moveForward)
+        public async Task<(List<Log>, bool)> PaginateLogDataAsync(int firstId, int lastId, int pageSize, bool moveForward)
         {
-            IQueryable<Log> query;
             List<Log> paginatedList;
+            bool hasMorePages;
 
             if (moveForward)
             {
-                query = _logRepository.GetAllEntries().OrderBy(l => l.LogId).Where(l => l.LogId > lastId);
+                var query = _logRepository.GetAllEntries().OrderBy(l => l.LogId).Where(l => l.LogId > lastId);
                 paginatedList = await query.Take(pageSize).ToListAsync();
+                hasMorePages = query.Count() > pageSize;
             }
             else
             {
-                query = _logRepository.GetAllEntries().OrderBy(l => l.LogId).Where(l => l.LogId <= lastId);
-                if(query.Count() > pageSize)
-                {
-                    paginatedList = await query.Reverse().Take(pageSize).ToListAsync();
-                }
-                else
-                {
-                    paginatedList = await query.Take(pageSize).ToListAsync();
-                }
+                paginatedList = await _logRepository.GetAllEntries().OrderBy(l => l.LogId).Reverse().Where(l => l.LogId < firstId).Take(pageSize).Reverse().ToListAsync();
+                hasMorePages = _logRepository.GetAllEntries().OrderBy(l => l.LogId).Where(l => l.LogId > paginatedList.Last().LogId).Count() > 0;
             }
-            var hasMorePages = _logRepository.GetAllEntries().OrderBy(l => l.LogId).Where(l => l.LogId > lastId).Count() > pageSize;
             return (paginatedList, hasMorePages);
         }
     }

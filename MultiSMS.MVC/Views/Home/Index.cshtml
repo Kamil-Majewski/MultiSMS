@@ -975,10 +975,10 @@
         });
 
         CalculateHeaderWidthAndToolbarHeight();
-        PaginateTemplatesAndPopulateTable(0, 11, true);
-        PaginateContactsAndPopulateTable(0, 11, true);
-        PaginateGroupsAndPopulateTable(0, 11, true);
-        PaginateLogsAndPopulateTable(0, 11, true);
+        PaginateTemplatesAndPopulateTable(null, 0, 11, true);
+        PaginateContactsAndPopulateTable(null, 0, 11, true);
+        PaginateGroupsAndPopulateTable(null, 0, 11, true);
+        PaginateLogsAndPopulateTable(null, 0, 11, true);
 
         let resizeTimer;
         window.addEventListener('resize', () => {
@@ -1163,43 +1163,51 @@
         });
 
         $(document).on('click', '#templates-list-next-page-button', function () {
-            var lastId = $("#template-table").attr('lastid');
-            PaginateTemplatesAndPopulateTable(lastId, 11, true);
+            var lastId = $("#template-table").attr('last-id');
+            var firstId = $("#template-table").attr('first-id');
+            PaginateTemplatesAndPopulateTable(firstId,lastId, 11, true);
         });
 
         $(document).on('click', '#templates-list-previous-page-button', function () {
-            var lastId = $("#template-table").attr('lastid');
-            PaginateTemplatesAndPopulateTable(lastId, 11, false);
+            var lastId = $("#template-table").attr('last-id');
+            var firstId = $("#template-table").attr('first-id');
+            PaginateTemplatesAndPopulateTable(firstId, lastId, 11, false);
         });
 
         $(document).on('click', '#contacts-list-next-page-button', function () {
-            var lastId = $("#contacts-table").attr('lastid');
-            PaginateContactsAndPopulateTable(lastId, 11, true);
+            var lastId = $("#contacts-table").attr('last-id');
+            var firstId = $("#contacts-table").attr('first-id');
+            PaginateContactsAndPopulateTable(firstId, lastId, 11, true);
         });
 
         $(document).on('click', '#contacts-list-previous-page-button', function () {
-            var lastId = $("#contacts-table").attr('lastid');
-            PaginateContactsAndPopulateTable(lastId, 11, false);
+            var lastId = $("#contacts-table").attr('last-id');
+            var firstId = $("#contacts-table").attr('first-id');
+            PaginateContactsAndPopulateTable(firstId, lastId, 11, false);
         });
 
         $(document).on('click', '#groups-list-next-page-button', function () {
-            var lastId = $("#group-table").attr('lastid');
-            PaginateGroupsAndPopulateTable(lastId, 11, true);
+            var lastId = $("#group-table").attr('last-id');
+            var firstId = $("#group-table").attr('first-id');
+            PaginateGroupsAndPopulateTable(firstId, lastId, 11, true);
         });
 
         $(document).on('click', '#groups-list-previous-page-button', function () {
-            var lastId = $("#group-table").attr('lastid');
-            PaginateGroupsAndPopulateTable(lastId, 11, false);
+            var lastId = $("#group-table").attr('last-id');
+            var firstId = $("#group-table").attr('first-id');
+            PaginateGroupsAndPopulateTable(firstId, lastId, 11, false);
         });
 
         $(document).on('click', '#logs-list-next-page-button', function () {
             var lastId = $("#log-table").attr('last-id');
-            PaginateLogsAndPopulateTable(lastId,  11, true);
+            var firstId = $("#log-table").attr('first-id');
+            PaginateLogsAndPopulateTable(firstId, lastId,  11, true);
         });
 
         $(document).on('click', '#logs-list-previous-page-button', function () {
+            var firstId = $("#log-table").attr('first-id');
             var lastId = $("#log-table").attr('last-id');
-            PaginateLogsAndPopulateTable(lastId, 11, false);
+            PaginateLogsAndPopulateTable(firstId, lastId, 11, false);
         });
        
         $(document).on('click', '.options-hidden', function (e) {
