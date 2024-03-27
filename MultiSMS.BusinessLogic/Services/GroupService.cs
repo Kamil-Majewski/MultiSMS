@@ -57,5 +57,12 @@ namespace MultiSMS.BusinessLogic.Services
 
             return (paginatedList, hasMorePages);
         }
+
+        public async Task<List<Group>> GetGroupsBySearchPhrase(string searchPhrase)
+        {
+            return await _groupRepository.GetAllEntries().Where(g =>
+            g.GroupName.Contains(searchPhrase) ||
+            (g.GroupDescription ?? "Brak opisu").Contains(searchPhrase)).ToListAsync();
+        }
     }
 }

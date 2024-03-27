@@ -2013,7 +2013,7 @@ function CreateNewContact() {
             <tr>
                 <td class="tiny-cell contact-name">${contact.name}</td>
                 <td class="tiny-cell contact-surname">${contact.surname}</td>
-                <td class="small-cell contact-email">${contact.email || "Brak danych"}</td>
+                <td class="small-cell contact-email">${contact.email || "Brak opisu"}</td>
                 <td class="small-cell contact-phone">${contact.phoneNumber}</td>
                 <td class="centered-cell contact-activity">
                     <span class="${contact.isActive ? "active-pill" : "inactive-pill"}">${contact.isActive ? "Aktywny" : "Nieaktywny"}</span>

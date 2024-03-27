@@ -30,7 +30,7 @@ namespace MultiSMS.BusinessLogic.Services
             {
                 query = query.Where(t => t.TemplateId >= firstId);
             }
-            if (moveForward == true)
+            else if (moveForward == true)
             {
                 query = query.Where(t => t.TemplateId > lastId);
             }
@@ -46,6 +46,14 @@ namespace MultiSMS.BusinessLogic.Services
             hasMorePages = await query.Skip(pageSize).AnyAsync();
 
             return (paginatedList, hasMorePages);
+        }
+
+        public async Task<List<SMSMessageTemplate>> GetTemplatesBySearchPhrase(string searchPhrase)
+        {
+            return await _repository.GetAllEntries().Where(t => 
+            t.TemplateName.Contains(searchPhrase) ||
+            (t.TemplateDescription ?? "Brak opisu").Contains(searchPhrase) ||
+            t.TemplateContent.Contains(searchPhrase)).ToListAsync();
         }
     }
 }

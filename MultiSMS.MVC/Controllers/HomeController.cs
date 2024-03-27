@@ -163,7 +163,15 @@ namespace MultiSMS.MVC.Controllers
             return Ok("Successfully deleted template");
         }
 
-        #endregion
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> GetTemplatesBySeachPhrase(string searchPhrase)
+        {
+            return Json(await _smsTemplateService.GetTemplatesBySearchPhrase(searchPhrase));
+        }
+
+            #endregion
 
         #region Employees
         [Authorize]
@@ -213,7 +221,7 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> FetchAllContacts()
         {
-            var contacts = await Task.FromResult(_employeeService.GetAllEntries().ToList());
+            var contacts = await Task.FromResult(_employeeService.GetAllEntries());
             foreach (var contact in contacts)
             {
                 contact.EmployeeGroupNames = await _employeeGroupService.GetAllGroupNamesForEmployeeListAsync(contact.EmployeeId);
@@ -314,6 +322,28 @@ namespace MultiSMS.MVC.Controllers
             await _employeeService.DeleteEntityAsync(id);
 
             return Ok("Successfully deleted contact");
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> GetEmployeesBySearchPhrase(string searchPhrase)
+        {
+            var contacts = await Task.FromResult(_employeeService.GetAllEntries());
+            await Task.WhenAll(contacts.Select(async contact =>
+            {
+                contact.EmployeeGroupNames = await _employeeGroupService.GetAllGroupNamesForEmployeeListAsync(contact.EmployeeId);
+            }));
+
+            var filtereContacts = contacts.Where(e =>
+            e.Name.Contains(searchPhrase) ||
+            e.Surname.Contains(searchPhrase) ||
+            (e.Email ?? "Brak danych").Contains(searchPhrase) ||
+            e.PhoneNumber.Contains(searchPhrase) ||
+            (e.IsActive ? "Aktywny" : "Nieaktywny").Contains(searchPhrase) ||
+            e.EmployeeGroupNames.Any(g => g.Contains(searchPhrase)));
+
+            return Json(filtereContacts);
+
         }
         #endregion
 
@@ -472,6 +502,13 @@ namespace MultiSMS.MVC.Controllers
            );
             await _groupService.DeleteEntityAsync(id);
             return Ok("Successfully deleted group");
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> GetGroupsBySeachPhrase(string searchPhrase)
+        {
+            return Json(await _groupService.GetGroupsBySearchPhrase(searchPhrase));
         }
 
         #endregion
@@ -741,6 +778,13 @@ namespace MultiSMS.MVC.Controllers
         {
             var (paginatedLogs, hasMorePages) = await _logService.PaginateLogDataAsync(firstId, lastId, pageSize, moveForward);
             return Json(new {paginatedLogs, hasMorePages});
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> GetLogsBySeachPhrase(string searchPhrase)
+        {
+            return Json(await _logService.GetLogsBySearchPhrase(searchPhrase));
         }
 
         #endregion
