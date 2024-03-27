@@ -18,22 +18,33 @@ namespace MultiSMS.BusinessLogic.Services
             return await _repository.GetAllEntries().FirstOrDefaultAsync(e => e.Name == name) ?? throw new Exception($"Could not find employee with provided name: {name}");
         }
 
-        public async Task<(List<Employee>, bool)> PaginateEmployeeDataAsync(int firstId, int lastId, int pageSize, bool moveForward)
+        public async Task<(List<Employee>, bool)> PaginateEmployeeDataAsync(int firstId, int lastId, int pageSize, bool? moveForward)
         {
+            IQueryable<Employee> query = _repository.GetAllEntries().OrderBy(e => e.EmployeeId);
+
             List<Employee> paginatedList;
             bool hasMorePages;
 
-            if (moveForward)
+            if(moveForward == null)
             {
-                var query = _repository.GetAllEntries().OrderBy(e => e.EmployeeId).Where(e => e.EmployeeId > lastId);
-                paginatedList = await query.Take(pageSize).ToListAsync();
-                hasMorePages = query.Count() > pageSize;
+                query = query.Where(e => e.EmployeeId >= firstId);
+
+            }
+            else if (moveForward == true)
+            {
+                query = query.Where(e => e.EmployeeId > lastId);
             }
             else
             {
-                paginatedList = await _repository.GetAllEntries().OrderBy(e => e.EmployeeId).Reverse().Where(e => e.EmployeeId < firstId).Take(pageSize).Reverse().ToListAsync();
-                hasMorePages = _repository.GetAllEntries().OrderBy(e => e.EmployeeId).Where(e => e.EmployeeId > paginatedList.Last().EmployeeId).Count() > 0;
+                paginatedList = await query.Reverse().Where(e => e.EmployeeId < firstId).Take(pageSize).Reverse().ToListAsync();
+                hasMorePages = await query.AnyAsync(e => e.EmployeeId > paginatedList.Last().EmployeeId);
+
+                return (paginatedList, hasMorePages);
             }
+
+            paginatedList = await query.Take(pageSize).ToListAsync();
+            hasMorePages = await query.Skip(pageSize).AnyAsync();
+
             return (paginatedList, hasMorePages);
         }
     }

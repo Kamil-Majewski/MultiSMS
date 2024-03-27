@@ -28,22 +28,33 @@ namespace MultiSMS.BusinessLogic.Services
             return _groupRepository.GetDictionaryWithGroupIdsAndNames();
         }
 
-        public async Task<(List<Group>, bool)> PaginateGroupDataAsync(int firstId, int lastId, int pageSize, bool moveForward)
+        public async Task<(List<Group>, bool)> PaginateGroupDataAsync(int firstId, int lastId, int pageSize, bool? moveForward)
         {
+            IQueryable<Group> query = _groupRepository.GetAllEntries().OrderBy(g => g.GroupId);
+
             List<Group> paginatedList;
             bool hasMorePages;
 
-            if (moveForward)
+            if (moveForward == null)
             {
-                var query = _groupRepository.GetAllEntries().OrderBy(g => g.GroupId).Where(g => g.GroupId > lastId);
-                paginatedList = await query.Take(pageSize).ToListAsync();
-                hasMorePages = query.Count() > pageSize;
+                query = query.Where(g => g.GroupId >= firstId);
+                
+            }
+            else if (moveForward == true)
+            {
+                query = query.Where(g => g.GroupId > lastId);
             }
             else
             {
-                paginatedList = await _groupRepository.GetAllEntries().OrderBy(g => g.GroupId).Reverse().Where(g => g.GroupId < firstId).Take(pageSize).Reverse().ToListAsync();
-                hasMorePages = _groupRepository.GetAllEntries().OrderBy(g => g.GroupId).Where(g => g.GroupId > paginatedList.Last().GroupId).Count() > 0;
+                paginatedList = await query.Reverse().Where(g => g.GroupId < firstId).Take(pageSize).Reverse().ToListAsync();
+                hasMorePages = await query.AnyAsync(g => g.GroupId > paginatedList.Last().GroupId);
+
+                return (paginatedList, hasMorePages);
             }
+
+            paginatedList = await query.Take(pageSize).ToListAsync();
+            hasMorePages = await query.Skip(pageSize).AnyAsync();
+
             return (paginatedList, hasMorePages);
         }
     }

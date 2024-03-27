@@ -146,10 +146,9 @@ function importContacts() {
     function IterateOverListOfObjectsAndAppendToTable(object, tableId) {
         $.each(object.ListOfEmployees, function (index, employee) {
             var group = employee.employeeGroupNames;
-            var email = employee.email;
+            var email = employee.email || "Brak danych";
 
             group = (group == null || group.length === 0) ? "Nie przypisano" : group.join(", ");
-            email = (email == null || email === "") ? "Brak danych" : email;
 
             var statusClass = employee.isActive ? 'active-pill' : 'inactive-pill';
             var statusText = employee.isActive ? 'Aktywny' : 'Nieaktywny';
@@ -390,7 +389,7 @@ function HandleTemplateTypeLog(templateEntity) {
                 <div class="row mb-10">
                     <div class="col d-flex">
                         <label class="logs-detail-label" for="logTemplate-TemplateDescriptionDetail">Opis:</label>
-                        <span class="details-span" id="logTemplate-TemplateDescriptionDetail">${templateEntity.templateDescription == null ? "Brak opisu" : templateEntity.templateDescription}</span>
+                        <span class="details-span" id="logTemplate-TemplateDescriptionDetail">${templateEntity.templateDescription || "Brak opisu"}</span>
                     </div>
                 </div>
                 <div class="row mb-10">
@@ -406,13 +405,13 @@ function HandleTemplateTypeLog(templateEntity) {
 
 function HandleGroupsAssignTypeLog(groupAssignObject) {
 
-    var groupDescription = groupAssignObject.group.groupDescription;
+    var groupDescription = groupAssignObject.group.groupDescription || "Brak opisu";
 
-    var email = groupAssignObject.contact.email;
-    var hqAddress = groupAssignObject.contact.hqAddress;
-    var postalNumber = groupAssignObject.contact.postalNumber;
-    var city = groupAssignObject.contact.city;
-    var department = groupAssignObject.contact.department;
+    var email = groupAssignObject.contact.email || "Brak danych";
+    var hqAddress = groupAssignObject.contact.hqAddress || "Brak danych";
+    var postalNumber = groupAssignObject.contact.postalNumber || "Brak danych";
+    var city = groupAssignObject.contact.city || "Brak danych";
+    var department = groupAssignObject.contact.department || "Brak danych";
 
     var relatedObjects =
         `<span class="log-related-object-title">Grupa</span>
@@ -433,7 +432,7 @@ function HandleGroupsAssignTypeLog(groupAssignObject) {
                 <div class="row mb-10">
                     <div class="col d-flex">
                         <label class="logs-detail-label" for="logGroupAssign-GroupDescriptionDetail">Opis:</label>
-                        <span class="details-span" id="logGroupAssign-GroupDescriptionDetail">${(groupDescription == null || groupDescription == "") ? "Brak opisu" : groupDescription}</span>
+                        <span class="details-span" id="logGroupAssign-GroupDescriptionDetail">${groupDescription}</span>
                     </div>
                 </div>
                 <hr />
@@ -461,7 +460,7 @@ function HandleGroupsAssignTypeLog(groupAssignObject) {
                 <div class="row mb-10">
                     <div class="col d-flex">
                         <label class="logs-detail-label" for="logGroupAssign-EmployeeEmailDetail">Email:</label>
-                            <span class="details-span" id="logGroupAssign-EmployeeEmailDetail">${(email == null || email == "") ? "Brak danych" : email}</span>
+                            <span class="details-span" id="logGroupAssign-EmployeeEmailDetail">${email}</span>
                     </div>
                 </div>
                 <hr />
@@ -475,25 +474,25 @@ function HandleGroupsAssignTypeLog(groupAssignObject) {
                 <div class="row mb-10">
                     <div class="col d-flex">
                         <label class="logs-detail-label" for="logGroupAssign-EmployeeHQAddressDetail">Adres miejsca pracy:</label>
-                        <span class="details-span" id="logGroupAssign-EmployeeHQAddressDetail">${(hqAddress == null || hqAddress == "") ? "Brak danych" : hqAddress}</span>
+                        <span class="details-span" id="logGroupAssign-EmployeeHQAddressDetail">${hqAddress}</span>
                     </div>
                 </div>
                 <div class="row mb-10">
                     <div class="col d-flex">
                         <label class="logs-detail-label" for="logGroupAssign-EmployeePostalNumberDetail">Kod pocztowy:</label>
-                        <span class="details-span" id="logGroupAssign-EmployeePostalNumberDetail">${(postalNumber == null || postalNumber == "") ? "Brak danych" : postalNumber}</span>
+                        <span class="details-span" id="logGroupAssign-EmployeePostalNumberDetail">${postalNumber}</span>
                     </div>
                 </div>
                 <div class="row mb-10">
                     <div class="col d-flex">
                         <label class="logs-detail-label" for="logGroupAssign-EmployeeCityDetail">Miasto:</label>
-                        <span class="details-span" id="logGroupAssign-EmployeeCityDetail">${(city == null || city == "") ? "Brak danych" : city}</span>
+                        <span class="details-span" id="logGroupAssign-EmployeeCityDetail">${city}</span>
                     </div>
                 </div>
                 <div class="row mb-10">
                     <div class="col d-flex">
                         <label class="logs-detail-label" for="logGroupAssign-EmployeeDepartmentDetail">Jednostka organizacyjna:</label>
-                        <span class="details-span" id="logGroupAssign-EmployeeDepartmentDetail">${(department == null || department == "") ? "Brak danych" : department}</span>
+                        <span class="details-span" id="logGroupAssign-EmployeeDepartmentDetail">${department}</span>
                     </div>
                 </div>
                 <hr />
@@ -682,7 +681,7 @@ function handleImportTypeLog(importEntity) {
 
 function HandleGroupsTypeLog(groupEntity) {
 
-    var groupDescription = groupEntity.groupDescription;
+    var groupDescription = groupEntity.groupDescription || "Brak opisu";
 
     var relatedObjects =
         `<span class="log-related-object-title">Grupa</span>
@@ -703,7 +702,7 @@ function HandleGroupsTypeLog(groupEntity) {
                 <div class="row mb-10">
                     <div class="col d-flex">
                         <label class="logs-detail-label" for="logGroupAssign-GroupDescriptionDetail">Opis:</label>
-                        <span class="details-span" id="logGroupAssign-GroupDescriptionDetail">${(groupDescription == null || groupDescription == "") ? "Brak opisu" : groupDescription}</span>
+                        <span class="details-span" id="logGroupAssign-GroupDescriptionDetail">${groupDescription}</span>
                     </div>
                 </div>`;
 
@@ -719,23 +718,23 @@ function handleSMSGroupTypeLog(smsGroupObject) {
     var type = $("#logTypeDetail").text();
 
     if (smsGroupObject.apiUsed == "ServerSms") {
-        var smsMessage = smsGroupObject.sms.settings.text;
+        var smsMessage = smsGroupObject.sms.settings.text || "Nie wpisano treści";
         var responseError = smsGroupObject.sms.serverResponse.error;
-        var senderName = smsGroupObject.sms.settings.sender;
+        var senderName = smsGroupObject.sms.settings.sender || "Nie określono";
         var fastChannel = smsGroupObject.sms.settings.speed;
     }
     else {
-        var smsMessage = smsGroupObject.sms.settings.message;
+        var smsMessage = smsGroupObject.sms.settings.message || "Nie wpisano treści";
         var responseError = smsGroupObject.sms.serverResponse;
-        var senderName = smsGroupObject.sms.settings.from;
+        var senderName = smsGroupObject.sms.settings.from || "Nie określono";
         var fastChannel = smsGroupObject.sms.settings.fast;
     }
 
-    var chosenGroupId = smsGroupObject.sms.chosenGroupId;
+    var chosenGroupId = smsGroupObject.sms.chosenGroupId || "Nie wybrano grupy";
     var additionalPhoneNumbers = smsGroupObject.sms.additionalPhoneNumbers;
-    var additionalInformation = smsGroupObject.sms.additionalInformation;
+    var additionalInformation = smsGroupObject.sms.additionalInformation || "Brak";
     var responseSuccess = smsGroupObject.sms.serverResponse;
-    var groupDescription = smsGroupObject.group.groupDescription;
+    var groupDescription = smsGroupObject.group.groupDescription || "Brak opisu";
 
     var relatedObjects =
         `<span class="log-related-object-title">Wiadomość SMS</span>
@@ -744,19 +743,19 @@ function handleSMSGroupTypeLog(smsGroupObject) {
                     <div class="row mb-10" style="margin-top: 20px;">
                         <div class="col d-flex">
                             <label class="logs-detail-label" for="logSMSGroup-SenderDetail">Nazwa nadawcy:</label>
-                            <span class="details-span" id="logSMSGroup-SenderDetail">${senderName == null ? "Nie określono" : senderName}</span>
+                            <span class="details-span" id="logSMSGroup-SenderDetail">${senderName}</span>
                         </div>
                     </div>
                     <div class="row mb-10">
                         <div class="col d-flex">
                             <label class="logs-detail-label" for="logSMSGroup-ChosenGroupIdDetail">Id wybranej grupy:</label>
-                            <span class="details-span" id="logSMSGroup-ChosenGroupIdDetail">${chosenGroupId == 0 ? "Nie wybrano grupy" : chosenGroupId}</span>
+                            <span class="details-span" id="logSMSGroup-ChosenGroupIdDetail">${chosenGroupId}</span>
                         </div>
                     </div>
                     <div class="row mb-10">
                         <div class="col d-flex">
                             <label class="logs-detail-label" for="logSMSGroup-MessageDetail">Treść wiadomości:</label>
-                            <span class="details-span" id = "logSMSGroup-MessageDetail" > ${ (smsMessage == "" || smsMessage == null) ? "Nie wpisano treści" : smsMessage }</span>
+                            <span class="details-span" id = "logSMSGroup-MessageDetail" > ${smsMessage}</span>
                         </div>
                     </div>
                     <div class="row mb-10">
@@ -768,7 +767,7 @@ function handleSMSGroupTypeLog(smsGroupObject) {
                     <div class="row mb-10">
                         <div class="col d-flex">
                             <label class="logs-detail-label" for="logSMSGroup-AdditionalInformationDetail">Komentarz:</label>
-                            <span class="details-span" id="logSMSGroup-AdditionalInformationDetail">${(additionalInformation == null || additionalInformation == "") ? "Brak" : additionalInformation}</span>
+                            <span class="details-span" id="logSMSGroup-AdditionalInformationDetail">${additionalInformation}</span>
                         </div>
                     </div>
                     <hr style="margin-top: 20px";/>
@@ -898,7 +897,7 @@ function handleSMSGroupTypeLog(smsGroupObject) {
                 <div class="row mb-10">
                     <div class="col d-flex">
                         <label class="logs-detail-label" for="logSMSGroup-GroupDescriptionDetail">Opis:</label>
-                        <span class="details-span" id="logSMSGroup-GroupDescriptionDetail">${(groupDescription == null || groupDescription == "") ? "Brak opisu" : groupDescription}</span>
+                        <span class="details-span" id="logSMSGroup-GroupDescriptionDetail">${groupDescription}</span>
                     </div>
                 </div>
                 <hr style="margin-top: 20px;"/>
@@ -946,21 +945,21 @@ function handleSMSNoGroupTypeLog(smsNoGroupObject) {
     var type = $("#logTypeDetail").text();
 
     if (smsNoGroupObject.apiUsed == "ServerSms") {
-        var smsMessage = smsNoGroupObject.sms.settings.text;
+        var smsMessage = smsNoGroupObject.sms.settings.text || "Nie wpisano treści";
         var responseError = smsNoGroupObject.sms.serverResponse.error;
-        var senderName = smsNoGroupObject.sms.settings.sender;
+        var senderName = smsNoGroupObject.sms.settings.sender || "Nie określono";
         var fastChannel = smsNoGroupObject.sms.settings.speed;
     }
     else {
-        var smsMessage = smsNoGroupObject.sms.settings.message;
+        var smsMessage = smsNoGroupObject.sms.settings.message || "Nie wpisano treści";;
         var responseError = smsNoGroupObject.sms.serverResponse;
-        var senderName = smsNoGroupObject.sms.settings.from;
+        var senderName = smsNoGroupObject.sms.settings.from || "Nie określono";;
         var fastChannel = smsNoGroupObject.sms.settings.fast;
     }
 
-    var chosenGroupId = smsNoGroupObject.sms.chosenGroupId;
+    var chosenGroupId = smsNoGroupObject.sms.chosenGroupId || "Nie wybrano grupy";
     var additionalPhoneNumbers = smsNoGroupObject.sms.additionalPhoneNumbers;
-    var additionalInformation = smsNoGroupObject.sms.additionalInformation;
+    var additionalInformation = smsNoGroupObject.sms.additionalInformation || "Brak";
     var responseSuccess = smsNoGroupObject.sms.serverResponse;
 
     var relatedObjects =
@@ -971,19 +970,19 @@ function handleSMSNoGroupTypeLog(smsNoGroupObject) {
             <div class="row mb-10" style="margin-top: 20px;">
                 <div class="col d-flex">
                     <label class="logs-detail-label" for="logSMSNoGroup-SenderDetail">Nazwa nadawcy:</label>
-                    <span class="details-span" id="logSMSNoGroup-SenderDetail">${senderName == null ? "Nie określono" : senderName}</span>
+                    <span class="details-span" id="logSMSNoGroup-SenderDetail">${senderName}</span>
                 </div>
             </div>
             <div class="row mb-10">
                 <div class="col d-flex">
                     <label class="logs-detail-label" for="logSMSNoGroup-ChosenGroupIdDetail">Id wybranej grupy:</label>
-                    <span class="details-span" id="logSMSNoGroup-ChosenGroupIdDetail">${chosenGroupId == 0 ? "Nie wybrano grupy" : chosenGroupId}</span>
+                    <span class="details-span" id="logSMSNoGroup-ChosenGroupIdDetail">${chosenGroupId}</span>
                 </div>
             </div>
             <div class="row mb-10">
                 <div class="col d-flex">
                     <label class="logs-detail-label" for="logSMSNoGroup-MessageDetail">Treść wiadomości:</label>
-                    <span class="details-span" id = "logSMSGroup-MessageDetail" > ${(smsMessage == "" || smsMessage == null) ? "Nie wpisano treści" : smsMessage}</span>
+                    <span class="details-span" id = "logSMSGroup-MessageDetail" > ${smsMessage}</span>
 
                 </div>
             </div>
@@ -996,7 +995,7 @@ function handleSMSNoGroupTypeLog(smsNoGroupObject) {
             <div class="row mb-10">
                 <div class="col d-flex">
                     <label class="logs-detail-label" for="logSMSNoGroup-AdditionalInformationDetail">Komentarz:</label>
-                    <span class="details-span" id="logSMSNoGroup-AdditionalInformationDetail">${(additionalInformation == null || additionalInformation == "") ? "Brak" : additionalInformation}</span>
+                    <span class="details-span" id="logSMSNoGroup-AdditionalInformationDetail">${additionalInformation}</span>
                 </div>
             </div>
             <hr style="margin-top: 20px";/>
@@ -1119,11 +1118,11 @@ function handleSMSNoGroupTypeLog(smsNoGroupObject) {
 
 function HandleContactTypeLog(contactEntity) {
 
-    var email = contactEntity.email;
-    var hqAddress = contactEntity.hqAddress;
-    var postalNumber = contactEntity.postalNumber;
-    var city = contactEntity.city;
-    var department = contactEntity.department;
+    var email = contactEntity.email || "Brak danych";
+    var hqAddress = contactEntity.hqAddress || "Brak danych";
+    var postalNumber = contactEntity.postalNumber || "Brak danych";
+    var city = contactEntity.city || "Brak danych";
+    var department = contactEntity.department || "Brak danych";
 
 
     var relatedObjects =
@@ -1151,7 +1150,7 @@ function HandleContactTypeLog(contactEntity) {
                     <div class="row mb-10">
                         <div class="col d-flex">
                             <label class="logs-detail-label" for="logContact-EmployeeEmailDetail">Email:</label>
-                            <span class="details-span" id="logDontact-EmployeeEmailDetail">${(email == null || email == "") ? "Brak danych" : email}</span>
+                            <span class="details-span" id="logDontact-EmployeeEmailDetail">${email}</span>
                         </div>
                     </div>
                     <hr />
@@ -1165,25 +1164,25 @@ function HandleContactTypeLog(contactEntity) {
                     <div class="row mb-10">
                         <div class="col d-flex">
                             <label class="logs-detail-label" for="logContact-EmployeeHQAddressDetail">Adres miejsca pracy:</label>
-                            <span class="details-span" id="logContact-EmployeeHQAddressDetail">${(hqAddress == null || hqAddress == "") ? "Brak danych" : hqAddress}</span>
+                            <span class="details-span" id="logContact-EmployeeHQAddressDetail">${hqAddress}</span>
                         </div>
                     </div>
                     <div class="row mb-10">
                         <div class="col d-flex">
                             <label class="logs-detail-label" for="logContact-EmployeePostalNumberDetail">Kod pocztowy:</label>
-                            <span class="details-span" id="logContact-EmployeePostalNumberDetail">${(postalNumber == null || postalNumber == "") ? "Brak danych" : postalNumber}</span>
+                            <span class="details-span" id="logContact-EmployeePostalNumberDetail">${postalNumber}</span>
                         </div>
                     </div>
                     <div class="row mb-10">
                         <div class="col d-flex">
                             <label class="logs-detail-label" for="logContact-EmployeeCityDetail">Miasto:</label>
-                            <span class="details-span" id="logContact-EmployeeCityDetail">${(city == null || city == "") ? "Brak danych" : city}</span>
+                            <span class="details-span" id="logContact-EmployeeCityDetail">${city}</span>
                         </div>
                     </div>
                     <div class="row mb-10">
                         <div class="col d-flex">
                             <label class="logs-detail-label" for="logContact-EmployeeDepartmentDetail">Jednostka organizacyjna:</label>
-                            <span class="details-span" id="logContact-EmployeeDepartmentDetail">${(department == null || department == "") ? "Brak danych" : department}</span>
+                            <span class="details-span" id="logContact-EmployeeDepartmentDetail">${department}</span>
                         </div>
                     </div>
                     <hr />
@@ -1242,7 +1241,9 @@ function DeleteTemplate(templateId) {
         contentType: 'application/json',
         data: { id: templateId },
         success: function () {
-            $("#template-table tr").find(`a[href="#details-${templateId}"]`).closest("tr").remove();
+            var lastId = $("#template-table").attr('last-id');
+            var firstId = $("#template-table").attr('first-id');
+            PaginateTemplatesAndPopulateTable(firstId, lastId, 11, null);
         },
         error: function (error) {
             console.error(error.responseText);
@@ -1266,7 +1267,10 @@ function DeleteContact(contactId) {
         contentType: 'application/json',
         data: { id: contactId },
         success: function () {
-            $("#contacts-table tr").find(`a[href="#details-${contactId}"]`).closest("tr").remove();
+            var lastId = $("#contacts-table").attr('last-id');
+            var firstId = $("#contacts-table").attr('first-id');
+            PaginateContactsAndPopulateTable(firstId, lastId, 11, null);
+
         },
         error: function (error) {
             console.error(error.responseText);
@@ -1282,7 +1286,9 @@ function DeleteGroup(groupId) {
         contentType: 'application/json',
         data: { id: groupId },
         success: function () {
-            $("#group-table tr").find(`a[href="#details-${groupId}"]`).closest("tr").remove();
+            var lastId = $("#group-table").attr('last-id');
+            var firstId = $("#group-table").attr('first-id');
+            PaginateGroupsAndPopulateTable(firstId, lastId, 11, null);
         },
         error: function (error) {
             console.error(error.responseText);
@@ -1409,63 +1415,68 @@ function PaginateTemplatesAndPopulateTable(firstId, lastId, pageSize, moveForwar
     $.ajax({
         url: '/Home/PaginateTemplates',
         type: 'GET',
-        data: {firstId: firstId, lastId: lastId, pageSize: pageSize, moveForward: moveForward },
+        data: {firstId, lastId, pageSize, moveForward },
         contentType: 'application/json',
         success: function (response) {
-            $('.template-list tbody').empty();
-            $("#template-next-button-container").html("");
-            $("#template-previous-button-container").html("");
+            const { paginatedTemplates, hasMorePages } = response;
+            const templateListBody = $('.template-list tbody');
+            const templateNextButtonContainer = $("#template-next-button-container");
+            const templatePreviousButtonContainer = $("#template-previous-button-container");
+            const templatePageCounter = $("#template-page-counter");
 
-            var listOfTemplates = response.paginatedTemplates;
-            var hasMorePages = response.hasMorePages;
-            $.each(listOfTemplates, function (index, template) {
-                var description = template.templateDescription == null ? "Brak opisu" : template.templateDescription;
+            templatePageCounter.hide();
+            templateListBody.empty();
+            templateNextButtonContainer.empty();
+            templatePreviousButtonContainer.empty();
+
+            paginatedTemplates.forEach(template => {
+                const description = template.templateDescription || "Brak opisu";
 
                 var newRow = `
-                <tr>
-                    <td class="small-cell template-name">${template.templateName}</td>
-                    <td class="medium-cell template-description">${description}</td>
-                    <td class="big-cell template-content">${template.templateContent}</td>
-                    <td class="centered-cell">
-                        <a href="#details-${template.templateId}" class="icon-list template-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
-                        <a href="#edit-${template.templateId}" class="icon-list template-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
-                        <a href="#delete-${template.templateId}" class="icon-list template-delete"><img src="/icons/trash.png" title="Usuń"/></a>
-                    </td>
-                </tr>
+                    <tr>
+                        <td class="small-cell template-name">${template.templateName}</td>
+                        <td class="medium-cell template-description">${description}</td>
+                        <td class="big-cell template-content">${template.templateContent}</td>
+                        <td class="centered-cell">
+                            <a href="#details-${template.templateId}" class="icon-list template-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
+                            <a href="#edit-${template.templateId}" class="icon-list template-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
+                            <a href="#delete-${template.templateId}" class="icon-list template-delete"><img src="/icons/trash.png" title="Usuń"/></a>
+                        </td>
+                    </tr>
                 `;
-                $('.template-list tbody').append(newRow);
-            });
+
+                templateListBody.append(newRow);
+            })
 
             if (hasMorePages) {
-                $("#template-next-button-container").append(`
-                <button class="arrow-button" id="templates-list-next-page-button" type="button">
-                    <span class="list-arrow-forward">
-                        <img src="/icons/arrow-next.png" />
-                    </span>
-                </button>`);
-                $("#template-page-counter").show();
+                templateNextButtonContainer.append(`
+                    <button class="arrow-button" id="templates-list-next-page-button" type="button">
+                        <span class="list-arrow-forward">
+                            <img src="/icons/arrow-next.png" />
+                        </span>
+                    </button>`);
+                templatePageCounter.show();
             }
 
-            if (moveForward) {
-                $("#template-page-counter").html(`${parseInt($("#template-page-counter").html()) + 1}`);
+            if (moveForward != null) {
+                const pageCounterValue = parseInt(templatePageCounter.html());
+                templatePageCounter.html(`${moveForward ? pageCounterValue + 1 : pageCounterValue - 1}`);
             }
-            else {
-                $("#template-page-counter").html(`${parseInt($("#template-page-counter").html()) - 1}`);
-            }
+            
 
-            if (parseInt($("#template-page-counter").html()) != 1) {
-                $("#template-previous-button-container").append(`
-                <button class="arrow-button" id="templates-list-previous-page-button" type="button">
-                    <span class="list-arrow-back">
-                        <img src="/icons/arrow-previous.png"/>
-                    </span>
-                </button>
+            if (parseInt(templatePageCounter.html()) > 1) {
+                templatePreviousButtonContainer.append(`
+                    <button class="arrow-button" id="templates-list-previous-page-button" type="button">
+                        <span class="list-arrow-back">
+                            <img src="/icons/arrow-previous.png"/>
+                        </span>
+                    </button>
                 `);
-                $("#template-page-counter").show();
+                templatePageCounter.show();
             }
 
-            $('.template-list').attr("last-id", `${listOfTemplates[listOfTemplates.length - 1].templateId}`);
-            $('.template-list').attr("first-id", `${listOfTemplates[0].templateId}`)
+            $('.template-list').attr("last-id", `${paginatedTemplates[paginatedTemplates.length - 1].templateId}`);
+            $('.template-list').attr("first-id", `${paginatedTemplates[0].templateId}`)
         },
         error: function (errorData) {
             console.error(errorData.responseText);
@@ -1483,10 +1494,10 @@ function FetchAllContactsAndPopulateTable() {
             $.each(listOfContacts, function (index, item) {
 
                 var groupNames = item.employeeGroupNames;
-                var email = item.email;
+                var email = item.email || "Brak danych";
 
                 groupNames = (groupNames == null || groupNames.length == 0) ? "Nie przypisano" : groupNames.join(", ")
-                email = (email == null || email == "") ? "Brak danych" : email
+
                 var isActiveRow = item.isActive ? '<td class="centered-cell contact-activity"><span class="active-pill">Aktywny<span></td>' : '<td class="centered-cell contact-activity"><span class="inactive-pill">Nieaktywny<span></td>'
 
                 var newRow = `<tr>
@@ -1517,71 +1528,77 @@ function PaginateContactsAndPopulateTable(firstId, lastId, pageSize, moveForward
     $.ajax({
         url: 'Home/PaginateContacts',
         type: 'GET',
-        data: {firstId, firstId, lastId: lastId, pageSize: pageSize, moveForward: moveForward },
+        data: {firstId, lastId,  pageSize, moveForward },
         contentType: 'application/json',
-        success: function (response) {
-            $('.contacts-list tbody').empty();
-            $("#contact-next-button-container").html("");
-            $("#contact-previous-button-container").html("");
+        success: function (response)
+        {
+            const { paginatedContacts, hasMorePages } = response;
+            const contactListBody = $('.contacts-list tbody');
+            const contactNextButtonContainer = $("#contact-next-button-container");
+            const contactPreviousButtonContainer = $("#contact-previous-button-container");
+            const contactPageCounter = $("#contact-page-counter");
 
-            var listOfContacts = response.paginatedContacts;
-            var hasMorePages = response.hasMorePages;
+            contactPageCounter.hide();
+            contactListBody.empty();
+            contactPreviousButtonContainer.empty();
+            contactNextButtonContainer.empty();
 
-            $.each(listOfContacts, function (index, contact) {
+            paginatedContacts.forEach(contact => {
+
                 var groupNames = contact.employeeGroupNames;
-                var email = contact.email;
+                var email = contact.email || "Brak danych";
 
                 groupNames = (groupNames == null || groupNames.length == 0) ? "Nie przypisano" : groupNames.join(", ")
-                email = (email == null || email == "") ? "Brak danych" : email
                 var isActiveRow = contact.isActive ? '<td class="centered-cell contact-activity"><span class="active-pill">Aktywny<span></td>' : '<td class="centered-cell contact-activity"><span class="inactive-pill">Nieaktywny<span></td>'
 
-                var newRow = `<tr>
-                            <td class="tiny-cell contact-name">${contact.name}</td>
-                            <td class="tiny-cell contact-surname">${contact.surname}</td>
-                            <td class="small-cell contact-email">${email}</td>
-                            <td class="small-cell contact-phone">${contact.phoneNumber}</td>
-                            ${isActiveRow}
-                            <td class="centered-cell contact-groups">${groupNames}</td>
-                            <td class="centered-cell">
+                var newRow = `
+                    <tr>
+                        <td class="tiny-cell contact-name">${contact.name}</td>
+                        <td class="tiny-cell contact-surname">${contact.surname}</td>
+                        <td class="small-cell contact-email">${email}</td>
+                        <td class="small-cell contact-phone">${contact.phoneNumber}</td>
+                        ${isActiveRow}
+                        <td class="centered-cell contact-groups">${groupNames}</td>
+                        <td class="centered-cell">
                             <a href="#details-${contact.employeeId}" class="icon-list contact-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
                             <a href="#edit-${contact.employeeId}" class="icon-list contact-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
                             <a href="#delete-${contact.employeeId}" class="icon-list contact-delete"><img src="/icons/trash.png" title="Usuń"/></a>
-                            </td>
-                            </tr>`;
+                        </td>
+                    </tr>
+                `;
 
-                $('.contacts-list tbody').append(newRow);
+                contactListBody.append(newRow);
             });
 
             if (hasMorePages) {
-                $("#contact-next-button-container").append(`
-                <button class="arrow-button" id="contacts-list-next-page-button" type="button">
-                    <span class="list-arrow-forward">
-                        <img src="/icons/arrow-next.png" />
-                    </span>
-                </button>`);
-                $("#contact-page-counter").show();
+                contactNextButtonContainer.append(`
+                    <button class="arrow-button" id="contacts-list-next-page-button" type="button">
+                        <span class="list-arrow-forward">
+                            <img src="/icons/arrow-next.png" />
+                        </span>
+                    </button>`
+                );
+                contactPageCounter.show();
             }
 
-            if (moveForward) {
-                $("#contact-page-counter").html(`${parseInt($("#contact-page-counter").html()) + 1}`);
-            }
-            else {
-                $("#contact-page-counter").html(`${parseInt($("#contact-page-counter").html()) - 1}`);
+            if (moveForward != null) {
+                const pageCounterValue = parseInt(contactPageCounter.html());
+                contactPageCounter.html(`${moveForward ? pageCounterValue + 1 : pageCounterValue - 1}`)
             }
 
-            if (parseInt($("#contact-page-counter").html()) != 1) {
-                $("#contact-previous-button-container").append(`
-                <button class="arrow-button" id="contacts-list-previous-page-button" type="button">
-                    <span class="list-arrow-back">
-                        <img src="/icons/arrow-previous.png"/>
-                    </span>
-                </button>
-            `);
-                $("#contact-page-counter").show();
+            if (parseInt(contactPageCounter.html()) > 1) {
+                contactPreviousButtonContainer.append(`
+                    <button class="arrow-button" id="contacts-list-previous-page-button" type="button">
+                        <span class="list-arrow-back">
+                            <img src="/icons/arrow-previous.png"/>
+                        </span>
+                    </button>
+                `);
+                contactPageCounter.show();
             }
 
-            $('.contacts-list').attr("last-id", `${listOfContacts[listOfContacts.length - 1].employeeId}`);
-            $('.contacts-list').attr("first-id", `${listOfContacts[0].employeeId}`);
+            $('.contacts-list').attr("last-id", `${paginatedContacts[paginatedContacts.length - 1].employeeId}`);
+            $('.contacts-list').attr("first-id", `${paginatedContacts[0].employeeId}`);
         },
         error: function (error) {
             console.error(error.responseText);
@@ -1598,9 +1615,7 @@ function FetchAllGroupsAndPopulateTable() {
             $('.group-list tbody').empty();
 
             $.each(listOfGroups, function (index, item) {
-                var groupDescription = item.groupDescription;
-
-                groupDescription = groupDescription == null ? "Brak opisu" : groupDescription;
+                var groupDescription = item.groupDescription || "Brak opisu";
 
                 var newRow = `<tr>
                             <td class="small-cell group-name">${item.groupName}</td>
@@ -1631,6 +1646,7 @@ function PaginateGroupsAndPopulateTable(firstId, lastId, pageSize, moveForward) 
         data: {firstId: firstId, lastId: lastId, pageSize: pageSize, moveForward: moveForward },
         contentType: 'application/json',
         success: function (response) {
+            $("#group-page-counter").hide();
             $('.group-list tbody').empty();
             $("#group-next-button-container").html("");
             $("#group-previous-button-container").html("");
@@ -1640,7 +1656,7 @@ function PaginateGroupsAndPopulateTable(firstId, lastId, pageSize, moveForward) 
 
             $.each(listOfGroups, function (index, group) {
 
-                var groupDescription = group.groupDescription == null ? "Brak opsiu" : group.groupDescription;
+                var groupDescription = group.groupDescription || "Brak opsiu";
 
                 var newRow = `
                 <tr>
@@ -1668,14 +1684,16 @@ function PaginateGroupsAndPopulateTable(firstId, lastId, pageSize, moveForward) 
                 $("#group-page-counter").show();
             }
 
-            if (moveForward) {
-                $("#group-page-counter").html(`${parseInt($("#group-page-counter").html()) + 1}`);
-            }
-            else {
-                $("#group-page-counter").html(`${parseInt($("#group-page-counter").html()) - 1}`);
+            if (moveForward != null) {
+                if (moveForward) {
+                    $("#group-page-counter").html(`${parseInt($("#group-page-counter").html()) + 1}`);
+                }
+                else {
+                    $("#group-page-counter").html(`${parseInt($("#group-page-counter").html()) - 1}`);
+                }
             }
 
-            if (parseInt($("#group-page-counter").html()) != 1) {
+            if (parseInt($("#group-page-counter").html()) > 1) {
                 $("#group-previous-button-container").append(`
                 <button class="arrow-button" id="groups-list-previous-page-button" type="button">
                     <span class="list-arrow-back">
@@ -1735,6 +1753,7 @@ function PaginateLogsAndPopulateTable(firstId, lastId, pageSize, moveForward) {
         data: {firstId: firstId, lastId: lastId, pageSize: pageSize, moveForward: moveForward },
         contentType: 'application/json',
         success: function (response) {
+            $("#log-page-counter").hide();
             $('#log-table tbody').empty();
             $("#log-next-button-container").html("");
             $("#log-previous-button-container").html("");
@@ -1770,14 +1789,16 @@ function PaginateLogsAndPopulateTable(firstId, lastId, pageSize, moveForward) {
                 $("#log-page-counter").show();
             }
 
-            if (moveForward) {
-                $("#log-page-counter").html(`${parseInt($("#log-page-counter").html()) + 1}`);
-            }
-            else {
-                $("#log-page-counter").html(`${parseInt($("#log-page-counter").html()) - 1}`);
+            if (moveForward != null) {
+                if (moveForward) {
+                    $("#log-page-counter").html(`${parseInt($("#log-page-counter").html()) + 1}`);
+                }
+                else {
+                    $("#log-page-counter").html(`${parseInt($("#log-page-counter").html()) - 1}`);
+                }
             }
 
-            if (parseInt($("#log-page-counter").html()) != 1) {
+            if (parseInt($("#log-page-counter").html()) > 1) {
                 $("#log-previous-button-container").append(`
                 <button class="arrow-button" id="logs-list-previous-page-button" type="button">
                     <span class="list-arrow-back">
@@ -1809,7 +1830,7 @@ function PopulateTableForChooseGroupForSMS() {
 
             $.each(listOfGroups, function (index, item) {
 
-                var description = item.groupDescription == null ? "Brak opisu" : item.groupDescription
+                var description = item.groupDescription || "Brak opisu";
 
                 var newRow = `<tr>
                             <td class="small-cell">${item.groupName}</td>
@@ -1840,7 +1861,7 @@ function PopulateTableForChooseTemplateForSMS() {
 
             $.each(listOfTemplates, function (index, item) {
 
-                var templateDescription = item.templateDescription == null ? "Brak opisu" : item.templateDescription
+                var templateDescription = item.templateDescription || "Brak opisu";
 
                 var newRow = `<tr>
                             <td class="small-cell">${item.templateName}</td>
@@ -1871,7 +1892,7 @@ function PopulateTablesForAssigningUsersToGroups(groupId) {
         contentType: 'application/json',
         success: function (groupEntity) {
 
-            var groupDescription = groupEntity.groupDescription == null ? "Brak opisu" : groupEntity.groupDescription;
+            var groupDescription = groupEntity.groupDescription || "Brak opisu";
             $("#group-assign-chosen-group-table tbody").empty();
 
             var newRow = `<tr>
@@ -1948,7 +1969,7 @@ function CreateNewTemplate() {
             var newRow = `
             <tr>
                 <td class="small-cell template-name">${template.templateName}</td>
-                <td class="medium-cell template-description">${template.templateDescription == null ? "Brak opisu" : template.templateDescription}</td>
+                <td class="medium-cell template-description">${template.templateDescription || "Brak opisu"}</td>
                 <td class="big-cell template-content">${template.templateContent}</td>
                 <td class=centered-cell>
                     <a href="#details-${template.templateId}" class="icon-list template-details">
@@ -1992,7 +2013,7 @@ function CreateNewContact() {
             <tr>
                 <td class="tiny-cell contact-name">${contact.name}</td>
                 <td class="tiny-cell contact-surname">${contact.surname}</td>
-                <td class="small-cell contact-email">${contact.email == null ? "Brak danych" : contact.email}</td>
+                <td class="small-cell contact-email">${contact.email || "Brak danych"}</td>
                 <td class="small-cell contact-phone">${contact.phoneNumber}</td>
                 <td class="centered-cell contact-activity">
                     <span class="${contact.isActive ? "active-pill" : "inactive-pill"}">${contact.isActive ? "Aktywny" : "Nieaktywny"}</span>
@@ -2032,7 +2053,7 @@ function CreateNewGroup() {
             var newRow = `
             <tr>
                 <td class="small-cell group-name">${group.groupName}</td>
-                <td class="big-cell group-description">${group.groupDescription == null ? "Brak danych" : group.groupDescription}</td>
+                <td class="big-cell group-description">${group.groupDescription || "Brak danych"}</td>
                 <td class="tiny-centered-cell">0</td>
                 <td class="centered-cell" style="minwidth: 205px;">
                     <a href="#assign-${group.groupId}" class="icon-list group-assign">

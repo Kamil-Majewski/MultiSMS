@@ -1124,7 +1124,7 @@
                     $("#logCreatorNameDetail").text(logEntity.logCreator.name);
                     $("#logCreatorSurnameDetail").text(logEntity.logCreator.surname);
                     $("#logCreatorUsernameDetail").text(logEntity.logCreator.userName);
-                    $("#logCreatorPhoneNumberDetail").text(logEntity.logCreator.phoneNumber == null ? "Brak danych" : logEntity.logCreator.phoneNumber);
+                    $("#logCreatorPhoneNumberDetail").text(logEntity.logCreator.phoneNumber || "Brak danych");
 
 
                     if (logEntity.type == "Template") {
@@ -1164,50 +1164,42 @@
 
         $(document).on('click', '#templates-list-next-page-button', function () {
             var lastId = $("#template-table").attr('last-id');
-            var firstId = $("#template-table").attr('first-id');
-            PaginateTemplatesAndPopulateTable(firstId,lastId, 11, true);
+            PaginateTemplatesAndPopulateTable(null, lastId, 11, true);
         });
 
         $(document).on('click', '#templates-list-previous-page-button', function () {
-            var lastId = $("#template-table").attr('last-id');
             var firstId = $("#template-table").attr('first-id');
-            PaginateTemplatesAndPopulateTable(firstId, lastId, 11, false);
+            PaginateTemplatesAndPopulateTable(firstId, null, 11, false);
         });
 
         $(document).on('click', '#contacts-list-next-page-button', function () {
             var lastId = $("#contacts-table").attr('last-id');
-            var firstId = $("#contacts-table").attr('first-id');
-            PaginateContactsAndPopulateTable(firstId, lastId, 11, true);
+            PaginateContactsAndPopulateTable(null, lastId, 11, true);
         });
 
         $(document).on('click', '#contacts-list-previous-page-button', function () {
-            var lastId = $("#contacts-table").attr('last-id');
             var firstId = $("#contacts-table").attr('first-id');
-            PaginateContactsAndPopulateTable(firstId, lastId, 11, false);
+            PaginateContactsAndPopulateTable(firstId, null, 11, false);
         });
 
         $(document).on('click', '#groups-list-next-page-button', function () {
             var lastId = $("#group-table").attr('last-id');
-            var firstId = $("#group-table").attr('first-id');
-            PaginateGroupsAndPopulateTable(firstId, lastId, 11, true);
+            PaginateGroupsAndPopulateTable(null, lastId, 11, true);
         });
 
         $(document).on('click', '#groups-list-previous-page-button', function () {
-            var lastId = $("#group-table").attr('last-id');
             var firstId = $("#group-table").attr('first-id');
-            PaginateGroupsAndPopulateTable(firstId, lastId, 11, false);
+            PaginateGroupsAndPopulateTable(firstId, null, 11, false);
         });
 
         $(document).on('click', '#logs-list-next-page-button', function () {
             var lastId = $("#log-table").attr('last-id');
-            var firstId = $("#log-table").attr('first-id');
-            PaginateLogsAndPopulateTable(firstId, lastId,  11, true);
+            PaginateLogsAndPopulateTable(null, lastId,  11, true);
         });
 
         $(document).on('click', '#logs-list-previous-page-button', function () {
             var firstId = $("#log-table").attr('first-id');
-            var lastId = $("#log-table").attr('last-id');
-            PaginateLogsAndPopulateTable(firstId, lastId, 11, false);
+            PaginateLogsAndPopulateTable(firstId, null, 11, false);
         });
        
         $(document).on('click', '.options-hidden', function (e) {
@@ -1240,22 +1232,22 @@
                 data: { id: id },
                 success: function (contactEntity) {
 
-                    var email = contactEntity.email;
-                    var hqAddress = contactEntity.hqAddres;
-                    var postalNumber = contactEntity.postalNumber;
-                    var city = contactEntity.city;
-                    var department = contactEntity.department;
+                    var email = contactEntity.email || "Brak danych";
+                    var hqAddress = contactEntity.hqAddres || "Brak danych";
+                    var postalNumber = contactEntity.postalNumber || "Brak danych";
+                    var city = contactEntity.city || "Brak danych";
+                    var department = contactEntity.department || "Brak danych";
                     var groupNames = contactEntity.employeeGroupNames;
 
                     $("#contactIdDetail").text(id);
                     $("#contactNameDetail").text(contactEntity.name);
                     $("#contactSurnameDetail").text(contactEntity.surname);
-                    $("#contactEmailDetail").text((email == null || email == "") ? "Brak danych" : email);
+                    $("#contactEmailDetail").text(email);
                     $("#contactPhoneNumberDetail").text(contactEntity.phoneNumber);
-                    $("#contactHQAddressDetail").text((hqAddress == null || hqAddress == "") ? "Brak danych" : hqAddress);
-                    $("#ContactPostalNumberDetail").text((postalNumber == null || postalNumber == "") ? "Brak danych" : postalNumber);
-                    $("#ContactCityDetail").text((city == null || city == "") ? "Brak danych" : city);
-                    $("#contactDepartmentDetail").text((department == null || department == "") ? "Brak danych" : department);
+                    $("#contactHQAddressDetail").text(hqAddress);
+                    $("#ContactPostalNumberDetail").text(postalNumber);
+                    $("#ContactCityDetail").text(city);
+                    $("#contactDepartmentDetail").text(department);
                     $("#contactStatusDetail").text(contactEntity.isActive ? "Aktywny" : "Nieaktywny");
                     $("#contactGroupsDetail").text(groupNames.length == 0 ? "Nie przypisano" : groupNames.join(', '));
 

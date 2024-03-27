@@ -7,6 +7,6 @@ namespace MultiSMS.BusinessLogic.Services.Interfaces
         List<Group> GetAllGroupsWithGroupMembersList();
         Dictionary<int, string> GetDictionaryWithGroupIdsAndNames();
         Task<Group> GetGroupByNameAsync(string groupName);
-        Task<(List<Group>, bool)> PaginateGroupDataAsync(int firstId, int lastId, int pageSize, bool moveForward);
+        Task<(List<Group>, bool)> PaginateGroupDataAsync(int firstId, int lastId, int pageSize, bool? moveForward);
     }
 }
