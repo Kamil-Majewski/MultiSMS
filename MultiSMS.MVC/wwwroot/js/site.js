@@ -1617,18 +1617,19 @@ function FetchAllGroupsAndPopulateTable() {
             $.each(listOfGroups, function (index, item) {
                 var groupDescription = item.groupDescription || "Brak opisu";
 
-                var newRow = `<tr>
-                            <td class="small-cell group-name">${item.groupName}</td>
-                            <td class="big-cell group-description">${groupDescription}</td>
-                            <td class="tiny-centered-cell">${item.membersIds.length}</td>
-                                <td class="centered-cell"" style="min-width: 205px;">
+                var newRow = `
+                    <tr>
+                        <td class="small-cell group-name">${item.groupName}</td>
+                        <td class="big-cell group-description">${groupDescription}</td>
+                        <td class="tiny-centered-cell">${item.membersIds.length}</td>
+                        <td class="centered-cell"" style="min-width: 205px;">
                             <a href="#assign-${item.groupId}" class="icon-list group-assign"><img src="/icons/assign-users.png" title="Przypisz użytkowników"/></a>
                             <a href="#details-${item.groupId}" class="icon-list group-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
                             <a href="#edit-${item.groupId}" class="icon-list group-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
                             <a href="#delete-${item.groupId}" class="icon-list group-delete"><img src="/icons/trash.png" title="Usuń"/></a>
-                            </td>
-                            </tr>`;
-
+                        </td>
+                    </tr>`
+                ;
 
                 $('.group-list tbody').append(newRow);
             });
@@ -1643,69 +1644,69 @@ function PaginateGroupsAndPopulateTable(firstId, lastId, pageSize, moveForward) 
     $.ajax({
         url: '/Home/PaginateGroups',
         type: 'GET',
-        data: {firstId: firstId, lastId: lastId, pageSize: pageSize, moveForward: moveForward },
+        data: {firstId, lastId, pageSize, moveForward },
         contentType: 'application/json',
         success: function (response) {
-            $("#group-page-counter").hide();
-            $('.group-list tbody').empty();
-            $("#group-next-button-container").html("");
-            $("#group-previous-button-container").html("");
+            const { paginatedGroups, hasMorePages } = response;
+            const groupListBody = $('.group-list tbody');
+            const groupNextButtonContainer = $("#group-next-button-container");
+            const groupPreviousButtonContainer = $("#group-previous-button-container");
+            const groupPageCounter = $("#group-page-counter");
 
-            var listOfGroups = response.paginatedGroups;
-            var hasMorePages = response.hasMorePages;
+            groupPageCounter.hide();
+            groupListBody.empty();
+            groupNextButtonContainer.empty();
+            groupPreviousButtonContainer.empty();
 
-            $.each(listOfGroups, function (index, group) {
-
-                var groupDescription = group.groupDescription || "Brak opsiu";
+            paginatedGroups.forEach(group => {
+                const description = group.groupDescription || "Brak opisu"
 
                 var newRow = `
-                <tr>
-                    <td class="small-cell group-name">${group.groupName}</td>
-                    <td class="big-cell group-description">${groupDescription}</td>
-                    <td class="tiny-centered-cell">${group.membersIds.length}</td>
-                    <td class="centered-cell"" style="min-width: 205px;">
-                        <a href="#assign-${group.groupId}" class="icon-list group-assign"><img src="/icons/assign-users.png" title="Przypisz użytkowników"/></a>
-                        <a href="#details-${group.groupId}" class="icon-list group-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
-                        <a href="#edit-${group.groupId}" class="icon-list group-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
-                        <a href="#delete-${group.groupId}" class="icon-list group-delete"><img src="/icons/trash.png" title="Usuń"/></a>
-                    </td>
-                </tr>`;
+                    <tr>
+                        <td class="small-cell group-name">${group.groupName}</td>
+                        <td class="big-cell group-description">${description}</td>
+                        <td class="tiny-centered-cell">${group.membersIds.length}</td>
+                        <td class="centered-cell"" style="min-width: 205px;">
+                            <a href="#assign-${group.groupId}" class="icon-list group-assign"><img src="/icons/assign-users.png" title="Przypisz użytkowników"/></a>
+                            <a href="#details-${group.groupId}" class="icon-list group-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
+                            <a href="#edit-${group.groupId}" class="icon-list group-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
+                            <a href="#delete-${group.groupId}" class="icon-list group-delete"><img src="/icons/trash.png" title="Usuń"/></a>
+                        </td>
+                    </tr>
+                `;
 
-                $('.group-list tbody').append(newRow);
+                groupListBody.append(newRow);
             });
 
             if (hasMorePages) {
-                $("#group-next-button-container").append(`
-                <button class="arrow-button" id="groups-list-next-page-button" type="button">
-                    <span class="list-arrow-forward">
-                        <img src="/icons/arrow-next.png" />
-                    </span>
-                </button>`);
-                $("#group-page-counter").show();
+                groupNextButtonContainer.append(`
+                    <button class="arrow-button" id="groups-list-next-page-button" type="button">
+                        <span class="list-arrow-forward">
+                            <img src="/icons/arrow-next.png" />
+                        </span>
+                    </button>`
+                );
+                groupPageCounter.show();
             }
 
             if (moveForward != null) {
-                if (moveForward) {
-                    $("#group-page-counter").html(`${parseInt($("#group-page-counter").html()) + 1}`);
-                }
-                else {
-                    $("#group-page-counter").html(`${parseInt($("#group-page-counter").html()) - 1}`);
-                }
+                const pageCounterValue = parseInt(groupPageCounter.html());
+                groupPageCounter.html(`${moveForward ? pageCounterValue + 1 : pageCounterValue - 1}`);
             }
 
             if (parseInt($("#group-page-counter").html()) > 1) {
-                $("#group-previous-button-container").append(`
-                <button class="arrow-button" id="groups-list-previous-page-button" type="button">
-                    <span class="list-arrow-back">
-                        <img src="/icons/arrow-previous.png"/>
-                    </span>
-                </button>
-            `);
-                $("#group-page-counter").show();
+                groupPreviousButtonContainer.append(`
+                    <button class="arrow-button" id="groups-list-previous-page-button" type="button">
+                        <span class="list-arrow-back">
+                            <img src="/icons/arrow-previous.png"/>
+                        </span>
+                    </button>
+                `);
+                groupPageCounter.show();
             }
 
-            $('.group-list').attr("last-id", `${listOfGroups[listOfGroups.length - 1].groupId}`);
-            $('.group-list').attr("first-id", `${listOfGroups[0].groupId}`);
+            $('.group-list').attr("last-id", `${paginatedGroups[paginatedGroups.length - 1].groupId}`);
+            $('.group-list').attr("first-id", `${paginatedGroups[0].groupId}`);
         },
         error: function (error) {
             console.error(error.responseText);
@@ -1750,69 +1751,68 @@ function PaginateLogsAndPopulateTable(firstId, lastId, pageSize, moveForward) {
     $.ajax({
         url: '/Home/PaginateLogs',
         type: 'GET',
-        data: {firstId: firstId, lastId: lastId, pageSize: pageSize, moveForward: moveForward },
+        data: {firstId, lastId, pageSize, moveForward },
         contentType: 'application/json',
         success: function (response) {
-            $("#log-page-counter").hide();
-            $('#log-table tbody').empty();
-            $("#log-next-button-container").html("");
-            $("#log-previous-button-container").html("");
+            const { paginatedLogs, hasMorePages } = response;
+            const logListBody = $('#log-table tbody');
+            const logNextButtonContainer = $("#log-next-button-container");
+            const logPreviousButtonContainer = $("#log-previous-button-container");
+            const logPageCounter = $("#log-page-counter");
 
-            var listOfLogs = response.paginatedLogs;
-            var hasMorePages = response.hasMorePages;
+            logPageCounter.hide();
+            logListBody.empty();
+            logNextButtonContainer.empty();
+            logPreviousButtonContainer.empty();
 
-            $.each(listOfLogs, function (index, log) {
-
-                var logTypeRow = log.logType == "Błąd" ? `<td class="tiny-centered-cell"><span class="error-pill">${log.logType}</span></td>` : `<td class="tiny-centered-cell"><span class="info-pill">${log.logType}</span></td>`
+            paginatedLogs.forEach(log => {
+                var logTypeRow = log.logType == "Błąd" ? `<td class="tiny-centered-cell"><span class="error-pill">${log.logType}</span></td>` : `<td class="tiny-centered-cell"><span class="info-pill">${log.logType}</span></td>`;
 
                 var newRow = `
-                <tr>
-                    ${logTypeRow}
-                    <td class="tiny-cell">${log.logSource}</td>
-                    <td class="big-cell">${log.logMessage}</td>
-                    <td class="centered-cell" style="min-width:105px;">${new Date(log.logCreationDate).toLocaleString('en-GB')}</td>
-                    <td class="tiny-centered-cell">
-                        <a href="#details-${log.logId}" class="icon-list log-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
-                    </td>
-                </tr>`;
+                    <tr>
+                        ${logTypeRow}
+                        <td class="tiny-cell">${log.logSource}</td>
+                        <td class="big-cell">${log.logMessage}</td>
+                        <td class="centered-cell" style="min-width:105px;">${new Date(log.logCreationDate).toLocaleString('en-GB')}</td>
+                        <td class="tiny-centered-cell">
+                            <a href="#details-${log.logId}" class="icon-list log-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
+                        </td>
+                    </tr>`
+                    ;
 
-                $('#log-table tbody').append(newRow);
+                logListBody.append(newRow);
             });
 
             if (hasMorePages) {
-                $("#log-next-button-container").append(`
-                <button class="arrow-button" id="logs-list-next-page-button" type="button">
-                    <span class="list-arrow-forward">
-                        <img src="/icons/arrow-next.png" />
-                    </span>
-                </button>`);
-                $("#log-page-counter").show();
+                logNextButtonContainer.append(`
+                    <button class="arrow-button" id="logs-list-next-page-button" type="button">
+                        <span class="list-arrow-forward">
+                            <img src="/icons/arrow-next.png" />
+                        </span>
+                    </button>`
+                );
+                logPageCounter.show();
             }
 
             if (moveForward != null) {
-                if (moveForward) {
-                    $("#log-page-counter").html(`${parseInt($("#log-page-counter").html()) + 1}`);
-                }
-                else {
-                    $("#log-page-counter").html(`${parseInt($("#log-page-counter").html()) - 1}`);
-                }
+                const pageCounterValue = parseInt(logPageCounter.html());
+                logPageCounter.html(`${moveForward ? pageCounterValue + 1 : pageCounterValue - 1}`);
             }
 
-            if (parseInt($("#log-page-counter").html()) > 1) {
-                $("#log-previous-button-container").append(`
-                <button class="arrow-button" id="logs-list-previous-page-button" type="button">
-                    <span class="list-arrow-back">
-                        <img src="/icons/arrow-previous.png"/>
-                    </span>
-                </button>
-            `);
+            if (parseInt(logPageCounter.html()) > 1) {
+                logPreviousButtonContainer.append(`
+                    <button class="arrow-button" id="logs-list-previous-page-button" type="button">
+                        <span class="list-arrow-back">
+                            <img src="/icons/arrow-previous.png"/>
+                        </span>
+                    </button>`
+                );
 
-                $("#log-page-counter").show();
+                logPageCounter.show();
             }
 
-            $('.log-list').attr("last-id", `${listOfLogs[listOfLogs.length - 1].logId}`);
-            $('.log-list').attr("first-id", `${listOfLogs[0].logId}`)
-            $('')
+            $('.log-list').attr("last-id", `${paginatedLogs[paginatedLogs.length - 1].logId}`);
+            $('.log-list').attr("first-id", `${paginatedLogs[0].logId}`);
         },
         error: function (error) {
             console.error(error.responseText);
