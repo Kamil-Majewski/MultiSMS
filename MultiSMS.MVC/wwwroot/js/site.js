@@ -20,22 +20,55 @@
 
 }
 
-function OnInputFilterTable(searchBarIdentification, tableIdentification) {
-    $(searchBarIdentification).on('input', function () {
+function OnSubmitFilterTemplatesTable(formIdentifiaction, searchBarIdentification, tableIdentification) {
+    $(formIdentifiaction).on('submit', function (e) {
+        e.preventDefault();
 
-        var filterText = $(this).val().toLowerCase();
+        var searchPhrase = $(searchBarIdentification).val().toLowerCase();
 
-        $(`${tableIdentification} tbody tr`).each(function () {
-            var rowHit = false;
-            $(this).find('td').each(function () {
-                if ($(this).text().toLowerCase().includes(filterText)) {
-                    rowHit = true;
-                    return false;
-                }
-            });
+        if (searchPhrase == "") {
+            var lastId = $(tableIdentification).attr("last-id");
+            PaginateTemplatesAndPopulateTable(null, lastId, 11, null)
+            return;
+        }
 
-            $(this).toggle(rowHit);
-        });
+        $.ajax({
+            url: `/Home/GetTemplatesBySeachPhrase`,
+            type: 'GET',
+            contentType: 'application/json',
+            data: { searchPhrase },
+            success: function (listOfTemplates) {
+                const templateListBody = $(`${tableIdentification} tbody`);
+
+                templateListBody.empty();
+
+                listOfTemplates.forEach(template => {
+                    var newRow = `
+                        <tr>
+                            <td class="small-cell template-name">${template.templateName}</td>
+                            <td class="medium-cell template-description">${template.templateDescription}</td>
+                            <td class="big-cell template-content">${template.templateContent}</td>
+                            <td class="centered-cell">
+                                <a href="#details-${template.templateId}" class="icon-list template-details">
+                                    <img src="/icons/view-doc.png" title="Szczegóły">
+                                </a>
+                                <a href="#edit-${template.templateId}" class="icon-list template-edit">
+                                    <img src="/icons/edit.png" title="Edytuj">
+                                </a>
+                                <a href="#delete-${template.templateId}" class="icon-list template-delete">
+                                    <img src="/icons/trash.png" title="Usuń">
+                                </a>
+                            </td>
+                        </tr>
+                    `;
+
+                    templateListBody.append(newRow);
+                });
+            },
+            error: function (error) {
+                console.error(error.responseText);
+            }
+        })
     });
 }
 

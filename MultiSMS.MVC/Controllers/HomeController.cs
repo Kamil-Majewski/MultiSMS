@@ -326,7 +326,7 @@ namespace MultiSMS.MVC.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> GetEmployeesBySearchPhrase(string searchPhrase)
+        public async Task<IActionResult> GetContactsBySearchPhrase(string searchPhrase)
         {
             var contacts = await Task.FromResult(_employeeService.GetAllEntries());
             await Task.WhenAll(contacts.Select(async contact =>
