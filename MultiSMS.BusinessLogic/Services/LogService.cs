@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MultiSMS.BusinessLogic.Extensions;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Repositories.Interfaces;
@@ -41,10 +42,10 @@ namespace MultiSMS.BusinessLogic.Services
         public async Task<List<Log>> GetLogsBySearchPhrase(string searchPhrase)
         {
             return await _logRepository.GetAllEntries().Where(l =>
-            l.LogType.Contains(searchPhrase) ||
-            l.LogMessage.Contains(searchPhrase) ||
-            l.LogSource.Contains(searchPhrase) ||
-            l.LogCreationDate.ToString().Contains(searchPhrase)).ToListAsync();
+            l.LogType.ContainsCaseInsensitive(searchPhrase) ||
+            l.LogMessage.ContainsCaseInsensitive(searchPhrase) ||
+            l.LogSource.ContainsCaseInsensitive(searchPhrase) ||
+            l.LogCreationDate.ToString().ContainsCaseInsensitive(searchPhrase)).ToListAsync();
         }
     }
 }

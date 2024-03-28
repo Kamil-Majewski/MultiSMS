@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace MultiSMS.Interface.Extensions
+namespace MultiSMS.BusinessLogic.Extensions
 {
     public static class ClaimsPrincipalExtensions
     {

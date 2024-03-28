@@ -293,9 +293,9 @@
                             <button class="import-contacts-button ie-button" type="button" onclick="TriggerFileInput()">Importuj kontakty</button>
                             <button class="export-contacts-button ie-button" type="button" onclick="ExportContactsAndDownloadExcel()">Exportuj kontakty</button>
                         </div>
-                        <div class="list-search-bar d-flex">
+                        <form class="list-search-bar d-flex" id="search-for-contacts">
                             <input class="search-for contact-search" placeholder="Wyszukaj kontakt">
-                        </div>
+                        </form>
                     </div>
                     <div class="list-content">
                         <div class="table-responsive">
@@ -1161,45 +1161,52 @@
                 }
             });
         });
+        const debouncedPaginateTemplates = debounce(PaginateTemplatesAndPopulateTable, 220);
 
         $(document).on('click', '#templates-list-next-page-button', function () {
             var lastId = $("#template-table").attr('last-id');
-            PaginateTemplatesAndPopulateTable(null, lastId, 11, true);
+            debouncedPaginateTemplates(null, lastId, 11, true);
         });
 
         $(document).on('click', '#templates-list-previous-page-button', function () {
             var firstId = $("#template-table").attr('first-id');
-            PaginateTemplatesAndPopulateTable(firstId, null, 11, false);
+            debouncedPaginateTemplates(firstId, null, 11, false);
         });
+
+        var debouncedPaginateContacts = debounce(PaginateContactsAndPopulateTable, 220);
 
         $(document).on('click', '#contacts-list-next-page-button', function () {
             var lastId = $("#contacts-table").attr('last-id');
-            PaginateContactsAndPopulateTable(null, lastId, 11, true);
+            debouncedPaginateContacts(null, lastId, 11, true);
         });
 
         $(document).on('click', '#contacts-list-previous-page-button', function () {
             var firstId = $("#contacts-table").attr('first-id');
-            PaginateContactsAndPopulateTable(firstId, null, 11, false);
+            debouncedPaginateContacts(firstId, null, 11, false);
         });
+
+        var debouncedPaginateGroups = debounce(PaginateGroupsAndPopulateTable, 220);
 
         $(document).on('click', '#groups-list-next-page-button', function () {
             var lastId = $("#group-table").attr('last-id');
-            PaginateGroupsAndPopulateTable(null, lastId, 11, true);
+            debouncedPaginateGroups(null, lastId, 11, true);
         });
 
         $(document).on('click', '#groups-list-previous-page-button', function () {
             var firstId = $("#group-table").attr('first-id');
-            PaginateGroupsAndPopulateTable(firstId, null, 11, false);
+            debouncedPaginateGroups(firstId, null, 11, false);
         });
+
+        var debouncedPaginateLogs = debounce(PaginateLogsAndPopulateTable, 220);
 
         $(document).on('click', '#logs-list-next-page-button', function () {
             var lastId = $("#log-table").attr('last-id');
-            PaginateLogsAndPopulateTable(null, lastId,  11, true);
+            debouncedPaginateLogs(null, lastId, 11, true);
         });
 
         $(document).on('click', '#logs-list-previous-page-button', function () {
             var firstId = $("#log-table").attr('first-id');
-            PaginateLogsAndPopulateTable(firstId, null, 11, false);
+            debouncedPaginateLogs(firstId, null, 11, false);
         });
        
         $(document).on('click', '.options-hidden', function (e) {
@@ -1478,66 +1485,25 @@
             GoBackToSMSWindow();
         });
 
+        var debouncedAddUserToGroup = debounce(addUserToGroup, 220);
+
         $(document).on('click', '.contact-assign', function (e) {
             var link = $(this);
-            link.addClass("disabled-link");
             e.preventDefault();
             var assignContactIdGroupId = $(this).attr("href").split('-');
-            $.ajax({
-                url: '@Url.Action("AddUserToGroup", "Home")',
-                type: 'GET',
-                data: { groupId: assignContactIdGroupId[2], employeeId: assignContactIdGroupId[1] },
-                contentType: 'application/json',
-                success: function () {
-                    var groupMembersCount = $("#group-members-count").html();
-                    $("#group-members-count").html(parseInt(groupMembersCount) + 1);
-                    link.removeClass("contact-assign").addClass("contact-unassign");
-                    link.attr("href", `#unassign-${assignContactIdGroupId[1]}-${assignContactIdGroupId[2]}`)
-                    link.children("img").attr("src", "/icons/unassign-user.png").attr("title", "Wypisz z grupy");
 
-                    var nearestRow = link.closest('tr');
-                    var assignedGroups = nearestRow.find('td.centered-cell').html() == "Nie przypisano" ? [] : nearestRow.find('td.centered-cell').html().split(", ");
-                    assignedGroups.push($("#group-name").html());
-                    nearestRow.find('td.centered-cell').html(assignedGroups.join(", "));
-                    link.removeClass("disabled-link");
-                },
-                error: function (error) {
-                    console.error(error.responseText);
-                    link.removeClass("disabled-link");
-                }
-            });
+            debouncedAddUserToGroup(link, assignContactIdGroupId);
+            
         });
+
+        var debouncedRemoveUserFromGroup = debounce(removeUserFromGroup, 220);
 
         $(document).on('click', '.contact-unassign', function (e) {
             var link = $(this);
-            link.addClass("disabled-link");
             e.preventDefault();
             var assignContactIdGroupId = $(this).attr("href").split('-');
 
-            $.ajax({
-                url: '@Url.Action("RemoveUserFromGroup", "Home")',
-                type: 'GET',
-                data: { groupId: assignContactIdGroupId[2], employeeId: assignContactIdGroupId[1] },
-                contentType: 'application/json',
-                success: function () {
-                    var groupMembersCount = $("#group-members-count").html();
-                    $("#group-members-count").html(parseInt(groupMembersCount) - 1);
-                    link.removeClass("contact-unassign").addClass("contact-assign");
-                    link.attr("href", `#assign-${assignContactIdGroupId[1]}-${assignContactIdGroupId[2]}`)
-                    link.children("img").attr("src", "/icons/assign-user.png").attr("title", "Dopisz do grupy");
-
-                    var nearestRow = link.closest('tr');
-                    var assignedGroups = nearestRow.find('td.centered-cell').html().split(", ");
-                    var index = assignedGroups.indexOf($("#group-name").html());
-                    assignedGroups.splice(index, 1);
-                    nearestRow.find('td.centered-cell').html(assignedGroups.join(", ") == "" ? "Nie przypisano" : nearestRow.find('td.centered-cell').html(assignedGroups.join(", ")));
-                    link.removeClass("disabled-link");
-                },
-                error: function (error) {
-                    console.error(error.responseText);
-                    link.removeClass("disabled-link");
-                }
-            });
+            debouncedRemoveUserFromGroup(link, assignContactIdGroupId);
         });
 
         $(document).on('submit', '#create-template-form', function (e) {
@@ -1686,6 +1652,8 @@
         });
 
         OnSubmitFilterTemplatesTable("#search-for-templates", ".template-search", "#template-table")
+
+        OnSubmitFilterContactsTable("#search-for-contacts", ".contact-search", "#contacts-table")
 
         // OnInputFilterTable(".template-search", "#template-table");
 

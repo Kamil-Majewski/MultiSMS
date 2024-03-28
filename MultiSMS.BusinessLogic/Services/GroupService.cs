@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using MultiSMS.BusinessLogic.Extensions;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Repositories.Interfaces;
@@ -61,8 +63,8 @@ namespace MultiSMS.BusinessLogic.Services
         public async Task<List<Group>> GetGroupsBySearchPhrase(string searchPhrase)
         {
             return await _groupRepository.GetAllEntries().Where(g =>
-            g.GroupName.Contains(searchPhrase) ||
-            (g.GroupDescription ?? "Brak opisu").Contains(searchPhrase)).ToListAsync();
+            g.GroupName.ContainsCaseInsensitive(searchPhrase) ||
+            (g.GroupDescription.IsNullOrEmpty() ? "Brak opisu" : g.GroupDescription!).ContainsCaseInsensitive(searchPhrase)).ToListAsync();
         }
     }
 }

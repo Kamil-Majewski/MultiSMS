@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using MultiSMS.BusinessLogic.DTO;
+using MultiSMS.BusinessLogic.Extensions;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Entities.ServerSms;
 using MultiSMS.Interface.Entities.SmsApi;
-using MultiSMS.Interface.Extensions;
 using MultiSMS.MVC.Models;
 using Newtonsoft.Json;
 using NuGet.Protocol;
@@ -329,18 +330,18 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> GetContactsBySearchPhrase(string searchPhrase)
         {
             var contacts = await Task.FromResult(_employeeService.GetAllEntries());
-            await Task.WhenAll(contacts.Select(async contact =>
+            foreach(var contact in contacts)
             {
                 contact.EmployeeGroupNames = await _employeeGroupService.GetAllGroupNamesForEmployeeListAsync(contact.EmployeeId);
-            }));
+            };
 
             var filtereContacts = contacts.Where(e =>
-            e.Name.Contains(searchPhrase) ||
-            e.Surname.Contains(searchPhrase) ||
-            (e.Email ?? "Brak danych").Contains(searchPhrase) ||
-            e.PhoneNumber.Contains(searchPhrase) ||
-            (e.IsActive ? "Aktywny" : "Nieaktywny").Contains(searchPhrase) ||
-            e.EmployeeGroupNames.Any(g => g.Contains(searchPhrase)));
+            e.Name.ContainsCaseInsensitive(searchPhrase) ||
+            e.Surname.ContainsCaseInsensitive(searchPhrase) ||
+            (e.Email.IsNullOrEmpty() ? "Brak danych" : e.Email!).ContainsCaseInsensitive(searchPhrase) ||
+            e.PhoneNumber.ContainsCaseInsensitive(searchPhrase) ||
+            (e.IsActive ? "Aktywny" : "Nieaktywny").ContainsCaseInsensitive(searchPhrase) ||
+            e.EmployeeGroupNames.Any(g => g.ContainsCaseInsensitive(searchPhrase))).ToList();
 
             return Json(filtereContacts);
 

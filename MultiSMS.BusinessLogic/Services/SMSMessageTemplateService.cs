@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using MultiSMS.BusinessLogic.Extensions;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Repositories.Interfaces;
@@ -51,9 +53,9 @@ namespace MultiSMS.BusinessLogic.Services
         public async Task<List<SMSMessageTemplate>> GetTemplatesBySearchPhrase(string searchPhrase)
         {
             return await _repository.GetAllEntries().Where(t => 
-            t.TemplateName.Contains(searchPhrase) ||
-            (t.TemplateDescription ?? "Brak opisu").Contains(searchPhrase) ||
-            t.TemplateContent.Contains(searchPhrase)).ToListAsync();
+            t.TemplateName.ContainsCaseInsensitive(searchPhrase) ||
+            (t.TemplateDescription.IsNullOrEmpty() ? "Brak opisu" : t.TemplateDescription!).ContainsCaseInsensitive(searchPhrase) ||
+            t.TemplateContent.ContainsCaseInsensitive(searchPhrase)).ToListAsync();
         }
     }
 }
