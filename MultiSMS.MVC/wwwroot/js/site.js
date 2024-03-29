@@ -304,7 +304,7 @@ function OnSubmitFilterLogsTable(formIdentifiaction, searchBarIdentification, ta
                             ${logTypeRow}
                             <td class="tiny-cell">${log.logSource}</td>
                             <td class="big-cell">${log.logMessage}</td>
-                            <td class="centered-cell" style="min-width:105px;">${new Date(log.logCreationDate).toLocaleString('en-GB')}</td>
+                            <td class="centered-cell" style="min-width:105px;">${new Date(log.logCreationDate).toLocaleString('pl-PL')}</td>
                             <td class="tiny-centered-cell">
                                 <a href="#details-${log.logId}" class="icon-list log-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
                             </td>
@@ -2103,7 +2103,7 @@ function PaginateLogsAndPopulateTable(firstId, lastId, pageSize, moveForward) {
                         ${logTypeRow}
                         <td class="tiny-cell">${log.logSource}</td>
                         <td class="big-cell">${log.logMessage}</td>
-                        <td class="centered-cell" style="min-width:105px;">${new Date(log.logCreationDate).toLocaleString('en-GB')}</td>
+                        <td class="centered-cell" style="min-width:105px;">${new Date(log.logCreationDate).toLocaleString('pl-PL')}</td>
                         <td class="tiny-centered-cell">
                             <a href="#details-${log.logId}" class="icon-list log-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
                         </td>

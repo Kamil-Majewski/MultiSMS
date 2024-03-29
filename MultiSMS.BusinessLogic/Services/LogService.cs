@@ -3,6 +3,7 @@ using MultiSMS.BusinessLogic.Extensions;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Repositories.Interfaces;
+using System.Globalization;
 
 namespace MultiSMS.BusinessLogic.Services
 {
@@ -43,13 +44,16 @@ namespace MultiSMS.BusinessLogic.Services
             return (paginatedList, hasMorePages);
         }
 
-        public async Task<List<Log>> GetLogsBySearchPhraseAsync(string searchPhrase)
+        public List<Log> GetLogsBySearchPhrase(string searchPhrase)
         {
-            return await _logRepository.GetAllEntries().Where(l =>
+
+            return _logRepository.GetAllEntries().Select(l => new Log{LogId = l.LogId, LogCreationDate = l.LogCreationDate, LogType = l.LogType, LogMessage = l.LogMessage, LogSource = l.LogSource })
+                .AsEnumerable()
+                .Where(l =>
             l.LogType.ToLower().Contains(searchPhrase) ||
             l.LogMessage.ToLower().Contains(searchPhrase) ||
             l.LogSource.ToLower().Contains(searchPhrase) ||
-            l.LogCreationDate.ToString().Contains(searchPhrase)).ToListAsync();
+            l.LogCreationDate.ToString("dd/MM/yyyy, HH:mm:ss").Contains(searchPhrase)).ToList();
         }
     }
 }

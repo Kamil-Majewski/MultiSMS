@@ -790,9 +790,9 @@ namespace MultiSMS.MVC.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> GetLogsBySearchPhrase(string searchPhrase)
+        public IActionResult GetLogsBySearchPhrase(string searchPhrase)
         {
-            return Json(await _logService.GetLogsBySearchPhraseAsync(searchPhrase));
+            return Json(_logService.GetLogsBySearchPhrase(searchPhrase));
         }
 
         #endregion
