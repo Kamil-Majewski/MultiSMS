@@ -801,9 +801,9 @@
                 <div class="list-header">
                     <div class="list-header-left">
                     </div>
-                    <div class="list-search-bar d-flex">
+                    <form class="list-search-bar d-flex" id="search-for-logs">
                         <input class="search-for log-search" placeholder="Wyszukaj logi" />
-                    </div>
+                    </form>
                 </div>
                 <div class="list-content">
                     <div class="table-responsive">
@@ -1663,7 +1663,7 @@
 
         OnInputFilterTable(".group-search-for-user", "#group-assign-contact-list-table");
 
-        // OnInputFilterTable(".log-search", "#log-table");
+        OnSubmitFilterLogsTable("#search-for-logs", ".log-search", "#log-table");
 
         OnInputFilterTable(".import-contact-search", "#added-contacts-table");
 

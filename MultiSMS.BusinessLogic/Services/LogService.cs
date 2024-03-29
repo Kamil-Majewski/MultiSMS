@@ -14,14 +14,18 @@ namespace MultiSMS.BusinessLogic.Services
             _logRepository = logRepository;
         }
 
-        public async Task<(List<Log>, bool)> PaginateLogDataAsync(int firstId, int lastId, int pageSize, bool moveForward)
+        public async Task<(List<Log>, bool)> PaginateLogDataAsync(int firstId, int lastId, int pageSize, bool? moveForward)
         {
             IQueryable<Log> query = _logRepository.GetAllEntries().OrderBy(l => l.LogId);
 
             List<Log> paginatedList;
             bool hasMorePages;
 
-            if (moveForward)
+            if(moveForward == null)
+            {
+                query = query.Where(g => g.LogId >= firstId);
+            }
+            else if (moveForward == true)
             {
                 query = query.Where(l => l.LogId > lastId);
             }

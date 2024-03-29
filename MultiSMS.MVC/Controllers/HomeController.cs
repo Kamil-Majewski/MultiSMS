@@ -782,7 +782,7 @@ namespace MultiSMS.MVC.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> PaginateLogs(int firstId, int lastId, int pageSize, bool moveForward)
+        public async Task<IActionResult> PaginateLogs(int firstId, int lastId, int pageSize, bool? moveForward)
         {
             var (paginatedLogs, hasMorePages) = await _logService.PaginateLogDataAsync(firstId, lastId, pageSize, moveForward);
             return Json(new {paginatedLogs, hasMorePages});
@@ -790,7 +790,7 @@ namespace MultiSMS.MVC.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> GetLogsBySeachPhrase(string searchPhrase)
+        public async Task<IActionResult> GetLogsBySearchPhrase(string searchPhrase)
         {
             return Json(await _logService.GetLogsBySearchPhraseAsync(searchPhrase));
         }

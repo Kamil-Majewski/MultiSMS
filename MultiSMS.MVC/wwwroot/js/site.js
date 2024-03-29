@@ -258,6 +258,68 @@ function OnSubmitFilterGroupsTable(formIdentifiaction, searchBarIdentification, 
     });
 }
 
+function OnSubmitFilterLogsTable(formIdentifiaction, searchBarIdentification, tableIdentification) {
+    $(formIdentifiaction).on('submit', function (e) {
+        e.preventDefault();
+
+        const logPageCounter = $("#log-page-counter");
+        const logNextButtonContainer = $("#log-next-button-container");
+        const logPreviousButtonContainer = $("#log-previous-button-container");
+
+        logPageCounter.hide();
+        logNextButtonContainer.hide();
+        logPreviousButtonContainer.hide();
+
+        var searchPhrase = $(searchBarIdentification).val().toLowerCase();
+
+        if (searchPhrase == "") {
+
+            var firstId = $(tableIdentification).attr("first-id");
+
+            PaginateLogsAndPopulateTable(firstId, null, 11, null)
+
+            logNextButtonContainer.show();
+            logPreviousButtonContainer.show();
+
+            return;
+        }
+
+        $.ajax({
+            url: `/Home/GetLogsBySearchPhrase`,
+            type: 'GET',
+            contentType: 'application/json',
+            data: { searchPhrase },
+            success: function (listOfLogs) {
+                const logListBody = $(`${tableIdentification} tbody`);
+
+                logListBody.empty();
+
+                listOfLogs.forEach(log => {
+
+                    var logTypeRow = log.logType == "Błąd" ? `<td class="tiny-centered-cell"><span class="error-pill">${log.logType}</span></td>` : `<td class="tiny-centered-cell"><span class="info-pill">${log.logType}</span></td>`;
+
+                    var newRow = `
+                        <tr>
+                            
+                            ${logTypeRow}
+                            <td class="tiny-cell">${log.logSource}</td>
+                            <td class="big-cell">${log.logMessage}</td>
+                            <td class="centered-cell" style="min-width:105px;">${new Date(log.logCreationDate).toLocaleString('en-GB')}</td>
+                            <td class="tiny-centered-cell">
+                                <a href="#details-${log.logId}" class="icon-list log-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
+                            </td>
+                        </tr>                        
+                    `;
+                    logListBody.append(newRow);
+                })
+            },
+            error: function (error) {
+                console.error(error.responseText);
+            }
+        });
+    });
+}
+
 function SendSMS(text, chosenGroupId, chosenGroupName, additionalPhoneNumbers, additionalInfo) {
     $.ajax({
         url: '/SmsApi/SendSmsMessage',
