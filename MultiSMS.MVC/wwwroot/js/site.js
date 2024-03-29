@@ -34,6 +34,25 @@ function CalculateHeaderWidthAndToolbarHeight() {
 
 }
 
+function OnInputFilterTable(searchBarIdentification, tableIdentification) {
+    $(searchBarIdentification).on('input', function () {
+
+        var filterText = $(this).val().toLowerCase();
+
+        $(`${tableIdentification} tbody tr`).each(function () {
+            var rowHit = false;
+            $(this).find('td').each(function () {
+                if ($(this).text().toLowerCase().includes(filterText)) {
+                    rowHit = true;
+                    return false;
+                }
+            });
+
+            $(this).toggle(rowHit);
+        });
+    });
+}
+
 function OnSubmitFilterTemplatesTable(formIdentifiaction, searchBarIdentification, tableIdentification) {
     $(formIdentifiaction).on('submit', function (e) {
         e.preventDefault();
@@ -49,6 +68,9 @@ function OnSubmitFilterTemplatesTable(formIdentifiaction, searchBarIdentificatio
         var searchPhrase = $(searchBarIdentification).val().toLowerCase();
 
         if (searchPhrase == "") {
+
+            templateNextButtonContainer.show();
+            templatePreviousButtonContainer.show();
 
             var firstId = $(tableIdentification).attr("first-id");
 
@@ -93,9 +115,6 @@ function OnSubmitFilterTemplatesTable(formIdentifiaction, searchBarIdentificatio
                 console.error(error.responseText);
             }
         })
-        templatePageCounter.show();
-        templateNextButtonContainer.show();
-        templatePreviousButtonContainer.show();
     });
 }
 
@@ -161,6 +180,75 @@ function OnSubmitFilterContactsTable(formIdentifiaction, searchBarIdentification
                         
                     `;
                     contactListBody.append(newRow);
+                })
+            },
+            error: function (error) {
+                console.error(error.responseText);
+            }
+        });
+    });
+}
+
+function OnSubmitFilterGroupsTable(formIdentifiaction, searchBarIdentification, tableIdentification) {
+    $(formIdentifiaction).on('submit', function (e) {
+        e.preventDefault();
+
+        const groupPageCounter = $("#group-page-counter");
+        const groupNextButtonContainer = $("#group-next-button-container");
+        const groupPreviousButtonContainer = $("#group-previous-button-container");
+
+        groupPageCounter.hide();
+        groupNextButtonContainer.hide();
+        groupPreviousButtonContainer.hide();
+
+        var searchPhrase = $(searchBarIdentification).val().toLowerCase();
+
+        if (searchPhrase == "") {
+
+            var firstId = $(tableIdentification).attr("first-id");
+
+            PaginateGroupsAndPopulateTable(firstId, null, 11, null)
+
+            groupNextButtonContainer.show();
+            groupPreviousButtonContainer.show();
+
+            return;
+        }
+
+        $.ajax({
+            url: `/Home/GetGroupsBySearchPhrase`,
+            type: 'GET',
+            contentType: 'application/json',
+            data: { searchPhrase },
+            success: function (listOfGroups) {
+                const groupListBody = $(`${tableIdentification} tbody`);
+
+                groupListBody.empty();
+
+                listOfGroups.forEach(group => {
+                    var newRow = `
+                        <tr>
+                            <td class="small-cell group-name">${group.groupName}</td>
+                            <td class="big-cell group-description">${group.groupDescription}</td>
+                            <td class="tiny-centered-cell contact-email">${group.membersIds.length}</td>
+                            <td class="centered-cell" style="min-width:205px !important;">
+                                <a href="#assign-${group.groupId}" class="icon-list group-assign">
+                                    <img src="/icons/assign-users.png" title="Przypisz użytkowników">
+                                </a>
+                                <a href="#details-${group.groupId}" class="icon-list group-details">
+                                    <img src="/icons/view-doc.png" title="Szczegóły">
+                                </a>
+                                <a href="#edit-${group.groupId}" class="icon-list group-edit">
+                                    <img src="/icons/edit.png" title="Edytuj">
+                                </a>
+                                <a href="#delete-${group.groupId}" class="icon-list group-delete">
+                                    <img src="/icons/trash.png" title="Usuń">
+                                </a>
+                            </td>
+                        </tr>
+                        
+                    `;
+                    groupListBody.append(newRow);
                 })
             },
             error: function (error) {
@@ -1802,7 +1890,7 @@ function FetchAllGroupsAndPopulateTable() {
                         <td class="small-cell group-name">${item.groupName}</td>
                         <td class="big-cell group-description">${groupDescription}</td>
                         <td class="tiny-centered-cell">${item.membersIds.length}</td>
-                        <td class="centered-cell"" style="min-width: 205px;">
+                        <td class="centered-cell" id="group-options-container" style="min-width: 205px;">
                             <a href="#assign-${item.groupId}" class="icon-list group-assign"><img src="/icons/assign-users.png" title="Przypisz użytkowników"/></a>
                             <a href="#details-${item.groupId}" class="icon-list group-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
                             <a href="#edit-${item.groupId}" class="icon-list group-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
@@ -1846,7 +1934,7 @@ function PaginateGroupsAndPopulateTable(firstId, lastId, pageSize, moveForward) 
                         <td class="small-cell group-name">${group.groupName}</td>
                         <td class="big-cell group-description">${description}</td>
                         <td class="tiny-centered-cell">${group.membersIds.length}</td>
-                        <td class="centered-cell"" style="min-width: 205px;">
+                        <td class="centered-cell" id="group-options-container" style="min-width: 205px !important;">
                             <a href="#assign-${group.groupId}" class="icon-list group-assign"><img src="/icons/assign-users.png" title="Przypisz użytkowników"/></a>
                             <a href="#details-${group.groupId}" class="icon-list group-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
                             <a href="#edit-${group.groupId}" class="icon-list group-edit"><img src="/icons/edit.png" title="Edytuj"/></a>

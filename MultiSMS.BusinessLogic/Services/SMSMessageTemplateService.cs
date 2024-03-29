@@ -50,12 +50,12 @@ namespace MultiSMS.BusinessLogic.Services
             return (paginatedList, hasMorePages);
         }
 
-        public async Task<List<SMSMessageTemplate>> GetTemplatesBySearchPhrase(string searchPhrase)
+        public async Task<List<SMSMessageTemplate>> GetTemplatesBySearchPhraseAsync(string searchPhrase)
         {
             return await _repository.GetAllEntries().Where(t => 
-            t.TemplateName.ContainsCaseInsensitive(searchPhrase) ||
-            (t.TemplateDescription.IsNullOrEmpty() ? "Brak opisu" : t.TemplateDescription!).ContainsCaseInsensitive(searchPhrase) ||
-            t.TemplateContent.ContainsCaseInsensitive(searchPhrase)).ToListAsync();
+            t.TemplateName.ToLower().Contains(searchPhrase) ||
+            (t.TemplateDescription == null || t.TemplateDescription.Equals(string.Empty) ? "Brak opisu" : t.TemplateDescription!).ToLower().Contains(searchPhrase) ||
+            t.TemplateContent.ToLower().Contains(searchPhrase)).ToListAsync();
         }
     }
 }

@@ -39,13 +39,13 @@ namespace MultiSMS.BusinessLogic.Services
             return (paginatedList, hasMorePages);
         }
 
-        public async Task<List<Log>> GetLogsBySearchPhrase(string searchPhrase)
+        public async Task<List<Log>> GetLogsBySearchPhraseAsync(string searchPhrase)
         {
             return await _logRepository.GetAllEntries().Where(l =>
-            l.LogType.ContainsCaseInsensitive(searchPhrase) ||
-            l.LogMessage.ContainsCaseInsensitive(searchPhrase) ||
-            l.LogSource.ContainsCaseInsensitive(searchPhrase) ||
-            l.LogCreationDate.ToString().ContainsCaseInsensitive(searchPhrase)).ToListAsync();
+            l.LogType.ToLower().Contains(searchPhrase) ||
+            l.LogMessage.ToLower().Contains(searchPhrase) ||
+            l.LogSource.ToLower().Contains(searchPhrase) ||
+            l.LogCreationDate.ToString().Contains(searchPhrase)).ToListAsync();
         }
     }
 }

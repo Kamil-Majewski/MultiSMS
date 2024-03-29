@@ -60,11 +60,11 @@ namespace MultiSMS.BusinessLogic.Services
             return (paginatedList, hasMorePages);
         }
 
-        public async Task<List<Group>> GetGroupsBySearchPhrase(string searchPhrase)
+        public async Task<List<Group>> GetGroupsBySearchPhraseAsync(string searchPhrase)
         {
             return await _groupRepository.GetAllEntries().Where(g =>
-            g.GroupName.ContainsCaseInsensitive(searchPhrase) ||
-            (g.GroupDescription.IsNullOrEmpty() ? "Brak opisu" : g.GroupDescription!).ContainsCaseInsensitive(searchPhrase)).ToListAsync();
+            g.GroupName.ToLower().Contains(searchPhrase) ||
+            (g.GroupDescription == null || g.GroupDescription.Equals(string.Empty) ? "Brak opisu" : g.GroupDescription!).ToLower().Contains(searchPhrase)).ToListAsync();
         }
     }
 }

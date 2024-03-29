@@ -613,9 +613,9 @@
                     <div class="list-header-left">
                         <button class="add-new-button violet-button" type="button" onclick="OpenCreateGroupWindow()">Dodaj nową</button>
                     </div>
-                    <div class="list-search-bar d-flex">
+                    <form class="list-search-bar d-flex" id="search-for-groups">
                         <input class="search-for group-search" placeholder="Wyszukaj grupę" />
-                    </div>
+                    </form>
                 </div>
                 <div class="list-content">
                     <div class="table-responsive">
@@ -715,7 +715,7 @@
                     </div>
                 </div>
                 <div class="list-content">
-                    <div class="table-responsive">
+                    <div class="table-responsive" style="max-height: 42vh;">
                         <table class="group-assign-contact-list table table-borderless" id="group-assign-contact-list-table">
                             <thead>
                                 <tr>
@@ -1655,27 +1655,21 @@
 
         OnSubmitFilterContactsTable("#search-for-contacts", ".contact-search", "#contacts-table")
 
-        // OnInputFilterTable(".template-search", "#template-table");
-
         // OnInputFilterTable(".search-for-group-for-sms", "#choose-group-for-sms-table");
 
         // OnInputFilterTable(".search-for-template-for-sms", "#choose-template-for-sms-table");
 
-        // OnInputFilterTable(".contact-search", "#contacts-table");
+        OnSubmitFilterGroupsTable("#search-for-groups", ".group-search", "#group-table");
 
-        // OnInputFilterTable(".group-search", "#group-table");
-
-        // OnInputFilterTable(".import-contact-search", "#added-contacts-table");
-
-        // OnInputFilterTable(".group-search-for-user", "#group-assign-contact-list-table");
+        OnInputFilterTable(".group-search-for-user", "#group-assign-contact-list-table");
 
         // OnInputFilterTable(".log-search", "#log-table");
 
-        // OnInputFilterTable(".import-contact-search", "#log-table");
+        OnInputFilterTable(".import-contact-search", "#added-contacts-table");
 
-        // OnInputFilterTable(".import-contact-search", "#repeated-contacts-table");
+        OnInputFilterTable(".import-contact-search", "#repeated-contacts-table");
 
-        // OnInputFilterTable(".import-contact-search", "#invalid-contacts-table");
+        OnInputFilterTable(".import-contact-search", "#invalid-contacts-table");
 
 
         $("#ContactPostalNumber").on('input', function () {

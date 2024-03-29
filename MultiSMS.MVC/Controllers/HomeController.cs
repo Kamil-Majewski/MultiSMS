@@ -169,7 +169,7 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTemplatesBySeachPhrase(string searchPhrase)
         {
-            return Json(await _smsTemplateService.GetTemplatesBySearchPhrase(searchPhrase));
+            return Json(await _smsTemplateService.GetTemplatesBySearchPhraseAsync(searchPhrase));
         }
 
             #endregion
@@ -336,12 +336,12 @@ namespace MultiSMS.MVC.Controllers
             };
 
             var filtereContacts = contacts.Where(e =>
-            e.Name.ContainsCaseInsensitive(searchPhrase) ||
-            e.Surname.ContainsCaseInsensitive(searchPhrase) ||
-            (e.Email.IsNullOrEmpty() ? "Brak danych" : e.Email!).ContainsCaseInsensitive(searchPhrase) ||
-            e.PhoneNumber.ContainsCaseInsensitive(searchPhrase) ||
-            (e.IsActive ? "Aktywny" : "Nieaktywny").ContainsCaseInsensitive(searchPhrase) ||
-            e.EmployeeGroupNames.Any(g => g.ContainsCaseInsensitive(searchPhrase))).ToList();
+            e.Name.ToLower().Contains(searchPhrase) ||
+            e.Surname.ToLower().Contains(searchPhrase) ||
+            (e.Email == null || e.Email.Equals(string.Empty) ? "Brak danych" : e.Email!).ToLower().Contains(searchPhrase) ||
+            e.PhoneNumber.ToLower().Contains(searchPhrase) ||
+            (e.IsActive ? "Aktywny" : "Nieaktywny").ToLower().Contains(searchPhrase) ||
+            e.EmployeeGroupNames.Any(g => g.ToLower().Contains(searchPhrase))).ToList();
 
             return Json(filtereContacts);
 
@@ -507,9 +507,16 @@ namespace MultiSMS.MVC.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> GetGroupsBySeachPhrase(string searchPhrase)
+        public async Task<IActionResult> GetGroupsBySearchPhrase(string searchPhrase)
         {
-            return Json(await _groupService.GetGroupsBySearchPhrase(searchPhrase));
+            var filteredGroups = await _groupService.GetGroupsBySearchPhraseAsync(searchPhrase);
+
+            foreach (var group in filteredGroups)
+            {
+                group.MembersIds = await _employeeGroupService.GetAllEmployeesIdsForGroupListAsync(group.GroupId);
+            }
+
+            return Json(filteredGroups);
         }
 
         #endregion
@@ -785,7 +792,7 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> GetLogsBySeachPhrase(string searchPhrase)
         {
-            return Json(await _logService.GetLogsBySearchPhrase(searchPhrase));
+            return Json(await _logService.GetLogsBySearchPhraseAsync(searchPhrase));
         }
 
         #endregion

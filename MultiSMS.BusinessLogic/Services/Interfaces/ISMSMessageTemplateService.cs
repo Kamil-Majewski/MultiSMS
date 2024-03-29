@@ -6,6 +6,6 @@ namespace MultiSMS.BusinessLogic.Services.Interfaces
     {
         Task<SMSMessageTemplate> GetTemplateByNameAsync(string name);
         Task<(List<SMSMessageTemplate>, bool)> PaginateTemplateDataAsync(int firstId, int lastId, int pageSize, bool? moveForward);
-        Task<List<SMSMessageTemplate>> GetTemplatesBySearchPhrase(string searchPhrase);
+        Task<List<SMSMessageTemplate>> GetTemplatesBySearchPhraseAsync(string searchPhrase);
     }
 }
