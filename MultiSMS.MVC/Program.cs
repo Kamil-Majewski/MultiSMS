@@ -10,6 +10,7 @@ using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.MVC.Models;
 using MultiSMS.MVC.Areas;
 using MultiSMS.MVC.Middlewares;
+using MultiSMS.MVC.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,11 +40,15 @@ builder.Services.AddDefaultIdentity<Administrator>(options => options.SignIn.Req
     .AddDefaultTokenProviders();
 
 builder.Services.InitializeInfrastructureDependencies();
+builder.Services.AddSingleton<IProgressRelay, ProgressRelay>();
 builder.Services.InitializeBusinessLogicDependencies();
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddSignalR();
 
 var app = builder.Build();
+
+app.MapHub<ProgressHub>("/progressHub");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

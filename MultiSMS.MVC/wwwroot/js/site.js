@@ -69,12 +69,12 @@ function OnSubmitFilterTemplatesTable(formIdentifiaction, searchBarIdentificatio
 
         if (searchPhrase == "") {
 
-            templateNextButtonContainer.show();
-            templatePreviousButtonContainer.show();
-
             var firstId = $(tableIdentification).attr("first-id");
 
-            PaginateTemplatesAndPopulateTable(firstId, null, 11, null)
+            PaginateTemplatesAndPopulateTable(firstId, null, 11, null);
+
+            templateNextButtonContainer.show();
+            templatePreviousButtonContainer.show();
             return;
         }
 
@@ -136,7 +136,7 @@ function OnSubmitFilterContactsTable(formIdentifiaction, searchBarIdentification
 
             var firstId = $(tableIdentification).attr("first-id");
 
-            PaginateContactsAndPopulateTable(firstId, null, 11, null)
+            PaginateContactsAndPopulateTable(firstId, null, 11, null);
 
             contactNextButtonContainer.show();
             contactPreviousButtonContainer.show();
@@ -207,7 +207,7 @@ function OnSubmitFilterGroupsTable(formIdentifiaction, searchBarIdentification, 
 
             var firstId = $(tableIdentification).attr("first-id");
 
-            PaginateGroupsAndPopulateTable(firstId, null, 11, null)
+            PaginateGroupsAndPopulateTable(firstId, null, 11, null);
 
             groupNextButtonContainer.show();
             groupPreviousButtonContainer.show();
@@ -276,7 +276,7 @@ function OnSubmitFilterLogsTable(formIdentifiaction, searchBarIdentification, ta
 
             var firstId = $(tableIdentification).attr("first-id");
 
-            PaginateLogsAndPopulateTable(firstId, null, 11, null)
+            PaginateLogsAndPopulateTable(firstId, null, 11, null);
 
             logNextButtonContainer.show();
             logPreviousButtonContainer.show();

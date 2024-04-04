@@ -17,14 +17,16 @@ namespace MultiSMS.BusinessLogic.Services
         private readonly IGroupRepository _groupRepository;
         private readonly IEmployeeGroupRepository _employeeGroupRepository;
         private readonly IPathProvider _pathProvider;
+        private readonly IProgressRelay _progressRelay;
 
 
-        public ImportExportEmployeesService(IEmployeeRepository employeeRepository, IGroupRepository groupRepository, IEmployeeGroupRepository employeeGroupRepository, IPathProvider pathProvider)
+        public ImportExportEmployeesService(IEmployeeRepository employeeRepository, IGroupRepository groupRepository, IEmployeeGroupRepository employeeGroupRepository, IPathProvider pathProvider, IProgressRelay progressRelay)
         {
             _employeeRepository = employeeRepository;
             _groupRepository = groupRepository;
             _employeeGroupRepository = employeeGroupRepository;
             _pathProvider = pathProvider;
+            _progressRelay = progressRelay;
 
         }
 
@@ -51,7 +53,7 @@ namespace MultiSMS.BusinessLogic.Services
         public async Task<ImportResult> ImportContactsAsync(IFormFile file)
         {
             string[] requiredHeaders = { "osoba", "tel", "instytucja", "grupa" };
-
+            int rows = 0;
             string[] fileHeaders;
 
             using var memoryStream = new MemoryStream(new byte[file.Length]);
@@ -64,6 +66,11 @@ namespace MultiSMS.BusinessLogic.Services
                 csvReader.Read();
                 csvReader.ReadHeader();
                 fileHeaders = csvReader.HeaderRecord.Select(f => f.ToLower()).ToArray();
+
+                while (csvReader.Read())
+                {
+                    rows++;
+                }
             }
 
             if (requiredHeaders.Except(fileHeaders).Any())
@@ -76,16 +83,16 @@ namespace MultiSMS.BusinessLogic.Services
                 }
                 else
                 {
-                    return await ImportContactsCsvByTypeAsync(file, "new");
+                    return await ImportContactsCsvByTypeAsync(file, rows, "new");
                 }
             }
             else
             {
-                return await ImportContactsCsvByTypeAsync(file, "old");
+                return await ImportContactsCsvByTypeAsync(file, rows, "old");
             }
         }
 
-        public async Task<ImportResult> ImportContactsCsvByTypeAsync(IFormFile file, string type)
+        public async Task<ImportResult> ImportContactsCsvByTypeAsync(IFormFile file, int totalRows, string type)
         {
             var phoneNumbersInDb = _employeeRepository.GetAllEntries().Select(e => e.PhoneNumber);
             List<Employee> allRecords = new List<Employee>();
@@ -93,6 +100,7 @@ namespace MultiSMS.BusinessLogic.Services
             List<Employee> validRecords = new List<Employee>();
             List<Employee> invalidRecords = new List<Employee>();
             List<string> groupIds = new List<string>();
+            var processedRows = 0;
 
             using var memoryStream = new MemoryStream(new byte[file.Length]);
             await file.CopyToAsync(memoryStream);
@@ -147,6 +155,11 @@ namespace MultiSMS.BusinessLogic.Services
                     }
 
                     allRecords.Add(record);
+                    processedRows++;
+
+                    int progress = (int)((double) processedRows / totalRows * 70);
+
+                    await _progressRelay.RelayProgressAsync("ImportContactsProgress", progress.ToString());
                 }
             }
 
@@ -155,6 +168,7 @@ namespace MultiSMS.BusinessLogic.Services
 
             if (addedEmployees.Count() == 0)
             {
+                await _progressRelay.RelayProgressAsync("ImportContactsProgress", "100");
                 return new ImportResult { ImportStatus = "OK", ImportMessage = "Brak nowych kontaktów w pliku csv", RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords };
             }
 
@@ -162,7 +176,10 @@ namespace MultiSMS.BusinessLogic.Services
             var nonExistentGroupIds = new List<List<string>>();
             var anyFailedAssigns = false;
 
-            for (int i = 0; i < addedEmployeesList.Count(); i++)
+            processedRows = 0;
+            var addedEmployeesCount = addedEmployeesList.Count();
+
+            for (int i = 0; i < addedEmployeesCount; i++)
             {
                 var employeeId = addedEmployeesList[i].EmployeeId;
                 var indexOfAddedEmployeeInRecords = allRecords.IndexOf(addedEmployeesList[i]);
@@ -193,14 +210,20 @@ namespace MultiSMS.BusinessLogic.Services
                         }
                     }
                 }
+                processedRows++;
+                int progress = 70 + (processedRows / addedEmployeesCount * 25);
+
+                await _progressRelay.RelayProgressAsync("ImportContactsProgress", progress.ToString());
             }
 
             if (anyFailedAssigns)
             {
+                await _progressRelay.RelayProgressAsync("ImportContactsProgress", "100");
                 return new ImportResult { ImportStatus = "Partial Success", ImportMessage = "Dodano nowe kontakty, ale nie wszystkie grupy były prawidłowe.", AddedEmployees = addedEmployees, RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords, NonExistantGroupIds = nonExistentGroupIds };
             }
             else
             {
+                await _progressRelay.RelayProgressAsync("ImportContactsProgress", "100");
                 return new ImportResult { ImportStatus = "Success", ImportMessage = "Poprawnie dodano nowe kontakty i przypisano je do grup.", AddedEmployees = addedEmployees, RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords };
             }
         }
