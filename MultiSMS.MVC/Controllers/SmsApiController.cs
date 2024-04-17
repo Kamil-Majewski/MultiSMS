@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.DotNet.Scaffolding.Shared.CodeModifier.CodeChange;
 using Microsoft.Extensions.Options;
 using MultiSMS.BusinessLogic.DTO;
 using MultiSMS.BusinessLogic.Extensions;
@@ -11,6 +13,7 @@ using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Entities.ServerSms;
 using MultiSMS.Interface.Entities.SmsApi;
 using Newtonsoft.Json;
+using System.Runtime.InteropServices;
 
 namespace MultiSMS.MVC.Controllers
 {
@@ -44,7 +47,7 @@ namespace MultiSMS.MVC.Controllers
             _apiSettingsService = apiSettingsService;
         }
 
-        private async Task<IActionResult> SendSmsMessageThroughServerSMS(string chosenGroupName, Group chosenGroup, int chosenGroupId, string additionalInfo, string? additionalPhoneNumbers, int adminId, AdministratorDTO admin, string phoneNumbersString, string text, Dictionary<string, string> data, ApiSettings activeApiSettings)
+        private async Task<object> SendSmsMessageThroughServerSMS(string chosenGroupName, Group chosenGroup, int chosenGroupId, string additionalInfo, string? additionalPhoneNumbers, int adminId, AdministratorDTO admin, string phoneNumbersString, string text, Dictionary<string, string> data, ApiSettings activeApiSettings)
         {
             _smsContext.SetSmsStrategy(new SendSmsTroughServerSms(_serverSmsSettings, _apiSettingsService));
             var response = await _smsContext.SendSMSAsync(phoneNumbersString, text, data);
@@ -96,7 +99,7 @@ namespace MultiSMS.MVC.Controllers
                         })
                 });
 
-                return Json(new { Status = successResponse.Success, Queued = successResponse.Queued, Unsent = successResponse.Unsent });
+                return (successResponse.Success, successResponse.Queued, successResponse.Unsent);
             }
             catch (JsonException)
             {
@@ -137,7 +140,7 @@ namespace MultiSMS.MVC.Controllers
                             })
                     });
 
-                    return Json(new { Status = "failed", Code = errorResponse.Error.Code, Message = errorResponse.Error.Message });
+                    return ("failed", errorResponse.Error.Code, errorResponse.Error.Message);
                 }
                 catch (JsonException)
                 {
@@ -146,7 +149,7 @@ namespace MultiSMS.MVC.Controllers
             }
         }
 
-        private async Task<IActionResult> SendSmsMessageThroughSmsApi(string chosenGroupName, Group chosenGroup, int chosenGroupId, string additionalInfo, string? additionalPhoneNumbers, int adminId, AdministratorDTO admin, string phoneNumbersString, string text, Dictionary<string, string> data, ApiSettings activeApiSettings)
+        private async Task<object> SendSmsMessageThroughSmsApi(string chosenGroupName, Group chosenGroup, int chosenGroupId, string additionalInfo, string? additionalPhoneNumbers, int adminId, AdministratorDTO admin, string phoneNumbersString, string text, Dictionary<string, string> data, ApiSettings activeApiSettings)
         {
             _smsContext.SetSmsStrategy(new SendSmsTroughSmsApi(_smsApiSettings, _apiSettingsService));
             var response = await _smsContext.SendSMSAsync(phoneNumbersString, text, data);
@@ -199,7 +202,10 @@ namespace MultiSMS.MVC.Controllers
                         })
                 });
 
-                return Json(new { Status = "success", Queued = successResponse.Details.Count(d => d.Status == "QUEUE"), Unsent = successResponse.Details.Count(d => d.Status != "QUEUE") });
+                var queued = successResponse.Details.Count(d => d.Status == "QUEUE");
+                var unsent = successResponse.Details.Count(d => d.Status != "QUEUE");
+
+                return (true, queued, unsent);
             }
             catch (JsonException)
             {
@@ -240,7 +246,8 @@ namespace MultiSMS.MVC.Controllers
                             })
                     });
 
-                    return Json(new { Status = "failed", Code = errorResponse.ErrorCode, Message = errorResponse.ErrorMessage });
+                    return ("failed", errorResponse.ErrorCode, errorResponse.ErrorMessage);
+
                 }
                 catch (JsonException)
                 {
@@ -268,31 +275,67 @@ namespace MultiSMS.MVC.Controllers
 
             var groupPhoneNumbers = await _employeeGroupService.GetAllActiveEmployeesPhoneNumbersForGroupListAsync(chosenGroupId);
 
-            if (additionalPhoneNumbers != null)
+            if (!string.IsNullOrEmpty(additionalPhoneNumbers))
             {
                 var additionalNumbers = additionalPhoneNumbers.Split(',').ToList();
-
-                if (additionalNumbers.Count != 0)
-                {
-                    groupPhoneNumbers.AddRange(additionalNumbers);
-                }
+                groupPhoneNumbers.AddRange(additionalNumbers);
             }
 
             var data = new Dictionary<string, string>();
+            var queued = 0;
+            var unsent = 0;
+            var listOfErrors = new List<string>();
 
-            var phoneNumbersString = string.Join(',', groupPhoneNumbers);
-
-            if (activeApiSettings.ApiName == "ServerSms")
+            for (int i = 0; i < groupPhoneNumbers.Count; i += 200)
             {
-                return await SendSmsMessageThroughServerSMS(chosenGroupName, chosenGroup, chosenGroupId, additionalInfo, additionalPhoneNumbers, adminId, admin, phoneNumbersString, text, data, activeApiSettings);
+                var chunk = groupPhoneNumbers.GetRange(i, Math.Min(200, groupPhoneNumbers.Count - i));
+                var phoneNumbersString = string.Join(',', chunk);
+
+                var result = activeApiSettings.ApiName == "ServerSms" ? await SendSmsMessageThroughServerSMS(chosenGroupName, chosenGroup, chosenGroupId, additionalInfo, additionalPhoneNumbers, adminId, admin, phoneNumbersString, text, data, activeApiSettings) : await SendSmsMessageThroughSmsApi(chosenGroupName, chosenGroup, chosenGroupId, additionalInfo, additionalPhoneNumbers, adminId, admin, phoneNumbersString, text, data, activeApiSettings);
+
+                if (groupPhoneNumbers.Count > 200)
+                {
+                    if (result is ValueTuple<bool, int, int> successTuple)
+                    {
+                        queued += successTuple.Item2;
+                        unsent += successTuple.Item3;
+                    }
+                    else if (result is ValueTuple<string, int, string> failedTuple)
+                    {
+                        listOfErrors.Add(failedTuple.Item3);
+                    }
+                    else
+                    {
+                        throw new Exception("Unknown tuple type");
+                    }
+                }
+                else
+                {
+                    if (result is ValueTuple<bool, int, int> successTuple)
+                    {
+                        return Json(new { Status = successTuple.Item1, Queued = successTuple.Item2, Unsent = successTuple.Item3 });
+                    }
+                    else if (result is ValueTuple<string, int, string> failedTuple)
+                    {
+                        return Json(new { Status = failedTuple.Item1, Code = failedTuple.Item2, Message = failedTuple.Item3 });
+                    }
+                    else
+                    {
+                        throw new Exception("Unknown tuple type");
+                    }
+                }
             }
-            else if (activeApiSettings.ApiName == "SmsApi")
+            if (queued == 0 && unsent == 0)
             {
-                return await SendSmsMessageThroughSmsApi(chosenGroupName, chosenGroup, chosenGroupId, additionalInfo, additionalPhoneNumbers, adminId, admin, phoneNumbersString, text, data, activeApiSettings);
+                return Json(new { Status = "Multiple-Failure", Errors = listOfErrors.Distinct() });
+            }
+            else if (listOfErrors.Count == 0)
+            {
+                return Json(new { Status = "Multiple-Success", Queued = queued, Unsent = unsent });
             }
             else
             {
-                throw new Exception("Wrong API name was received when fetching active API settings");
+                return Json(new { Status = "Multiple-Partial", Queued = queued, Unsent = unsent, Errors = listOfErrors.Distinct() });
             }
         }
     }
