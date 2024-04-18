@@ -2518,3 +2518,28 @@ function GoBackToGroupListFromAssign() {
     $(".groups-options-container-assign").hide();
     $(".groups-list-container").show();
 }
+
+function setupWatcher(targetElement, watchedClass, callback) {
+    const observer = new MutationObserver((mutationList, observer) => {
+        for (let mutation of mutationList) {
+            if (mutation.type == "attributes" && mutation.attributeName == "class" && targetElement.classList.contains(watchedClass)) {
+                callback();
+            }
+        }
+    })
+
+    observer.observe(targetElement, { attributes: true });
+    return observer;
+}
+
+function setupClassRemovalWatcher(targetElement, classToRemove, callback) {
+    const observer = new MutationObserver((mutationsList, observer) => {
+        for (let mutation of mutationsList) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'class' && !targetElement.classList.contains(classToRemove)) {
+                callback();
+            }
+        }
+    })
+    observer.observe(targetElement, { attributes: true });
+    return observer;
+}

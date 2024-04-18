@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.DotNet.Scaffolding.Shared.CodeModifier.CodeChange;
 using Microsoft.Extensions.Options;
 using MultiSMS.BusinessLogic.DTO;
 using MultiSMS.BusinessLogic.Extensions;
@@ -13,7 +11,6 @@ using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Entities.ServerSms;
 using MultiSMS.Interface.Entities.SmsApi;
 using Newtonsoft.Json;
-using System.Runtime.InteropServices;
 
 namespace MultiSMS.MVC.Controllers
 {
@@ -306,7 +303,7 @@ namespace MultiSMS.MVC.Controllers
                     }
                     else
                     {
-                        throw new Exception("Unknown tuple type");
+                        throw new Exception("Unknown tuple type"); 
                     }
                 }
                 else

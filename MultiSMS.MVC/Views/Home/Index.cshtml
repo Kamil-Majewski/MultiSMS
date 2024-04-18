@@ -992,7 +992,19 @@
             CalculateHeaderWidthAndToolbarHeight();
 
         });
+        const elementToWatch = document.getElementById("settings-tab");
 
+        const settingsClickedObserver = setupWatcher(elementToWatch, "active", () => {
+            const tabChangedObserver = setupClassRemovalWatcher(elementToWatch, "active", () => {
+                $("#settings-form").empty();
+                $("#settings-container").hide();
+                $("#settings-password").show();
+                $("#status-message-settings").hide();
+
+                settingsClickedObserver.observe(elementToWatch, { attributes: true });
+            });
+            settingsClickedObserver.disconnect();
+        });
 
         const resizeObserver = new ResizeObserver(entries => {
             for (const entry of entries) {
