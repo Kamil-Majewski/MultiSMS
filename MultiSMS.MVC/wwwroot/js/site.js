@@ -189,6 +189,77 @@ function OnSubmitFilterContactsTable(formIdentifiaction, searchBarIdentification
     });
 }
 
+function OnSubmitFilterAssignContactsTable(formIdentifiaction, searchBarIdentification, tableIdentification) {
+    $(formIdentifiaction).on('submit', function (e) {
+        e.preventDefault();
+
+        const contactPageCounter = $("#contact-assign-page-counter");
+        const contactNextButtonContainer = $("#contacts-assign-list-next-page-button");
+        const contactPreviousButtonContainer = $("#contact-assign-previous-button-container");
+
+        contactPageCounter.hide();
+        contactNextButtonContainer.hide();
+        contactPreviousButtonContainer.hide();
+
+        var searchPhrase = $(searchBarIdentification).val().toLowerCase();
+
+        if (searchPhrase == "") {
+
+            var firstId = $(tableIdentification).attr("first-id");
+
+            PaginateAssignContactsAndPopulateTable(firstId, null, 7, null);
+
+            contactNextButtonContainer.show();
+            contactPreviousButtonContainer.show();
+
+            return;
+        }
+
+        $.ajax({
+            url: `/Home/GetContactsBySearchPhrase`,
+            type: 'GET',
+            contentType: 'application/json',
+            data: { searchPhrase },
+            success: function (listOfContacts) {
+                const contactListBody = $(`${tableIdentification} tbody`);
+
+                contactListBody.empty();
+
+                listOfContacts.forEach(contact => {
+                    var newRow = `
+                        <tr>
+                            <td class="tiny-cell contact-name">${contact.name}</td>
+                            <td class="tiny-cell contact-surname">${contact.surname}</td>
+                            <td class="tiny-cell contact-phone">${contact.phoneNumber}</td>
+                            <td class="tiny-centered-cell contact-activity">
+                                <span class="${contact.isActive ? "active-pill" : "inactive-pill"}">${contact.isActive ? "Aktywny" : "Nieaktywny"}</span>
+                            </td>
+                            <td class="centered-cell contact-groups">${(contact.employeeGroupNames == null || contact.employeeGroupNames.length == 0) ? "Nie przypisano" : contact.employeeGroupNames.join(", ")}</td>         
+                            <td class="tiny-centered-cell">
+                    `;
+
+                    if (groupAssignMembersIds.includes(contact.employeeId)) {
+
+                        newRow += `<a href="#unassign-${contact.employeeId}-${grouAssignGroupId}" class="icon-list contact-unassign"><img src="/icons/unassign-user.png" title="Wypisz z grupy"/></a>
+                                        </td>
+                                        </tr>`;
+                    }
+                    else {
+                        newRow += `<a href="#assign-${contact.employeeId}-${grouAssignGroupId}" class="icon-list contact-assign"><img src="/icons/assign-user.png" title="Dopisz do grupy" /></a>
+                                        </td>
+                                        </tr>`;
+                    }
+
+                    contactListBody.append(newRow);
+                });
+            },
+            error: function (error) {
+                console.error(error.responseText);
+            }
+        });
+    });
+}
+
 function OnSubmitFilterGroupsTable(formIdentifiaction, searchBarIdentification, tableIdentification) {
     $(formIdentifiaction).on('submit', function (e) {
         e.preventDefault();
@@ -1936,6 +2007,96 @@ function PaginateContactsAndPopulateTable(firstId, lastId, pageSize, moveForward
     });
 }
 
+
+
+function PaginateAssignContactsAndPopulateTable(firstId, lastId, pageSize, moveForward) {
+    $.ajax({
+        url: 'Home/PaginateContacts',
+        type: 'GET',
+        data: { firstId, lastId, pageSize, moveForward },
+        contentType: 'application/json',
+        success: function (response) {
+            const { paginatedContacts, hasMorePages } = response;
+            const contactListBody = $('#group-assign-contact-list-table tbody');
+            const contactNextButtonContainer = $("#contact-assign-next-button-container");
+            const contactPreviousButtonContainer = $("#contact-assign-previous-button-container");
+            const contactPageCounter = $("#contact-assign-page-counter");
+
+            contactPageCounter.hide();
+            contactListBody.empty();
+            contactPreviousButtonContainer.empty();
+            contactNextButtonContainer.empty();
+
+            paginatedContacts.forEach(contact => {
+
+                var groupNames = contact.employeeGroupNames;
+
+                groupNames = (groupNames == null || groupNames.length == 0) ? "Nie przypisano" : groupNames.join(", ")
+                var isActiveRow = contact.isActive ? '<td class="tiny-centered-cell contact-activity"><span class="active-pill">Aktywny<span></td>' : '<td class="tiny-centered-cell contact-activity"><span class="inactive-pill">Nieaktywny<span></td>'
+
+                var newRow = `
+                    <tr>
+                        <td class="tiny-cell contact-name">${contact.name}</td>
+                        <td class="tiny-cell contact-surname">${contact.surname}</td>
+                        <td class="tiny-cell contact-phone">${contact.phoneNumber}</td>
+                        ${isActiveRow}
+                        <td class="centered-cell contact-groups">${groupNames}</td>
+                        <td class="tiny-centered-cell">
+                `;
+
+                if (groupAssignMembersIds.includes(contact.employeeId)) {
+
+                    newRow += `<a href="#unassign-${contact.employeeId}-${grouAssignGroupId}" class="icon-list contact-unassign"><img src="/icons/unassign-user.png" title="Wypisz z grupy"/></a>
+                                        </td>
+                                        </tr>`;
+                }
+                else {
+                    newRow += `<a href="#assign-${contact.employeeId}-${grouAssignGroupId}" class="icon-list contact-assign"><img src="/icons/assign-user.png" title="Dopisz do grupy" /></a>
+                                        </td>
+                                        </tr>`;
+                }
+
+                contactListBody.append(newRow);
+            });
+
+            if (hasMorePages) {
+                contactNextButtonContainer.append(`
+                    <button class="arrow-button" id="contacts-assign-list-next-page-button" type="button">
+                        <span class="list-arrow-forward">
+                            <img src="/icons/arrow-next.png" />
+                        </span>
+                    </button>`
+                );
+                contactPageCounter.show();
+            }
+
+            if (moveForward != null) {
+                const pageCounterValue = parseInt(contactPageCounter.html());
+                contactPageCounter.html(`${moveForward ? pageCounterValue + 1 : pageCounterValue - 1}`)
+            }
+
+            if (parseInt(contactPageCounter.html()) > 1) {
+                contactPreviousButtonContainer.append(`
+                    <button class="arrow-button" id="contacts-assign-list-previous-page-button" type="button">
+                        <span class="list-arrow-back">
+                            <img src="/icons/arrow-previous.png"/>
+                        </span>
+                    </button>
+                `);
+                contactPageCounter.show();
+            }
+
+            $('#group-assign-contact-list-table').attr("last-id", `${paginatedContacts[paginatedContacts.length - 1].employeeId}`);
+            $('#group-assign-contact-list-table').attr("first-id", `${paginatedContacts[0].employeeId}`);
+        },
+        error: function (error) {
+            console.error(error.responseText);
+        }
+    });
+}
+
+
+
 function FetchAllGroupsAndPopulateTable() {
     $.ajax({
         url: '/Home/FetchAllGroups',
@@ -2213,7 +2374,12 @@ function PopulateTableForChooseTemplateForSMS() {
     });
 }
 
+let groupAssignMembersIds;
+let groupAssignGroupId;
+
 function PopulateTablesForAssigningUsersToGroups(groupId) {
+    grouAssignGroupId = groupId;
+
     $.ajax({
         url: '/Home/GetGroupById',
         type: 'GET',
@@ -2221,6 +2387,8 @@ function PopulateTablesForAssigningUsersToGroups(groupId) {
 
         contentType: 'application/json',
         success: function (groupEntity) {
+
+            groupAssignMembersIds = groupEntity.membersIds;
 
             var groupDescription = groupEntity.groupDescription || "Brak opisu";
             $("#group-assign-chosen-group-table tbody").empty();
@@ -2234,42 +2402,70 @@ function PopulateTablesForAssigningUsersToGroups(groupId) {
             $('#group-assign-chosen-group-table').append(newRow);
 
             $.ajax({
-                url: '/Home/FetchAllContacts',
+                url: 'Home/PaginateContacts',
                 type: 'GET',
+                data: { firstId: null, lastId: 0, pageSize: 7, moveForward: true },
                 contentType: 'application/json',
-                success: function (listOfContacts) {
+                success: function (response) {
+                    const { paginatedContacts, hasMorePages } = response;
+                    const contactListBody = $('#group-assign-contact-list-table tbody');
+                    const contactNextButtonContainer = $("#contact-assign-next-button-container");
+                    const contactPreviousButtonContainer = $("#contact-assign-previous-button-container");
+                    const contactPageCounter = $("#contact-assign-page-counter");
 
-                    $('#group-assign-contact-list-table tbody').empty();
+                    contactPageCounter.hide();
+                    contactListBody.empty();
+                    contactPreviousButtonContainer.empty();
+                    contactNextButtonContainer.empty();
 
-                    $.each(listOfContacts, function (index, item) {
+                    paginatedContacts.forEach(contact => {
 
-                        var groupNames = item.employeeGroupNames;
+                        var groupNames = contact.employeeGroupNames;
 
-                        groupNames = (groupNames == null || groupNames.length === 0) ? "Nie przypisano" : groupNames.join(", ")
-                        var isActiveRow = item.isActive ? '<td class="tiny-centered-cell"><span class="active-pill">Aktywny<span></td>' : '<td class="tiny-centered-cell"><span class="inactive-pill">Nieaktywny<span></td>'
+                        groupNames = (groupNames == null || groupNames.length == 0) ? "Nie przypisano" : groupNames.join(", ")
+                        var isActiveRow = contact.isActive ? '<td class="tiny-centered-cell contact-activity"><span class="active-pill">Aktywny<span></td>' : '<td class="tiny-centered-cell contact-activity"><span class="inactive-pill">Nieaktywny<span></td>'
 
                         var newRow = `<tr>
-                                    <td class="tiny-cell">${item.name}</td>
-                                    <td class="tiny-cell">${item.surname}</td>
-                                    <td class="tiny-cell">${item.phoneNumber}</td>
-                                    ${isActiveRow}
-                                    <td class="centered-cell">${groupNames}</td>
-                                    <td class="tiny-centered-cell">`
+                        <td class="tiny-cell">${contact.name}</td>
+                        <td class="tiny-cell">${contact.surname}</td>
+                        <td class="tiny-cell">${contact.phoneNumber}</td>
+                        ${isActiveRow}
+                        <td class="centered-cell">${groupNames}</td>
+                        <td class="tiny-centered-cell">`
 
-                        if (groupEntity.membersIds.includes(item.employeeId)) {
+                        if (groupAssignMembersIds.includes(contact.employeeId)) {
 
-                            newRow += `<a href="#unassign-${item.employeeId}-${groupEntity.groupId}" class="icon-list contact-unassign"><img src="/icons/unassign-user.png" title="Wypisz z grupy"/></a>
+                            newRow += `<a href="#unassign-${contact.employeeId}-${groupEntity.groupId}" class="icon-list contact-unassign"><img src="/icons/unassign-user.png" title="Wypisz z grupy"/></a>
                                         </td>
                                         </tr>`;
                         }
                         else {
-                            newRow += `<a href="#assign-${item.employeeId}-${groupEntity.groupId}" class="icon-list contact-assign"><img src="/icons/assign-user.png" title="Dopisz do grupy" /></a>
+                            newRow += `<a href="#assign-${contact.employeeId}-${groupEntity.groupId}" class="icon-list contact-assign"><img src="/icons/assign-user.png" title="Dopisz do grupy" /></a>
                                         </td>
                                         </tr>`;
                         }
 
-                        $('#group-assign-contact-list-table tbody').append(newRow);
+                        contactListBody.append(newRow);
+
                     });
+
+                    const pageCounterValue = parseInt(contactPageCounter.html());
+                    contactPageCounter.html(`${pageCounterValue + 1}`)
+
+                    if (hasMorePages) {
+                        contactNextButtonContainer.append(`
+                            <button class="arrow-button" id="contacts-assign-list-next-page-button" type="button">
+                                <span class="list-arrow-forward">
+                                    <img src="/icons/arrow-next.png" />
+                                </span>
+                            </button>`
+                        );
+                        contactPageCounter.show();
+                    }
+
+                    $('#group-assign-contact-list-table').attr("last-id", `${paginatedContacts[paginatedContacts.length - 1].employeeId}`);
+                    $('#group-assign-contact-list-table').attr("first-id", `${paginatedContacts[0].employeeId}`);
+
                 },
                 error: function (error) {
                     console.error(error.responseText);
@@ -2514,6 +2710,9 @@ function GoBackToLogsList() {
 }
 
 function GoBackToGroupListFromAssign() {
+    $("#contact-assign-page-counter").html("0");
+    $(".group-search-for-user").val("");
+    $("#search-for-assingn-contacts").submit();
     FetchAllGroupsAndPopulateTable();
     $(".groups-options-container-assign").hide();
     $(".groups-list-container").show();

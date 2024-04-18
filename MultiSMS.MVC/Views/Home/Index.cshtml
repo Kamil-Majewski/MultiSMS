@@ -710,12 +710,12 @@
                 </div>
                 <div class="list-header">
                     <div></div>
-                    <div class="list-search-bar d-flex">
+                    <form class="list-search-bar d-flex" id="search-for-assingn-contacts">
                         <input class="search-for group-search-for-user" placeholder="Wyszukaj użytkownika" />
-                    </div>
+                    </form>
                 </div>
                 <div class="list-content">
-                    <div class="table-responsive" style="max-height: 42vh;">
+                    <div class="table-responsive" style="max-height: 38vh;">
                         <table class="group-assign-contact-list table table-borderless" id="group-assign-contact-list-table">
                             <thead>
                                 <tr>
@@ -730,6 +730,15 @@
                             <tbody>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+                <div class="list-footer" style="margin-top:15px; display:flex; align-items: center;">
+                    <div style="flex:1;" id="contact-assign-previous-button-container">
+                    </div>
+                    <div class="page-counter" style="flex:auto; text-align:center;">
+                        <span class="form-subtitle" id="contact-assign-page-counter" style="display:none;">0</span>
+                    </div>
+                    <div style="flex:1; display:flex; justify-content:right;" id="contact-assign-next-button-container">
                     </div>
                 </div>
             </div>
@@ -1226,6 +1235,18 @@
             debouncedPaginateContacts(firstId, null, 11, false);
         });
 
+        var debouncedPaginateAssignContacts = debounce(PaginateAssignContactsAndPopulateTable, 220);
+
+        $(document).on('click', '#contacts-assign-list-next-page-button', function () {
+            var lastId = $("#group-assign-contact-list-table").attr('last-id');
+            debouncedPaginateAssignContacts(null, lastId, 7, true);
+        });
+
+        $(document).on('click', '#contacts-assign-list-previous-page-button', function () {
+            var firstId = $("#group-assign-contact-list-table").attr('first-id');
+            debouncedPaginateAssignContacts(firstId, null, 7, false);
+        });
+
         var debouncedPaginateGroups = debounce(PaginateGroupsAndPopulateTable, 220);
 
         $(document).on('click', '#groups-list-next-page-button', function () {
@@ -1534,6 +1555,7 @@
             var assignContactIdGroupId = $(this).attr("href").split('-');
 
             debouncedAddUserToGroup(link, assignContactIdGroupId);
+            groupAssignMembersIds.push(parseInt(assignContactIdGroupId[1]));
             
         });
 
@@ -1545,6 +1567,10 @@
             var assignContactIdGroupId = $(this).attr("href").split('-');
 
             debouncedRemoveUserFromGroup(link, assignContactIdGroupId);
+
+            var contactIdInt = parseInt(assignContactIdGroupId[1]);
+            var indexOfContactId = groupAssignMembersIds.indexOf(contactIdInt);
+            groupAssignMembersIds.splice(indexOfContactId, 1);
         });
 
         $(document).on('submit', '#create-template-form', function (e) {
@@ -1696,13 +1722,13 @@
 
         OnSubmitFilterContactsTable("#search-for-contacts", ".contact-search", "#contacts-table")
 
-        // OnInputFilterTable(".search-for-group-for-sms", "#choose-group-for-sms-table");
+        OnInputFilterTable(".search-for-group-for-sms", "#choose-group-for-sms-table");
 
-        // OnInputFilterTable(".search-for-template-for-sms", "#choose-template-for-sms-table");
+        OnInputFilterTable(".search-for-template-for-sms", "#choose-template-for-sms-table");
 
         OnSubmitFilterGroupsTable("#search-for-groups", ".group-search", "#group-table");
 
-        OnInputFilterTable(".group-search-for-user", "#group-assign-contact-list-table");
+        OnSubmitFilterAssignContactsTable("#search-for-assingn-contacts", ".group-search-for-user", "#group-assign-contact-list-table");
 
         OnSubmitFilterLogsTable("#search-for-logs", ".log-search", "#log-table");
 
