@@ -727,7 +727,7 @@ function importContacts() {
     }
 
     function handleImportError(error) {
-        console.error(error.responseText);
+        console.error(error);
         $("#closeModal").show();
         $("#import-modal-content-text").text("Wystąpił niespodziewany błąd!");
         $("#import-modal-footer").addClass("justify-content-center");

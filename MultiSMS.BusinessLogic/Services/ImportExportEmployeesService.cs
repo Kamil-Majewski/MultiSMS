@@ -6,6 +6,7 @@ using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Repositories.Interfaces;
 using OfficeOpenXml;
+using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -50,18 +51,59 @@ namespace MultiSMS.BusinessLogic.Services
             return true;
         }
 
+        private string ParsePhoneNumber(string phoneNumber)
+        {
+            if(phoneNumber.Count() == 9)
+            {
+                return $"+48{phoneNumber}";
+            }
+            else if(phoneNumber.Count() == 11)
+            {
+                return $"+{phoneNumber}";
+            }
+            else
+            {
+                return phoneNumber;
+            }
+        }
+
+        private (string, string) GetNameAndSurname(string[] personField)
+        {
+            if (personField.Length == 1)
+            {
+                return(personField[0], "Nie podano");
+            }
+            else if (personField.Length == 2)
+            {
+                return(personField[0], personField[1]);
+            }
+            else if (personField.Length == 3)
+            {
+                return(personField[1], personField[2]);
+            }
+            else
+            {
+                return("Nieprawidłowa wartosć", "");
+            }
+        }
+
         public async Task<ImportResult> ImportContactsAsync(IFormFile file)
         {
             string[] requiredHeaders = { "osoba", "tel", "instytucja", "grupa" };
             int rows = 0;
             string[] fileHeaders;
 
+            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                Delimiter = ";",
+            };
+
             using var memoryStream = new MemoryStream(new byte[file.Length]);
             await file.CopyToAsync(memoryStream);
             memoryStream.Position = 0;
 
             using (var reader = new StreamReader(memoryStream))
-            using (var csvReader = new CsvReader(reader, CultureInfo.InvariantCulture))
+            using (var csvReader = new CsvReader(reader, config))
             {
                 csvReader.Read();
                 csvReader.ReadHeader();
@@ -75,16 +117,7 @@ namespace MultiSMS.BusinessLogic.Services
 
             if (requiredHeaders.Except(fileHeaders).Any())
             {
-                fileHeaders = fileHeaders[0].Split(";").ToArray();
-
-                if (requiredHeaders.Except(fileHeaders).Any())
-                {
-                    return new ImportResult { ImportStatus = "Failure", ImportMessage = "Struktura pliku .csv nie jest prawidłowa" };
-                }
-                else
-                {
-                    return await ImportContactsCsvByTypeAsync(file, rows, "new");
-                }
+                return await ImportContactsCsvByTypeAsync(file, rows, "new");
             }
             else
             {
@@ -109,7 +142,7 @@ namespace MultiSMS.BusinessLogic.Services
             var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
                 PrepareHeaderForMatch = args => args.Header.ToLowerInvariant(),
-                Delimiter = type == "new" ? ";" : ","
+                Delimiter = ";"
             };
 
             using (var reader = new StreamReader(memoryStream))
@@ -123,11 +156,16 @@ namespace MultiSMS.BusinessLogic.Services
                     groupIds.Add(csvReader.GetField<string>("grupa"));
                     var sanitizedPhoneNumber = Regex.Replace(csvReader.GetField<string>("tel"), @"\s+", "");
 
+                    var person = csvReader.GetField<string>("osoba").Split(" ");
+
+                    var (name, surname) = GetNameAndSurname(person);
+                    var phoneNumber = ParsePhoneNumber(sanitizedPhoneNumber);
+
                     var record = new Employee
                     {
-                        Name = csvReader.GetField<string>("osoba").Split(' ')[0],
-                        Surname = csvReader.GetField<string>("osoba").Split(' ')[1],
-                        PhoneNumber = Regex.Replace(sanitizedPhoneNumber, @"(\S{3})", "$1 ").Trim(),
+                        Name = name,
+                        Surname = surname,
+                        PhoneNumber = Regex.Replace(phoneNumber, @"(\S{3})", "$1 ").Trim(),
                         Department = csvReader.GetField<string>("instytucja"),
                         IsActive = true
                     };
