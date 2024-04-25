@@ -262,7 +262,7 @@ namespace MultiSMS.BusinessLogic.Services
             else
             {
                 await _progressRelay.RelayProgressAsync("ImportContactsProgress", "100");
-                return new ImportResult { ImportStatus = "Success", ImportMessage = "Poprawnie dodano nowe kontakty i przypisano je do grup.", AddedEmployees = addedEmployees, RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords };
+                return new ImportResult { ImportStatus = "Success", ImportMessage = "Poprawnie dodano nowe kontakty i przypisano je do grup.", AddedEmployees = addedEmployees, RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords, NonExistantGroupIds = nonExistentGroupIds };
             }
         }
 
