@@ -329,10 +329,8 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> GetContactsBySearchPhrase(string searchPhrase)
         {
             var contacts = await Task.FromResult(_employeeService.GetAllEntries());
-            foreach(var contact in contacts)
-            {
-                contact.EmployeeGroupNames = await _employeeGroupService.GetAllGroupNamesForEmployeeListAsync(contact.EmployeeId);
-            };
+
+            var dictionaryEmployeeIdGroupNames = _employeeGroupService.GetDictionaryOfEmployeeIdAndGroupNames();
 
             var filtereContacts = contacts.Where(e =>
             e.Name.ToLower().Contains(searchPhrase) ||
@@ -340,7 +338,12 @@ namespace MultiSMS.MVC.Controllers
             (e.Email == null || e.Email.Equals(string.Empty) ? "Brak danych" : e.Email!).ToLower().Contains(searchPhrase) ||
             e.PhoneNumber.ToLower().Contains(searchPhrase) ||
             (e.IsActive ? "Aktywny" : "Nieaktywny").ToLower().Contains(searchPhrase) ||
-            e.EmployeeGroupNames.Any(g => g.ToLower().Contains(searchPhrase))).ToList();
+            dictionaryEmployeeIdGroupNames[e.EmployeeId].Any(g => g.ToLower().Contains(searchPhrase))).ToList();
+
+            foreach(var contact in filtereContacts)
+            {
+                contact.EmployeeGroupNames = dictionaryEmployeeIdGroupNames[contact.EmployeeId].ToList();
+            }
 
             return Json(filtereContacts);
 

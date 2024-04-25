@@ -12,5 +12,6 @@ namespace MultiSMS.Interface.Repositories.Interfaces
         IQueryable<string> GetAllPhoneNumbersForGroupQueryable(int groupId);
         IQueryable<string> GetAllActiveEmployeesPhoneNumbersForGroupQueryable(int groupId);
         IQueryable<Employee> GetAllEmployeesForGroupQueryable(int groupId);
+        Dictionary<int, IEnumerable<string>> GetDictionaryOfEmployeeIdAndGroupNames();
     }
 }

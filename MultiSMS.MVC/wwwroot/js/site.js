@@ -2652,7 +2652,8 @@ function OpenChooseTemplateForSMS() {
 }
 
 function FinishBrowsingImportReport() {
-    FetchAllContactsAndPopulateTable();
+    var firstId = $("contacts-table").attr("first-id");
+    PaginateContactsAndPopulateTable(firstId, null, 11, null);
     $(".import-report-container").hide();
     $("#import-repeated-contacts-container").show();
     $("#import-invalid-contacts-container").show();
@@ -2713,7 +2714,8 @@ function GoBackToGroupListFromAssign() {
     $("#contact-assign-page-counter").html("0");
     $(".group-search-for-user").val("");
     $("#search-for-assingn-contacts").submit();
-    FetchAllGroupsAndPopulateTable();
+    var firstId = $("#group-table").attr("first-id")
+    PaginateGroupsAndPopulateTable(firstId, null, 11, null);
     $(".groups-options-container-assign").hide();
     $(".groups-list-container").show();
 }

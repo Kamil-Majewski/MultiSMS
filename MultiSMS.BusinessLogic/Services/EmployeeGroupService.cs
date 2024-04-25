@@ -53,5 +53,10 @@ namespace MultiSMS.BusinessLogic.Services
         {
             return await _repository.GetAllEmployeesForGroupQueryable(groupId).ToListAsync();
         }
+
+        public Dictionary<int, IEnumerable<string>> GetDictionaryOfEmployeeIdAndGroupNames()
+        {
+            return _repository.GetDictionaryOfEmployeeIdAndGroupNames();
+        }
     }
 }

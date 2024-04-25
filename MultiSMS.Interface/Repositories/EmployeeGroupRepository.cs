@@ -61,5 +61,17 @@ namespace MultiSMS.Interface.Repositories
         {
             return _dbContext.EmployeeGroups.Where(eg => eg.GroupId == groupId).Include(eg => eg.Employee).Select(e => e.Employee);
         }
+
+        public Dictionary<int, IEnumerable<string>> GetDictionaryOfEmployeeIdAndGroupNames()
+        {
+            var result = _dbContext.EmployeeGroups
+                .Include(eg => eg.Group)
+                .GroupBy(eg => eg.EmployeeId)
+                .ToDictionary(
+                    group => group.Key,
+                    group => group.Select(eg => eg.Group.GroupName));
+
+            return result;
+        }
     }
 }

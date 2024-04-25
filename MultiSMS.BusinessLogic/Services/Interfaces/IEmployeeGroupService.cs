@@ -12,5 +12,6 @@ namespace MultiSMS.BusinessLogic.Services.Interfaces
         Task<List<string>> GetAllGroupNamesForEmployeeListAsync(int employeeId);
         Task<List<string>> GetAllPhoneNumbersForGroupListAsync(int groupId);
         Task RemoveGroupMember(int groupId, int employeeId);
+        Dictionary<int, IEnumerable<string>> GetDictionaryOfEmployeeIdAndGroupNames();
     }
 }
