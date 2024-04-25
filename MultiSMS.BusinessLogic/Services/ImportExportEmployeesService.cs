@@ -179,7 +179,7 @@ namespace MultiSMS.BusinessLogic.Services
                         record.HQAddress = csvReader.GetField<string>("adres miejsca pracy");
                     }
 
-                    if (phoneNumbersInDb.Any(p => p == record.PhoneNumber))
+                    if (phoneNumbersInDb.Any(p => p == record.PhoneNumber) || validRecords.Any(r => r.PhoneNumber == record.PhoneNumber))
                     {
                         repeatedEntries.Add(record);
                     }
@@ -249,7 +249,7 @@ namespace MultiSMS.BusinessLogic.Services
                     }
                 }
                 processedRows++;
-                int progress = 70 + (processedRows / addedEmployeesCount * 25);
+                int progress = 70 + (processedRows / addedEmployeesCount) * 25;
 
                 await _progressRelay.RelayProgressAsync("ImportContactsProgress", progress.ToString());
             }

@@ -49,16 +49,6 @@ namespace MultiSMS.MVC.Controllers
             _smsContext.SetSmsStrategy(new SendSmsTroughServerSms(_serverSmsSettings, _apiSettingsService));
             var response = await _smsContext.SendSMSAsync(phoneNumbersString, text, data);
 
-            var dataForSmsEntity = new Dictionary<string, string>
-                {
-                    {"details", "true"},
-                    {"phone", phoneNumbersString },
-                    {"text", text },
-                    { "speed", activeApiSettings.FastChannel ? "1" : "0" },
-                    { "test", activeApiSettings.TestMode ? "true" : "false" },
-                    { "sender", $"{activeApiSettings.SenderName}" }
-                };
-
             try //try to deserialize response into entities that correspond with response structure and then act depending on the outcome
             {
                 string logMessage;
@@ -77,7 +67,7 @@ namespace MultiSMS.MVC.Controllers
                     ChosenGroupId = chosenGroupId,
                     AdditionalPhoneNumbers = string.Join(',', additionalPhoneNumbers),
                     AdditionalInformation = additionalInfo,
-                    Settings = dataForSmsEntity,
+                    Settings = data,
                     ServerResponse = successResponse
                 };
 
@@ -118,7 +108,7 @@ namespace MultiSMS.MVC.Controllers
                         ChosenGroupId = chosenGroupId,
                         AdditionalPhoneNumbers = string.Join(',', additionalPhoneNumbers),
                         AdditionalInformation = additionalInfo,
-                        Settings = dataForSmsEntity,
+                        Settings = data,
                         ServerResponse = errorResponse
                     };
 
@@ -151,16 +141,6 @@ namespace MultiSMS.MVC.Controllers
             _smsContext.SetSmsStrategy(new SendSmsTroughSmsApi(_smsApiSettings, _apiSettingsService));
             var response = await _smsContext.SendSMSAsync(phoneNumbersString, text, data);
 
-            var dataForSmsEntity = new Dictionary<string, string>
-                {
-                    { "to", phoneNumbersString },
-                    { "message", text },
-                    { "format", "json" },
-                    { "from", $"{activeApiSettings.SenderName}" },
-                    { "fast", activeApiSettings.FastChannel ? "1" : "0" },
-                    { "test",  activeApiSettings.TestMode ? "true" : "false" },
-                };
-
             try //try to deserialize response into entities that correspond with response structure and then act depending on the outcome
             {
                 string logMessage;
@@ -180,7 +160,7 @@ namespace MultiSMS.MVC.Controllers
                     ChosenGroupId = chosenGroupId,
                     AdditionalPhoneNumbers = string.Join(',', additionalPhoneNumbers),
                     AdditionalInformation = additionalInfo,
-                    Settings = dataForSmsEntity,
+                    Settings = data,
                     ServerResponse = successResponse
                 };
 
@@ -224,7 +204,7 @@ namespace MultiSMS.MVC.Controllers
                         ChosenGroupId = chosenGroupId,
                         AdditionalPhoneNumbers = string.Join(',', additionalPhoneNumbers),
                         AdditionalInformation = additionalInfo,
-                        Settings = dataForSmsEntity,
+                        Settings = data,
                         ServerResponse = errorResponse
                     };
 
@@ -278,7 +258,6 @@ namespace MultiSMS.MVC.Controllers
                 groupPhoneNumbers.AddRange(additionalNumbers);
             }
 
-            var data = new Dictionary<string, string>();
             var queued = 0;
             var unsent = 0;
             var listOfErrors = new List<string>();
@@ -287,6 +266,7 @@ namespace MultiSMS.MVC.Controllers
             {
                 var chunk = groupPhoneNumbers.GetRange(i, Math.Min(200, groupPhoneNumbers.Count - i));
                 var phoneNumbersString = string.Join(',', chunk);
+                var data = new Dictionary<string, string>();
 
                 var result = activeApiSettings.ApiName == "ServerSms" ? await SendSmsMessageThroughServerSMS(chosenGroupName, chosenGroup, chosenGroupId, additionalInfo, additionalPhoneNumbers, adminId, admin, phoneNumbersString, text, data, activeApiSettings) : await SendSmsMessageThroughSmsApi(chosenGroupName, chosenGroup, chosenGroupId, additionalInfo, additionalPhoneNumbers, adminId, admin, phoneNumbersString, text, data, activeApiSettings);
 

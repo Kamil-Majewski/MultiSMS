@@ -1,9 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MultiSMS.BusinessLogic.Extensions;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Repositories.Interfaces;
-using System.Globalization;
 
 namespace MultiSMS.BusinessLogic.Services
 {
@@ -32,13 +30,29 @@ namespace MultiSMS.BusinessLogic.Services
             }
             else
             {
-                paginatedList = await query.Reverse().Where(l => l.LogId < firstId).Take(pageSize).Reverse().ToListAsync();
+                paginatedList = await query.Reverse().Where(l => l.LogId < firstId).Take(pageSize).Select(l => new Log
+                {
+                    LogId = l.LogId,
+                    LogType = l.LogType,
+                    LogSource = l.LogSource,
+                    LogMessage = l.LogMessage,
+                    LogCreationDate = l.LogCreationDate
+
+                }).Reverse().ToListAsync();
                 hasMorePages = await query.AnyAsync(l => l.LogId > paginatedList.Last().LogId);
 
                 return (paginatedList, hasMorePages);
             }
 
-            paginatedList = await query.Take(pageSize).ToListAsync();
+            paginatedList = await query.Select(l => new Log
+            {
+                LogId = l.LogId,
+                LogType = l.LogType,
+                LogSource = l.LogSource,
+                LogMessage = l.LogMessage,
+                LogCreationDate = l.LogCreationDate
+
+            }).Take(pageSize).ToListAsync();
             hasMorePages = await query.Skip(pageSize).AnyAsync();
 
             return (paginatedList, hasMorePages);
