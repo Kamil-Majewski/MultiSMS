@@ -517,6 +517,34 @@ function addUserToGroup(link, assignContactIdGroupId) {
     });
 }
 
+function assignGroupToUser(link, assignContactIdGroupId) {
+    $.ajax({
+        url: '/Home/AddUserToGroup',
+        type: 'GET',
+        data: { groupId: assignContactIdGroupId[2], employeeId: assignContactIdGroupId[1] },
+        contentType: 'application/json',
+        success: function () {
+            link.removeClass("contact-group-assign").addClass("contact-group-unassign");
+            link.attr("href", `#unassign-${assignContactIdGroupId[1]}-${assignContactIdGroupId[2]}`)
+            link.children("img").attr("src", "/icons/unassign-user.png").attr("title", "Wypisz z grupy");
+            var nearestRow = link.closest('tr');
+
+            var groupMembersElement = nearestRow.find('.group-members');
+            var currentHtml = groupMembersElement.html();
+            var currentValue = parseInt(currentHtml);
+            groupMembersElement.html(currentValue + 1);
+
+
+            var assignedGroups = $("#groups-assigned-to-user").html() == "Nie przypisano" ? [] : $("#groups-assigned-to-user").html().split(", ");
+            assignedGroups.push(nearestRow.find(".small-cell").html());
+            $("#groups-assigned-to-user").html(assignedGroups.join(", "));
+        },
+        error: function (error) {
+            console.error(error.responseText);
+        }
+    });
+}
+
 function removeUserFromGroup(link, assignContactIdGroupId) {
     $.ajax({
         url: '/Home/RemoveUserFromGroup',
@@ -532,9 +560,39 @@ function removeUserFromGroup(link, assignContactIdGroupId) {
 
             var nearestRow = link.closest('tr');
             var assignedGroups = nearestRow.find('td.centered-cell').html().split(", ");
+            console.log($("#group-name").html());
             var index = assignedGroups.indexOf($("#group-name").html());
             assignedGroups.splice(index, 1);
-            nearestRow.find('td.centered-cell').html(assignedGroups.join(", ") == "" ? "Nie przypisano" : nearestRow.find('td.centered-cell').html(assignedGroups.join(", ")));
+            nearestRow.find('td.centered-cell').html(assignedGroups.join(", ") == "" ? "Nie przypisano" : assignedGroups.join(", "));
+        },
+        error: function (error) {
+            console.error(error.responseText);
+        }
+    });
+}
+
+function unassignGroupFromUser(link, assignContactIdGroupId) {
+    $.ajax({
+        url: '/Home/RemoveUserFromGroup',
+        type: 'GET',
+        data: { groupId: assignContactIdGroupId[2], employeeId: assignContactIdGroupId[1] },
+        contentType: 'application/json',
+        success: function () {
+            link.removeClass("contact-group-unassign").addClass("contact-group-assign");
+            link.attr("href", `#assign-${assignContactIdGroupId[1]}-${assignContactIdGroupId[2]}`)
+            link.children("img").attr("src", "/icons/assign-user.png").attr("title", "Dopisz do grupy");
+
+            var nearestRow = link.closest('tr');
+
+            var groupMembersElement = nearestRow.find('.group-members');
+            var currentHtml = groupMembersElement.html();
+            var currentValue = parseInt(currentHtml);
+            groupMembersElement.html(currentValue - 1);
+
+            var assignedGroups = $("#groups-assigned-to-user").html().split(", ");
+            var index = assignedGroups.indexOf(nearestRow.find(".group-name").html());
+            assignedGroups.splice(index, 1);
+            $("#groups-assigned-to-user").html(assignedGroups.join(", ") || "Nie przypisano");
         },
         error: function (error) {
             console.error(error.responseText);
@@ -2231,7 +2289,7 @@ function PaginateAssignGroupsAndPopulateTable(firstId, lastId, pageSize, moveFor
                     <tr>
                         <td class="small-cell group-name">${group.groupName}</td>
                         <td class="big-cell group-description">${description}</td>
-                        <td class="tiny-centered-cell">${group.membersIds.length}</td>
+                        <td class="tiny-centered-cell group-members">${group.membersIds.length}</td>
                         <td class="tiny-centered-cell">
                 `;
 
@@ -2504,6 +2562,7 @@ function PopulateTablesForAssigningGroupsToUsers(contactId) {
         contentType: 'application/json',
 
         success: function (contactEntity) {
+            $("#group-assign-chosen-contact-table tbody").empty();
             var newRow = `<tr>
                         <td class="tiny-cell">${contactEntity.name}</td>
                         <td class="tiny-cell">${contactEntity.surname}</td>
@@ -2511,7 +2570,7 @@ function PopulateTablesForAssigningGroupsToUsers(contactId) {
                         <td class="centered-cell">
                         <span class="${contactEntity.isActive ? " active-pill" : "inactive - pill"}" > ${contactEntity.isActive ? "Aktywny" : "Nieaktywny"}</span >
                         </td>
-                        <td class="centered-cell">${contactEntity.employeeGroupNames.join(", ")}</td>
+                        <td class="centered-cell" id="groups-assigned-to-user">${contactEntity.employeeGroupNames.join(", ")}</td>
                         </tr>
                         `;
             $("#group-assign-chosen-contact-table tbody").append(newRow);
@@ -2764,6 +2823,16 @@ function GoBackToGroupListFromAssign() {
     PaginateGroupsAndPopulateTable(firstId, null, 11, null);
     $(".groups-options-container-assign").hide();
     $(".groups-list-container").show();
+}
+
+function GoBackToContactListFromAssign() {
+    $("#group-assign-page-counter").html("0");
+    $(".contact-search-for-group").val("");
+    $("#search-for-assign-groups").submit();
+    var firstId = $("#contacts-table").attr("first-id");
+    PaginateContactsAndPopulateTable(firstId, null, 11, null);
+    $(".contact-options-container-assign").hide();
+    $(".contacts-list-container").show();
 }
 
 function setupWatcher(targetElement, watchedClass, callback) {

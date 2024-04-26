@@ -608,7 +608,7 @@
                 <div class="contact-options-container-assign list-container" style="display: none;">
                     <div class="list-header">
                         <div class="previous-page" style="flex:1;">
-                            <button class="violet-button" id="contacts-assign-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToContactsListFromAssign()">
+                            <button class="violet-button" id="contacts-assign-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToContactListFromAssign()">
                                 <span class="arrow-back" style="max-width:24px;"><img src="~/icons/previous.png" /></span>
                                 <span>Powrót</span>
                             </button>
@@ -1639,6 +1639,16 @@
             
         });
 
+        var debouncedAssingGroupToUser = debounce(assignGroupToUser, 220);
+
+        $(document).on('click', '.contact-group-assign', function (e) {
+            var link = $(this);
+            e.preventDefault();
+            var assignContactIdGroupId = $(this).attr("href").split('-');
+
+            debouncedAssingGroupToUser(link, assignContactIdGroupId);
+        });
+
         var debouncedRemoveUserFromGroup = debounce(removeUserFromGroup, 220);
 
         $(document).on('click', '.contact-unassign', function (e) {
@@ -1651,6 +1661,16 @@
             var contactIdInt = parseInt(assignContactIdGroupId[1]);
             var indexOfContactId = groupAssignMembersIds.indexOf(contactIdInt);
             groupAssignMembersIds.splice(indexOfContactId, 1);
+        });
+
+        var debouncedUnassignGroupFromUser = debounce(unassignGroupFromUser, 220);
+
+        $(document).on('click', '.contact-group-unassign', function (e) {
+            var link = $(this);
+            e.preventDefault();
+            var assignContactIdGroupId = $(this).attr("href").split('-');
+
+            debouncedUnassignGroupFromUser(link, assignContactIdGroupId);
         });
 
         $(document).on('submit', '#create-template-form', function (e) {
