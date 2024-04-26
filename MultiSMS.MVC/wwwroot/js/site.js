@@ -1710,7 +1710,7 @@ function EditTemplate() {
         success: function () {
             var affectedRow = $("#template-table tr").find(`a[href="#details-${templateId}"]`).closest("tr");
             affectedRow.find(".template-name").html(templateName);
-            affectedRow.find(".template-description").html(templateDescription);
+            affectedRow.find(".template-description").html(templateDescription || "Brak opisu");
             affectedRow.find(".template-content").html(templateContent);
         },
         error: function (error) {
@@ -1740,7 +1740,7 @@ function EditContact() {
             var affectedRow = $("#contacts-table tr").find(`a[href="#details-${contactId}"]`).closest("tr");
             affectedRow.find(".contact-name").html(name);
             affectedRow.find(".contact-surname").html(surname);
-            affectedRow.find(".contact-email").html(email);
+            affectedRow.find(".contact-email").html(email || "Brak danych");
             affectedRow.find(".contact-phone").html(phoneNumber);
             affectedRow.find("span").html(isActive == "yes" ? "Aktywny" : "Nieaktywny");
             if (isActive == "yes") {
@@ -1768,7 +1768,7 @@ function EditGroup() {
         success: function () {
             var affectedRow = $("#group-table tr").find(`a[href="#details-${groupId}"]`).closest("tr");
             affectedRow.find(".group-name").html(groupName);
-            affectedRow.find(".group-description").html(groupDescription);
+            affectedRow.find(".group-description").html(groupDescription || "Brak opisu");
         },
         error: function (error) {
             console.error(error.responseText);
