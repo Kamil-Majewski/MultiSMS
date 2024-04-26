@@ -1961,7 +1961,7 @@ function PaginateContactsAndPopulateTable(firstId, lastId, pageSize, moveForward
                         ${isActiveRow}
                         <td class="centered-cell contact-groups">${groupNames}</td>
                         <td class="centered-cell">
-                            <a href="#assign-${contact.employeeId}" class="icon-list contact-assign"><img src="/icons/assign-users.png" title="Przypisz grupy"/></a>
+                            <a href="#assign-${contact.employeeId}" class="icon-list contact-assign-groups"><img src="/icons/assign-users.png" title="Przypisz grupy"/></a>
                             <a href="#details-${contact.employeeId}" class="icon-list contact-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
                             <a href="#edit-${contact.employeeId}" class="icon-list contact-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
                             <a href="#delete-${contact.employeeId}" class="icon-list contact-delete"><img src="/icons/trash.png" title="Usuń"/></a>
@@ -2207,7 +2207,83 @@ function PaginateGroupsAndPopulateTable(firstId, lastId, pageSize, moveForward) 
 }
 
 function PaginateAssignGroupsAndPopulateTable(firstId, lastId, pageSize, moveForward) {
+    $.ajax({
+        url: '/Home/PaginateGroups',
+        type: 'GET',
+        data: { firstId, lastId, pageSize, moveForward },
+        contentType: 'application/json',
+        success: function (response) {
+            const { paginatedGroups, hasMorePages } = response;
+            const groupListBody = $('#group-assign-group-list-table tbody');
+            const groupNextButtonContainer = $("#group-assign-next-button-container");
+            const groupPreviousButtonContainer = $("#group-assign-previous-button-container");
+            const groupPageCounter = $("#group-assign-page-counter");
 
+            groupPageCounter.hide();
+            groupListBody.empty();
+            groupNextButtonContainer.empty();
+            groupPreviousButtonContainer.empty();
+
+            paginatedGroups.forEach(group => {
+                const description = group.groupDescription || "Brak opisu"
+
+                var newRow = `
+                    <tr>
+                        <td class="small-cell group-name">${group.groupName}</td>
+                        <td class="big-cell group-description">${description}</td>
+                        <td class="tiny-centered-cell">${group.membersIds.length}</td>
+                        <td class="tiny-centered-cell">
+                `;
+
+                if (group.membersIds.includes(parseInt(groupAssignContactId))) {
+
+                    newRow += `<a href="#unassign-${groupAssignContactId}-${group.groupId}" class="icon-list contact-group-unassign"><img src="/icons/unassign-user.png" title="Wypisz z grupy"/></a>
+                                        </td>
+                                        </tr>`;
+                }
+                else {
+                    newRow += `<a href="#assign-${groupAssignContactId}-${group.groupId}" class="icon-list contact-group-assign"><img src="/icons/assign-user.png" title="Dopisz do grupy"/></a>
+                                        </td>
+                                        </tr>`;
+                }
+
+                groupListBody.append(newRow);
+            });
+
+            if (hasMorePages) {
+                groupNextButtonContainer.append(`
+                    <button class="arrow-button" id="groups-assign-list-next-page-button" type="button">
+                        <span class="list-arrow-forward">
+                            <img src="/icons/arrow-next.png" />
+                        </span>
+                    </button>`
+                );
+                groupPageCounter.show();
+            }
+
+            if (moveForward != null) {
+                const pageCounterValue = parseInt(groupPageCounter.html());
+                groupPageCounter.html(`${moveForward ? pageCounterValue + 1 : pageCounterValue - 1}`);
+            }
+
+            if (parseInt(groupPageCounter.html()) > 1) {
+                groupPreviousButtonContainer.append(`
+                    <button class="arrow-button" id="groups-assign-list-previous-page-button" type="button">
+                        <span class="list-arrow-back">
+                            <img src="/icons/arrow-previous.png"/>
+                        </span>
+                    </button>
+                `);
+                groupPageCounter.show();
+            }
+
+            $('#group-assign-group-list-table').attr("last-id", `${paginatedGroups[paginatedGroups.length - 1].groupId}`);
+            $('#group-assign-group-list-table').attr("first-id", `${paginatedGroups[0].groupId}`);
+        },
+        error: function (error) {
+            console.error(error.responseText);
+        }
+    });
 }
 
 function FetchAllLogsAndPopulateTable() {
@@ -2380,6 +2456,7 @@ function PopulateTableForChooseTemplateForSMS() {
 }
 
 let groupAssignMembersIds;
+let groupAssignContactId;
 let groupAssignGroupId;
 
 function PopulateTablesForAssigningUsersToGroups(groupId) {
@@ -2406,76 +2483,7 @@ function PopulateTablesForAssigningUsersToGroups(groupId) {
 
             $('#group-assign-chosen-group-table').append(newRow);
 
-            $.ajax({
-                url: 'Home/PaginateContacts',
-                type: 'GET',
-                data: { firstId: null, lastId: 0, pageSize: 7, moveForward: true },
-                contentType: 'application/json',
-                success: function (response) {
-                    const { paginatedContacts, hasMorePages } = response;
-                    const contactListBody = $('#group-assign-contact-list-table tbody');
-                    const contactNextButtonContainer = $("#contact-assign-next-button-container");
-                    const contactPreviousButtonContainer = $("#contact-assign-previous-button-container");
-                    const contactPageCounter = $("#contact-assign-page-counter");
-
-                    contactPageCounter.hide();
-                    contactListBody.empty();
-                    contactPreviousButtonContainer.empty();
-                    contactNextButtonContainer.empty();
-
-                    paginatedContacts.forEach(contact => {
-
-                        var groupNames = contact.employeeGroupNames;
-
-                        groupNames = (groupNames == null || groupNames.length == 0) ? "Nie przypisano" : groupNames.join(", ")
-                        var isActiveRow = contact.isActive ? '<td class="tiny-centered-cell contact-activity"><span class="active-pill">Aktywny<span></td>' : '<td class="tiny-centered-cell contact-activity"><span class="inactive-pill">Nieaktywny<span></td>'
-
-                        var newRow = `<tr>
-                        <td class="tiny-cell">${contact.name}</td>
-                        <td class="tiny-cell">${contact.surname}</td>
-                        <td class="tiny-cell">${contact.phoneNumber}</td>
-                        ${isActiveRow}
-                        <td class="centered-cell">${groupNames}</td>
-                        <td class="tiny-centered-cell">`
-
-                        if (groupAssignMembersIds.includes(contact.employeeId)) {
-
-                            newRow += `<a href="#unassign-${contact.employeeId}-${groupEntity.groupId}" class="icon-list contact-unassign"><img src="/icons/unassign-user.png" title="Wypisz z grupy"/></a>
-                                        </td>
-                                        </tr>`;
-                        }
-                        else {
-                            newRow += `<a href="#assign-${contact.employeeId}-${groupEntity.groupId}" class="icon-list contact-assign"><img src="/icons/assign-user.png" title="Dopisz do grupy" /></a>
-                                        </td>
-                                        </tr>`;
-                        }
-
-                        contactListBody.append(newRow);
-
-                    });
-
-                    const pageCounterValue = parseInt(contactPageCounter.html());
-                    contactPageCounter.html(`${pageCounterValue + 1}`)
-
-                    if (hasMorePages) {
-                        contactNextButtonContainer.append(`
-                            <button class="arrow-button" id="contacts-assign-list-next-page-button" type="button">
-                                <span class="list-arrow-forward">
-                                    <img src="/icons/arrow-next.png" />
-                                </span>
-                            </button>`
-                        );
-                        contactPageCounter.show();
-                    }
-
-                    $('#group-assign-contact-list-table').attr("last-id", `${paginatedContacts[paginatedContacts.length - 1].employeeId}`);
-                    $('#group-assign-contact-list-table').attr("first-id", `${paginatedContacts[0].employeeId}`);
-
-                },
-                error: function (error) {
-                    console.error(error.responseText);
-                }
-            });
+            PaginateAssignContactsAndPopulateTable(null, 0, 7, true);
 
             $(".groups-list-container").hide();
             $(".groups-options-container-assign").show();
@@ -2484,6 +2492,39 @@ function PopulateTablesForAssigningUsersToGroups(groupId) {
             console.error(error.responseText);
         }
     });
+}
+
+function PopulateTablesForAssigningGroupsToUsers(contactId) {
+    groupAssignContactId = contactId;
+
+    $.ajax({
+        url: '/Home/GetContactById',
+        type: 'GET',
+        data: { id: contactId },
+        contentType: 'application/json',
+
+        success: function (contactEntity) {
+            var newRow = `<tr>
+                        <td class="tiny-cell">${contactEntity.name}</td>
+                        <td class="tiny-cell">${contactEntity.surname}</td>
+                        <td class="small-cell">${contactEntity.phoneNumber}</td>
+                        <td class="centered-cell">
+                        <span class="${contactEntity.isActive ? " active-pill" : "inactive - pill"}" > ${contactEntity.isActive ? "Aktywny" : "Nieaktywny"}</span >
+                        </td>
+                        <td class="centered-cell">${contactEntity.employeeGroupNames.join(", ")}</td>
+                        </tr>
+                        `;
+            $("#group-assign-chosen-contact-table tbody").append(newRow);
+
+            PaginateAssignGroupsAndPopulateTable(null, 0, 7, true)
+
+            $(".contacts-list-container").hide();
+            $(".contact-options-container-assign ").show();
+        },
+        error: function (error) {
+            console.error(error.responseText);
+        }
+    })
 }
 
 function CreateNewTemplate() {
