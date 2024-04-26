@@ -605,6 +605,59 @@
                         </div>
                     </div>
                 </div>
+                <div class="contact-options-container-assign list-container" style="display: none;">
+                    <div class="list-header">
+                        <div class="previous-page" style="flex:1;">
+                            <button class="violet-button" id="contacts-assign-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToContactsListFromAssign()">
+                                <span class="arrow-back" style="max-width:24px;"><img src="~/icons/previous.png" /></span>
+                                <span>Powrót</span>
+                            </button>
+                        </div>
+                        <div class="option-name" style="flex:auto; text-align:center;">
+                            <span class="opion-name-placeholder" id="contact-asssign-window-title">Zarządzaj grupami użytkownika</span>
+                        </div>
+                        <div style="flex:1;"></div>
+                    </div>
+                    <div class="list-content" style="margin-bottom: 24px;">
+                        <div class="table-responsive">
+                            <table class="group-assign-chosen-contact table table-borderless" id="group-assign-chosen-contact-table">
+                                <thead>
+                                    <tr>
+                                        <th class="tiny-cell">Imię</th>
+                                        <th class="tiny-cell">Nazwisko</th>
+                                        <th class="small-cell" style="width: 150px;">Numer telefonu</th>
+                                        <th class="tiny-centered-cell">Status</th>
+                                        <th class="centered-cell">Grupy</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="list-header">
+                        <div></div>
+                        <form class="list-search-bar d-flex" id="search-for-assign-groups">
+                            <input class="search-for contact-search-for-group" placeholder="Wyszukaj grupę" />
+                        </form>
+                    </div>
+                    <div class="list-content">
+                        <div class="table-responsive" style="max-height: 39vh;">
+                            <table class="group-assign-group-list table table-borderless" id="group-assign-group-list-table">
+                                <thead>
+                                    <tr>
+                                        <th class="small-cell">Nazwa</th>
+                                        <th class="big-cell">Opis</th>
+                                        <th class="tiny-centered-cell">Liczba członków</th>
+                                        <th class="tiny-centered-cell" scope="col">Akcja</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="tab-pane" id="groups">

@@ -1961,6 +1961,7 @@ function PaginateContactsAndPopulateTable(firstId, lastId, pageSize, moveForward
                         ${isActiveRow}
                         <td class="centered-cell contact-groups">${groupNames}</td>
                         <td class="centered-cell">
+                            <a href="#assign-${contact.employeeId}" class="icon-list contact-assign"><img src="/icons/assign-users.png" title="Przypisz grupy"/></a>
                             <a href="#details-${contact.employeeId}" class="icon-list contact-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
                             <a href="#edit-${contact.employeeId}" class="icon-list contact-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
                             <a href="#delete-${contact.employeeId}" class="icon-list contact-delete"><img src="/icons/trash.png" title="Usuń"/></a>
@@ -2203,6 +2204,10 @@ function PaginateGroupsAndPopulateTable(firstId, lastId, pageSize, moveForward) 
             console.error(error.responseText);
         }
     });
+}
+
+function PaginateAssignGroupsAndPopulateTable(firstId, lastId, pageSize, moveForward) {
+
 }
 
 function FetchAllLogsAndPopulateTable() {
