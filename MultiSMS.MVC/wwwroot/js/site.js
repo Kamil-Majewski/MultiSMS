@@ -2085,7 +2085,7 @@ function PaginateContactsAndPopulateTable(firstId, lastId, pageSize, moveForward
                         <td class="small-cell contact-phone">${contact.phoneNumber}</td>
                         ${isActiveRow}
                         <td class="centered-cell contact-groups">${groupNames}</td>
-                        <td class="centered-cell">
+                        <td class="centered-cell" style="min-width: 163px;">
                             <a href="#assign-${contact.employeeId}" class="icon-list contact-assign-groups"><img src="/icons/assign-users.png" title="Przypisz grupy"/></a>
                             <a href="#details-${contact.employeeId}" class="icon-list contact-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
                             <a href="#edit-${contact.employeeId}" class="icon-list contact-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
