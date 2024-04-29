@@ -1,5 +1,4 @@
-﻿using Microsoft.SqlServer.Server;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Text;
 
 namespace MultiSMS.Interface.Entities.SmsApi
@@ -24,12 +23,12 @@ namespace MultiSMS.Interface.Entities.SmsApi
 
         public async Task<string> CallAsync(string url, Dictionary<string, string> data)
         {
-            data["authorization"] = $"Bearer {ApiToken}";
             data["system"] = _system;
 
             string jsonData = JsonConvert.SerializeObject(data);
 
             using var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {ApiToken}");
             var requestContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
             using var response = await httpClient.PostAsync($"{_api_url}{url}", requestContent);

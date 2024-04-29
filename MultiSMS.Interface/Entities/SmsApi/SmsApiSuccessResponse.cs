@@ -15,10 +15,10 @@ namespace MultiSMS.Interface.Entities.SmsApi
     public class SuccessDetail
     {
         [JsonProperty(PropertyName = "id", Required = Required.Always)]
-        public int Id { get; set; }
+        public string Id { get; set; } = default!;
 
         [JsonProperty(PropertyName = "points", Required = Required.Always)]
-        public float Points { get; set; }
+        public decimal Points { get; set; }
 
         [JsonProperty(PropertyName = "number", Required = Required.Always)]
         public string PhoneNumber { get; set; } = default!;
