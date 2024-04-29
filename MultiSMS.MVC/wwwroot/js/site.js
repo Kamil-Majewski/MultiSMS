@@ -260,6 +260,73 @@ function OnSubmitFilterAssignContactsTable(formIdentifiaction, searchBarIdentifi
     });
 }
 
+function OnSubmitFilterAssignGroupsTable(formIdentifiaction, searchBarIdentification, tableIdentification) {
+    $(formIdentifiaction).on('submit', function (e) {
+        e.preventDefault();
+
+        const groupPageCounter = $("#group-assign-page-counter");
+        const groupNextButtonContainer = $("#groups-assign-list-next-page-button");
+        const groupPreviousButtonContainer = $("#groups-assign-list-previous-page-button");
+
+        groupPageCounter.hide();
+        groupNextButtonContainer.hide();
+        groupPreviousButtonContainer.hide();
+
+        var searchPhrase = $(searchBarIdentification).val().toLowerCase();
+
+        if (searchPhrase == "") {
+
+            var firstId = $(tableIdentification).attr("first-id");
+
+            PaginateAssignGroupsAndPopulateTable(firstId, null, 7, null);
+
+            groupNextButtonContainer.show();
+            groupPreviousButtonContainer.show();
+
+            return;
+        }
+
+        $.ajax({
+            url: `/Home/GetGroupsBySearchPhrase`,
+            type: 'GET',
+            contentType: 'application/json',
+            data: { searchPhrase },
+            success: function (listOfGroups) {
+                const groupListBody = $(`${tableIdentification} tbody`);
+
+                groupListBody.empty();
+
+                listOfGroups.forEach(group => {
+                    var newRow = `
+                        <tr>
+                            <td class="small-cell group-name">${group.groupName}</td>
+                            <td class="big-cell group-description">${group.groupDescription || "Brak opisu"}</td>
+                            <td class="tiny-centered-cell group-members">${group.membersIds.length}</td>
+                            <td class="tiny-centered-cell">
+                    `;
+
+                    if (group.membersIds.includes(parseInt(groupAssignContactId))) {
+
+                        newRow += `<a href="#unassign-${groupAssignContactId}-${group.groupId}" class="icon-list contact-group-unassign"><img src="/icons/unassign-user.png" title="Wypisz z grupy"/></a>
+                                        </td>
+                                        </tr>`;
+                    }
+                    else {
+                        newRow += `<a href="#assign-${groupAssignContactId}-${group.groupId}" class="icon-list contact-group-assign"><img src="/icons/assign-user.png" title="Dopisz do grupy"/></a>
+                                        </td>
+                                        </tr>`;
+                    }
+
+                    groupListBody.append(newRow);
+                });
+            },
+            error: function (error) {
+                console.error(error.responseText);
+            }
+        });
+    });
+}
+
 function OnSubmitFilterGroupsTable(formIdentifiaction, searchBarIdentification, tableIdentification) {
     $(formIdentifiaction).on('submit', function (e) {
         e.preventDefault();
