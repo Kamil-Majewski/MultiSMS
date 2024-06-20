@@ -15,22 +15,29 @@ namespace MultiSMS.BusinessLogic.Services
 
         public async Task<(List<Log>, bool)> PaginateLogDataAsync(int firstId, int lastId, int pageSize, bool? moveForward)
         {
-            IQueryable<Log> query = _logRepository.GetAllEntries().OrderBy(l => l.LogId);
+            IQueryable<Log> query = _logRepository.GetAllEntries().OrderByDescending(l => l.LogId);
 
             List<Log> paginatedList;
             bool hasMorePages;
 
             if(moveForward == null)
             {
-                query = query.Where(g => g.LogId >= firstId);
+                query = query.Where(g => g.LogId <= firstId);
             }
             else if (moveForward == true)
             {
-                query = query.Where(l => l.LogId > lastId);
+                if(lastId == 0)
+                {
+                    query = query.Take(pageSize + 1);
+                }
+                else
+                {
+                    query = query.Where(l => l.LogId < lastId);
+                }
             }
             else
             {
-                paginatedList = await query.Reverse().Where(l => l.LogId < firstId).Take(pageSize).Select(l => new Log
+                paginatedList = await query.Reverse().Where(l => l.LogId > firstId).Take(pageSize).Select(l => new Log
                 {
                     LogId = l.LogId,
                     LogType = l.LogType,
@@ -39,7 +46,7 @@ namespace MultiSMS.BusinessLogic.Services
                     LogCreationDate = l.LogCreationDate
 
                 }).Reverse().ToListAsync();
-                hasMorePages = await query.AnyAsync(l => l.LogId > paginatedList.Last().LogId);
+                hasMorePages = await query.AnyAsync(l => l.LogId < paginatedList.Last().LogId);
 
                 return (paginatedList, hasMorePages);
             }

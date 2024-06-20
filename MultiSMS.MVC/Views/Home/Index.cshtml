@@ -1071,7 +1071,12 @@
                 $("#settings-container").hide();
                 $("#settings-password").show();
                 $("#status-message-settings").hide();
-
+                if ($("#settings-password-input").attr('type') == "text"){
+                    $("#settings-eye-icon").click().hide();
+                }
+                else{
+                    $("#settings-eye-icon").hide();
+                }
                 settingsClickedObserver.observe(elementToWatch, { attributes: true });
             });
             settingsClickedObserver.disconnect();
