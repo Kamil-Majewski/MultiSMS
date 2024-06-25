@@ -39,7 +39,7 @@ html {
     }
 
     .arrow-back {
-        width: 20px !important;
+        width: 17px !important;
     }
 
     .table > :not(caption) > * > * {
@@ -218,7 +218,7 @@ html {
     }
 
     .arrow-back {
-        width: 18px !important;
+        width: 16px !important;
     }
 
     .table > :not(caption) > * > * {
@@ -702,6 +702,7 @@ body {
 
 .arrow-back {
     width: 22px;
+    margin-bottom: 3.2px
 }
 
 .form-input:focus {
@@ -805,7 +806,6 @@ label {
     font-family: 'Open Sans', sans-serif;
     font-size: 17px;
     height: 49px;
-    align-items: center;
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 

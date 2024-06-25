@@ -1042,7 +1042,15 @@
         $("#settings-password-input").on('input', function () {
             if ($("#settings-password-input").val().length > 0) {
                 $("#settings-eye-icon").css('display', 'block')
-            };
+            }
+            else {
+                if ($("#settings-password-input").attr('type') == "text") {
+                    $("#settings-eye-icon").click().hide();
+                }
+                else {
+                    $("#settings-eye-icon").hide();
+                }
+            }
         });
 
         CalculateHeaderWidthAndToolbarHeight();

@@ -71,6 +71,15 @@
     $("#password-input").on('input', function () {
         if ($("#password-input").val().length > 0) {
             $("#eye-icon").css('display', 'block')
-        };
+        }
+        else {
+            if ($("#password-input").attr('type') == "text") {
+                $("#eye-icon").click().hide();
+            }
+            else {
+                $("#eye-icon").hide();
+            }
+        }
     });
+
 </script>
