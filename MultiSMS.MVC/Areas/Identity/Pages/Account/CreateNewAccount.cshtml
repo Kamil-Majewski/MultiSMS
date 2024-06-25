@@ -48,7 +48,7 @@
                     <div class="password-input-container">
                         <input asp-for="Input.Password" class="form-input" id="create-acc-password" type="password" autocomplete="new-password" style="padding-right:30px;" aria-required="true"
                                required />
-                        <img src="~/icons/closed-eye.png" class="input-icons" id="eye-icon" alt="Toggle Password Visibility" onclick="togglePasswordVisibilityForCreateAccount()">
+                        <img src="~/icons/closed-eye.png" class="input-icons" id="eye-icon" alt="Toggle Password Visibility">
                     </div>
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div>
@@ -62,22 +62,15 @@
 
 
 <script>
-    function togglePasswordVisibilityForCreateAccount() {
-        var passwordInput = document.getElementById('create-acc-password');
-        var eyeIcon = document.getElementById('eye-icon');
+    $(document).ready(function () {
 
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            eyeIcon.src = window.location.origin + "/icons/eye.png";
-        } else {
-            passwordInput.type = 'password';
-            eyeIcon.src = window.location.origin + "/icons/closed-eye.png";
-        }
-    }
+        var passwordInput = document.getElementById("create-acc-password");
+        var eyeIcon = document.getElementById("eye-icon");
 
-    $("#create-acc-password").on('input', function () {
-        if ($("#create-acc-password").val().length > 0) {
-            $("#eye-icon").css('display', 'block')
-        };
+        $("#eye-icon").click(function () {
+            togglePasswordVisibility(passwordInput, eyeIcon);
+        });
+
+        showEyeIconOrResetPasswordField(passwordInput, eyeIcon);
     });
 </script>
