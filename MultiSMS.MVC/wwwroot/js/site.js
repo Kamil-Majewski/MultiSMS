@@ -11,6 +11,33 @@
     };
 }
 
+function showEyeIconOrResetPasswordField(fieldEl, eyeEl) {
+
+    $(fieldEl).on('input', function () {
+        if ($(fieldEl).val().length > 0) {
+            $(eyeEl).css('display', 'block')
+        }
+        else {
+            if ($(fieldEl).attr('type') == "text") {
+                $(eyeEl).click().hide();
+            }
+            else {
+                $(eyeEl).hide();
+            }
+        }
+    });
+}
+
+function togglePasswordVisibility(passwordInputEl, eyeIconEl) {
+
+    if (passwordInputEl.type === 'password') {
+        passwordInputEl.type = 'text';
+        eyeIconEl.src = window.location.origin + "/icons/eye.png";
+    } else {
+        passwordInputEl.type = 'password';
+        eyeIconEl.src = window.location.origin + "/icons/closed-eye.png";
+    }
+}
 
 function CalculateHeaderWidthAndToolbarHeight() {
 

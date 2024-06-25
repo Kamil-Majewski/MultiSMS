@@ -18,7 +18,7 @@
                     <label asp-for="Input.Password" class="form-label">Hasło</label>
                     <div class="password-input-container">
                         <input asp-for="Input.Password" class="form-input" id="password-input" autocomplete="current-password" style="padding-right:30px;" aria-required="true" placeholder="Wprowadź hasło" required />
-                        <img src="~/icons/closed-eye.png" class="input-icons" id="eye-icon" alt="Toggle Password Visibility" onclick="togglePasswordVisibility()">
+                        <img src="~/icons/closed-eye.png" class="input-icons" id="eye-icon" alt="Toggle Password Visibility">
                     </div>
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                     <div>
@@ -55,31 +55,17 @@
 </style>
 
 <script>
-    function togglePasswordVisibility() {
+
+    $(document).ready(function () {
         var passwordInput = document.getElementById('password-input');
         var eyeIcon = document.getElementById('eye-icon');
 
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            eyeIcon.src = window.location.origin + "/icons/eye.png";
-        } else {
-            passwordInput.type = 'password';
-            eyeIcon.src = window.location.origin + "/icons/closed-eye.png";
-        }
-    }
+        $("#eye-icon").click(function () {
+            togglePasswordVisibility(passwordInput, eyeIcon);
+        });
 
-    $("#password-input").on('input', function () {
-        if ($("#password-input").val().length > 0) {
-            $("#eye-icon").css('display', 'block')
-        }
-        else {
-            if ($("#password-input").attr('type') == "text") {
-                $("#eye-icon").click().hide();
-            }
-            else {
-                $("#eye-icon").hide();
-            }
-        }
+        showEyeIconOrResetPasswordField(passwordInput, eyeIcon);
     });
 
+    
 </script>

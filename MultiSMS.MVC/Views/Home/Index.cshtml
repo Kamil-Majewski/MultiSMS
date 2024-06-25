@@ -1024,34 +1024,16 @@
 
 <script defer>
 
-    function togglePasswordVisibility() {
-        var passwordInput = document.getElementById('settings-password-input');
-        var eyeIcon = document.getElementById('settings-eye-icon');
-
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            eyeIcon.src = window.location.origin + "/icons/eye.png";
-        } else {
-            passwordInput.type = 'password';
-            eyeIcon.src = window.location.origin + "/icons/closed-eye.png";
-        }
-    }
-
     $(document).ready(function () {
-    
-        $("#settings-password-input").on('input', function () {
-            if ($("#settings-password-input").val().length > 0) {
-                $("#settings-eye-icon").css('display', 'block')
-            }
-            else {
-                if ($("#settings-password-input").attr('type') == "text") {
-                    $("#settings-eye-icon").click().hide();
-                }
-                else {
-                    $("#settings-eye-icon").hide();
-                }
-            }
+
+        var passwordInput = document.getElementById("settings-password-input");
+        var eyeIcon = document.getElementById("settings-eye-icon");
+
+        $("#settings-eye-icon").click(function () {
+            togglePasswordVisibility(passwordInput, eyeIcon);
         });
+
+        showEyeIconOrResetPasswordField(passwordInput, eyeIcon);
 
         CalculateHeaderWidthAndToolbarHeight();
         PaginateTemplatesAndPopulateTable(null, 0, 11, true);
