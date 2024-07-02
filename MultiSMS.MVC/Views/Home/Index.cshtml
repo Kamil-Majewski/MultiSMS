@@ -1029,10 +1029,7 @@
         var passwordInput = document.getElementById("settings-password-input");
         var eyeIcon = document.getElementById("settings-eye-icon");
 
-        $("#settings-eye-icon").click(function () {
-            togglePasswordVisibility(passwordInput, eyeIcon);
-        });
-
+        togglePasswordVisibility(passwordInput, eyeIcon);
         showEyeIconOrResetPasswordField(passwordInput, eyeIcon);
 
         CalculateHeaderWidthAndToolbarHeight();

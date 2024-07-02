@@ -27,16 +27,17 @@ function showEyeIconOrResetPasswordField(fieldEl, eyeEl) {
         }
     });
 }
-
 function togglePasswordVisibility(passwordInputEl, eyeIconEl) {
 
-    if (passwordInputEl.type === 'password') {
-        passwordInputEl.type = 'text';
-        eyeIconEl.src = window.location.origin + "/icons/eye.png";
-    } else {
-        passwordInputEl.type = 'password';
-        eyeIconEl.src = window.location.origin + "/icons/closed-eye.png";
-    }
+    $(eyeIconEl).click(function () {
+        if (passwordInputEl.type === 'password') {
+            passwordInputEl.type = 'text';
+            eyeIconEl.src = window.location.origin + "/icons/eye.png";
+        } else {
+            passwordInputEl.type = 'password';
+            eyeIconEl.src = window.location.origin + "/icons/closed-eye.png";
+        }
+    });
 }
 
 function CalculateHeaderWidthAndToolbarHeight() {

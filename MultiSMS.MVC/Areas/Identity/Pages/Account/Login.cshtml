@@ -60,10 +60,7 @@
         var passwordInput = document.getElementById('password-input');
         var eyeIcon = document.getElementById('eye-icon');
 
-        $("#eye-icon").click(function () {
-            togglePasswordVisibility(passwordInput, eyeIcon);
-        });
-
+        togglePasswordVisibility(passwordInput, eyeIcon);
         showEyeIconOrResetPasswordField(passwordInput, eyeIcon);
     });
 
