@@ -107,7 +107,7 @@ namespace MultiSMS.BusinessLogic.Services
             {
                 csvReader.Read();
                 csvReader.ReadHeader();
-                fileHeaders = csvReader.HeaderRecord.Select(f => f.ToLower()).ToArray();
+                fileHeaders = csvReader.HeaderRecord!.Select(f => f.ToLower()).ToArray();
 
                 while (csvReader.Read())
                 {
@@ -153,10 +153,10 @@ namespace MultiSMS.BusinessLogic.Services
 
                 while (csvReader.Read())
                 {
-                    groupIds.Add(csvReader.GetField<string>("grupa"));
-                    var sanitizedPhoneNumber = Regex.Replace(csvReader.GetField<string>("tel"), @"\s+", "");
+                    groupIds.Add(csvReader.GetField<string>("grupa")!);
+                    var sanitizedPhoneNumber = Regex.Replace(csvReader.GetField<string>("tel")!, @"\s+", "");
 
-                    var person = csvReader.GetField<string>("osoba").Split(" ");
+                    var person = csvReader.GetField<string>("osoba")!.Split(" ");
 
                     var (name, surname) = GetNameAndSurname(person);
                     var phoneNumber = ParsePhoneNumber(sanitizedPhoneNumber);
