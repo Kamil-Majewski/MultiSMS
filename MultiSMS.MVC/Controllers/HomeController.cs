@@ -342,7 +342,14 @@ namespace MultiSMS.MVC.Controllers
 
             foreach(var contact in filtereContacts)
             {
-                contact.EmployeeGroupNames = dictionaryEmployeeIdGroupNames[contact.EmployeeId].ToList();
+                if (dictionaryEmployeeIdGroupNames.ContainsKey(contact.EmployeeId))
+                {
+                    contact.EmployeeGroupNames = dictionaryEmployeeIdGroupNames[contact.EmployeeId].ToList();
+                }
+                else
+                {
+                    contact.EmployeeGroupNames = new List<string> { "Nie przypisano" };
+                }     
             }
 
             return Json(filtereContacts);
