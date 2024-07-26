@@ -1343,8 +1343,11 @@
             $(".more-options-container").slideDown(300);
             $(".options-hidden").addClass("options-shown");
             $(".options-hidden").removeClass("options-hidden");
-
         });
+
+        // $(document).on("click", "#group-assign-group-list-table tbody tr", function(e) { 
+        //     var link = $(this).find('a').first();
+        // });
 
         $(document).on('click', '.options-shown', function (e) {
             e.preventDefault();

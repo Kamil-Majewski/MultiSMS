@@ -181,7 +181,7 @@ function OnSubmitFilterContactsTable(formIdentifiaction, searchBarIdentification
                 const contactListBody = $(`${tableIdentification} tbody`);
 
                 contactListBody.empty();
-
+                 
                 listOfContacts.forEach(contact => {
                     var newRow = `
                         <tr>
@@ -205,8 +205,8 @@ function OnSubmitFilterContactsTable(formIdentifiaction, searchBarIdentification
                                 </a>
                             </td>
                         </tr>
-                        
                     `;
+
                     contactListBody.append(newRow);
                 })
             },

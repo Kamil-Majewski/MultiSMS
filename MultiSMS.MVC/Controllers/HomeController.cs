@@ -330,26 +330,16 @@ namespace MultiSMS.MVC.Controllers
         {
             var contacts = await Task.FromResult(_employeeService.GetAllEntries());
 
-            var dictionaryEmployeeIdGroupNames = _employeeGroupService.GetDictionaryOfEmployeeIdAndGroupNames();
-
             var filtereContacts = contacts.Where(e =>
             e.Name.ToLower().Contains(searchPhrase) ||
             e.Surname.ToLower().Contains(searchPhrase) ||
             (e.Email == null || e.Email.Equals(string.Empty) ? "Brak danych" : e.Email!).ToLower().Contains(searchPhrase) ||
             e.PhoneNumber.ToLower().Contains(searchPhrase) ||
-            (e.IsActive ? "Aktywny" : "Nieaktywny").ToLower().Contains(searchPhrase) ||
-            dictionaryEmployeeIdGroupNames[e.EmployeeId].Any(g => g.ToLower().Contains(searchPhrase))).ToList();
+            (e.IsActive ? "Aktywny" : "Nieaktywny").ToLower().Contains(searchPhrase)).ToList();
 
             foreach(var contact in filtereContacts)
             {
-                if (dictionaryEmployeeIdGroupNames.ContainsKey(contact.EmployeeId))
-                {
-                    contact.EmployeeGroupNames = dictionaryEmployeeIdGroupNames[contact.EmployeeId].ToList();
-                }
-                else
-                {
-                    contact.EmployeeGroupNames = new List<string> { "Nie przypisano" };
-                }     
+                contact.EmployeeGroupNames = await _employeeGroupService.GetAllGroupNamesForEmployeeListAsync(contact.EmployeeId);
             }
 
             return Json(filtereContacts);
