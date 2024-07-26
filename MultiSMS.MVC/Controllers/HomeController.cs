@@ -329,20 +329,29 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> GetContactsBySearchPhrase(string searchPhrase)
         {
             var contacts = await Task.FromResult(_employeeService.GetAllEntries());
+            var fittingGroups = _groupService.GetAllEntries().Where(g => g.GroupName == searchPhrase).Select(g => g.GroupId).ToList();
+            List<Employee> filteredContacts;
 
-            var filtereContacts = contacts.Where(e =>
-            e.Name.ToLower().Contains(searchPhrase) ||
-            e.Surname.ToLower().Contains(searchPhrase) ||
-            (e.Email == null || e.Email.Equals(string.Empty) ? "Brak danych" : e.Email!).ToLower().Contains(searchPhrase) ||
-            e.PhoneNumber.ToLower().Contains(searchPhrase) ||
-            (e.IsActive ? "Aktywny" : "Nieaktywny").ToLower().Contains(searchPhrase)).ToList();
+            if(fittingGroups.Count() == 1)
+            {
+                filteredContacts = await _employeeGroupService.GetAllEmployeesForGroupListAsync(fittingGroups[0]);
+            }
+            else
+            {
+                filteredContacts = contacts.Where(e =>
+                e.Name.ToLower().Contains(searchPhrase) ||
+                e.Surname.ToLower().Contains(searchPhrase) ||
+                (e.Email == null || e.Email.Equals(string.Empty) ? "Brak danych" : e.Email!).ToLower().Contains(searchPhrase) ||
+                e.PhoneNumber.ToLower().Contains(searchPhrase) ||
+                (e.IsActive ? "Aktywny" : "Nieaktywny").ToLower().Contains(searchPhrase)).ToList();
+            }
 
-            foreach(var contact in filtereContacts)
+            foreach (var contact in filteredContacts)
             {
                 contact.EmployeeGroupNames = await _employeeGroupService.GetAllGroupNamesForEmployeeListAsync(contact.EmployeeId);
             }
 
-            return Json(filtereContacts);
+            return Json(filteredContacts);
 
         }
         #endregion
