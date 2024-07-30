@@ -2,9 +2,9 @@
 
 namespace MultiSMS.Interface.Seeding
 {
-    public static class SeedApiSettings
+    internal static class SeedApiSettings
     {
-        public static List<ApiSettings> GetApiSettingsSeed()
+        internal static List<ApiSettings> GetApiSettingsSeed()
         {
             var apiSettingsList = new List<ApiSettings>();
 

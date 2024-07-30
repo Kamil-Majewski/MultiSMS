@@ -24,8 +24,10 @@ namespace MultiSMS.Interface
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<Administrator>().HasData(SeedAdmin.GetAdminSeed());
+            builder.Entity<Administrator>().HasData(SeedUsers.GetUserSeed());
             builder.Entity<ApiSettings>().HasData(SeedApiSettings.GetApiSettingsSeed());
+            builder.Entity<IdentityRole<int>>().HasData(SeedRoles.Seed());
+            builder.Entity<IdentityUserRole<int>>().HasData(AssignRoles.GrantRoles());
         }
     }
 }

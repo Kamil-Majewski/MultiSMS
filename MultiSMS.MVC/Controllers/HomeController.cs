@@ -49,7 +49,7 @@ namespace MultiSMS.MVC.Controllers
 
         #region Templates
 
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> CreateNewTemplate(string templateName, string templateDescription, string templateContent)
         {
@@ -87,7 +87,7 @@ namespace MultiSMS.MVC.Controllers
             return Json(templates);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> PaginateTemplates(int firstId, int lastId, int pageSize, bool? moveForward)
         {
@@ -95,7 +95,7 @@ namespace MultiSMS.MVC.Controllers
             return Json(new {paginatedTemplates, hasMorePages});
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> GetTemplateById(int id)
         {
@@ -103,7 +103,7 @@ namespace MultiSMS.MVC.Controllers
             return Json(template);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> EditTemplate(int id, string name, string description, string content)
         {
@@ -134,7 +134,7 @@ namespace MultiSMS.MVC.Controllers
             return Ok("Successfully edited template");
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> DeleteTemplate(int id)
         {
@@ -164,17 +164,17 @@ namespace MultiSMS.MVC.Controllers
         }
 
 
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> GetTemplatesBySeachPhrase(string searchPhrase)
         {
             return Json(await _smsTemplateService.GetTemplatesBySearchPhraseAsync(searchPhrase));
         }
 
-            #endregion
+        #endregion
 
         #region Employees
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> CreateNewContact(string contactName, string contactSurname, string email, string phone, string address, string zip, string city, string department, string isActive)
         {
@@ -217,7 +217,7 @@ namespace MultiSMS.MVC.Controllers
             return Json(contact);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> FetchAllContacts()
         {
@@ -229,7 +229,7 @@ namespace MultiSMS.MVC.Controllers
             return Json(contacts);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> PaginateContacts(int firstId, int lastId, int pageSize, bool? moveForward)
         {
@@ -241,9 +241,7 @@ namespace MultiSMS.MVC.Controllers
             return Json(new { paginatedContacts, hasMorePages });
         }
 
-        
-
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> GetContactById(int id)
         {
@@ -252,7 +250,7 @@ namespace MultiSMS.MVC.Controllers
             return Json(contact);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> EditContact(int contactId, string contactName, string contactSurname, string email, string phone, string address, string zip, string city, string department, string isActive)
         {
@@ -296,7 +294,7 @@ namespace MultiSMS.MVC.Controllers
             return Ok("Successfully edited contact");
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> DeleteContact(int id)
         {
@@ -324,7 +322,7 @@ namespace MultiSMS.MVC.Controllers
             return Ok("Successfully deleted contact");
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> GetContactsBySearchPhrase(string searchPhrase)
         {
@@ -358,7 +356,7 @@ namespace MultiSMS.MVC.Controllers
 
         #region Groups
 
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> CreateNewGroup(string groupName, string groupDescription)
         {
@@ -388,7 +386,7 @@ namespace MultiSMS.MVC.Controllers
             return Json(group);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> FetchAllGroups()
         {
@@ -400,7 +398,7 @@ namespace MultiSMS.MVC.Controllers
             return Json(groups);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> PaginateGroups(int firstId, int lastId, int pageSize, bool? moveForward)
         {
@@ -446,7 +444,7 @@ namespace MultiSMS.MVC.Controllers
             return Json(validGroups);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> GetGroupById(int id)
         {
@@ -455,7 +453,7 @@ namespace MultiSMS.MVC.Controllers
             return Json(group);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> EditGroup(int id, string name, string description)
         {
@@ -485,7 +483,7 @@ namespace MultiSMS.MVC.Controllers
             return Ok("Successfully edited group");
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> DeleteGroup(int id)
         {
@@ -513,7 +511,7 @@ namespace MultiSMS.MVC.Controllers
             return Ok("Successfully deleted group");
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> GetGroupsBySearchPhrase(string searchPhrase)
         {
@@ -531,7 +529,7 @@ namespace MultiSMS.MVC.Controllers
 
         #region EmployeeGroups
 
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> AddUserToGroup(int groupId, int employeeId)
         {
@@ -563,7 +561,7 @@ namespace MultiSMS.MVC.Controllers
             return Ok("Successfully added contact to group");
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> RemoveUserFromGroup(int groupId, int employeeId)
         {
@@ -594,7 +592,7 @@ namespace MultiSMS.MVC.Controllers
             return Ok("Successfully removed user from group");
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> GetAllEmployeesForGroup(int groupId)
         {
@@ -691,7 +689,7 @@ namespace MultiSMS.MVC.Controllers
 
         #region Logs
 
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> GetLog(int logId)
         {
@@ -780,7 +778,7 @@ namespace MultiSMS.MVC.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> FetchAllLogs()
         {
@@ -788,7 +786,7 @@ namespace MultiSMS.MVC.Controllers
             return Json(logs);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> PaginateLogs(int firstId, int lastId, int pageSize, bool? moveForward)
         {
@@ -796,7 +794,7 @@ namespace MultiSMS.MVC.Controllers
             return Json(new {paginatedLogs, hasMorePages});
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public IActionResult GetLogsBySearchPhrase(string searchPhrase)
         {
@@ -807,7 +805,7 @@ namespace MultiSMS.MVC.Controllers
 
         #region ApiSettings
 
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpPost]
         public IActionResult CheckIfAuthorizationSuccessful([FromBody]string password)
         {
@@ -889,7 +887,7 @@ namespace MultiSMS.MVC.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpPost]
         public async Task<IActionResult> UpdateApiSettings([FromBody]UpdateApiSettingsModel model)
         {
@@ -905,7 +903,7 @@ namespace MultiSMS.MVC.Controllers
             return Ok("Successfully updated API settings");
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> FetchApiSettingsByName(string apiName)
         {
