@@ -1,4 +1,16 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using MultiSMS.Interface.Entities
+
+@inject UserManager<Administrator> UserManager
+@inject SignInManager<Administrator> SignInManager
+
+@{
+    var user = SignInManager.IsSignedIn(User) ? await UserManager.GetUserAsync(User) : null;
+    var roles = user != null ? await UserManager.GetRolesAsync(user) : new List<string>();
+}
+
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -29,10 +41,7 @@
                 $(this).parent().toggleClass("active-tab");
             });
         });
-
-
     </script>
-
 </head>
 <body>
     <div class="container-fluid main-window" style="display:flex; justify-content: center; align-items: center; flex-direction: column; padding:0px; ">
@@ -63,36 +72,39 @@
                                 <span class="text-nav" id="sms-text">Wyslij SMS</span>
                             </a>
                         </li>
-                        <li class="option-list-item">
-                            <a class="link" id="templates-tab" href="#templates">
-                                <span class="icon"><img src="~/icons/template.png" title="Szablony" /></span>
-                                <span class="text-nav">Szablony</span>
-                            </a>
-                        </li>
-                        <li class="option-list-item">
-                            <a class="link" id="contacts-tab" href="#contacts">
-                                <span class="icon"><img src="~/icons/contacts.png" title="Kontakty"/></span>
-                                <span class="text-nav">Kontakty</span>
-                            </a>
-                        </li>
-                        <li class="option-list-item">
-                            <a class="link" id="groups-tab" href="#groups">
-                                <span class="icon"><img src="~/icons/groups.png" title="Grupy" /></span>
-                                <span class="text-nav">Grupy</span>
-                            </a>
-                        </li>
-                        <li class="option-list-item">
-                            <a class="link" id="logs-tab" href="#logs">
-                                <span class="icon"><img src="~/icons/logs.png" title="Logi" /></span>
-                                <span class="text-nav">Logi</span>
-                            </a>
-                        </li>
-                        <li class="option-list-item">
-                            <a class="link" id="settings-tab" href="#settings">
-                                <span class="icon"><img src="~/icons/settings.png" title="Ustawienia" /></span>
-                                <span class="text-nav">Ustawienia</span>
-                            </a>
-                        </li>
+                        @if(roles.Contains("Administrator") || roles.Contains("Owner"))
+                        {
+                            <li class="option-list-item">
+                                <a class="link" id="templates-tab" href="#templates">
+                                    <span class="icon"><img src="~/icons/template.png" title="Szablony" /></span>
+                                    <span class="text-nav">Szablony</span>
+                                </a>
+                            </li>
+                            <li class="option-list-item">
+                                <a class="link" id="contacts-tab" href="#contacts">
+                                    <span class="icon"><img src="~/icons/contacts.png" title="Kontakty" /></span>
+                                    <span class="text-nav">Kontakty</span>
+                                </a>
+                            </li>
+                            <li class="option-list-item">
+                                <a class="link" id="groups-tab" href="#groups">
+                                    <span class="icon"><img src="~/icons/groups.png" title="Grupy" /></span>
+                                    <span class="text-nav">Grupy</span>
+                                </a>
+                            </li>
+                            <li class="option-list-item">
+                                <a class="link" id="logs-tab" href="#logs">
+                                    <span class="icon"><img src="~/icons/logs.png" title="Logi" /></span>
+                                    <span class="text-nav">Logi</span>
+                                </a>
+                            </li>
+                            <li class="option-list-item">
+                                <a class="link" id="settings-tab" href="#settings">
+                                    <span class="icon"><img src="~/icons/settings.png" title="Ustawienia" /></span>
+                                    <span class="text-nav">Ustawienia</span>
+                                </a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

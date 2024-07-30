@@ -1,7 +1,17 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@using MultiSMS.Interface.Entities
+
+@inject UserManager<Administrator> UserManager
+@inject SignInManager<Administrator> SignInManager
+
+@{
+    var user = SignInManager.IsSignedIn(User) ? await UserManager.GetUserAsync(User) : null;
+    var roles = user != null ? await UserManager.GetRolesAsync(user) : new List<string>();
     ViewData["Title"] = "MultiSMS";
 }
 
+@if (roles.Contains("Administrator") || roles.Contains("Owner"))
+{
 <div class="modal fade" id="deleteEntityModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="deleteEntityModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 550px; min-width: 307px; width:fit-content;">
         <div class="modal-content">
@@ -29,6 +39,7 @@
         </div>
     </div>
 </div>
+}
 
 <div class="content-container">
     <div class="tab-content" id="category-tab-content">
@@ -159,155 +170,26 @@
                 </div>
             </div>
         </div>
-        <div class="tab-pane" id="templates">
-            <div class="templates-list-container list-container">
-                <div class="list-header">
-                    <div class="list-header-left">
-                        <button class="add-new-button violet-button" type="button" onclick="OpenCreateTemplateWindow()">Dodaj nowy</button>
-                    </div>
-                    <form class="list-search-bar d-flex" id="search-for-templates">
-                        <input class="search-for template-search" placeholder="Wyszukaj szablon" />
-                    </form>
-                </div>
-                <div class="list-content">
-                    <div class="table-responsive">
-                        <table class="template-list table table-borderless" id="template-table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Nazwa</th>
-                                    <th scope="col">Opis</th>
-                                    <th scope="col">Treść</th>
-                                    <th class="centered-cell" scope="col">Opcje</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="list-footer" style="margin-top:15px; display:flex; align-items: center;">
-                    <div style="flex:1;" id="template-previous-button-container">
-                    </div>
-                    <div class="page-counter" style="flex:auto; text-align:center;">
-                        <span class="form-subtitle" id="template-page-counter" style="display:none;">0</span>
-                    </div>
-                    <div style="flex:1; display:flex; justify-content:right;" id="template-next-button-container">
-                    </div>
-                </div>
-            </div>
-            <div class="templates-options-container options-container" style="display:none;">
-                <div class="option-content">
-                    <div class="options-header">
-                        <div class="previous-page" style="flex:1;">
-                            <button class="violet-button" id="templates-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToTemplateList()">
-                                <span class="arrow-back" style="max-width:24px;"><img src="~/icons/previous.png" /></span>
-                                <span>Powrót</span>
-                            </button>
-                        </div>
-                        <div class="option-name" style="flex:auto; text-align:center;">
-                            <span class="opion-name-placeholder" id="template-input-window-title">Nowy szablon</span>
-                        </div>
-                        <div style="flex:1;"></div>
-                    </div>
-                    <hr />
-                    <form class="template-options-form options-form">
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col">
-                                    <label for="templateNameInput">Nazwa szablonu *</label>
-                                    <input type="text" class="form-input" id="templateNameInput" required maxlength="30" />
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <label for="templateDescriptionInput">Opis</label>
-                                    <input type="text" class="form-input" id="templateDescriptionInput" maxlength="50" />
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <label for="templateContentInput">Treść wiadomości *</label>
-                                    <textarea class="form-input" id="templateContentInput" rows="5" maxlength="160" required spellcheck="false"></textarea>
-                                    <div class="symbol-counter" style="margin-top: 0.25rem; text-align: right" id="symbolCounterAdd">&nbsp</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="justify-content-center d-flex">
-                            <button type="submit" class="violet-button" id="createOrEditButtonTemplates"></button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="templates-details-container options-container" style="display:none; ">
-                <div class="option-content" style="max-width:600px;">
-                    <div class="options-header">
-                        <div class="previous-page" style="flex:1;">
-                            <button class="violet-button" id="templates-details-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToTemplateList()">
-                                <span class="arrow-back" style="max-width:24px;"><img src="~/icons/previous.png" /></span>
-                                <span>Powrót</span>
-                            </button>
-                        </div>
-                        <div class="option-name" style="flex:auto; text-align:center;">
-                            <span class="opion-name-placeholder" id="template-details-window-title">Szablon</span>
-                        </div>
-                        <div style="flex:1;"></div>
-                    </div>
-                    <hr />
-                    <div class="template-details-content-container" style="padding: 10px 30px 30px 30px;">
-                        <span class="form-subtitle">Informacje</span>
-                        <div class="row mb-10" style="margin-top: 20px;">
-                            <div class="col d-flex">
-                                <label class="templates-details-label" for="TemplateId">Id:</label>
-                                <span class="details-span" id="TemplateId"></span>
-                            </div>
-                        </div>
-                        <div class="row mb-10">
-                            <div class="col d-flex">
-                                <label class="templates-details-label" for="TemplateName">Nazwa:</label>
-                                <span class="details-span" id="TemplateName"></span>
-                            </div>
-                        </div>
-                        <div class="row mb-10">
-                            <div class="col d-flex">
-                                <label class="templates-details-label" for="TemplateDescription">Opis:</label>
-                                <span class="details-span" id="TemplateDescription"></span>
-                            </div>
-                        </div>
-                        <div class="row mb-10">
-                            <div class="col d-flex">
-                                <label class="templates-details-label" for="TemplateContent">Treść:</label>
-                                <span class="details-span" id="TemplateContent"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="tab-pane" id="contacts">
-            <div class="contacts-container">
-                <div class="contacts-list-container list-container">
+        @if (roles.Contains("Administrator") || roles.Contains("Owner"))
+        {
+            <div class="tab-pane" id="templates">
+                <div class="templates-list-container list-container">
                     <div class="list-header">
                         <div class="list-header-left">
-                            <button class="add-new-button violet-button" type="button" onclick="OpenCreateContactWindow()">Dodaj nowy</button>
-                            <input type="file" id="import-file-input" style="display: none;" accept=".csv" />
-                            <button class="import-contacts-button ie-button" type="button" onclick="TriggerFileInput()">Importuj kontakty</button>
-                            <button class="export-contacts-button ie-button" type="button" onclick="ExportContactsAndDownloadExcel()">Exportuj kontakty</button>
+                            <button class="add-new-button violet-button" type="button" onclick="OpenCreateTemplateWindow()">Dodaj nowy</button>
                         </div>
-                        <form class="list-search-bar d-flex" id="search-for-contacts">
-                            <input class="search-for contact-search" placeholder="Wyszukaj kontakt">
+                        <form class="list-search-bar d-flex" id="search-for-templates">
+                            <input class="search-for template-search" placeholder="Wyszukaj szablon" />
                         </form>
                     </div>
                     <div class="list-content">
                         <div class="table-responsive">
-                            <table class="contacts-list table table-borderless" id="contacts-table">
+                            <table class="template-list table table-borderless" id="template-table">
                                 <thead>
                                     <tr>
-                                        <th class="tiny-cell">Imię</th>
-                                        <th class="tiny-cell" id="contact-surname">Nazwisko</th>
-                                        <th class="tiny-cell">Email</th>
-                                        <th class="small-cell" style="width: 150px;">Numer telefonu</th>
-                                        <th class="tiny-centered-cell">Status</th>
-                                        <th class="centered-cell">Grupy</th>
+                                        <th scope="col">Nazwa</th>
+                                        <th scope="col">Opis</th>
+                                        <th scope="col">Treść</th>
                                         <th class="centered-cell" scope="col">Opcje</th>
                                     </tr>
                                 </thead>
@@ -317,317 +199,583 @@
                         </div>
                     </div>
                     <div class="list-footer" style="margin-top:15px; display:flex; align-items: center;">
-                        <div style="flex:1;" id="contact-previous-button-container">
+                        <div style="flex:1;" id="template-previous-button-container">
                         </div>
                         <div class="page-counter" style="flex:auto; text-align:center;">
-                            <span class="form-subtitle" id="contact-page-counter" style="display:none;">0</span>
+                            <span class="form-subtitle" id="template-page-counter" style="display:none;">0</span>
                         </div>
-                        <div style="flex:1; display:flex; justify-content:right;" id="contact-next-button-container">
+                        <div style="flex:1; display:flex; justify-content:right;" id="template-next-button-container">
                         </div>
                     </div>
                 </div>
-                <div class="contacts-options-container options-container" style="margin: 20px; display: none;">
+                <div class="templates-options-container options-container" style="display:none;">
                     <div class="option-content">
                         <div class="options-header">
                             <div class="previous-page" style="flex:1;">
-                                <button class="violet-button" id="contacts-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToContactList()">
-                                    <span class="arrow-back" style="max-width:24px;"><img src="/icons/previous.png"></span>
+                                <button class="violet-button" id="templates-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToTemplateList()">
+                                    <span class="arrow-back" style="max-width:24px;"><img src="~/icons/previous.png" /></span>
                                     <span>Powrót</span>
                                 </button>
                             </div>
                             <div class="option-name" style="flex:auto; text-align:center;">
-                                <span class="opion-name-placeholder" id="contact-input-window-title">Nowy kontakt</span>
+                                <span class="opion-name-placeholder" id="template-input-window-title">Nowy szablon</span>
                             </div>
                             <div style="flex:1;"></div>
                         </div>
                         <hr />
-                        <form class="contact-options-form options-form">
-                            <div class="personal-data" style="margin-bottom:20px;">
-                                <span class="form-subtitle">Dane Personalne</span>
-                                <div class="form-group" style="margin-top: 20px;">
-                                    <div class="row">
-                                        <div class="col">
-                                            <label for="contactNameInput">Imię *</label>
-                                            <input type="text" class="form-input" id="contactNameInput" required maxlength="40">
-                                        </div>
-                                        <div class="col">
-                                            <label for="contactSurnameInput">Nazwisko *</label>
-                                            <input type="text" class="form-input" id="contactSurnameInput" required maxlength="40">
-                                        </div>
+                        <form class="template-options-form options-form">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="templateNameInput">Nazwa szablonu *</label>
+                                        <input type="text" class="form-input" id="templateNameInput" required maxlength="30" />
                                     </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <label for="contactEmail">Email</label>
-                                            <input type="email" class="form-input" id="contactEmail" maxlength="50">
-                                        </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="templateDescriptionInput">Opis</label>
+                                        <input type="text" class="form-input" id="templateDescriptionInput" maxlength="50" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="templateContentInput">Treść wiadomości *</label>
+                                        <textarea class="form-input" id="templateContentInput" rows="5" maxlength="160" required spellcheck="false"></textarea>
+                                        <div class="symbol-counter" style="margin-top: 0.25rem; text-align: right" id="symbolCounterAdd">&nbsp</div>
                                     </div>
                                 </div>
                             </div>
-                            <hr />
-                            <div class="contact-data" style="margin-top:20px; margin-bottom:20px;">
-                                <span class="form-subtitle">Dane Kontaktowe</span>
-                                <div class="form-group" style="margin-top:20px;">
-                                    <div class="row">
-                                        <div class="col">
-                                            <label for="contactPhoneNumber">Numer telefonu *</label>
-                                            <input type="tel" class="form-input" id="contactPhoneNumber" required maxlength="15" minlength="15" pattern="^\+[0-9]{2} \d{3} \d{3} \d{3}$">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <label for="contactHQAddress">Adres miejsca pracy</label>
-                                            <input type="text" class="form-input" id="contactHQAddress" maxlength="50">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <label for="ContactPostalNumber" style="white-space: nowrap;">Kod pocztowy</label>
-                                            <input type="text" class="form-input" id="ContactPostalNumber" pattern="[0-9]{2}-[0-9]{3}" maxlength="6">
-                                        </div>
-                                        <div class="col" style="flex-grow: 3;">
-                                            <label for="ContactCity">Miasto</label>
-                                            <input type="text" class="form-input" id="ContactCity" maxlength="30">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col" style="flex-grow:3;">
-                                            <label for="contactDepartment">Jednostka organizacyjna</label>
-                                            <input type="text" class="form-input" id="contactDepartment" maxlength="100">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr />
-                            <div class="other-data" style="margin-top: 20px;">
-                                <div class="form-group">
-                                    <label for="contactIsActive" style="width:100%;">Czy kontakt obecnie jest zatrudniony?</label>
-                                    <div class="form-check form-check-inline" style="margin-bottom: 8px;">
-                                        <input class="check-input" type="radio" name="isActive?" id="isActiveYes" value="yes" checked />
-                                        <label class="form-check-label" for="IsActiveYes">
-                                            Tak
-                                        </label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="check-input" type="radio" name="isActive?" id="isActiveNo" value="no" />
-                                        <label class="form-check-label" for="IsActiveNo">
-                                            Nie
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="justify-content-center d-flex" style="margin-top: 20px;">
-                                <button type="submit" class="violet-button" id="createOrEditButtonContacts"></button>
+                            <div class="justify-content-center d-flex">
+                                <button type="submit" class="violet-button" id="createOrEditButtonTemplates"></button>
                             </div>
                         </form>
                     </div>
                 </div>
-                <div class="contacts-details-container options-container" style="margin: 20px; display: none;">
-                    <div class="option-content" style="max-width: 600px;">
+                <div class="templates-details-container options-container" style="display:none; ">
+                    <div class="option-content" style="max-width:600px;">
                         <div class="options-header">
                             <div class="previous-page" style="flex:1;">
-                                <button class="violet-button" id="contacts-details-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToContactList()">
+                                <button class="violet-button" id="templates-details-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToTemplateList()">
+                                    <span class="arrow-back" style="max-width:24px;"><img src="~/icons/previous.png" /></span>
+                                    <span>Powrót</span>
+                                </button>
+                            </div>
+                            <div class="option-name" style="flex:auto; text-align:center;">
+                                <span class="opion-name-placeholder" id="template-details-window-title">Szablon</span>
+                            </div>
+                            <div style="flex:1;"></div>
+                        </div>
+                        <hr />
+                        <div class="template-details-content-container" style="padding: 10px 30px 30px 30px;">
+                            <span class="form-subtitle">Informacje</span>
+                            <div class="row mb-10" style="margin-top: 20px;">
+                                <div class="col d-flex">
+                                    <label class="templates-details-label" for="TemplateId">Id:</label>
+                                    <span class="details-span" id="TemplateId"></span>
+                                </div>
+                            </div>
+                            <div class="row mb-10">
+                                <div class="col d-flex">
+                                    <label class="templates-details-label" for="TemplateName">Nazwa:</label>
+                                    <span class="details-span" id="TemplateName"></span>
+                                </div>
+                            </div>
+                            <div class="row mb-10">
+                                <div class="col d-flex">
+                                    <label class="templates-details-label" for="TemplateDescription">Opis:</label>
+                                    <span class="details-span" id="TemplateDescription"></span>
+                                </div>
+                            </div>
+                            <div class="row mb-10">
+                                <div class="col d-flex">
+                                    <label class="templates-details-label" for="TemplateContent">Treść:</label>
+                                    <span class="details-span" id="TemplateContent"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="contacts">
+                <div class="contacts-container">
+                    <div class="contacts-list-container list-container">
+                        <div class="list-header">
+                            <div class="list-header-left">
+                                <button class="add-new-button violet-button" type="button" onclick="OpenCreateContactWindow()">Dodaj nowy</button>
+                                <input type="file" id="import-file-input" style="display: none;" accept=".csv" />
+                                <button class="import-contacts-button ie-button" type="button" onclick="TriggerFileInput()">Importuj kontakty</button>
+                                <button class="export-contacts-button ie-button" type="button" onclick="ExportContactsAndDownloadExcel()">Exportuj kontakty</button>
+                            </div>
+                            <form class="list-search-bar d-flex" id="search-for-contacts">
+                                <input class="search-for contact-search" placeholder="Wyszukaj kontakt">
+                            </form>
+                        </div>
+                        <div class="list-content">
+                            <div class="table-responsive">
+                                <table class="contacts-list table table-borderless" id="contacts-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="tiny-cell">Imię</th>
+                                            <th class="tiny-cell" id="contact-surname">Nazwisko</th>
+                                            <th class="tiny-cell">Email</th>
+                                            <th class="small-cell" style="width: 150px;">Numer telefonu</th>
+                                            <th class="tiny-centered-cell">Status</th>
+                                            <th class="centered-cell">Grupy</th>
+                                            <th class="centered-cell" scope="col">Opcje</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="list-footer" style="margin-top:15px; display:flex; align-items: center;">
+                            <div style="flex:1;" id="contact-previous-button-container">
+                            </div>
+                            <div class="page-counter" style="flex:auto; text-align:center;">
+                                <span class="form-subtitle" id="contact-page-counter" style="display:none;">0</span>
+                            </div>
+                            <div style="flex:1; display:flex; justify-content:right;" id="contact-next-button-container">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contacts-options-container options-container" style="margin: 20px; display: none;">
+                        <div class="option-content">
+                            <div class="options-header">
+                                <div class="previous-page" style="flex:1;">
+                                    <button class="violet-button" id="contacts-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToContactList()">
+                                        <span class="arrow-back" style="max-width:24px;"><img src="/icons/previous.png"></span>
+                                        <span>Powrót</span>
+                                    </button>
+                                </div>
+                                <div class="option-name" style="flex:auto; text-align:center;">
+                                    <span class="opion-name-placeholder" id="contact-input-window-title">Nowy kontakt</span>
+                                </div>
+                                <div style="flex:1;"></div>
+                            </div>
+                            <hr />
+                            <form class="contact-options-form options-form">
+                                <div class="personal-data" style="margin-bottom:20px;">
+                                    <span class="form-subtitle">Dane Personalne</span>
+                                    <div class="form-group" style="margin-top: 20px;">
+                                        <div class="row">
+                                            <div class="col">
+                                                <label for="contactNameInput">Imię *</label>
+                                                <input type="text" class="form-input" id="contactNameInput" required maxlength="40">
+                                            </div>
+                                            <div class="col">
+                                                <label for="contactSurnameInput">Nazwisko *</label>
+                                                <input type="text" class="form-input" id="contactSurnameInput" required maxlength="40">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <label for="contactEmail">Email</label>
+                                                <input type="email" class="form-input" id="contactEmail" maxlength="50">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="contact-data" style="margin-top:20px; margin-bottom:20px;">
+                                    <span class="form-subtitle">Dane Kontaktowe</span>
+                                    <div class="form-group" style="margin-top:20px;">
+                                        <div class="row">
+                                            <div class="col">
+                                                <label for="contactPhoneNumber">Numer telefonu *</label>
+                                                <input type="tel" class="form-input" id="contactPhoneNumber" required maxlength="15" minlength="15" pattern="^\+[0-9]{2} \d{3} \d{3} \d{3}$">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <label for="contactHQAddress">Adres miejsca pracy</label>
+                                                <input type="text" class="form-input" id="contactHQAddress" maxlength="50">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <label for="ContactPostalNumber" style="white-space: nowrap;">Kod pocztowy</label>
+                                                <input type="text" class="form-input" id="ContactPostalNumber" pattern="[0-9]{2}-[0-9]{3}" maxlength="6">
+                                            </div>
+                                            <div class="col" style="flex-grow: 3;">
+                                                <label for="ContactCity">Miasto</label>
+                                                <input type="text" class="form-input" id="ContactCity" maxlength="30">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col" style="flex-grow:3;">
+                                                <label for="contactDepartment">Jednostka organizacyjna</label>
+                                                <input type="text" class="form-input" id="contactDepartment" maxlength="100">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="other-data" style="margin-top: 20px;">
+                                    <div class="form-group">
+                                        <label for="contactIsActive" style="width:100%;">Czy kontakt obecnie jest zatrudniony?</label>
+                                        <div class="form-check form-check-inline" style="margin-bottom: 8px;">
+                                            <input class="check-input" type="radio" name="isActive?" id="isActiveYes" value="yes" checked />
+                                            <label class="form-check-label" for="IsActiveYes">
+                                                Tak
+                                            </label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="check-input" type="radio" name="isActive?" id="isActiveNo" value="no" />
+                                            <label class="form-check-label" for="IsActiveNo">
+                                                Nie
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="justify-content-center d-flex" style="margin-top: 20px;">
+                                    <button type="submit" class="violet-button" id="createOrEditButtonContacts"></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="contacts-details-container options-container" style="margin: 20px; display: none;">
+                        <div class="option-content" style="max-width: 600px;">
+                            <div class="options-header">
+                                <div class="previous-page" style="flex:1;">
+                                    <button class="violet-button" id="contacts-details-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToContactList()">
+                                        <span class="arrow-back" style="max-width:24px;"><img src="/icons/previous.png"></span>
+                                        <span>Powrót</span>
+                                    </button>
+                                </div>
+                                <div class="option-name" style="flex:auto; text-align:center;">
+                                    <span class="opion-name-placeholder" id="contact-details-window-title">Kontakt</span>
+                                </div>
+                                <div style="flex:1;"></div>
+                            </div>
+                            <hr />
+                            <div class="contact-details-content-container" style="padding: 10px 30px 30px 30px;">
+                                <div class="personal-data" style="margin-bottom:20px;">
+                                    <span class="form-subtitle">Dane Personalne</span>
+                                    <div class="form-group" style="margin-top: 20px;">
+                                        <div class="row mb-10">
+                                            <div class="col d-flex">
+                                                <label class="contacts-detail-label" for="contactIdDetail">Id:</label>
+                                                <span class="details-span" id="contactIdDetail"></span>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-10">
+                                            <div class="col d-flex">
+                                                <label class="contacts-detail-label" for="contactNameDetail">Imię:</label>
+                                                <span class="details-span" id="contactNameDetail"></span>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-10">
+                                            <div class="col d-flex">
+                                                <label class="contacts-detail-label" for="contactSurnameDetail">Nazwisko:</label>
+                                                <span class="details-span" id="contactSurnameDetail"></span>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-10">
+                                            <div class="col d-flex">
+                                                <label class="contacts-detail-label" for="contactEmailDetail">Email:</label>
+                                                <span class="details-span" id="contactEmailDetail"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="contact-data" style="margin-top:20px; margin-bottom:20px;">
+                                    <span class="form-subtitle">Dane Kontaktowe</span>
+                                    <div class="form-group" style="margin-top:20px;">
+                                        <div class="row mb-10">
+                                            <div class="col d-flex">
+                                                <label class="contacts-detail-label" for="contactPhoneNumberDetail">Numer telefonu:</label>
+                                                <span class="details-span" id="contactPhoneNumberDetail"></span>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-10">
+                                            <div class="col d-flex">
+                                                <label class="contacts-detail-label" for="contactHQAddressDetail">Adres miejsca pracy:</label>
+                                                <span class="details-span" id="contactHQAddressDetail"></span>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-10">
+                                            <div class="col d-flex">
+                                                <label class="contacts-detail-label" for="ContactPostalNumberDetail" style="white-space: nowrap;">Kod pocztowy:</label>
+                                                <span class="details-span" id="ContactPostalNumberDetail"></span>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-10">
+                                            <div class="col d-flex">
+                                                <label class="contacts-detail-label" for="ContactCityDetail">Miasto:</label>
+                                                <span class="details-span" id="ContactCityDetail"></span>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-10">
+                                            <div class="col d-flex">
+                                                <label class="contacts-detail-label" for="contactDepartmentDetail">Jednostka organizacyjna:</label>
+                                                <span class="details-span" id="contactDepartmentDetail"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="other-data" style="margin-top: 20px;">
+                                    <div class="row mb-10">
+                                        <div class="col d-flex">
+                                            <label class="contacts-detail-label" for="contactGroupsDetail">Przypisane grupy:</label>
+                                            <span class="details-span" id="contactGroupsDetail"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-10">
+                                        <div class="col d-flex">
+                                            <label class="contacts-detail-label" for="contactStatusDetail">Status:</label>
+                                            <span class="details-span" id="contactStatusDetail"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="import-report-container list-container" style="display:none;">
+                        <div class="list-header">
+                            <div class="previous-page" style="flex:1;">
+                                <button class="violet-button" id="contacts-previous-button" type="button" style="display: flex; align-items:center;" onclick="FinishBrowsingImportReport()">
+                                    Zamknij raport
+                                </button>
+                            </div>
+                            <div class="option-name" style="flex:auto; text-align:center;">
+                                <span class="opion-name-placeholder" id="report-window-title">Importuj kontakty - raport</span>
+                            </div>
+                            <div style="flex:1;">
+                                <div class="list-search-bar d-flex">
+                                    <input class="search-for import-contact-search" placeholder="Wyszukaj kontakt">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-content" style="margin-bottom:20px;" id="import-added-contacts-container">
+                            <div class="table-responsive">
+                                <table class="added-contacts-list table table-borderless" id="added-contacts-table" style="table-layout:fixed;">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="7" class="header" style="color:#5a6372c4; text-align: center; font-size: 18px; padding: 10px;">
+                                                Kontakty dodane
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th class="tiny-cell">Imię</th>
+                                            <th class="tiny-cell">Nazwisko</th>
+                                            <th class="tiny-cell">Email</th>
+                                            <th class="small-cell" style="width: 150px;">Numer telefonu</th>
+                                            <th class="tiny-centered-cell">Status</th>
+                                            <th class="tiny-centered-cell">Grupy przypisane</th>
+                                            <th class="tiny-centered-cell">Grupy błędne (Id)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="list-content" style="margin-bottom:20px; margin-top:5px;" id="import-repeated-contacts-container">
+                            <div class="table-responsive">
+                                <table class="added-contacts-list table table-borderless" id="repeated-contacts-table" style="table-layout:fixed;">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="5" class="header" style="color:#5a6372c4; text-align: center; font-size: 18px; padding: 10px;">
+                                                Kontakty powtórzone
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th class="tiny-cell">Imię</th>
+                                            <th class="tiny-cell">Nazwisko</th>
+                                            <th class="tiny-cell">Email</th>
+                                            <th class="small-cell" style="width: 150px;">Numer telefonu</th>
+                                            <th class="tiny-centered-cell">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="list-content" style="margin-bottom:20px; margin-top:5px;" id="import-invalid-contacts-container">
+                            <div class="table-responsive">
+                                <table class="added-contacts-list table table-borderless" id="invalid-contacts-table" style="table-layout:fixed;">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="5" class="header" style="color:#5a6372c4; text-align: center; font-size: 18px; padding: 10px;">
+                                                Kontakty nieprawidłowe
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th class="tiny-cell">Imię</th>
+                                            <th class="tiny-cell">Nazwisko</th>
+                                            <th class="tiny-cell">Email</th>
+                                            <th class="small-cell" style="width: 150px;">Numer telefonu</th>
+                                            <th class="tiny-centered-cell">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contact-options-container-assign list-container" style="display: none;">
+                        <div class="list-header">
+                            <div class="previous-page" style="flex:1;">
+                                <button class="violet-button" id="contacts-assign-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToContactListFromAssign()">
+                                    <span class="arrow-back" style="max-width:24px;"><img src="~/icons/previous.png" /></span>
+                                    <span>Powrót</span>
+                                </button>
+                            </div>
+                            <div class="option-name" style="flex:auto; text-align:center;">
+                                <span class="opion-name-placeholder" id="contact-asssign-window-title">Zarządzaj grupami użytkownika</span>
+                            </div>
+                            <div style="flex:1;"></div>
+                        </div>
+                        <div class="list-content" style="margin-bottom: 24px;">
+                            <div class="table-responsive">
+                                <table class="group-assign-chosen-contact table table-borderless" id="group-assign-chosen-contact-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="tiny-cell">Imię</th>
+                                            <th class="tiny-cell">Nazwisko</th>
+                                            <th class="small-cell" style="width: 150px;">Numer telefonu</th>
+                                            <th class="tiny-centered-cell">Status</th>
+                                            <th class="centered-cell">Grupy</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="list-header">
+                            <div></div>
+                            <form class="list-search-bar d-flex" id="search-for-assign-groups">
+                                <input class="search-for contact-search-for-group" placeholder="Wyszukaj grupę" />
+                            </form>
+                        </div>
+                        <div class="list-content">
+                            <div class="table-responsive" style="max-height: 39vh;">
+                                <table class="group-assign-group-list table table-borderless" id="group-assign-group-list-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="small-cell">Nazwa</th>
+                                            <th class="big-cell">Opis</th>
+                                            <th class="tiny-centered-cell">Liczba członków</th>
+                                            <th class="tiny-centered-cell" scope="col">Akcja</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="list-footer" style="margin-top:15px; display:flex; align-items: center;">
+                            <div style="flex:1;" id="group-assign-previous-button-container">
+                            </div>
+                            <div class="page-counter" style="flex:auto; text-align:center;">
+                                <span class="form-subtitle" id="group-assign-page-counter" style="display:none;">0</span>
+                            </div>
+                            <div style="flex:1; display:flex; justify-content:right;" id="group-assign-next-button-container">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="groups">
+                <div class="groups-list-container list-container">
+                    <div class="list-header">
+                        <div class="list-header-left">
+                            <button class="add-new-button violet-button" type="button" onclick="OpenCreateGroupWindow()">Dodaj nową</button>
+                        </div>
+                        <form class="list-search-bar d-flex" id="search-for-groups">
+                            <input class="search-for group-search" placeholder="Wyszukaj grupę" />
+                        </form>
+                    </div>
+                    <div class="list-content">
+                        <div class="table-responsive">
+                            <table class="group-list table table-borderless" id="group-table">
+                                <thead>
+                                    <tr>
+                                        <th class="small-cell">Nazwa</th>
+                                        <th class="big-cell">Opis</th>
+                                        <th class="tiny-centered-cell">Liczba członków</th>
+                                        <th class="centered-cell" scope="col">Opcje</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="list-footer" style="margin-top:15px; display:flex; align-items: center;">
+                        <div style="flex:1;" id="group-previous-button-container">
+                        </div>
+                        <div class="page-counter" style="flex:auto; text-align:center;">
+                            <span class="form-subtitle" id="group-page-counter" style="display:none;">0</span>
+                        </div>
+                        <div style="flex:1; display:flex; justify-content:right;" id="group-next-button-container">
+                        </div>
+                    </div>
+                </div>
+                <div class="groups-options-container options-container" style="display:none;">
+                    <div class="option-content">
+                        <div class="options-header">
+                            <div class="previous-page" style="flex:1;">
+                                <button class="violet-button" id="groups-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToGroupList()">
                                     <span class="arrow-back" style="max-width:24px;"><img src="/icons/previous.png"></span>
                                     <span>Powrót</span>
                                 </button>
                             </div>
                             <div class="option-name" style="flex:auto; text-align:center;">
-                                <span class="opion-name-placeholder" id="contact-details-window-title">Kontakt</span>
+                                <span class="opion-name-placeholder" id="group-input-window-title">Nowa grupa</span>
                             </div>
                             <div style="flex:1;"></div>
                         </div>
                         <hr />
-                        <div class="contact-details-content-container" style="padding: 10px 30px 30px 30px;">
-                            <div class="personal-data" style="margin-bottom:20px;">
-                                <span class="form-subtitle">Dane Personalne</span>
-                                <div class="form-group" style="margin-top: 20px;">
-                                    <div class="row mb-10">
-                                        <div class="col d-flex">
-                                            <label class="contacts-detail-label" for="contactIdDetail">Id:</label>
-                                            <span class="details-span" id="contactIdDetail"></span>
-                                        </div>
+                        <form class="group-options-form options-form">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="groupNameInput">Nazwa grupy *</label>
+                                        <input type="text" class="form-input" id="groupNameInput" required maxlength="30" />
                                     </div>
-                                    <div class="row mb-10">
-                                        <div class="col d-flex">
-                                            <label class="contacts-detail-label" for="contactNameDetail">Imię:</label>
-                                            <span class="details-span" id="contactNameDetail"></span>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-10">
-                                        <div class="col d-flex">
-                                            <label class="contacts-detail-label" for="contactSurnameDetail">Nazwisko:</label>
-                                            <span class="details-span" id="contactSurnameDetail"></span>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-10">
-                                        <div class="col d-flex">
-                                            <label class="contacts-detail-label" for="contactEmailDetail">Email:</label>
-                                            <span class="details-span" id="contactEmailDetail"></span>
-                                        </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="groupDescriptionInput">Opis grupy</label>
+                                        <textarea class="form-input" id="groupDescriptionInput" rows="3" maxlength="100"></textarea>
+                                        <div class="symbol-counter" style="margin-top: 0.25rem; text-align: right" id="symbolCounterAddGroups">&nbsp</div>
                                     </div>
                                 </div>
                             </div>
-                            <hr />
-                            <div class="contact-data" style="margin-top:20px; margin-bottom:20px;">
-                                <span class="form-subtitle">Dane Kontaktowe</span>
-                                <div class="form-group" style="margin-top:20px;">
-                                    <div class="row mb-10">
-                                        <div class="col d-flex">
-                                            <label class="contacts-detail-label" for="contactPhoneNumberDetail">Numer telefonu:</label>
-                                            <span class="details-span" id="contactPhoneNumberDetail"></span>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-10">
-                                        <div class="col d-flex">
-                                            <label class="contacts-detail-label" for="contactHQAddressDetail">Adres miejsca pracy:</label>
-                                            <span class="details-span" id="contactHQAddressDetail"></span>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-10">
-                                        <div class="col d-flex">
-                                            <label class="contacts-detail-label" for="ContactPostalNumberDetail" style="white-space: nowrap;">Kod pocztowy:</label>
-                                            <span class="details-span" id="ContactPostalNumberDetail"></span>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-10">
-                                        <div class="col d-flex">
-                                            <label class="contacts-detail-label" for="ContactCityDetail">Miasto:</label>
-                                            <span class="details-span" id="ContactCityDetail"></span>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-10">
-                                        <div class="col d-flex">
-                                            <label class="contacts-detail-label" for="contactDepartmentDetail">Jednostka organizacyjna:</label>
-                                            <span class="details-span" id="contactDepartmentDetail"></span>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="justify-content-center d-flex">
+                                <button type="submit" class="violet-button" id="createOrEditButtonGroups"></button>
                             </div>
-                            <hr />
-                            <div class="other-data" style="margin-top: 20px;">
-                                <div class="row mb-10">
-                                    <div class="col d-flex">
-                                        <label class="contacts-detail-label" for="contactGroupsDetail">Przypisane grupy:</label>
-                                        <span class="details-span" id="contactGroupsDetail"></span>
-                                    </div>
-                                </div>
-                                <div class="row mb-10">
-                                    <div class="col d-flex">
-                                        <label class="contacts-detail-label" for="contactStatusDetail">Status:</label>
-                                        <span class="details-span" id="contactStatusDetail"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
-                <div class="import-report-container list-container" style="display:none;">
+                <div class="groups-options-container-assign list-container" style="display: none;">
                     <div class="list-header">
                         <div class="previous-page" style="flex:1;">
-                            <button class="violet-button" id="contacts-previous-button" type="button" style="display: flex; align-items:center;" onclick="FinishBrowsingImportReport()">
-                                Zamknij raport
-                            </button>
-                        </div>
-                        <div class="option-name" style="flex:auto; text-align:center;">
-                            <span class="opion-name-placeholder" id="report-window-title">Importuj kontakty - raport</span>
-                        </div>
-                        <div style="flex:1;">
-                            <div class="list-search-bar d-flex">
-                                <input class="search-for import-contact-search" placeholder="Wyszukaj kontakt">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="list-content" style="margin-bottom:20px;" id="import-added-contacts-container">
-                        <div class="table-responsive">
-                            <table class="added-contacts-list table table-borderless" id="added-contacts-table" style="table-layout:fixed;">
-                                <thead>
-                                    <tr>
-                                        <th colspan="7" class="header" style="color:#5a6372c4; text-align: center; font-size: 18px; padding: 10px;">
-                                            Kontakty dodane
-                                        </th>
-                                    </tr>
-                                    <tr>
-                                        <th class="tiny-cell">Imię</th>
-                                        <th class="tiny-cell">Nazwisko</th>
-                                        <th class="tiny-cell">Email</th>
-                                        <th class="small-cell" style="width: 150px;">Numer telefonu</th>
-                                        <th class="tiny-centered-cell">Status</th>
-                                        <th class="tiny-centered-cell">Grupy przypisane</th>
-                                        <th class="tiny-centered-cell">Grupy błędne (Id)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="list-content" style="margin-bottom:20px; margin-top:5px;" id="import-repeated-contacts-container">
-                        <div class="table-responsive">
-                            <table class="added-contacts-list table table-borderless" id="repeated-contacts-table" style="table-layout:fixed;">
-                                <thead>
-                                    <tr>
-                                        <th colspan="5" class="header" style="color:#5a6372c4; text-align: center; font-size: 18px; padding: 10px;">
-                                            Kontakty powtórzone
-                                        </th>
-                                    </tr>
-                                    <tr>
-                                        <th class="tiny-cell">Imię</th>
-                                        <th class="tiny-cell">Nazwisko</th>
-                                        <th class="tiny-cell">Email</th>
-                                        <th class="small-cell" style="width: 150px;">Numer telefonu</th>
-                                        <th class="tiny-centered-cell">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="list-content" style="margin-bottom:20px; margin-top:5px;" id="import-invalid-contacts-container">
-                        <div class="table-responsive">
-                            <table class="added-contacts-list table table-borderless" id="invalid-contacts-table" style="table-layout:fixed;">
-                                <thead>
-                                    <tr>
-                                        <th colspan="5" class="header" style="color:#5a6372c4; text-align: center; font-size: 18px; padding: 10px;">
-                                            Kontakty nieprawidłowe
-                                        </th>
-                                    </tr>
-                                    <tr>
-                                        <th class="tiny-cell">Imię</th>
-                                        <th class="tiny-cell">Nazwisko</th>
-                                        <th class="tiny-cell">Email</th>
-                                        <th class="small-cell" style="width: 150px;">Numer telefonu</th>
-                                        <th class="tiny-centered-cell">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="contact-options-container-assign list-container" style="display: none;">
-                    <div class="list-header">
-                        <div class="previous-page" style="flex:1;">
-                            <button class="violet-button" id="contacts-assign-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToContactListFromAssign()">
+                            <button class="violet-button" id="groups-assign-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToGroupListFromAssign()">
                                 <span class="arrow-back" style="max-width:24px;"><img src="~/icons/previous.png" /></span>
                                 <span>Powrót</span>
                             </button>
                         </div>
                         <div class="option-name" style="flex:auto; text-align:center;">
-                            <span class="opion-name-placeholder" id="contact-asssign-window-title">Zarządzaj grupami użytkownika</span>
+                            <span class="opion-name-placeholder" id="group-asssign-window-title">Zarządzaj użytkownikami w grupie</span>
                         </div>
                         <div style="flex:1;"></div>
                     </div>
                     <div class="list-content" style="margin-bottom: 24px;">
                         <div class="table-responsive">
-                            <table class="group-assign-chosen-contact table table-borderless" id="group-assign-chosen-contact-table">
+                            <table class="group-assign-chosen-group table table-borderless" id="group-assign-chosen-group-table">
                                 <thead>
                                     <tr>
-                                        <th class="tiny-cell">Imię</th>
-                                        <th class="tiny-cell">Nazwisko</th>
-                                        <th class="small-cell" style="width: 150px;">Numer telefonu</th>
-                                        <th class="tiny-centered-cell">Status</th>
-                                        <th class="centered-cell">Grupy</th>
+                                        <th class="small-cell">Nazwa</th>
+                                        <th class="big-cell">Opis</th>
+                                        <th class="tiny-centered-cell">Liczba członków</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -637,19 +785,21 @@
                     </div>
                     <div class="list-header">
                         <div></div>
-                        <form class="list-search-bar d-flex" id="search-for-assign-groups">
-                            <input class="search-for contact-search-for-group" placeholder="Wyszukaj grupę" />
+                        <form class="list-search-bar d-flex" id="search-for-assingn-contacts">
+                            <input class="search-for group-search-for-user" placeholder="Wyszukaj użytkownika" />
                         </form>
                     </div>
                     <div class="list-content">
                         <div class="table-responsive" style="max-height: 39vh;">
-                            <table class="group-assign-group-list table table-borderless" id="group-assign-group-list-table">
+                            <table class="group-assign-contact-list table table-borderless" id="group-assign-contact-list-table">
                                 <thead>
                                     <tr>
-                                        <th class="small-cell">Nazwa</th>
-                                        <th class="big-cell">Opis</th>
-                                        <th class="tiny-centered-cell">Liczba członków</th>
-                                        <th class="tiny-centered-cell" scope="col">Akcja</th>
+                                        <th class="tiny-cell">Imię</th>
+                                        <th class="tiny-cell">Nazwisko</th>
+                                        <th class="tiny-cell">Numer telefonu</th>
+                                        <th class="tiny-centered-cell">Status</th>
+                                        <th class="centered-cell">Grupy</th>
+                                        <th class="tiny-centered-cell" style="width: 94px;">Akcja</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -658,337 +808,200 @@
                         </div>
                     </div>
                     <div class="list-footer" style="margin-top:15px; display:flex; align-items: center;">
-                        <div style="flex:1;" id="group-assign-previous-button-container">
+                        <div style="flex:1;" id="contact-assign-previous-button-container">
                         </div>
                         <div class="page-counter" style="flex:auto; text-align:center;">
-                            <span class="form-subtitle" id="group-assign-page-counter" style="display:none;">0</span>
+                            <span class="form-subtitle" id="contact-assign-page-counter" style="display:none;">0</span>
                         </div>
-                        <div style="flex:1; display:flex; justify-content:right;" id="group-assign-next-button-container">
+                        <div style="flex:1; display:flex; justify-content:right;" id="contact-assign-next-button-container">
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="tab-pane" id="groups">
-            <div class="groups-list-container list-container">
-                <div class="list-header">
-                    <div class="list-header-left">
-                        <button class="add-new-button violet-button" type="button" onclick="OpenCreateGroupWindow()">Dodaj nową</button>
-                    </div>
-                    <form class="list-search-bar d-flex" id="search-for-groups">
-                        <input class="search-for group-search" placeholder="Wyszukaj grupę" />
-                    </form>
-                </div>
-                <div class="list-content">
-                    <div class="table-responsive">
-                        <table class="group-list table table-borderless" id="group-table">
-                            <thead>
-                                <tr>
-                                    <th class="small-cell">Nazwa</th>
-                                    <th class="big-cell">Opis</th>
-                                    <th class="tiny-centered-cell">Liczba członków</th>
-                                    <th class="centered-cell" scope="col">Opcje</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="list-footer" style="margin-top:15px; display:flex; align-items: center;">
-                    <div style="flex:1;" id="group-previous-button-container">
-                    </div>
-                    <div class="page-counter" style="flex:auto; text-align:center;">
-                        <span class="form-subtitle" id="group-page-counter" style="display:none;">0</span>
-                    </div>
-                    <div style="flex:1; display:flex; justify-content:right;" id="group-next-button-container">
-                    </div>
-                </div>
-            </div>
-            <div class="groups-options-container options-container" style="display:none;">
-                <div class="option-content">
-                    <div class="options-header">
-                        <div class="previous-page" style="flex:1;">
-                            <button class="violet-button" id="groups-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToGroupList()">
-                                <span class="arrow-back" style="max-width:24px;"><img src="/icons/previous.png"></span>
-                                <span>Powrót</span>
-                            </button>
-                        </div>
-                        <div class="option-name" style="flex:auto; text-align:center;">
-                            <span class="opion-name-placeholder" id="group-input-window-title">Nowa grupa</span>
-                        </div>
-                        <div style="flex:1;"></div>
-                    </div>
-                    <hr />
-                    <form class="group-options-form options-form">
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col">
-                                    <label for="groupNameInput">Nazwa grupy *</label>
-                                    <input type="text" class="form-input" id="groupNameInput" required maxlength="30" />
-                                </div>
+                <div class="groups-details-container options-container" style="margin: 20px; display:none;">
+                    <div class="option-content" style="max-width: 600px;">
+                        <div class="options-header">
+                            <div class="previous-page" style="flex:1;">
+                                <button class="violet-button" id="groups-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToGroupList()">
+                                    <span class="arrow-back" style="max-width:24px;"><img src="/icons/previous.png"></span>
+                                    <span>Powrót</span>
+                                </button>
                             </div>
-                            <div class="row">
-                                <div class="col">
-                                    <label for="groupDescriptionInput">Opis grupy</label>
-                                    <textarea class="form-input" id="groupDescriptionInput" rows="3" maxlength="100"></textarea>
-                                    <div class="symbol-counter" style="margin-top: 0.25rem; text-align: right" id="symbolCounterAddGroups">&nbsp</div>
-                                </div>
+                            <div class="option-name" style="flex:auto; text-align:center;">
+                                <span class="opion-name-placeholder" id="group-details-window-title">Grupa</span>
                             </div>
-                        </div>
-                        <div class="justify-content-center d-flex">
-                            <button type="submit" class="violet-button" id="createOrEditButtonGroups"></button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="groups-options-container-assign list-container" style="display: none;">
-                <div class="list-header">
-                    <div class="previous-page" style="flex:1;">
-                        <button class="violet-button" id="groups-assign-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToGroupListFromAssign()">
-                            <span class="arrow-back" style="max-width:24px;"><img src="~/icons/previous.png" /></span>
-                            <span>Powrót</span>
-                        </button>
-                    </div>
-                    <div class="option-name" style="flex:auto; text-align:center;">
-                        <span class="opion-name-placeholder" id="group-asssign-window-title">Zarządzaj użytkownikami w grupie</span>
-                    </div>
-                    <div style="flex:1;"></div>
-                </div>
-                <div class="list-content" style="margin-bottom: 24px;">
-                    <div class="table-responsive">
-                        <table class="group-assign-chosen-group table table-borderless" id="group-assign-chosen-group-table">
-                            <thead>
-                                <tr>
-                                    <th class="small-cell">Nazwa</th>
-                                    <th class="big-cell">Opis</th>
-                                    <th class="tiny-centered-cell">Liczba członków</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="list-header">
-                    <div></div>
-                    <form class="list-search-bar d-flex" id="search-for-assingn-contacts">
-                        <input class="search-for group-search-for-user" placeholder="Wyszukaj użytkownika" />
-                    </form>
-                </div>
-                <div class="list-content">
-                    <div class="table-responsive" style="max-height: 39vh;">
-                        <table class="group-assign-contact-list table table-borderless" id="group-assign-contact-list-table">
-                            <thead>
-                                <tr>
-                                    <th class="tiny-cell">Imię</th>
-                                    <th class="tiny-cell">Nazwisko</th>
-                                    <th class="tiny-cell">Numer telefonu</th>
-                                    <th class="tiny-centered-cell">Status</th>
-                                    <th class="centered-cell">Grupy</th>
-                                    <th class="tiny-centered-cell" style="width: 94px;">Akcja</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="list-footer" style="margin-top:15px; display:flex; align-items: center;">
-                    <div style="flex:1;" id="contact-assign-previous-button-container">
-                    </div>
-                    <div class="page-counter" style="flex:auto; text-align:center;">
-                        <span class="form-subtitle" id="contact-assign-page-counter" style="display:none;">0</span>
-                    </div>
-                    <div style="flex:1; display:flex; justify-content:right;" id="contact-assign-next-button-container">
-                    </div>
-                </div>
-            </div>
-            <div class="groups-details-container options-container" style="margin: 20px; display:none;">
-                <div class="option-content" style="max-width: 600px;">
-                    <div class="options-header">
-                        <div class="previous-page" style="flex:1;">
-                            <button class="violet-button" id="groups-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToGroupList()">
-                                <span class="arrow-back" style="max-width:24px;"><img src="/icons/previous.png"></span>
-                                <span>Powrót</span>
-                            </button>
-                        </div>
-                        <div class="option-name" style="flex:auto; text-align:center;">
-                            <span class="opion-name-placeholder" id="group-details-window-title">Grupa</span>
-                        </div>
-                        <div style="flex:1;"></div>
-                    </div>
-                    <hr />
-                    <div class="groups-details-content-container" style="padding: 10px 30px 30px 30px;">
-                        <div class="group-data" style="margin-bottom:20px;">
-                            <span class="form-subtitle">Informacje</span>
-                            <div class="form-group" style="margin-top:20px;">
-                                <div class="row mb-10">
-                                    <div class="col d-flex">
-                                        <label class="groups-detail-label" for="groupIdDetail">Id:</label>
-                                        <span class="details-span" id="groupIdDetail"></span>
-                                    </div>
-                                </div>
-                                <div class="row mb-10">
-                                    <div class="col d-flex">
-                                        <label class="groups-detail-label" for="groupNameDetail">Nazwa grupy:</label>
-                                        <span class="details-span" id="groupNameDetail"></span>
-                                    </div>
-                                </div>
-                                <div class="row mb-10">
-                                    <div class="col d-flex">
-                                        <label class="groups-detail-label" for="groupDescriptionDetail">Opis grupy:</label>
-                                        <span class="details-span" id="groupDescriptionDetail"></span>
-                                    </div>
-                                </div>
-                            </div>
+                            <div style="flex:1;"></div>
                         </div>
                         <hr />
-                        <div class="group-members-data" style="margin-top:20px;">
-                            <span class="form-subtitle">Członkowie grupy</span>
-                            <div class="form-group" style="margin-top:20px;">
-                                <div class="table-responsive" style="border: 2px solid #f0f1f1; max-height: 17em;">
-                                    <table class="group-members-list table table-borderless" id="group-detail-members-table">
-                                        <thead>
-                                            <tr>
-                                                <th class="tiny-cell">Imię</th>
-                                                <th class="tiny-cell">Nazwisko</th>
-                                                <th class="small-cell" style="width: 150px;">Numer telefonu</th>
-                                                <th class="tiny-centered-cell">Status</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
+                        <div class="groups-details-content-container" style="padding: 10px 30px 30px 30px;">
+                            <div class="group-data" style="margin-bottom:20px;">
+                                <span class="form-subtitle">Informacje</span>
+                                <div class="form-group" style="margin-top:20px;">
+                                    <div class="row mb-10">
+                                        <div class="col d-flex">
+                                            <label class="groups-detail-label" for="groupIdDetail">Id:</label>
+                                            <span class="details-span" id="groupIdDetail"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-10">
+                                        <div class="col d-flex">
+                                            <label class="groups-detail-label" for="groupNameDetail">Nazwa grupy:</label>
+                                            <span class="details-span" id="groupNameDetail"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-10">
+                                        <div class="col d-flex">
+                                            <label class="groups-detail-label" for="groupDescriptionDetail">Opis grupy:</label>
+                                            <span class="details-span" id="groupDescriptionDetail"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="group-members-data" style="margin-top:20px;">
+                                <span class="form-subtitle">Członkowie grupy</span>
+                                <div class="form-group" style="margin-top:20px;">
+                                    <div class="table-responsive" style="border: 2px solid #f0f1f1; max-height: 17em;">
+                                        <table class="group-members-list table table-borderless" id="group-detail-members-table">
+                                            <thead>
+                                                <tr>
+                                                    <th class="tiny-cell">Imię</th>
+                                                    <th class="tiny-cell">Nazwisko</th>
+                                                    <th class="small-cell" style="width: 150px;">Numer telefonu</th>
+                                                    <th class="tiny-centered-cell">Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="tab-pane" id="logs">
-            <div class="logs-list-container list-container">
-                <div class="list-header">
-                    <div class="list-header-left">
+            <div class="tab-pane" id="logs">
+                <div class="logs-list-container list-container">
+                    <div class="list-header">
+                        <div class="list-header-left">
+                        </div>
+                        <form class="list-search-bar d-flex" id="search-for-logs">
+                            <input class="search-for log-search" placeholder="Wyszukaj logi" />
+                        </form>
                     </div>
-                    <form class="list-search-bar d-flex" id="search-for-logs">
-                        <input class="search-for log-search" placeholder="Wyszukaj logi" />
-                    </form>
+                    <div class="list-content">
+                        <div class="table-responsive">
+                            <table class="log-list table table-borderless" id="log-table">
+                                <thead>
+                                    <tr>
+                                        <th class="tiny-centered-cell">Typ</th>
+                                        <th scope="col">Źródło</th>
+                                        <th scope="col">Wiadomość</th>
+                                        <th class="centered-cell" style="min-width:105px;">Data</th>
+                                        <th class="tiny-centered-cell" scope="col">Opcje</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="list-footer" style="margin-top:15px; display:flex; align-items: center;">
+                        <div style="flex:1;" id="log-previous-button-container">
+                        </div>
+                        <div class="page-counter" style="flex:auto; text-align:center;">
+                            <span class="form-subtitle" id="log-page-counter" style="display:none;">0</span>
+                        </div>
+                        <div style="flex:1; display:flex; justify-content:right;" id="log-next-button-container">
+                        </div>
+                    </div>
                 </div>
-                <div class="list-content">
-                    <div class="table-responsive">
-                        <table class="log-list table table-borderless" id="log-table">
-                            <thead>
-                                <tr>
-                                    <th class="tiny-centered-cell">Typ</th>
-                                    <th scope="col">Źródło</th>
-                                    <th scope="col">Wiadomość</th>
-                                    <th class="centered-cell" style="min-width:105px;">Data</th>
-                                    <th class="tiny-centered-cell" scope="col">Opcje</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="list-footer" style="margin-top:15px; display:flex; align-items: center;">
-                    <div style="flex:1;" id="log-previous-button-container">
-                    </div>
-                    <div class="page-counter" style="flex:auto; text-align:center;">
-                        <span class="form-subtitle" id="log-page-counter" style="display:none;">0</span>
-                    </div>
-                    <div style="flex:1; display:flex; justify-content:right;" id="log-next-button-container">
+                <div class="logs-details-container options-container" style="margin: 20px; display:none;">
+                    <div class="option-content" id="log-details-window" style="max-width: 600px;">
+                        <div class="options-header">
+                            <div class="previous-page" style="flex:1;">
+                                <button class="violet-button" id="groups-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToLogsList()">
+                                    <span class="arrow-back" style="max-width:24px;"><img src="/icons/previous.png"></span>
+                                    <span>Powrót</span>
+                                </button>
+                            </div>
+                            <div class="option-name" style="flex:auto; text-align:center;">
+                                <span class="opion-name-placeholder" id="group-details-window-title">Log</span>
+                            </div>
+                            <div style="flex:1;"></div>
+                        </div>
+                        <hr style="margin-bottom: 10px;" />
+                        <div class="logs-details-content-container" style="padding: 10px 30px 30px 30px;">
+                            <div class="log-data" style="margin-bottom:20px;">
+                                <span class="form-subtitle">Informacje</span>
+                                <div class="form-group" style="margin-top:20px;">
+                                    <div class="row mb-10">
+                                        <div class="col d-flex">
+                                            <label class="logs-detail-label" for="logTypeDetail">Typ:</label>
+                                            <span class="details-span" id="logTypeDetail"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-10">
+                                        <div class="col d-flex">
+                                            <label class="logs-detail-label" for="logSourceDetail">Źródło:</label>
+                                            <span class="details-span" id="logSourceDetail"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-10">
+                                        <div class="col d-flex">
+                                            <label class="logs-detail-label" for="logMessageDetail">Wiadomość:</label>
+                                            <span class="details-span" id="logMessageDetail"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-10">
+                                        <div class="col d-flex">
+                                            <label class="logs-detail-label" for="logCreationDateDetail">Data:</label>
+                                            <span class="details-span" id="logCreationDateDetail"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="log-creator-data" style="margin-bottom:20px; margin-top: 4px;">
+                                <span class="form-subtitle">Inicjator</span>
+                                <div class="form-group" style="margin-top:20px;">
+                                    <div class="row mb-10">
+                                        <div class="col d-flex">
+                                            <label class="logs-detail-label" for="logCreatorNameDetail">Imię:</label>
+                                            <span class="details-span" id="logCreatorNameDetail"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-10">
+                                        <div class="col d-flex">
+                                            <label class="logs-detail-label" for="logCreatorSurnameDetail">Nazwisko:</label>
+                                            <span class="details-span" id="logCreatorSurnameDetail"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-10">
+                                        <div class="col d-flex">
+                                            <label class="logs-detail-label" for="logCreatorUsernameDetail">Email:</label>
+                                            <span class="details-span" id="logCreatorUsernameDetail"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-10">
+                                        <div class="col d-flex">
+                                            <label class="logs-detail-label" for="logCreatorPhoneNumberDetail">Numer telefonu:</label>
+                                            <span class="details-span" id="logCreatorPhoneNumberDetail"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="log-related-objects-data" style="margin-top:20px;">
+                                <div class="form-group" id="log-related-objects-data-form-group">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="logs-details-container options-container" style="margin: 20px; display:none;">
-                <div class="option-content" id="log-details-window" style="max-width: 600px;">
-                    <div class="options-header">
-                        <div class="previous-page" style="flex:1;">
-                            <button class="violet-button" id="groups-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToLogsList()">
-                                <span class="arrow-back" style="max-width:24px;"><img src="/icons/previous.png"></span>
-                                <span>Powrót</span>
-                            </button>
-                        </div>
-                        <div class="option-name" style="flex:auto; text-align:center;">
-                            <span class="opion-name-placeholder" id="group-details-window-title">Log</span>
-                        </div>
-                        <div style="flex:1;"></div>
-                    </div>
-                    <hr style="margin-bottom: 10px;" />
-                    <div class="logs-details-content-container" style="padding: 10px 30px 30px 30px;">
-                        <div class="log-data" style="margin-bottom:20px;">
-                            <span class="form-subtitle">Informacje</span>
-                            <div class="form-group" style="margin-top:20px;">
-                                <div class="row mb-10">
-                                    <div class="col d-flex">
-                                        <label class="logs-detail-label" for="logTypeDetail">Typ:</label>
-                                        <span class="details-span" id="logTypeDetail"></span>
-                                    </div>
-                                </div>
-                                <div class="row mb-10">
-                                    <div class="col d-flex">
-                                        <label class="logs-detail-label" for="logSourceDetail">Źródło:</label>
-                                        <span class="details-span" id="logSourceDetail"></span>
-                                    </div>
-                                </div>
-                                <div class="row mb-10">
-                                    <div class="col d-flex">
-                                        <label class="logs-detail-label" for="logMessageDetail">Wiadomość:</label>
-                                        <span class="details-span" id="logMessageDetail"></span>
-                                    </div>
-                                </div>
-                                <div class="row mb-10">
-                                    <div class="col d-flex">
-                                        <label class="logs-detail-label" for="logCreationDateDetail">Data:</label>
-                                        <span class="details-span" id="logCreationDateDetail"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <hr />
-                        <div class="log-creator-data" style="margin-bottom:20px; margin-top: 4px;">
-                            <span class="form-subtitle">Inicjator</span>
-                            <div class="form-group" style="margin-top:20px;">
-                                <div class="row mb-10">
-                                    <div class="col d-flex">
-                                        <label class="logs-detail-label" for="logCreatorNameDetail">Imię:</label>
-                                        <span class="details-span" id="logCreatorNameDetail"></span>
-                                    </div>
-                                </div>
-                                <div class="row mb-10">
-                                    <div class="col d-flex">
-                                        <label class="logs-detail-label" for="logCreatorSurnameDetail">Nazwisko:</label>
-                                        <span class="details-span" id="logCreatorSurnameDetail"></span>
-                                    </div>
-                                </div>
-                                <div class="row mb-10">
-                                    <div class="col d-flex">
-                                        <label class="logs-detail-label" for="logCreatorUsernameDetail">Email:</label>
-                                        <span class="details-span" id="logCreatorUsernameDetail"></span>
-                                    </div>
-                                </div>
-                                <div class="row mb-10">
-                                    <div class="col d-flex">
-                                        <label class="logs-detail-label" for="logCreatorPhoneNumberDetail">Numer telefonu:</label>
-                                        <span class="details-span" id="logCreatorPhoneNumberDetail"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <hr />
-                        <div class="log-related-objects-data" style="margin-top:20px;">
-                            <div class="form-group" id="log-related-objects-data-form-group">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="tab-pane" id="settings">
-            <div class="settings-options-password-container options-container" id="settings-password" style="height:320px; align-items: center;">
+            <div class="tab-pane" id="settings">
+                <div class="settings-options-password-container options-container" id="settings-password" style="height:320px; align-items: center;">
                 <div class="option-content">
                     <form class="setting-options-password-form, options-form" id="settings-password-form" style="width: 100%; padding-top:30px;">
                         <span class="text-danger model-alert-font" id="authorization-failed-message" role='alert' style='display:block; padding:0;'></span>
@@ -1019,6 +1032,7 @@
                 </div>
             </div>
         </div>
+        }
     </div>
 </div>
 
@@ -1052,22 +1066,25 @@
         });
         const elementToWatch = document.getElementById("settings-tab");
 
-        const settingsClickedObserver = setupWatcher(elementToWatch, "active", () => {
-            const tabChangedObserver = setupClassRemovalWatcher(elementToWatch, "active", () => {
-                $("#settings-form").empty();
-                $("#settings-container").hide();
-                $("#settings-password").show();
-                $("#status-message-settings").hide();
-                if ($("#settings-password-input").attr('type') == "text"){
-                    $("#settings-eye-icon").click().hide();
-                }
-                else{
-                    $("#settings-eye-icon").hide();
-                }
-                settingsClickedObserver.observe(elementToWatch, { attributes: true });
+        if (elementToWatch != null) {
+
+            const settingsClickedObserver = setupWatcher(elementToWatch, "active", () => {
+                const tabChangedObserver = setupClassRemovalWatcher(elementToWatch, "active", () => {
+                    $("#settings-form").empty();
+                    $("#settings-container").hide();
+                    $("#settings-password").show();
+                    $("#status-message-settings").hide();
+                    if ($("#settings-password-input").attr('type') == "text") {
+                        $("#settings-eye-icon").click().hide();
+                    }
+                    else {
+                        $("#settings-eye-icon").hide();
+                    }
+                    settingsClickedObserver.observe(elementToWatch, { attributes: true });
+                });
+                settingsClickedObserver.disconnect();
             });
-            settingsClickedObserver.disconnect();
-        });
+        }
 
         const resizeObserver = new ResizeObserver(entries => {
             for (const entry of entries) {

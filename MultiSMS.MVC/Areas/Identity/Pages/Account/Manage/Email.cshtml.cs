@@ -2,16 +2,15 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
 
 namespace MultiSMS.MVC.Areas.Identity.Pages.Account.Manage
@@ -20,16 +19,16 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<Administrator> _userManager;
         private readonly SignInManager<Administrator> _signInManager;
-        private readonly IEmailSender _emailSender;
+        private readonly IEmailService _emailService;
 
         public EmailModel(
             UserManager<Administrator> userManager,
-            SignInManager<Administrator> signInManager,
-            IEmailSender emailSender)
+            IEmailService emailService,
+            SignInManager<Administrator> signInManager)
         {
             _userManager = userManager;
+            _emailService = emailService;
             _signInManager = signInManager;
-            _emailSender = emailSender;
         }
 
         /// <summary>
@@ -119,10 +118,15 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account.Manage
                     pageHandler: null,
                     values: new { area = "Identity", userId = userId, email = Input.NewEmail, code = code },
                     protocol: Request.Scheme);
-                await _emailSender.SendEmailAsync(
-                    Input.NewEmail,
-                    "Confirm your email",
-                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+                _emailService.SendEmail(
+                    new Message
+                    {
+                        To = new List<string> { email},
+                        Subject = "Potwierdź zmianę adresu email",
+                        MessageContent = $"Aby zmienić adres email w serwisie Multi-SMS na {Input.NewEmail} proszę kliknąć <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>tutaj</a>."
+                    }
+                );
 
                 StatusMessage = "Wysłano link potwierdzający zmianę adresu e-mail na twoją skrzynkę pocztową";
                 return RedirectToPage();

@@ -34,9 +34,13 @@ builder.Services.Configure<ApiSettingsSettings>(configuration.GetSection("ApiSet
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-builder.Services.AddDefaultIdentity<Administrator>(options => options.SignIn.RequireConfirmedAccount = false)
+builder.Services.AddIdentity<Administrator, IdentityRole<int>>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<MultiSMSDbContext>()
+    .AddDefaultUI()
     .AddErrorDescriber<CustomIdentityErrorDescriber>()
+    .AddRoles<IdentityRole<int>>()
+    .AddRoleManager<RoleManager<IdentityRole<int>>>()
+    .AddUserManager<UserManager<Administrator>>()
     .AddDefaultTokenProviders();
 
 builder.Services.InitializeInfrastructureDependencies();
@@ -45,6 +49,7 @@ builder.Services.InitializeBusinessLogicDependencies();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddSignalR();
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
@@ -77,7 +82,13 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 app.MapRazorPages();
+
+app.MapAreaControllerRoute(
+    name: "Identity",
+    areaName: "Identity",
+    pattern: "Identity/{controller=Home}/{action=Index}/{id?}");
 
 var mapper = app.Services.GetRequiredService<IMapper>();
 mapper.ConfigurationProvider.AssertConfigurationIsValid();
