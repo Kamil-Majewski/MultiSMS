@@ -1209,9 +1209,9 @@
             });
         });
 
-        $(document).on('click', '.log-details', function (e) {
+        $(document).on('click', '#log-table tbody tr', function (e) {
             e.preventDefault();
-            var id = $(this).attr('href').split('-')[1];
+            var id = $(this).find('a').first().attr('href').split('-')[1];
 
             $.ajax({
                 url: '@Url.Action("GetLog", "Home")',
@@ -1345,9 +1345,19 @@
             $(".options-hidden").removeClass("options-hidden");
         });
 
-        // $(document).on("click", "#group-assign-group-list-table tbody tr", function(e) { 
-        //     var link = $(this).find('a').first();
-        // });
+        var debouncedUnassignGroupFromUser = debounce(unassignGroupFromUser, 220);
+        var debouncedAssingGroupToUser = debounce(assignGroupToUser, 220);
+
+        $(document).on("click", "#group-assign-group-list-table tbody tr", function (e) {
+            var link = $(this).find('a').first();
+            var contactIdGroupId = link.attr("href").split('-');
+            if (link.hasClass("contact-group-unassign")) {
+                debouncedUnassignGroupFromUser(link, contactIdGroupId);
+            }
+            else {
+                debouncedAssingGroupToUser(link, contactIdGroupId);
+            }
+        });
 
         $(document).on('click', '.options-shown', function (e) {
             e.preventDefault();
@@ -1559,9 +1569,9 @@
             PopulateTablesForAssigningGroupsToUsers(contactId)
         });
 
-        $(document).on('click', '.group-pick-me', function (e) {
+        $(document).on('click', '#choose-group-for-sms-table tbody tr', function (e) {
             e.preventDefault();
-            var groupId = $(this).attr("href").split('-')[1];
+            var groupId = $(this).find("a").first().attr("href").split('-')[1];
 
             $.ajax({
                 url: '@Url.Action("GetGroupById", "Home")',
@@ -1596,9 +1606,9 @@
             document.getElementById('sms-text-symbol-counter').innerHTML = messageEle.value.length + "/" + messageEle.getAttribute('maxlength');
         });
 
-        $(document).on('click', '.template-pick-me', function (e) {
+        $(document).on('click', '#choose-template-for-sms-table tbody tr', function (e) {
             e.preventDefault();
-            var templateId = $(this).attr("href").split('-')[1];
+            var templateId = $(this).find("a").first().attr("href").split('-')[1];
 
             $.ajax({
                 url: '@Url.Action("GetTemplateById", "Home")',
@@ -1623,49 +1633,23 @@
         });
 
         var debouncedAddUserToGroup = debounce(addUserToGroup, 220);
-
-        $(document).on('click', '.contact-assign', function (e) {
-            var link = $(this);
-            e.preventDefault();
-            var assignContactIdGroupId = $(this).attr("href").split('-');
-
-            debouncedAddUserToGroup(link, assignContactIdGroupId);
-            groupAssignMembersIds.push(parseInt(assignContactIdGroupId[1]));
-            
-        });
-
-        var debouncedAssingGroupToUser = debounce(assignGroupToUser, 220);
-
-        $(document).on('click', '.contact-group-assign', function (e) {
-            var link = $(this);
-            e.preventDefault();
-            var assignContactIdGroupId = $(this).attr("href").split('-');
-
-            debouncedAssingGroupToUser(link, assignContactIdGroupId);
-        });
-
         var debouncedRemoveUserFromGroup = debounce(removeUserFromGroup, 220);
 
-        $(document).on('click', '.contact-unassign', function (e) {
-            var link = $(this);
+        $(document).on("click", "#group-assign-contact-list-table tbody tr", function (e) {
             e.preventDefault();
-            var assignContactIdGroupId = $(this).attr("href").split('-');
 
-            debouncedRemoveUserFromGroup(link, assignContactIdGroupId);
-
-            var contactIdInt = parseInt(assignContactIdGroupId[1]);
-            var indexOfContactId = groupAssignMembersIds.indexOf(contactIdInt);
-            groupAssignMembersIds.splice(indexOfContactId, 1);
-        });
-
-        var debouncedUnassignGroupFromUser = debounce(unassignGroupFromUser, 220);
-
-        $(document).on('click', '.contact-group-unassign', function (e) {
-            var link = $(this);
-            e.preventDefault();
-            var assignContactIdGroupId = $(this).attr("href").split('-');
-
-            debouncedUnassignGroupFromUser(link, assignContactIdGroupId);
+            var link = $(this).find('a').first();
+            var contactIdGroupId = link.attr("href").split("-");
+            if (link.hasClass("contact-assign")) {
+                debouncedAddUserToGroup(link, contactIdGroupId)
+                groupAssignMembersIds.push(parseInt(contactIdGroupId[1]));
+            }
+            else {
+                debouncedRemoveUserFromGroup(link, contactIdGroupId);
+                var contactIdInt = parseInt(contactIdGroupId[1]);
+                var indexOfContactId = groupAssignMembersIds.indexOf(contactIdInt);
+                groupAssignMembersIds.splice(indexOfContactId, 1);
+            }
         });
 
         $(document).on('submit', '#create-template-form', function (e) {

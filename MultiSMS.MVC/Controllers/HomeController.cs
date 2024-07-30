@@ -329,7 +329,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> GetContactsBySearchPhrase(string searchPhrase)
         {
             var contacts = await Task.FromResult(_employeeService.GetAllEntries());
-            var fittingGroups = _groupService.GetAllEntries().Where(g => g.GroupName == searchPhrase).Select(g => g.GroupId).ToList();
+            var fittingGroups = _groupService.GetAllEntries().Where(g => g.GroupName.ToLower() == searchPhrase).Select(g => g.GroupId).ToList();
             List<Employee> filteredContacts;
 
             if(fittingGroups.Count() == 1)
