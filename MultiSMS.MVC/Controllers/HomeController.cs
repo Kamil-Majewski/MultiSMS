@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MultiSMS.BusinessLogic.DTO;
 using MultiSMS.BusinessLogic.Extensions;
+using MultiSMS.BusinessLogic.Models;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Entities.ServerSms;
@@ -927,6 +928,94 @@ namespace MultiSMS.MVC.Controllers
                                   <option value=""Owner"">Właściciel</option>");
             }
         }
+
+        //[Authorize(Roles = "Administrator, Owner")]
+        //[HttpPost]
+        //public IActionResult DetermineUserRoleAndCreate(IdentityUserModel model)
+        //{
+        //    if (model.Role == "Owner" || model.Role == "Administrator")
+        //    {
+        //        return RedirectToAction(nameof(CreateAdmin), new { model.Name, model.Surname, model.Email, model.Role, model.PhoneNumber, model.Password });
+        //    }
+        //    else
+        //    {
+        //        return RedirectToAction(nameof(CreateUser), new { model.Name, model.Surname, model.Email, model.Role, model.PhoneNumber, model.Password });
+        //    }
+        //}
+
+        //[Authorize(Roles = "Administrator, Owner")]
+        //[HttpGet]
+        //public async Task<IActionResult> CreateUser(string Name, string Surname, string Email, string Role, string? PhoneNumber, string Password)
+        //{
+        //    var model = new IdentityUserModel
+        //    {
+        //        Name = Name,
+        //        Surname = Surname,
+        //        Email = Email,
+        //        Role = Role,
+        //        PhoneNumber = PhoneNumber,
+        //        Password = Password
+        //    };
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            var newUser = await _use;
+        //            return Ok(newUser);
+        //        }
+        //        catch (CustomValidationException ex)
+        //        {
+        //            foreach (var error in ex.Errors)
+        //            {
+        //                ModelState.AddModelError(string.Empty, error);
+        //            }
+        //            return BadRequest(ModelState);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+        //}
+
+        //[Authorize(Roles = "Owner")]
+        //[HttpGet]
+        //public async Task<IActionResult> CreateAdmin(string Name, string Surname, string Email, string Role, string? PhoneNumber, string Password)
+        //{
+        //    var model = new IdentityUserModel
+        //    {
+        //        Name = Name,
+        //        Surname = Surname,
+        //        Email = Email,
+        //        Role = Role,
+        //        PhoneNumber = PhoneNumber,
+        //        Password = Password
+        //    };
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            var newUser = await _userService. _mediator.Send(new CreateNewIdentityUserCommand(model));
+        //            return Ok(newUser);
+        //        }
+        //        catch (CustomValidationException ex)
+        //        {
+        //            foreach (var error in ex.Errors)
+        //            {
+        //                ModelState.AddModelError(string.Empty, error);
+        //            }
+        //            return BadRequest(ModelState);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+        //}
+
+
         #endregion
 
 
