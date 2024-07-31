@@ -6,9 +6,9 @@ using MultiSMS.Interface.Seeding;
 
 namespace MultiSMS.Interface
 {
-    public class MultiSMSDbContext : IdentityDbContext<Administrator, IdentityRole<int>, int>
+    public class MultiSMSDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
-        public virtual DbSet<Administrator> AspNetUsers { get; set; }
+        public virtual DbSet<User> AspNetUsers { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<Group> Groups { get; set; }
         public virtual DbSet<SMSMessageTemplate> SMSMessageTemplates { get; set; }
@@ -24,7 +24,7 @@ namespace MultiSMS.Interface
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<Administrator>().HasData(SeedUsers.GetUserSeed());
+            builder.Entity<User>().HasData(SeedUsers.GetUserSeed());
             builder.Entity<ApiSettings>().HasData(SeedApiSettings.GetApiSettingsSeed());
             builder.Entity<IdentityRole<int>>().HasData(SeedRoles.Seed());
             builder.Entity<IdentityUserRole<int>>().HasData(AssignRoles.GrantRoles());

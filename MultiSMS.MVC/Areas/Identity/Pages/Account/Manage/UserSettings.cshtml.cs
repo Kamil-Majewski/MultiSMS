@@ -13,14 +13,14 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account.Manage
 {
     public class IndexModel : PageModel
     {
-        private readonly UserManager<Administrator> _userManager;
-        private readonly SignInManager<Administrator> _signInManager;
-        private readonly IAdministratorService _adminService;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly IUserService _adminService;
 
         public IndexModel(
-            UserManager<Administrator> userManager,
-            SignInManager<Administrator> signInManager,
-            IAdministratorService adminService)
+            UserManager<User> userManager,
+            SignInManager<User> signInManager,
+            IUserService adminService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -69,7 +69,7 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account.Manage
             public string Surname { get; set; }
         }
 
-        private async Task LoadAsync(Administrator user)
+        private async Task LoadAsync(User user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var adminDto = await _adminService.GetAdministratorDtoByEmailAsync(userName);

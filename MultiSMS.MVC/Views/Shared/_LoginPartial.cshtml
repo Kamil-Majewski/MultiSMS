@@ -1,9 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using MultiSMS.BusinessLogic.Services.Interfaces;
 @using MultiSMS.Interface.Entities;
-@inject SignInManager<Administrator> SignInManager
-@inject UserManager<Administrator> UserManager
-@inject IAdministratorService AdministratorService
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+@inject IUserService AdministratorService
 
 @{
     var user = SignInManager.IsSignedIn(User) ? await UserManager.GetUserAsync(User) : null;

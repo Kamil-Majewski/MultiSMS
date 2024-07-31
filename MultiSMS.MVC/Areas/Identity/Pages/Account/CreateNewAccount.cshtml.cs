@@ -15,17 +15,17 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<Administrator> _signInManager;
-        private readonly UserManager<Administrator> _userManager;
-        private readonly IUserStore<Administrator> _userStore;
-        private readonly IUserEmailStore<Administrator> _emailStore;
+        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly IUserStore<User> _userStore;
+        private readonly IUserEmailStore<User> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
-            UserManager<Administrator> userManager,
-            IUserStore<Administrator> userStore,
-            SignInManager<Administrator> signInManager,
+            UserManager<User> userManager,
+            IUserStore<User> userStore,
+            SignInManager<User> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
@@ -159,11 +159,11 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private Administrator CreateUser()
+        private User CreateUser()
         {
             try
             {
-                return Activator.CreateInstance<Administrator>();
+                return Activator.CreateInstance<User>();
             }
             catch
             {
@@ -173,13 +173,13 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account
             }
         }
 
-        private IUserEmailStore<Administrator> GetEmailStore()
+        private IUserEmailStore<User> GetEmailStore()
         {
             if (!_userManager.SupportsUserEmail)
             {
                 throw new NotSupportedException("The default UI requires a user store with email support.");
             }
-            return (IUserEmailStore<Administrator>)_userStore;
+            return (IUserEmailStore<User>)_userStore;
         }
     }
 }

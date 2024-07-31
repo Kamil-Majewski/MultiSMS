@@ -53,7 +53,7 @@ function CalculateHeaderWidthAndToolbarHeight() {
 
     if (sidebar.offsetHeight > 0) {
         if (renderedContent.offsetHeight > sidebar.offsetHeight) {
-            sidebar.style.height = `${renderedContent.offsetHeight}px`;
+            sidebar.style.height = `${renderedContent.offsetHeight + 1}px`;
         }
         else {
             renderedContent.style.height = `${sidebar.offsetHeight}px`

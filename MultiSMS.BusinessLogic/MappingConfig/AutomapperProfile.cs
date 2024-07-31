@@ -8,7 +8,8 @@ namespace MultiSMS.BusinessLogic.MappingConfig
     {
         public AutomapperProfile()
         {
-            CreateMap<Administrator, AdministratorDTO>();
+            CreateMap<User, UserDTO>();
+            CreateMap<User, ManageUserDTO>();
         }
     }
 }

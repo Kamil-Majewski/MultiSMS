@@ -13,11 +13,11 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account
 {
     public class LoginModel : PageModel
     {
-        private readonly SignInManager<Administrator> _signInManager;
+        private readonly SignInManager<User> _signInManager;
         private readonly ILogger<LoginModel> _logger;
-        private readonly UserManager<Administrator> _userManager;
+        private readonly UserManager<User> _userManager;
 
-        public LoginModel(SignInManager<Administrator> signInManager, ILogger<LoginModel> logger, UserManager<Administrator> userManager)
+        public LoginModel(SignInManager<User> signInManager, ILogger<LoginModel> logger, UserManager<User> userManager)
         {
             _signInManager = signInManager;
             _logger = logger;

@@ -20,7 +20,7 @@ namespace MultiSMS.MVC.Controllers
         private readonly IOptions<SmsApiSettings> _smsApiSettings;
         private readonly ILogService _logService;
         private readonly IEmployeeGroupService _employeeGroupService;
-        private readonly IAdministratorService _administratorService;
+        private readonly IUserService _userService;
         private readonly IGroupService _groupService;
         private readonly ISendSMSContext _smsContext;
         private readonly IApiSettingsService _apiSettingsService;
@@ -29,7 +29,7 @@ namespace MultiSMS.MVC.Controllers
                                 IOptions<SmsApiSettings> smsApiSettings,
                                 ILogService logService,
                                 IEmployeeGroupService employeeGroupService,
-                                IAdministratorService administratorService,
+                                IUserService administratorService,
                                 IGroupService groupService,
                                 ISendSMSContext smsContext,
                                 IApiSettingsService apiSettingsService)
@@ -38,13 +38,13 @@ namespace MultiSMS.MVC.Controllers
             _smsApiSettings = smsApiSettings;
             _logService = logService;
             _employeeGroupService = employeeGroupService;
-            _administratorService = administratorService;
+            _userService = administratorService;
             _groupService = groupService;
             _smsContext = smsContext;
             _apiSettingsService = apiSettingsService;
         }
 
-        private async Task<object> SendSmsMessageThroughServerSMS(string chosenGroupName, Group chosenGroup, int chosenGroupId, string additionalInfo, string? additionalPhoneNumbers, int adminId, AdministratorDTO admin, string phoneNumbersString, string text, Dictionary<string, string> data, ApiSettings activeApiSettings)
+        private async Task<object> SendSmsMessageThroughServerSMS(string chosenGroupName, Group chosenGroup, int chosenGroupId, string additionalInfo, string? additionalPhoneNumbers, int adminId, UserDTO admin, string phoneNumbersString, string text, Dictionary<string, string> data, ApiSettings activeApiSettings)
         {
             _smsContext.SetSmsStrategy(new SendSmsTroughServerSms(_serverSmsSettings, _apiSettingsService));
             var response = await _smsContext.SendSMSAsync(phoneNumbersString, text, data);
@@ -136,7 +136,7 @@ namespace MultiSMS.MVC.Controllers
             }
         }
 
-        private async Task<object> SendSmsMessageThroughSmsApi(string chosenGroupName, Group chosenGroup, int chosenGroupId, string additionalInfo, string? additionalPhoneNumbers, int adminId, AdministratorDTO admin, string phoneNumbersString, string text, Dictionary<string, string> data, ApiSettings activeApiSettings)
+        private async Task<object> SendSmsMessageThroughSmsApi(string chosenGroupName, Group chosenGroup, int chosenGroupId, string additionalInfo, string? additionalPhoneNumbers, int adminId, UserDTO admin, string phoneNumbersString, string text, Dictionary<string, string> data, ApiSettings activeApiSettings)
         {
             _smsContext.SetSmsStrategy(new SendSmsTroughSmsApi(_smsApiSettings, _apiSettingsService));
             var response = await _smsContext.SendSMSAsync(phoneNumbersString, text, data);
@@ -238,7 +238,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> SendSmsMessage(string text, int chosenGroupId, string chosenGroupName, string additionalPhoneNumbers, string additionalInfo)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _administratorService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
 
             var activeApiSettings = await _apiSettingsService.GetActiveSettingsAsync();
 

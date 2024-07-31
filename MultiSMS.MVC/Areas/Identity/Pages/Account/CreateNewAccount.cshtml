@@ -22,8 +22,13 @@
 
 <div class="single-windows-container">
     <div class="credentials-container" style="margin-left:30px; width:28vw">
+        <div class="window-header">
+            <div class="left">
+                <span>Tworzenie nowego konta</span>
+            </div>
+        </div>
         <section>
-            <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" style="padding: 15px 30px;">
                 <div asp-validation-summary="ModelOnly" class="text-danger model-alert-font" role="alert"></div>
                 <span class="form-subtitle">Utwórz nowe konto</span>
                 <div class="row" style="margin-top:20px;">
@@ -53,7 +58,7 @@
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div>
                 <div style="display:flex; justify-content:center; width:100%;">
-                    <button id="create-acc-submit" type="submit" class="violet-button mb-2" style="width:100%; display:flex; justify-content:center; font-size:19px; height:44px;">Zarejestruj nowe konto</button>
+                    <button id="create-acc-submit" type="submit" class="violet-button violet-button-small mb-2" style="width:50%; display:flex; justify-content:center; font-size:17px;">Zarejestruj nowe konto</button>
                 </div>
             </form>
         </section>

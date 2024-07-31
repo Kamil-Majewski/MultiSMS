@@ -7,13 +7,13 @@ namespace MultiSMS.Interface.Seeding
 {
     internal static class SeedUsers
     {
-        internal static IEnumerable<Administrator> GetUserSeed()
+        internal static IEnumerable<User> GetUserSeed()
         {
-            IPasswordHasher<Administrator> _passwordHasher = new PasswordHasher<Administrator>();
+            IPasswordHasher<User> _passwordHasher = new PasswordHasher<User>();
 
-            var users = new Administrator[]
+            var users = new User[]
             {
-                new Administrator
+                new User
                 {
                     Id = 1,
                     Name = "Giga",
@@ -31,7 +31,7 @@ namespace MultiSMS.Interface.Seeding
                     LockoutEnabled = false,
                     AccessFailedCount = 0
                 },
-                 new Administrator
+                 new User
                 {
                     Id = 2,
                     Name = "Normal",
@@ -48,7 +48,7 @@ namespace MultiSMS.Interface.Seeding
                     LockoutEnabled = false,
                     AccessFailedCount = 0
                 },
-                new Administrator
+                new User
                 {
                     Id = 3,
                     Name = "Casual",

@@ -11,7 +11,7 @@ namespace MultiSMS.BusinessLogic.Initialization
         public static void InitializeBusinessLogicDependencies(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IEmailService, EmailService>();
-            serviceCollection.AddScoped<IAdministratorService, AdministratorService>();
+            serviceCollection.AddScoped<IUserService, UserService>();
             serviceCollection.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
             serviceCollection.AddScoped<IImportExportEmployeesService, ImportExportEmployeesService>();
             serviceCollection.AddScoped<ISendSMSContext, SendSMSContext>();

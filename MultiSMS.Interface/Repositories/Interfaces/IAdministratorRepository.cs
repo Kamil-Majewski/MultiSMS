@@ -4,7 +4,7 @@ namespace MultiSMS.Interface.Repositories.Interfaces
 {
     public interface IAdministratorRepository
     {
-        Task<Administrator> GetAdministratorByEmailAsync(string email);
-        Task<Administrator> GetAdinistratorByIdAsync(int id);
+        Task<User> GetAdministratorByEmailAsync(string email);
+        Task<User> GetAdinistratorByIdAsync(int id);
     }
 }

@@ -1,8 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using MultiSMS.Interface.Entities
 
-@inject UserManager<Administrator> UserManager
-@inject SignInManager<Administrator> SignInManager
+@inject UserManager<User> UserManager
+@inject SignInManager<User> SignInManager
 
 @{
     var user = SignInManager.IsSignedIn(User) ? await UserManager.GetUserAsync(User) : null;
@@ -1072,7 +1072,7 @@
                         <span class="text-danger model-alert-font" id="authorization-failed-message" role='alert' style='display:block; padding:0;'></span>
                         <label class="form-subtitle" for="settings-password-input">Hasło</label>
                         <div class="password-input-container" id="enter-password-window" style="display: flex; justify-content: center; flex-direction:column; margin-bottom:25px;">
-                            <input type="password" class="form-input" id="settings-password-input" aria-required="true" placeholder="Wprowadź hasło" required"/>
+                            <input type="password" class="form-input" id="settings-password-input" aria-required="true" placeholder="Wprowadź hasło" required" style="margin: 0;"/>
                             <img src="~/icons/closed-eye.png" class="input-icons" id="settings-eye-icon" alt="Toggle Password Visibility">
                         </div>
                         <div style="display:flex; justify-content:center; width:100%;">

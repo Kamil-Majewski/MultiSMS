@@ -13,9 +13,9 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account
     [Authorize]
     public class ChangePasswordOnLogin : PageModel
     {
-        private readonly UserManager<Administrator> _userManager;
+        private readonly UserManager<User> _userManager;
 
-        public ChangePasswordOnLogin(UserManager<Administrator> userManager)
+        public ChangePasswordOnLogin(UserManager<User> userManager)
         {
             _userManager = userManager;
         }

@@ -34,13 +34,13 @@ builder.Services.Configure<ApiSettingsSettings>(configuration.GetSection("ApiSet
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-builder.Services.AddIdentity<Administrator, IdentityRole<int>>(options => options.SignIn.RequireConfirmedAccount = false)
+builder.Services.AddIdentity<User, IdentityRole<int>>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<MultiSMSDbContext>()
     .AddDefaultUI()
     .AddErrorDescriber<CustomIdentityErrorDescriber>()
     .AddRoles<IdentityRole<int>>()
     .AddRoleManager<RoleManager<IdentityRole<int>>>()
-    .AddUserManager<UserManager<Administrator>>()
+    .AddUserManager<UserManager<User>>()
     .AddDefaultTokenProviders();
 
 builder.Services.InitializeInfrastructureDependencies();
