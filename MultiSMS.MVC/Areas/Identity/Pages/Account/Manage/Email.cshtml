@@ -8,10 +8,14 @@
 
 <div class="admin-email options-container">
     <div class="option-content">
-        <form class="options-form" id="update-admin-email" method="post" style="padding-top: 30px;">
+        <div class="window-header">
+            <div class="left">
+                <span>Zmiana adresu e-mail</span>
+            </div>
+        </div>
+        <form class="options-form" id="update-admin-email" method="post">
             <div style="margin-bottom:20px;">
-                <span class="form-subtitle">Zmień adres e-mail</span>
-                <div class="form-group" style="margin-top: 20px;">
+                <div class="form-group">
                     <div class="row">
                         <div class="col">
                             <label for="AdminEmail">Obecny email</label>
@@ -22,22 +26,20 @@
                     <div class="row">
                         <div class="col">
                             <label for="AdminNewEmail">Nowy email</label>
-                            <input asp-for="Input.NewEmail" class="form-input" id="AdminNewEmail" autocomplete="email" aria-required="true" placeholder="Proszę podać nowy adres email" required maxlength="30" />
+                            <input asp-for="Input.NewEmail" class="form-input" id="AdminNewEmail" autocomplete="email" aria-required="true" style="margin: 0;" placeholder="Proszę podać nowy adres email" required maxlength="30" />
                             <span asp-validation-for="Input.NewEmail" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="justify-content-center d-flex" style="margin-top: 20px;">
-                <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="violet-button" style="width:100%;">Zmień maila</button>
+                <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="violet-button violet-button-small" style="width:50%;">Zmień adres e-mail</button>
             </div>
         </form>
     </div>
 </div>
 
 <script>
-    $("#toolbar").hide();
-    $("#toolbar-user-settings").show();
     $(".active-tab").removeClass("active-tab");
     $("#email-tab").parent().toggleClass("active-tab");
 

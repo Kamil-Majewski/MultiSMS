@@ -9,6 +9,11 @@
     }
 }
 
+<script>
+    $("#toolbar").hide();
+    $("#toolbar-user-settings").show();
+</script>
+
 <div>
     @RenderBody()
 </div>
@@ -38,8 +43,6 @@
                 renderedContent.style.height = `${sidebar.offsetHeight}px`
             }
         }
-        
-
     }
 
     $(document).ready(function () {

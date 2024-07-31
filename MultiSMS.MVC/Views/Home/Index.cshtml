@@ -210,19 +210,14 @@
                 </div>
                 <div class="templates-options-container options-container" style="display:none;">
                     <div class="option-content">
-                        <div class="options-header">
-                            <div class="previous-page" style="flex:1;">
-                                <button class="violet-button" id="templates-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToTemplateList()">
-                                    <span class="arrow-back" style="max-width:24px;"><img src="~/icons/previous.png" /></span>
-                                    <span>Powrót</span>
-                                </button>
+                        <div class="window-header">
+                            <div class="left">
+                                <a id="create-edit-template-go-back" onclick="GoBackToTemplateList()">
+                                    <img src="/icons/back-arrow.png" class="arrow-back" title="Powrót">
+                                </a>
+                                <span>Tworzenie szablonu</span>
                             </div>
-                            <div class="option-name" style="flex:auto; text-align:center;">
-                                <span class="opion-name-placeholder" id="template-input-window-title">Nowy szablon</span>
-                            </div>
-                            <div style="flex:1;"></div>
                         </div>
-                        <hr />
                         <form class="template-options-form options-form">
                             <div class="form-group">
                                 <div class="row">
@@ -246,27 +241,22 @@
                                 </div>
                             </div>
                             <div class="justify-content-center d-flex">
-                                <button type="submit" class="violet-button" id="createOrEditButtonTemplates"></button>
+                                <button type="submit" class="violet-button violet-button-small" style="width: 50%" id="createOrEditButtonTemplates"></button>
                             </div>
                         </form>
                     </div>
                 </div>
                 <div class="templates-details-container options-container" style="display:none; ">
                     <div class="option-content" style="max-width:600px;">
-                        <div class="options-header">
-                            <div class="previous-page" style="flex:1;">
-                                <button class="violet-button" id="templates-details-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToTemplateList()">
-                                    <span class="arrow-back" style="max-width:24px;"><img src="~/icons/previous.png" /></span>
-                                    <span>Powrót</span>
-                                </button>
+                        <div class="window-header">
+                            <div class="left">
+                                <a id="templates-details-previous-button" onclick="GoBackToTemplateList()">
+                                    <img src="/icons/back-arrow.png" class="arrow-back" title="Powrót">
+                                </a>
+                                <span>Szczegóły szablonu</span>
                             </div>
-                            <div class="option-name" style="flex:auto; text-align:center;">
-                                <span class="opion-name-placeholder" id="template-details-window-title">Szablon</span>
-                            </div>
-                            <div style="flex:1;"></div>
                         </div>
-                        <hr />
-                        <div class="template-details-content-container" style="padding: 10px 30px 30px 30px;">
+                        <div class="template-details-content-container" style="padding: 15px 30px 15px 30px;">
                             <span class="form-subtitle">Informacje</span>
                             <div class="row mb-10" style="margin-top: 20px;">
                                 <div class="col d-flex">
@@ -341,19 +331,14 @@
                     </div>
                     <div class="contacts-options-container options-container" style="margin: 20px; display: none;">
                         <div class="option-content">
-                            <div class="options-header">
-                                <div class="previous-page" style="flex:1;">
-                                    <button class="violet-button" id="contacts-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToContactList()">
-                                        <span class="arrow-back" style="max-width:24px;"><img src="/icons/previous.png"></span>
-                                        <span>Powrót</span>
-                                    </button>
+                            <div class="window-header">
+                                <div class="left">
+                                    <a id="contact-create-edit-previous-button" onclick="GoBackToContactList()">
+                                        <img src="/icons/back-arrow.png" class="arrow-back" title="Powrót">
+                                    </a>
+                                    <span>Tworzenie kontaktu</span>
                                 </div>
-                                <div class="option-name" style="flex:auto; text-align:center;">
-                                    <span class="opion-name-placeholder" id="contact-input-window-title">Nowy kontakt</span>
-                                </div>
-                                <div style="flex:1;"></div>
                             </div>
-                            <hr />
                             <form class="contact-options-form options-form">
                                 <div class="personal-data" style="margin-bottom:20px;">
                                     <span class="form-subtitle">Dane Personalne</span>
@@ -429,27 +414,22 @@
                                     </div>
                                 </div>
                                 <div class="justify-content-center d-flex" style="margin-top: 20px;">
-                                    <button type="submit" class="violet-button" id="createOrEditButtonContacts"></button>
+                                    <button type="submit" class="violet-button violet-button-small" id="createOrEditButtonContacts" style="width: 50%;"></button>
                                 </div>
                             </form>
                         </div>
                     </div>
                     <div class="contacts-details-container options-container" style="margin: 20px; display: none;">
                         <div class="option-content" style="max-width: 600px;">
-                            <div class="options-header">
-                                <div class="previous-page" style="flex:1;">
-                                    <button class="violet-button" id="contacts-details-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToContactList()">
-                                        <span class="arrow-back" style="max-width:24px;"><img src="/icons/previous.png"></span>
-                                        <span>Powrót</span>
-                                    </button>
+                            <div class="window-header">
+                                <div class="left">
+                                    <a id="contact-details-previous-button" onclick="GoBackToContactList()">
+                                        <img src="/icons/back-arrow.png" class="arrow-back" title="Powrót">
+                                    </a>
+                                    <span>Szczegóły kontaktu</span>
                                 </div>
-                                <div class="option-name" style="flex:auto; text-align:center;">
-                                    <span class="opion-name-placeholder" id="contact-details-window-title">Kontakt</span>
-                                </div>
-                                <div style="flex:1;"></div>
                             </div>
-                            <hr />
-                            <div class="contact-details-content-container" style="padding: 10px 30px 30px 30px;">
+                            <div class="contact-details-content-container" style="padding: 15px 30px 15px 30px;">
                                 <div class="personal-data" style="margin-bottom:20px;">
                                     <span class="form-subtitle">Dane Personalne</span>
                                     <div class="form-group" style="margin-top: 20px;">
@@ -622,7 +602,7 @@
                         <div class="list-header">
                             <div class="previous-page" style="flex:1;">
                                 <button class="violet-button" id="contacts-assign-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToContactListFromAssign()">
-                                    <span class="arrow-back" style="max-width:24px;"><img src="~/icons/previous.png" /></span>
+                                    <span class="button-arrow-back" style="max-width:24px;"><img src="~/icons/previous.png" /></span>
                                     <span>Powrót</span>
                                 </button>
                             </div>
@@ -720,19 +700,14 @@
                 </div>
                 <div class="groups-options-container options-container" style="display:none;">
                     <div class="option-content">
-                        <div class="options-header">
-                            <div class="previous-page" style="flex:1;">
-                                <button class="violet-button" id="groups-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToGroupList()">
-                                    <span class="arrow-back" style="max-width:24px;"><img src="/icons/previous.png"></span>
-                                    <span>Powrót</span>
-                                </button>
+                        <div class="window-header">
+                            <div class="left">
+                                <a id="group-edit-create-previous-button" onclick="GoBackToGroupList()">
+                                    <img src="/icons/back-arrow.png" class="arrow-back" title="Powrót">
+                                </a>
+                                <span>Tworzenie grupy</span>
                             </div>
-                            <div class="option-name" style="flex:auto; text-align:center;">
-                                <span class="opion-name-placeholder" id="group-input-window-title">Nowa grupa</span>
-                            </div>
-                            <div style="flex:1;"></div>
                         </div>
-                        <hr />
                         <form class="group-options-form options-form">
                             <div class="form-group">
                                 <div class="row">
@@ -750,7 +725,7 @@
                                 </div>
                             </div>
                             <div class="justify-content-center d-flex">
-                                <button type="submit" class="violet-button" id="createOrEditButtonGroups"></button>
+                                <button type="submit" class="violet-button violet-button-small" id="createOrEditButtonGroups" style="width: 50%;"></button>
                             </div>
                         </form>
                     </div>
@@ -759,7 +734,7 @@
                     <div class="list-header">
                         <div class="previous-page" style="flex:1;">
                             <button class="violet-button" id="groups-assign-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToGroupListFromAssign()">
-                                <span class="arrow-back" style="max-width:24px;"><img src="~/icons/previous.png" /></span>
+                                <span class="button-arrow-back" style="max-width:24px;"><img src="~/icons/previous.png" /></span>
                                 <span>Powrót</span>
                             </button>
                         </div>
@@ -819,19 +794,14 @@
                 </div>
                 <div class="groups-details-container options-container" style="margin: 20px; display:none;">
                     <div class="option-content" style="max-width: 600px;">
-                        <div class="options-header">
-                            <div class="previous-page" style="flex:1;">
-                                <button class="violet-button" id="groups-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToGroupList()">
-                                    <span class="arrow-back" style="max-width:24px;"><img src="/icons/previous.png"></span>
-                                    <span>Powrót</span>
-                                </button>
+                        <div class="window-header">
+                            <div class="left">
+                                <a id="group-details-previous-button" onclick="GoBackToGroupList()">
+                                    <img src="/icons/back-arrow.png" class="arrow-back" title="Powrót">
+                                </a>
+                                <span>Szczegóły grupy</span>
                             </div>
-                            <div class="option-name" style="flex:auto; text-align:center;">
-                                <span class="opion-name-placeholder" id="group-details-window-title">Grupa</span>
-                            </div>
-                            <div style="flex:1;"></div>
                         </div>
-                        <hr />
                         <div class="groups-details-content-container" style="padding: 10px 30px 30px 30px;">
                             <div class="group-data" style="margin-bottom:20px;">
                                 <span class="form-subtitle">Informacje</span>
@@ -918,20 +888,15 @@
                 </div>
                 <div class="logs-details-container options-container" style="margin: 20px; display:none;">
                     <div class="option-content" id="log-details-window" style="max-width: 600px;">
-                        <div class="options-header">
-                            <div class="previous-page" style="flex:1;">
-                                <button class="violet-button" id="groups-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToLogsList()">
-                                    <span class="arrow-back" style="max-width:24px;"><img src="/icons/previous.png"></span>
-                                    <span>Powrót</span>
-                                </button>
+                        <div class="window-header">
+                            <div class="left">
+                                <a id="log-details-previous-button" onclick="GoBackToLogsList()">
+                                    <img src="/icons/back-arrow.png" class="arrow-back" title="Powrót">
+                                </a>
+                                <span>Log</span>
                             </div>
-                            <div class="option-name" style="flex:auto; text-align:center;">
-                                <span class="opion-name-placeholder" id="group-details-window-title">Log</span>
-                            </div>
-                            <div style="flex:1;"></div>
                         </div>
-                        <hr style="margin-bottom: 10px;" />
-                        <div class="logs-details-content-container" style="padding: 10px 30px 30px 30px;">
+                        <div class="logs-details-content-container" style="padding: 15px 30px 15px 30px;">
                             <div class="log-data" style="margin-bottom:20px;">
                                 <span class="form-subtitle">Informacje</span>
                                 <div class="form-group" style="margin-top:20px;">
@@ -1032,19 +997,14 @@
                     </div>
                     <div class="users-options-container options-container" style="margin: 20px; display: none;">
                         <div class="option-content">
-                            <div class="options-header">
-                                <div class="previous-page" style="flex:1;">
-                                    <button class="violet-button" id="users-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToUsersList()">
-                                        <span class="arrow-back" style="max-width:24px;"><img src="/icons/previous.png"></span>
-                                        <span>Powrót</span>
-                                    </button>
+                            <div class="window-header">
+                                <div class="left">
+                                    <a id="user-edit-create-previous-button" onclick="GoBackToUserList()">
+                                        <img src="/icons/back-arrow.png" class="arrow-back" title="Powrót">
+                                    </a>
+                                    <span>Tworzenie użytkownika</span>
                                 </div>
-                                <div class="option-name" style="flex:auto; text-align:center;">
-                                    <span class="opion-name-placeholder" id="user-input-window-title">Nowy użytkownik</span>
-                                </div>
-                                <div style="flex:1;"></div>
                             </div>
-                            <hr />
                             <form class="user-options-form options-form">
                                 <div class="role-data">
                                     <div class="form-group">
@@ -1098,7 +1058,7 @@
                                     </div>
                                 </div>
                                 <div class="justify-content-center d-flex" style="margin-top: 20px;">
-                                    <button type="submit" class="violet-button" id="createOrEditUserButton" style="width: 50%;">Utwórz użytkownika</button>
+                                    <button type="submit" class="violet-button violet-button-small" id="createOrEditUserButton" style="width: 50%;">Utwórz użytkownika</button>
                                 </div>
                             </form>
                         </div>
@@ -1124,14 +1084,11 @@
             <div class="alert alert-dismissible" id="status-message-settings" role="alert" style="border-radius: 50px; display:none;"></div>
             <div class="settings-options-container options-container" id="settings-container" style="display:none; ">
                 <div class="option-content">
-                    <div class="options-header">
-                        <div style="flex:1;"></div>
-                        <div class="option-name" style="flex:auto; text-align:center;">
-                            <span class="opion-name-placeholder" id="group-details-window-title">Ustawienia</span>
+                        <div class="window-header">
+                            <div class="left">
+                                <span>Ustawienia</span>
+                            </div>
                         </div>
-                        <div style="flex:1;"></div>
-                    </div>
-                    <hr style="margin-bottom: 10px;"/>
                     <form class="settings-options-form options-form" id="settings-form">
                     </form>
                 </div>
@@ -1608,7 +1565,7 @@
             const messageEle = document.getElementById('templateContentInput');
             document.getElementById('symbolCounterAdd').innerHTML = messageEle.value.length + "/" + messageEle.getAttribute('maxlength');
 
-            $("#template-input-window-title").html("Edytuj szablon")
+            $(".templates-options-container .left span").html("Edycja szablonu");
             $(".template-options-form").attr('id', 'edit-template-form');
             $("#createOrEditButtonTemplates").html("Zatwierdź edycję");
             $(".templates-list-container").hide();
@@ -1643,7 +1600,7 @@
                     $("#contactDepartment").val(contactEnitity.department);
                     contactEnitity.isActive ? $("#isActiveYes").prop("checked", true).trigger("click") : $("#isActiveNo").prop("checked", true).trigger("click");
 
-                    $("#contact-input-window-title").html("Edytuj kontakt")
+                    $(".contacts-options-container .left span").html("Edycja kontaktu")
                     $(".contact-options-form").attr('id', 'edit-contact-form');
                     $("#createOrEditButtonContacts").html("Zatwierdź edycję");
                     $(".contacts-options-container").show();
@@ -1671,7 +1628,7 @@
             const messageEle = document.getElementById('groupDescriptionInput');
             document.getElementById('symbolCounterAddGroups').innerHTML = messageEle.value.length + "/" + messageEle.getAttribute('maxlength');
 
-            $("#group-input-window-title").html("Edytuj grupę")
+            $(".groups-options-container .left span").html("Edycja grupy")
             $(".group-options-form").attr('id', 'edit-group-form');
             $("#createOrEditButtonGroups").html("Zatwierdź edycję");
             $(".groups-list-container").hide();

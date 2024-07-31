@@ -2813,18 +2813,18 @@ function OpenCreateTemplateWindow() {
     const messageEle = document.getElementById('templateContentInput');
     document.getElementById('symbolCounterAdd').innerHTML = messageEle.value.length + "/" + messageEle.getAttribute('maxlength');
     $("#symbolCounterAdd").innerHTML = '25';
-    $("#template-input-window-title").html("Nowy szablon")
+    $(".templates-options-container .left span").html("Tworzenie szablonu")
     $(".template-options-form").attr('id', 'create-template-form');
-    $("#createOrEditButtonTemplates").html("Utwórz");
+    $("#createOrEditButtonTemplates").html("Utwórz szablon");
     $(".templates-list-container").hide();
     $(".templates-options-container").show();
 }
 
 function OpenCreateContactWindow() {
     document.getElementById("isActiveYes").checked = true;
-    $("#contact-input-window-title").html("Nowy kontakt")
+    $(".contacts-options-container .left span").html("Tworzenie kontaktu")
     $(".contact-options-form").attr('id', 'create-contact-form');
-    $("#createOrEditButtonContacts").html("Utwórz");
+    $("#createOrEditButtonContacts").html("Utwórz kontakt");
     $(".contacts-list-container").hide();
     $(".contacts-options-container").show();
 }
@@ -2832,9 +2832,9 @@ function OpenCreateContactWindow() {
 function OpenCreateGroupWindow() {
     const messageEle = document.getElementById('groupDescriptionInput');
     document.getElementById('symbolCounterAddGroups').innerHTML = messageEle.value.length + "/" + messageEle.getAttribute('maxlength');
-    $("#group-input-window-title").html("Nowa grupa")
+    $(".groups-options-container .left span").html("Tworzenie grupy");
     $(".group-options-form").attr('id', 'create-group-form');
-    $("#createOrEditButtonGroups").html("Utwórz");
+    $("#createOrEditButtonGroups").html("Utwórz grupę");
     $(".groups-list-container").hide();
     $(".groups-options-container").show();
 }

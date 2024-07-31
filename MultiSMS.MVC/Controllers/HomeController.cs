@@ -845,7 +845,7 @@ namespace MultiSMS.MVC.Controllers
                         </div>
                     </div>
                 </div>
-                <hr style=""margin: 20px;"" />
+                <hr style=""margin: 20px 0px;"" />
                 <div class=""active-api-settings"" style=""margin-bottom:20px;"">
                     <span class=""form-subtitle"">Konfiguracja API</span>
                     <div class=""form-group"" style=""margin-top:20px;"">
@@ -876,7 +876,7 @@ namespace MultiSMS.MVC.Controllers
                     </div>
                 </div>
                 <div class=""d-flex justify-content-center"">
-                    <button type=""submit"" class=""violet-button w-50"" id=""submit-settings-form-button"">Zapisz zmiany</button>
+                    <button type=""submit"" class=""violet-button violet-button-small w-50"" id=""submit-settings-form-button"">Zapisz zmiany</button>
                 </div>";
                 return Content(htmlContent, "text/html");
             }
