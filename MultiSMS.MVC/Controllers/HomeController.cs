@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MultiSMS.BusinessLogic.DTO;
 using MultiSMS.BusinessLogic.Extensions;
 using MultiSMS.BusinessLogic.Models;
+using MultiSMS.BusinessLogic.Models.CustomException;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Entities.ServerSms;
@@ -929,91 +930,242 @@ namespace MultiSMS.MVC.Controllers
             }
         }
 
-        //[Authorize(Roles = "Administrator, Owner")]
-        //[HttpPost]
-        //public IActionResult DetermineUserRoleAndCreate(IdentityUserModel model)
-        //{
-        //    if (model.Role == "Owner" || model.Role == "Administrator")
-        //    {
-        //        return RedirectToAction(nameof(CreateAdmin), new { model.Name, model.Surname, model.Email, model.Role, model.PhoneNumber, model.Password });
-        //    }
-        //    else
-        //    {
-        //        return RedirectToAction(nameof(CreateUser), new { model.Name, model.Surname, model.Email, model.Role, model.PhoneNumber, model.Password });
-        //    }
-        //}
+        [Authorize(Roles = "Administrator, Owner")]
+        [HttpGet]
+        public async Task<IActionResult> DetermineUserRoleAndGetById(int userId)
+        {
+            var userRole = await _userService.GetUserRoleById(userId);
 
-        //[Authorize(Roles = "Administrator, Owner")]
-        //[HttpGet]
-        //public async Task<IActionResult> CreateUser(string Name, string Surname, string Email, string Role, string? PhoneNumber, string Password)
-        //{
-        //    var model = new IdentityUserModel
-        //    {
-        //        Name = Name,
-        //        Surname = Surname,
-        //        Email = Email,
-        //        Role = Role,
-        //        PhoneNumber = PhoneNumber,
-        //        Password = Password
-        //    };
+            if (userRole == "Administrator" || userRole == "Owner")
+            {
+                return RedirectToAction(nameof(GetAdminById), new { userId });
+            }
+            else
+            {
+                return RedirectToAction(nameof(GetUserById), new { userId });
+            }
+        }
 
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            var newUser = await _use;
-        //            return Ok(newUser);
-        //        }
-        //        catch (CustomValidationException ex)
-        //        {
-        //            foreach (var error in ex.Errors)
-        //            {
-        //                ModelState.AddModelError(string.Empty, error);
-        //            }
-        //            return BadRequest(ModelState);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-        //}
+        [Authorize(Roles = "Owner")]
+        [HttpGet]
+        public async Task<IActionResult> GetAdminById(int userId)
+        {
+            return Json(await _userService.GetIdentityUserById(userId));
+        }
 
-        //[Authorize(Roles = "Owner")]
-        //[HttpGet]
-        //public async Task<IActionResult> CreateAdmin(string Name, string Surname, string Email, string Role, string? PhoneNumber, string Password)
-        //{
-        //    var model = new IdentityUserModel
-        //    {
-        //        Name = Name,
-        //        Surname = Surname,
-        //        Email = Email,
-        //        Role = Role,
-        //        PhoneNumber = PhoneNumber,
-        //        Password = Password
-        //    };
+        [Authorize(Roles = "Administrator, Owner")]
+        [HttpGet]
+        public async Task<IActionResult> GetUserById(int userId)
+        {
+            return Json(await _userService.GetIdentityUserById(userId));
+        }
 
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            var newUser = await _userService. _mediator.Send(new CreateNewIdentityUserCommand(model));
-        //            return Ok(newUser);
-        //        }
-        //        catch (CustomValidationException ex)
-        //        {
-        //            foreach (var error in ex.Errors)
-        //            {
-        //                ModelState.AddModelError(string.Empty, error);
-        //            }
-        //            return BadRequest(ModelState);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-        //}
+        [Authorize(Roles = "Administrator, Owner")]
+        [HttpPost]
+        public IActionResult DetermineUserRoleAndCreate(IdentityUserModel model)
+        {
+            if (model.Role == "Owner" || model.Role == "Administrator")
+            {
+                return RedirectToAction(nameof(CreateAdmin), new { model.Name, model.Surname, model.Email, model.Role, model.PhoneNumber, model.Password });
+            }
+            else
+            {
+                return RedirectToAction(nameof(CreateUser), new { model.Name, model.Surname, model.Email, model.Role, model.PhoneNumber, model.Password });
+            }
+        }
+
+        [Authorize(Roles = "Administrator, Owner")]
+        [HttpGet]
+        public async Task<IActionResult> CreateUser(string Name, string Surname, string Email, string Role, string? PhoneNumber, string Password)
+        {
+            var model = new IdentityUserModel
+            {
+                Name = Name,
+                Surname = Surname,
+                Email = Email,
+                Role = Role,
+                PhoneNumber = PhoneNumber,
+                Password = Password
+            };
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var newUser = await _userService.CreateNewIdentityUser(model);
+                    return Ok(newUser);
+                }
+                catch (CustomValidationException ex)
+                {
+                    foreach (var error in ex.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error);
+                    }
+                    return BadRequest(ModelState);
+                }
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+
+        [Authorize(Roles = "Owner")]
+        [HttpGet]
+        public async Task<IActionResult> CreateAdmin(string Name, string Surname, string Email, string Role, string? PhoneNumber, string Password)
+        {
+            var model = new IdentityUserModel
+            {
+                Name = Name,
+                Surname = Surname,
+                Email = Email,
+                Role = Role,
+                PhoneNumber = PhoneNumber,
+                Password = Password
+            };
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var newUser = await _userService.CreateNewIdentityUser(model);
+                    return Ok(newUser);
+                }
+                catch (CustomValidationException ex)
+                {
+                    foreach (var error in ex.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error);
+                    }
+                    return BadRequest(ModelState);
+                }
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+
+        [Authorize(Roles = "Administrator, Owner")]
+        [HttpPut]
+        public async Task<IActionResult> DetermineUserRoleAndEdit(int userId, IdentityUserModel model)
+        {
+            var userRole = await _userService.GetUserRoleById(userId);
+
+            if (userRole == "Administrator" || userRole == "Owner" || model.Role == "Owner" || model.Role == "Administrator")
+            {
+                return RedirectToAction(nameof(EditAdmin), new { userId, model.Name, model.Surname, model.Email, model.Role, model.PhoneNumber });
+            }
+            else
+            {
+                return RedirectToAction(nameof(EditUser), new { userId, model.Name, model.Surname, model.Email, model.Role, model.PhoneNumber });
+            }
+        }
+
+        [Authorize(Roles = "Administrator, Owner")]
+        [HttpPut]
+        public async Task<IActionResult> EditUser(int userId, string Name, string Surname, string Email, string Role, string PhoneNumber)
+        {
+            IdentityUserModel model = new IdentityUserModel
+            {
+                Name = Name,
+                Surname = Surname,
+                Email = Email,
+                Role = Role,
+                PhoneNumber = PhoneNumber,
+            };
+
+            try
+            {
+                var user = await _userService.EditIdenitityUser(userId, model);
+                user.Role = Role;
+                return Ok(user);
+            }
+            catch (CustomValidationException ex)
+            {
+                foreach (var error in ex.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error);
+                }
+                return BadRequest(ModelState);
+            }
+        }
+
+        [Authorize(Roles = "Owner")]
+        [HttpPut]
+        public async Task<IActionResult> EditAdmin(int userId, string Name, string Surname, string Email, string Role, string PhoneNumber)
+        {
+
+            IdentityUserModel model = new IdentityUserModel
+            {
+                Name = Name,
+                Surname = Surname,
+                Email = Email,
+                Role = Role,
+                PhoneNumber = PhoneNumber,
+            };
+
+            try
+            {
+                var user = await _userService.EditIdenitityUser(userId, model);
+                user.Role = Role;
+                return Ok(user);
+            }
+            catch (CustomValidationException ex)
+            {
+                foreach (var error in ex.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error);
+                }
+                return BadRequest(ModelState);
+            }
+        }
+
+        [Authorize(Roles = "Administrator, Owner")]
+        [HttpDelete]
+        public async Task<IActionResult> DetermineUserRoleAndDelete(int userId)
+        {
+            var userRole = await _userService.GetUserRoleById(userId);
+
+            if (userRole == "Administrator" || userRole == "Owner")
+            {
+                return RedirectToAction(nameof(DeleteAdmin), new { userId });
+            }
+            else
+            {
+                return RedirectToAction(nameof(DeleteUser), new { userId });
+            }
+        }
+
+        [Authorize(Roles = "Administrator, Owner")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteUser(int userId)
+        {
+            try
+            {
+                await _userService.DeleteIdentityUser(userId);
+                return Ok("User deleted successfully");
+            }
+            catch (NullReferenceException)
+            {
+                return NotFound("Could not find user with provided Id");
+            }
+        }
+
+        [Authorize(Roles = "Owner")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAdmin(int userId)
+        {
+            try
+            {
+                await _userService.DeleteIdentityUser(userId);
+                return Ok("Admin deleted successfully");
+            }
+            catch (NullReferenceException)
+            {
+                return NotFound("Could not find user with provided Id");
+            }
+        }
 
 
         #endregion
