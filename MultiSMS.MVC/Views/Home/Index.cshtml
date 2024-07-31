@@ -1000,6 +1000,111 @@
                     </div>
                 </div>
             </div>
+            <div class="tab-pane" id="users">
+                <div class="users-container">
+                    <div class="users-list-container list-container">
+                        <div class="list-header">
+                            <div class="list-header-left">
+                                <button class="add-new-button violet-button" type="button" onclick="OpenCreateUserWindow()">Dodaj nowego</button>
+                            </div>
+                            <div>
+                                <input class="search-for user-search" placeholder="Wyszukaj użytkownika">
+                            </div>
+                        </div>
+                        <div class="list-content">
+                            <div class="table-responsive">
+                                <table class="users-list table table-borderless" id="users-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="tiny-cell">Imię</th>
+                                            <th class="tiny-cell" id="user-surname">Nazwisko</th>
+                                            <th class="tiny-cell">Email</th>
+                                            <th class="small-cell" style="width: 150px;">Numer telefonu</th>
+                                            <th class="centered-cell">Rola</th>
+                                            <th class="centered-cell" scope="col">Opcje</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="users-options-container options-container" style="margin: 20px; display: none;">
+                        <div class="option-content">
+                            <div class="options-header">
+                                <div class="previous-page" style="flex:1;">
+                                    <button class="violet-button" id="users-previous-button" type="button" style="display: flex; align-items:center;" onclick="GoBackToUsersList()">
+                                        <span class="arrow-back" style="max-width:24px;"><img src="/icons/previous.png"></span>
+                                        <span>Powrót</span>
+                                    </button>
+                                </div>
+                                <div class="option-name" style="flex:auto; text-align:center;">
+                                    <span class="opion-name-placeholder" id="user-input-window-title">Nowy użytkownik</span>
+                                </div>
+                                <div style="flex:1;"></div>
+                            </div>
+                            <hr />
+                            <form class="user-options-form options-form">
+                                <div class="role-data">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col">
+                                                <label for="user-role">Rola*</label>
+                                                <input type="text" class="form-input" id="user-role" name="Role" list="role-names" autocomplete="off" required="">
+                                                <datalist id="role-names"><option value="User" selected="">Użytkownik</option></datalist>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="personal-data">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col">
+                                                <label for="userNameInput">Imię*</label>
+                                                <input type="text" class="form-input" id="userNameInput" name="Name" required maxlength="40">
+                                            </div>
+                                            <div class="col">
+                                                <label for="userSurnameInput">Nazwisko*</label>
+                                                <input type="text" class="form-input" id="userSurnameInput" name="Surname" required maxlength="40">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <label for="userEmail">Email*</label>
+                                                <input type="email" class="form-input" id="userEmail" name="Email" maxlength="50">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="contact-data">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col">
+                                                <label for="userPhoneNumber">Numer telefonu</label>
+                                                <input type="tel" class="form-input" id="userPhoneNumber" name="PhoneNumber" required maxlength="15" minlength="15" pattern="^\+[0-9]{2} \d{3} \d{3} \d{3}$">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="login-data">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col">
+                                                <label for="userPassword">Hasło jednorazowe*</label>
+                                                <input type="password" class="form-input" id="userPassword" name="Password" required minlength="6" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="justify-content-center d-flex" style="margin-top: 20px;">
+                                    <button type="submit" class="violet-button" id="createOrEditUserButton" style="width: 50%;">Utwórz użytkownika</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="tab-pane" id="settings">
                 <div class="settings-options-password-container options-container" id="settings-password" style="height:320px; align-items: center;">
                 <div class="option-content">
