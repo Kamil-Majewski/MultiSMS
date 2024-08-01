@@ -2878,7 +2878,7 @@ function OpenCreateGroupWindow() {
 
 function openCreateUserWindow() {
     $(".users-options-container .left span").html("Tworzenie użytkownika");
-    $(".user-options-form").attr("operation-type", 'create');
+    $("#create-edit-user-form").attr("operation-type", 'create');
     $("#createOrEditUserButton").html("Utwórz użytkownika");
     getRolesForUserCreation();
     $(".users-list-container").hide();
@@ -2957,8 +2957,8 @@ function GoBackToLogsList() {
 }
 
 function GoBackToUserList() {
-    document.querySelector(".user-options-form").reset();
-    $(".user-options-form").removeAttr("operation-type");
+    document.querySelector("#create-edit-user-form").reset();
+    $("#create-edit-user-formm").removeAttr("operation-type");
     $("#user-role").empty();
     $(".users-options-container").hide();
     $(".users-list-container").show();
@@ -3097,4 +3097,81 @@ function formatPhoneNumber(phoneInput, event) {
     phoneInputEl.value = formattedValue;
 
     phoneInputEl.setSelectionRange(cursorPosition + lengthDiff, cursorPosition + lengthDiff);
+}
+
+function createNewUser(formData) {
+
+    $.ajax({
+        url: `/Home/DetermineUserRoleAndCreate`,
+        type: 'POST',
+        dataType: "json",
+        data: formData,
+        success: function (user) {
+            let roleCell;
+
+            if (user.role == "Owner") {
+                roleCell = `<td class="centered-cell"><span class="owner-pill">Właściciel</span></td>`;
+            }
+            else if (user.role == "Administrator") {
+                roleCell = `<td class="centered-cell"><span class="admin-pill">Admin</span></td>`;
+            }
+            else {
+                roleCell = `<td class="centered-cell"><span class="user-pill">Użytkownik</span></td>`;
+            }
+
+            var newRow = `<tr>
+                <td class="tiny-centered-cell id">${user.id}</td>
+                <td class="tiny-cell">${user.name}</td>
+                <td class="tiny-cell">${user.surname}</td>
+                <td class="tiny-cell">${user.userName}</td>
+                <td class="small-cell" style="width: 150px; text-align: center;">${user.phoneNumber || "Brak numeru"}</td>
+                ${roleCell}
+                 <td class="tiny-centered-cell row-options">
+                    <a href="#edit" class="icon-list user-edit">
+                        <img src="/icons/edit.png" title="Edytuj">
+                    </a>
+                    <a href="#delete" class="icon-list user-delete">
+                        <img src="/icons/thrash.png" title="Usuń">
+                    </a>
+                </td>
+            </tr>`;
+
+            $("#users-table tbody").append(newRow);
+            var desiredRow = $("#users-tabletbody tr").filter(function () {
+                return $(this).find('td.id').text().trim() == user.id;
+            });
+
+            $("#user-edit-create-previous-button").trigger("click");
+        },
+        error: function (error) {
+            var listOfErrors = `<ul style="margin: 0; padding-left: 25px; font-size: 17px; font-weight: 500;">`;
+
+            if (typeof error.responseJSON === 'object') {
+                Object.keys(error.responseJSON).forEach(function (key) {
+                    var errors = error.responseJSON[key];
+                    errors.forEach(function (errorMessage) {
+                        listOfErrors += `<li>${errorMessage}</li>`;
+                    });
+                });
+
+                listOfErrors += `</ul>
+                    <button type='button' class='btn-close text-dark' onclick='CloseUserAlert()' aria-label='Close'></button>`;
+
+                $("#status-create-edit-user").html(listOfErrors).show();
+            }
+            else {
+                if (error.status == "403") {
+                    listOfErrors += `<li>Nie można utworzyć użytkownika - brak uprawnień do nadania tej roli</li>`;
+                }
+                else {
+                    listOfErrors += `<li>${error.responseText}</li>`;
+                }
+
+                listOfErrors += `</ul>
+                    <button type='button' class='btn-close text-dark' onclick='CloseUserAlert()' aria-label='Close'></button>`;
+
+                $("#status-create-edit-user").html(listOfErrors).show();
+            }
+        }
+    });
 }

@@ -16,16 +16,18 @@ namespace MultiSMS.BusinessLogic.Services
         private readonly IAdministratorRepository _adminRepository;
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
-        private readonly IUserEmailStore<User> _emailStore;
         private readonly IUserStore<User> _userStore;
+        private readonly IUserEmailStore<User> _emailStore;
+        
 
-        public UserService(IAdministratorRepository adminRepository, IMapper mapper, UserManager<User> userManager, IUserStore<User> userStore)
+        public UserService(IAdministratorRepository adminRepository, IMapper mapper, IUserStore<User> userStore, UserManager<User> userManager)
         {
             _adminRepository = adminRepository;
             _mapper = mapper;
             _userManager = userManager;
-            _emailStore = GetEmailStore();
             _userStore = userStore;
+            _emailStore = GetEmailStore();
+            
         }
 
         private IUserEmailStore<User> GetEmailStore()
