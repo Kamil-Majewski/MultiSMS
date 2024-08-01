@@ -258,20 +258,41 @@ namespace MultiSMS.MVC.Controllers
                 groupPhoneNumbers.AddRange(additionalNumbers);
             }
 
-            var queued = 0;
-            var unsent = 0;
-            var listOfErrors = new List<string>();
-
-            for (int i = 0; i < groupPhoneNumbers.Count; i += 200)
+            if (groupPhoneNumbers.Count < 200)
             {
-                var chunk = groupPhoneNumbers.GetRange(i, Math.Min(200, groupPhoneNumbers.Count - i));
-                var phoneNumbersString = string.Join(',', chunk);
                 var data = new Dictionary<string, string>();
 
+                var phoneNumbersString = string.Join(',', groupPhoneNumbers);
                 var result = activeApiSettings.ApiName == "ServerSms" ? await SendSmsMessageThroughServerSMS(chosenGroupName, chosenGroup, chosenGroupId, additionalInfo, additionalPhoneNumbers, adminId, admin, phoneNumbersString, text, data, activeApiSettings) : await SendSmsMessageThroughSmsApi(chosenGroupName, chosenGroup, chosenGroupId, additionalInfo, additionalPhoneNumbers, adminId, admin, phoneNumbersString, text, data, activeApiSettings);
 
-                if (groupPhoneNumbers.Count > 200)
+                if (result is ValueTuple<bool, int, int> successTuple)
                 {
+                    return Json(new { Status = successTuple.Item1, Queued = successTuple.Item2, Unsent = successTuple.Item3 });
+                }
+                else if (result is ValueTuple<string, int, string> failedTuple)
+                {
+                    return Json(new { Status = failedTuple.Item1, Code = failedTuple.Item2, Message = failedTuple.Item3 });
+                }
+                else
+                {
+                    throw new Exception("Unknown tuple type");
+                }
+            }
+            else
+            {
+                var queued = 0;
+                var unsent = 0;
+                var listOfErrors = new List<string>();
+
+                for (int i = 0; i < groupPhoneNumbers.Count; i += 200)
+                {
+                    var data = new Dictionary<string, string>();
+
+                    var chunk = groupPhoneNumbers.GetRange(i, Math.Min(200, groupPhoneNumbers.Count - i));
+                    var phoneNumbersString = string.Join(',', chunk);
+
+                    var result = activeApiSettings.ApiName == "ServerSms" ? await SendSmsMessageThroughServerSMS(chosenGroupName, chosenGroup, chosenGroupId, additionalInfo, additionalPhoneNumbers, adminId, admin, phoneNumbersString, text, data, activeApiSettings) : await SendSmsMessageThroughSmsApi(chosenGroupName, chosenGroup, chosenGroupId, additionalInfo, additionalPhoneNumbers, adminId, admin, phoneNumbersString, text, data, activeApiSettings);
+
                     if (result is ValueTuple<bool, int, int> successTuple)
                     {
                         queued += successTuple.Item2;
@@ -283,36 +304,22 @@ namespace MultiSMS.MVC.Controllers
                     }
                     else
                     {
-                        throw new Exception("Unknown tuple type"); 
-                    }
-                }
-                else
-                {
-                    if (result is ValueTuple<bool, int, int> successTuple)
-                    {
-                        return Json(new { Status = successTuple.Item1, Queued = successTuple.Item2, Unsent = successTuple.Item3 });
-                    }
-                    else if (result is ValueTuple<string, int, string> failedTuple)
-                    {
-                        return Json(new { Status = failedTuple.Item1, Code = failedTuple.Item2, Message = failedTuple.Item3 });
-                    }
-                    else
-                    {
                         throw new Exception("Unknown tuple type");
                     }
                 }
-            }
-            if (queued == 0 && unsent == 0)
-            {
-                return Json(new { Status = "Multiple-Failure", Errors = listOfErrors.Distinct() });
-            }
-            else if (listOfErrors.Count == 0)
-            {
-                return Json(new { Status = "Multiple-Success", Queued = queued, Unsent = unsent });
-            }
-            else
-            {
-                return Json(new { Status = "Multiple-Partial", Queued = queued, Unsent = unsent, Errors = listOfErrors.Distinct() });
+
+                if (queued == 0 && unsent == 0)
+                {
+                    return Json(new { Status = "Multiple-Failure", Errors = listOfErrors.Distinct() });
+                }
+                else if (listOfErrors.Count == 0)
+                {
+                    return Json(new { Status = "Multiple-Success", Queued = queued, Unsent = unsent });
+                }
+                else
+                {
+                    return Json(new { Status = "Multiple-Partial", Queued = queued, Unsent = unsent, Errors = listOfErrors.Distinct() });
+                }
             }
         }
     }

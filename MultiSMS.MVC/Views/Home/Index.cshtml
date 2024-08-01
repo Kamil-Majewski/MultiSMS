@@ -970,7 +970,7 @@
                     <div class="users-list-container list-container">
                         <div class="list-header">
                             <div class="list-header-left">
-                                <button class="add-new-button violet-button" type="button" onclick="OpenCreateUserWindow()">Dodaj nowego</button>
+                                <button class="add-new-button violet-button" type="button" onclick="openCreateUserWindow()">Dodaj nowego</button>
                             </div>
                             <div>
                                 <input class="search-for user-search" placeholder="Wyszukaj użytkownika">
@@ -1006,6 +1006,7 @@
                                     <span>Tworzenie użytkownika</span>
                                 </div>
                             </div>
+                            <div class="alert" id="create-user-status" role="alert" style="display: none;"></div>
                             <form class="user-options-form options-form">
                                 <div class="role-data">
                                     <div class="form-group">
@@ -1013,7 +1014,7 @@
                                             <div class="col">
                                                 <label for="user-role">Rola*</label>
                                                 <input type="text" class="form-input" id="user-role" name="Role" list="role-names" autocomplete="off" required="">
-                                                <datalist id="role-names"><option value="User" selected="">Użytkownik</option></datalist>
+                                                <datalist id="role-names"></datalist>
                                             </div>
                                         </div>
                                     </div>
@@ -1053,7 +1054,10 @@
                                         <div class="row">
                                             <div class="col">
                                                 <label for="userPassword">Hasło jednorazowe*</label>
-                                                <input type="password" class="form-input" id="userPassword" name="Password" required minlength="6" />
+                                                <div class="password-input-container">
+                                                    <input class="form-input" id="userPassword" type="password" name="Password" style="padding-right:30px;" aria-required="true" required minlength="6" />
+                                                    <img src="~/icons/closed-eye.png" class="input-icons" id="user-eye-icon" alt="Toggle Password Visibility">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -1106,9 +1110,15 @@
         var passwordInput = document.getElementById("settings-password-input");
         var eyeIcon = document.getElementById("settings-eye-icon");
 
+        var oneTimeUserPassword = document.getElementById('userPassword');
+        var userEyeIcon = document.getElementById('user-eye-icon');
+
         if(passwordInput != null) {
             togglePasswordVisibility(passwordInput, eyeIcon);
             showEyeIconOrResetPasswordField(passwordInput, eyeIcon);
+
+            togglePasswordVisibility(oneTimeUserPassword, userEyeIcon)
+            showEyeIconOrResetPasswordField(oneTimeUserPassword, userEyeIcon);
 
             CalculateHeaderWidthAndToolbarHeight();
             PaginateTemplatesAndPopulateTable(null, 0, 11, true);
@@ -1926,27 +1936,15 @@
 
         });
 
-        $("#contactPhoneNumber").on('input', function () {
-            var phoneInput = document.getElementById('contactPhoneNumber');
-
-            if (event.inputType === 'deleteContentBackward' || event.inputType === 'deleteContentForward') {
-                return;
-            }
-
-            var inputValue = phoneInput.value;
-            var cursorPosition = phoneInput.selectionStart;
-
-            var sanitizedValue = inputValue.replace(/[^0-9+]/g, '');
-
-            var formattedValue = sanitizedValue.replace(/(\S{3})/g, '$1 ').trim();
-            var lengthDiff = formattedValue.length - inputValue.length;
-
-            phoneInput.value = formattedValue;
-
-            phoneInput.setSelectionRange(cursorPosition + lengthDiff, cursorPosition + lengthDiff);
+        $("#contactPhoneNumber").on('input', function (event) {
+            formatPhoneNumber('contactPhoneNumber', event);
         });
 
-        $("#AdditionalPhoneNumbers").on('input', function () {
+        $("#userPhoneNumber").on('input', function (event) {
+            formatPhoneNumber("userPhoneNumber", event);
+        });
+
+        $("#AdditionalPhoneNumbers").on('input', function (event) {
             var phoneInput = document.getElementById('AdditionalPhoneNumbers');
 
             if (event.inputType === 'deleteContentBackward' || event.inputType === 'deleteContentForward') {
@@ -2014,6 +2012,4 @@
             counterEle.innerHTML = `${currentLength}/${maxLength}`;
         });
     });
-
-
 </script>

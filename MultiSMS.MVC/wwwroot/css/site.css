@@ -455,7 +455,7 @@ hr {
 .error-pill {
     background-color: #ffd1d1;
     border-radius: 50px;
-    padding: 4px 2px;
+    padding: 4px 18.15px
 }
 
 .admin-pill {
@@ -1185,3 +1185,25 @@ input:checked + .slider:before {
     margin-right: 5px;
     max-width: 25px;
 }
+
+#create-user-status {
+    border-radius: 30px;
+    width: 100%;
+    background-color: #d3e4ff;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.alert-dismissible{
+    position: relative;
+}
+
+    .alert-dismissible .btn-close {
+        position: absolute;
+        z-index: 2;
+        right: 1%;
+        top: 50%;
+        transform: translateY(-50%);
+    }

@@ -487,29 +487,66 @@ function OnSubmitFilterLogsTable(formIdentifiaction, searchBarIdentification, ta
 }
 
 function SendSMS(text, chosenGroupId, chosenGroupName, additionalPhoneNumbers, additionalInfo) {
+    function findUniqueErrors(value, index, array) {
+        return array.indexOf(value) === index;
+    }
+
     $.ajax({
         url: '/SmsApi/SendSmsMessage',
         type: 'GET',
         contentType: 'application/json',
         data: { text: text, chosenGroupId: chosenGroupId, chosenGroupName: chosenGroupName, additionalPhoneNumbers: additionalPhoneNumbers, additionalInfo: additionalInfo },
         success: function (response) {
-            if (response.status == "failed") {
-                console.error(`Operation failed, server responded with code ${response.code} - ${response.message}`);
-                $("#status-message-sms").addClass("failed-status");
-                $("#status-message-sms").html(`Operacja zakończyła się niepowodzeniem, błąd ${response.code} - ${response.message} <button type='button' class='btn-close text-dark' aria-label='Close' onclick='CloseAlert()'></button>`);
-                $("#status-message-sms").show();
-            }
-            else {
-                $("#status-message-sms").addClass("success-status");
-                console.log(`Operation successful, messages queued: ${response.queued}, messages unsent: ${response.unsent}`);
-                $("#status-message-sms").html(`Wiadomość została wysłana (zakolejkowane: ${response.queued}, niewysłane: ${response.unsent}) <button type='button' class='btn-close text-dark' onclick='CloseAlert()' aria-label='Close'></button>`);
-                $("#status-message-sms").show();
-                $("#send-sms-form :input").val('');
-                document.getElementById('sms-text-symbol-counter').innerHTML = "";
-                $("#GroupOfContacts").removeAttr("data-id");
-                $(".input-icons").hide();
+            switch (response.status) {
+                case "failed":
 
-            }
+                    console.error(`Operation failed, server responded with code ${response.code} - ${response.message}`);
+                    $("#status-message-sms").addClass("failed-status");
+                    $("#status-message-sms").html(`Operacja zakończyła się niepowodzeniem, błąd ${response.code} - ${response.message} <button type='button' class='btn-close text-dark' aria-label='Close' onclick='CloseAlert()'></button>`);
+
+                    break;
+                case "success" || "Multiple-Success":
+
+                    console.log(`Operation successful, messages queued: ${response.queued}, messages unsent: ${response.unsent}`);
+                    $("#status-message-sms").addClass("success-status");
+                    $("#status-message-sms").html(`Wiadomość została wysłana (zakolejkowane: ${response.queued}, niewysłane: ${response.unsent}) <button type='button' class='btn-close text-dark' onclick='CloseAlert()' aria-label='Close'></button>`);
+                    $("#send-sms-form :input").val('');
+                    document.getElementById('sms-text-symbol-counter').innerHTML = "";
+                    $("#GroupOfContacts").removeAttr("data-id");
+                    $(".input-icons").hide();
+
+                    break;
+                case "Multiple-Failure":
+                    console.log(`Operation failed, errors detected!`);
+
+                    const uniqueErrors = response.errors.filter(findUniqueErrors);
+
+                    var newList = `<ul style="margin-top: 8px; margin-bottom: 0;">`;
+                    uniqueErrors.forEach((error) => {
+                        newList += `<li>${error}</li>`;
+                    })
+                    newList += "</ul>"
+
+                    $("#status-message-sms").addClass("failed-status");
+                    $("#status-message-sms").html(`Operacja zakończyła się niepowodzeniem, wszystkie próby wysłania wiadomości zakończyły się poniższymi błędami: ${newList} <button type='button' class='btn-close text-dark' aria-label='Close' onclick='CloseAlert()'></button>`);
+
+                    break;
+                case "Multiple-Partial":
+                    console.log(`Operation partially successful - errors detected!`);
+
+                    const uniquePartialErrors = response.errors.filter(findUniqueErrors);
+
+                    var newPartialList = `<ul style="margin-top: 8px; margin-bottom: 0;">`;
+                    uniquePartialErrors.forEach((error) => {
+                        newPartialList += `<li>${error}</li>`;
+                    })
+                    newPartialList += "</ul>"
+
+                    $("#status-message-sms").addClass("failed-status");
+                    $("#status-message-sms").html(`Operacja zakończyła się częściowym powodzeniem (zakolejkowane: ${response.queued}, niewysłane: ${response.unsent}), Niektóre próby wysłania sms-a zakończyły się poniższymi błędami: ${newPartialList} <button type='button' class='btn-close text-dark' aria-label='Close' onclick='CloseAlert()'></button>`);
+                    break;
+            }       
+            $("#status-message-sms").show();
         },
         error: function (error) {
             $("#status-message-sms").addClass("failed-status");
@@ -2840,7 +2877,12 @@ function OpenCreateGroupWindow() {
 }
 
 function openCreateUserWindow() {
-
+    $(".users-options-container .left span").html("Tworzenie użytkownika");
+    $(".user-options-form").attr("operation-type", 'create');
+    $("#createOrEditUserButton").html("Utwórz użytkownika");
+    getRolesForUserCreation();
+    $(".users-list-container").hide();
+    $(".users-options-container").show();
 }
 
 function OpenChooseGroupForSMS() {
@@ -2912,6 +2954,14 @@ function GoBackToLogsList() {
     $(".details-span").text("");
     $("#log-related-objects-data-form-group").empty();
     $("#log-details-window").css("max-width", "600px")
+}
+
+function GoBackToUserList() {
+    document.querySelector(".user-options-form").reset();
+    $(".user-options-form").removeAttr("operation-type");
+    $("#user-role").empty();
+    $(".users-options-container").hide();
+    $(".users-list-container").show();
 }
 
 function GoBackToGroupListFromAssign() {
@@ -3013,4 +3063,38 @@ function getAllUsersAndPopulateTable() {
             console.error(error.responseText);
         }
     });
+}
+
+function getRolesForUserCreation() {
+    $.ajax({
+        url: 'Home/GetRolesForUserCreation',
+        type: 'GET',
+        contentType: 'application/json',
+        success: function (roles) {
+            $("#role-names").empty().append(roles);
+        },
+        error: function (error) {
+            console.error(error.responseText);
+        }
+    })
+}
+
+function formatPhoneNumber(phoneInput, event) {
+    var phoneInputEl = document.getElementById(phoneInput);
+
+    if (event.inputType === 'deleteContentBackward' || event.inputType === 'deleteContentForward') {
+        return;
+    }
+
+    var inputValue = phoneInputEl.value;
+    var cursorPosition = phoneInputEl.selectionStart;
+
+    var sanitizedValue = inputValue.replace(/[^0-9+]/g, '');
+
+    var formattedValue = sanitizedValue.replace(/(\S{3})/g, '$1 ').trim();
+    var lengthDiff = formattedValue.length - inputValue.length;
+
+    phoneInputEl.value = formattedValue;
+
+    phoneInputEl.setSelectionRange(cursorPosition + lengthDiff, cursorPosition + lengthDiff);
 }
