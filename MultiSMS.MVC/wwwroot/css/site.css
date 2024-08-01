@@ -455,7 +455,27 @@ hr {
 .error-pill {
     background-color: #ffd1d1;
     border-radius: 50px;
-    padding: 4px 20px;
+    padding: 4px 2px;
+}
+
+.admin-pill {
+    background-color: #6f5cc4;
+    border-radius: 50px;
+    padding: 4px 28px;
+    color: white;
+}
+
+.owner-pill {
+    background-color: #6f5cc4;
+    border-radius: 50px;
+    padding: 4px 16.04px;
+    color: white;
+}
+
+.user-pill {
+    background-color: #d3e4ff;
+    border-radius: 50px;
+    padding: 4px 8.82px;
 }
 
 .single-windows-container {

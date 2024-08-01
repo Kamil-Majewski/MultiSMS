@@ -2839,6 +2839,10 @@ function OpenCreateGroupWindow() {
     $(".groups-options-container").show();
 }
 
+function openCreateUserWindow() {
+
+}
+
 function OpenChooseGroupForSMS() {
     PopulateTableForChooseGroupForSMS();
     $(".sms-container").hide();
@@ -2953,4 +2957,60 @@ function setupClassRemovalWatcher(targetElement, classToRemove, callback) {
     })
     observer.observe(targetElement, { attributes: true });
     return observer;
+}
+
+function getAllUsersAndPopulateTable() {
+    $.ajax({
+        url: 'Home/GetAllIdentityUsers',
+        type: 'GET',
+        contentType: 'application/json',
+        success: function (object) {
+            object.users.forEach((user) => {
+                let roleCell;
+
+                if (user.role == "Owner") {
+                    roleCell = `<td class="centered-cell"><span class="owner-pill">Właściciel</span></td>`;
+                }
+                else if (user.role == "Administrator") {
+                    roleCell = `<td class="centered-cell"><span class="admin-pill">Admin</span></td>`;
+                }
+                else {
+                    roleCell = `<td class="centered-cell"><span class="user-pill">Użytkownik</span></td>`;
+                }
+
+                let optionsCell
+
+                if ((object.role == "Admin" && user.role == "User") || (object.role == "Owner" && user.userName != $(".profile-box .box-header-text").html())) {
+                    optionsCell = `
+                            <td class="tiny-centered-cell row-options">
+                                <a href="#edit" class="icon-list user-edit">
+                                    <img src="/icons/edit.png" title="Edytuj">
+                                </a>
+                                <a href="#delete" class="icon-list user-delete">
+                                    <img src="/icons/trash.png" title="Usuń">
+                                </a>
+                            </td>`;
+                }
+                else {
+                    optionsCell = `<td></td>`
+                }
+
+                var newRow = `
+                    <tr>
+                        <td class="tiny-centered-cell id">${user.id}</td>
+                        <td>${user.name}</td>
+                        <td>${user.surname}</td>
+                        <td>${user.userName}</td>
+                        <td class="small-cell" style="text-align: center;">${user.phoneNumber || "Brak numeru"}</td>
+                        ${roleCell}
+                        ${optionsCell}
+                    </tr>`;
+
+                $("#users-table tbody").append(newRow);
+            });
+        },
+        error: function (error) {
+            console.error(error.responseText);
+        }
+    });
 }

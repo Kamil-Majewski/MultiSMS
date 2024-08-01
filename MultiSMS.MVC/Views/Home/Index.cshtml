@@ -981,12 +981,13 @@
                                 <table class="users-list table table-borderless" id="users-table">
                                     <thead>
                                         <tr>
+                                            <th class="tiny-centered-cell">Id</th>
                                             <th class="tiny-cell">Imię</th>
                                             <th class="tiny-cell" id="user-surname">Nazwisko</th>
                                             <th class="tiny-cell">Email</th>
-                                            <th class="small-cell" style="width: 150px;">Numer telefonu</th>
+                                            <th class="small-cell" style="width: 150px; text-align: center;">Numer telefonu</th>
                                             <th class="centered-cell">Rola</th>
-                                            <th class="centered-cell" scope="col">Opcje</th>
+                                            <th class="tiny-centered-cell" scope="col">Opcje</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -1105,14 +1106,17 @@
         var passwordInput = document.getElementById("settings-password-input");
         var eyeIcon = document.getElementById("settings-eye-icon");
 
-        togglePasswordVisibility(passwordInput, eyeIcon);
-        showEyeIconOrResetPasswordField(passwordInput, eyeIcon);
+        if(passwordInput != null) {
+            togglePasswordVisibility(passwordInput, eyeIcon);
+            showEyeIconOrResetPasswordField(passwordInput, eyeIcon);
 
-        CalculateHeaderWidthAndToolbarHeight();
-        PaginateTemplatesAndPopulateTable(null, 0, 11, true);
-        PaginateContactsAndPopulateTable(null, 0, 11, true);
-        PaginateGroupsAndPopulateTable(null, 0, 11, true);
-        PaginateLogsAndPopulateTable(null, 0, 11, true);
+            CalculateHeaderWidthAndToolbarHeight();
+            PaginateTemplatesAndPopulateTable(null, 0, 11, true);
+            PaginateContactsAndPopulateTable(null, 0, 11, true);
+            PaginateGroupsAndPopulateTable(null, 0, 11, true);
+            PaginateLogsAndPopulateTable(null, 0, 11, true);
+            getAllUsersAndPopulateTable()
+        }
 
         let resizeTimer;
         window.addEventListener('resize', () => {
@@ -1897,6 +1901,8 @@
         OnInputFilterTable(".import-contact-search", "#repeated-contacts-table");
 
         OnInputFilterTable(".import-contact-search", "#invalid-contacts-table");
+
+        OnInputFilterTable(".user-search", "#users-table");
 
 
         $("#ContactPostalNumber").on('input', function () {

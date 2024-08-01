@@ -916,6 +916,24 @@ namespace MultiSMS.MVC.Controllers
         #region ManageUsers
         [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
+        public async Task<IActionResult> GetAllIdentityUsers()
+        {
+            var users = await _userService.GetAllIdentityUsers();
+
+            string role;
+            if (User.IsInRole("Owner"))
+            {
+                role = "Owner";
+            }
+            else
+            {
+                role = "Admin";
+            }
+            return Json(new { Users = users, Role = role });
+        }
+
+        [Authorize(Roles = "Administrator, Owner")]
+        [HttpGet]
         public IActionResult GetRolesForUserCreation()
         {
             if (User.IsInRole("Administrator"))
