@@ -997,7 +997,7 @@
                         </div>
                     </div>
                     <div class="users-options-container options-container" style="margin: 20px; display: none;">
-                        <div class="alert alert-dismissible failed-status" id="status-create-edit-user" role="alert" style="border-radius: 50px; display:none;"></div>
+                        <div class="alert alert-dismissible failed-status" id="status-create-edit-user" role="alert" style="border-radius: 50px; width: 100%; display:none;"></div>
                         <div class="option-content">
                             <div class="window-header">
                                 <div class="left">
@@ -1023,18 +1023,18 @@
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col">
-                                                <label for="userNameInput">Imię*</label>
-                                                <input type="text" class="form-input" id="userNameInput" name="Name" required maxlength="40">
+                                                <label for="user-name-input">Imię*</label>
+                                                <input type="text" class="form-input" id="user-name-input" name="Name" required maxlength="40">
                                             </div>
                                             <div class="col">
-                                                <label for="userSurnameInput">Nazwisko*</label>
-                                                <input type="text" class="form-input" id="userSurnameInput" name="Surname" required maxlength="40">
+                                                <label for="user-surname-input">Nazwisko*</label>
+                                                <input type="text" class="form-input" id="user-surname-input" name="Surname" required maxlength="40">
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col">
-                                                <label for="userEmail">Email*</label>
-                                                <input type="email" class="form-input" id="userEmail" name="Email" maxlength="50">
+                                                <label for="user-email-input">Email*</label>
+                                                <input type="email" class="form-input" id="user-email-input" name="Email" maxlength="50">
                                             </div>
                                         </div>
                                     </div>
@@ -1043,8 +1043,8 @@
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col">
-                                                <label for="userPhoneNumber">Numer telefonu</label>
-                                                <input type="tel" class="form-input" id="userPhoneNumber" name="PhoneNumber" maxlength="15" minlength="15" pattern="^\+[0-9]{2} \d{3} \d{3} \d{3}$">
+                                                <label for="user-phone-number-input">Numer telefonu</label>
+                                                <input type="tel" class="form-input" id="user-phone-number-input" name="PhoneNumber" maxlength="15" minlength="15" pattern="^\+[0-9]{2} \d{3} \d{3} \d{3}$">
                                             </div>
                                         </div>
                                     </div>
@@ -1053,9 +1053,9 @@
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col">
-                                                <label for="userPassword">Hasło jednorazowe*</label>
+                                                <label for="user-password-input">Hasło jednorazowe*</label>
                                                 <div class="password-input-container">
-                                                    <input class="form-input" id="userPassword" type="password" name="Password" style="padding-right:30px; margin: 0;" aria-required="true" required />
+                                                    <input class="form-input" id="user-password-input" type="password" name="Password" style="padding-right:30px; margin: 0;" aria-required="true" required />
                                                     <img src="~/icons/closed-eye.png" class="input-icons" id="user-eye-icon" alt="Toggle Password Visibility">
                                                 </div>
                                             </div>
@@ -2054,6 +2054,15 @@
                 $("#create-edit-user-go-back").trigger("click");
                 return;
             }
+        });
+
+        $(document).on("click", ".user-edit", function (e) {
+            e.preventDefault();
+            var id = $(this).closest('tr').find('td.id').html();
+            $("#create-edit-user-form").attr("data-id", id);
+
+            getUserById(id)
+
         });
     });
 </script>

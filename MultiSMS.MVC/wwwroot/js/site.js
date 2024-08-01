@@ -2960,6 +2960,10 @@ function GoBackToUserList() {
     document.querySelector("#create-edit-user-form").reset();
     $("#create-edit-user-formm").removeAttr("operation-type");
     $("#user-role").empty();
+    $("#status-create-edit-user").html("").hide();
+    $(".login-data").show();
+    $("#user-password-input").attr("name", "Password");
+    $("#user-password-input").attr("required", true);
     $(".users-options-container").hide();
     $(".users-list-container").show();
 }
@@ -3028,9 +3032,11 @@ function getAllUsersAndPopulateTable() {
                     roleCell = `<td class="centered-cell"><span class="user-pill">Użytkownik</span></td>`;
                 }
 
+                var isUserCallingAdmin = document.getElementById(user.userName);
+
                 let optionsCell
 
-                if ((object.role == "Admin" && user.role == "User") || (object.role == "Owner" && user.userName != $(".profile-box .box-header-text").html())) {
+                if ((object.role == "Admin" && user.role == "User") || (object.role == "Owner" && isUserCallingAdmin == null)) {
                     optionsCell = `
                             <td class="tiny-centered-cell row-options">
                                 <a href="#edit" class="icon-list user-edit">
@@ -3172,6 +3178,45 @@ function createNewUser(formData) {
 
                 $("#status-create-edit-user").html(listOfErrors).show();
             }
+        }
+    });
+}
+
+function getUserById(userId) {
+    $.ajax({
+        url: `Home/DetermineUserRoleAndGetById`,
+        type: 'GET',
+        contentType: 'application/json',
+        data: { userId: userId },
+        success: function (user) {
+            $("#user-role").val(user.role);
+            $("#user-name-input").val(user.name);
+            $("#user-surname-input").val(user.surname);
+            $("#user-email-input").val(user.userName);
+            $("#user-phone-number-input").val(user.phoneNumber);
+            $("#user-password-input").removeAttr("name");
+            $("#user-password-input").removeAttr("required");
+            $(".login-data").hide();
+            $("#createOrEditUserButton").html("Zatwierdź edycję");
+
+            $.ajax({
+                url: "Home/GetRolesForUserCreation",
+                type: "GET",
+                success: function (roles) {
+                    $("#role-names").empty().append(roles);
+                    $(".users-options-container .left span").html("Edycja użytkownika");
+                    $("#create-edit-user-form").attr("operation", "edit");
+                },
+                error: function (error) {
+                    console.error(error.responseText);
+                }
+            });
+
+            $(".users-list-container").hide();
+            $(".users-options-container").show();
+        },
+        error: function (error) {
+            console.error(error);
         }
     });
 }

@@ -1113,6 +1113,11 @@ namespace MultiSMS.MVC.Controllers
         [HttpPut]
         public async Task<IActionResult> EditAdmin(int userId, string Name, string Surname, string Email, string Role, string PhoneNumber)
         {
+            var callingUserId = User.GetLoggedInUserId<int>();
+            if (callingUserId == userId)
+            {
+                throw new Exception("Administrator cannot edit himself through user-tab!");
+            }
 
             IdentityUserModel model = new IdentityUserModel
             {
@@ -1174,6 +1179,12 @@ namespace MultiSMS.MVC.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteAdmin(int userId)
         {
+            var callingUserId = User.GetLoggedInUserId<int>();
+            if(callingUserId == userId)
+            {
+                throw new Exception("Administrator cannot delete himself");
+            }
+
             try
             {
                 await _userService.DeleteIdentityUser(userId);
