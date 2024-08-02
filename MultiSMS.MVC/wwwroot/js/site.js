@@ -2958,7 +2958,7 @@ function GoBackToLogsList() {
 
 function GoBackToUserList() {
     document.querySelector("#create-edit-user-form").reset();
-    $("#create-edit-user-formm").removeAttr("operation-type");
+    $("#create-edit-user-form").removeAttr("operation-type").removeAttr("data-id");
     $("#user-role").empty();
     $("#status-create-edit-user").html("").hide();
     $(".login-data").show();
@@ -3137,7 +3137,7 @@ function createNewUser(formData) {
                         <img src="/icons/edit.png" title="Edytuj">
                     </a>
                     <a href="#delete" class="icon-list user-delete">
-                        <img src="/icons/thrash.png" title="Usuń">
+                        <img src="/icons/trash.png" title="Usuń">
                     </a>
                 </td>
             </tr>`;
@@ -3205,7 +3205,7 @@ function getUserById(userId) {
                 success: function (roles) {
                     $("#role-names").empty().append(roles);
                     $(".users-options-container .left span").html("Edycja użytkownika");
-                    $("#create-edit-user-form").attr("operation", "edit");
+                    $("#create-edit-user-form").attr("operation-type", "edit");
                 },
                 error: function (error) {
                     console.error(error.responseText);
@@ -3217,6 +3217,87 @@ function getUserById(userId) {
         },
         error: function (error) {
             console.error(error);
+        }
+    });
+}
+
+function CloseUserAlert() {
+    $("#status-create-edit-user").empty().hide();
+}
+
+function editUser(userId, formData) {
+    $.ajax({
+        url: `/Home/DetermineUserRoleAndEdit?userId=${userId}`,
+        type: 'PUT',
+        dataType: "json",
+        data: formData,
+        success: function (user) {
+            var tr = $('#users-table tbody tr').filter(function () {
+                return $(this).find('td.id').html() == user.id;
+            });
+
+            let roleCell;
+
+            if (user.role == "Owner") {
+                roleCell = `<td class="centered-cell"><span class="owner-pill">Właściciel</span></td>`;
+            }
+            else if (user.role == "Administrator") {
+                roleCell = `<td class="centered-cell"><span class="admin-pill">Admin</span></td>`;
+            }
+            else {
+                roleCell = `<td class="centered-cell"><span class="user-pill">Użytkownik</span></td>`;
+            }
+
+            var newRow = `<tr>
+                <td class="tiny-centered-cell id">${user.id}</td>
+                <td class="tiny-cell">${user.name}</td>
+                <td class="tiny-cell">${user.surname}</td>
+                <td class="tiny-cell">${user.userName}</td>
+                <td class="small-cell" style="width: 150px; text-align: center;">${user.phoneNumber || "Brak numeru"}</td>
+                ${roleCell}
+                 <td class="tiny-centered-cell row-options">
+                    <a href="#edit" class="icon-list user-edit">
+                        <img src="/icons/edit.png" title="Edytuj">
+                    </a>
+                    <a href="#delete" class="icon-list user-delete">
+                        <img src="/icons/trash.png" title="Usuń">
+                    </a>
+                </td>
+            </tr>`;
+
+            tr.replaceWith(newRow);
+
+            $("#user-edit-create-previous-button").trigger("click");
+        },
+        error: function (error) {
+            var listOfErrors = `<ul style="margin: 0; padding-left: 25px; font-size: 17px; font-weight: 500;">`;
+
+            if (typeof error.responseJSON === 'object') {
+                Object.keys(error.responseJSON).forEach(function (key) {
+                    var errors = error.responseJSON[key];
+                    errors.forEach(function (errorMessage) {
+                        listOfErrors += `<li>${errorMessage}</li>`;
+                    });
+                });
+
+                listOfErrors += `</ul>
+                    <button type='button' class='btn-close text-dark' onclick='CloseUserAlert()' aria-label='Close'></button>`;
+
+                $("#status-create-edit-user").html(listOfErrors).show();
+            }
+            else {
+                if (error.status == "403") {
+                    listOfErrors += `<li>Nie można utworzyć użytkownika - brak uprawnień do nadania tej roli</li>`;
+                }
+                else {
+                    listOfErrors += `<li>${error.responseText}</li>`;
+                }
+
+                listOfErrors += `</ul>
+                    <button type='button' class='btn-close text-dark' onclick='CloseUserAlert()' aria-label='Close'></button>`;
+
+                $("#status-create-edit-user").html(listOfErrors).show();
+            }
         }
     });
 }

@@ -2045,7 +2045,7 @@
                 createNewUser(formData);
             }
             else if ($(this).attr("operation-type") == "edit") {
-                var userId = $("#createEditUserForm").attr("data-id");
+                var userId = $("#create-edit-user-form").attr("data-id");
 
                 editUser(userId, formData);
             }
@@ -2058,8 +2058,7 @@
         $(document).on("click", ".user-edit", function (e) {
             e.preventDefault();
             var id = $(this).closest('tr').find('td.id').html();
-            $("#create-edit-user-form").attr("data-id", id);
-
+            $("#create-edit-user-form").attr("data-id", id).attr("operation-type", "edit");;
             getUserById(id)
 
         });

@@ -1070,7 +1070,7 @@ namespace MultiSMS.MVC.Controllers
 
         [Authorize(Roles = "Administrator, Owner")]
         [HttpPut]
-        public async Task<IActionResult> DetermineUserRoleAndEdit(int userId, IdentityUserModel model)
+        public async Task<IActionResult> DetermineUserRoleAndEdit([FromQuery]int userId, IdentityUserModel model)
         {
             var userRole = await _userService.GetUserRoleById(userId);
 
