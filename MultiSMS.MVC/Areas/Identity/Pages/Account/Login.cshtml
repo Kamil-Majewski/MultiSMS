@@ -2,6 +2,7 @@
 @model LoginModel
 
 @{
+    Layout = "~/Views/Shared/_SingleWindowLayout.cshtml";
     ViewData["Title"] = "Zaloguj sie";
 }
 <div class="single-windows-container">
@@ -44,20 +45,6 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
-
-<style>
-    .toolbar-left{
-        display:none;
-    }
-    .navbar{
-        display:none;
-    }
-
-    .layout-render-body{
-        background-color:transparent;
-        box-shadow:none;
-    }
-</style>
 
 <script>
 

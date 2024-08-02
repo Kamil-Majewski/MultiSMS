@@ -5,12 +5,11 @@
 @inject SignInManager<User> SignInManager
 
 @{
-    var user = SignInManager.IsSignedIn(User) ? await UserManager.GetUserAsync(User) : null;
-    var roles = user != null ? await UserManager.GetRolesAsync(user) : new List<string>();
+    Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "MultiSMS";
 }
 
-@if (roles.Contains("Administrator") || roles.Contains("Owner"))
+@if (ViewBag.roles.Contains("Administrator") || ViewBag.roles.Contains("Owner"))
 {
 <div class="modal fade" id="deleteEntityModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="deleteEntityModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 550px; min-width: 307px; width:fit-content;">
@@ -170,7 +169,7 @@
                 </div>
             </div>
         </div>
-        @if (roles.Contains("Administrator") || roles.Contains("Owner"))
+        @if (ViewBag.roles.Contains("Administrator") || ViewBag.roles.Contains("Owner"))
         {
             <div class="tab-pane" id="templates">
                 <div class="templates-list-container list-container">
@@ -1151,7 +1150,7 @@
                     $("#settings-password").show();
                     $("#status-message-settings").hide();
                     if ($("#settings-password-input").attr('type') == "text") {
-                        $("#settings-eye-icon").click().hide();
+                        $("#settings-eye-icon").trigger("click").hide();
                     }
                     else {
                         $("#settings-eye-icon").hide();
@@ -1185,7 +1184,7 @@
 
         var connection = null;
 
-        $('#import-file-input').change(function () {
+        $('#import-file-input').on("change", function () {
             $("#viewReportModal").modal("show");
             $("#import-modal-content-text").html(`
                 <div class="progress" style="width: 450px;">

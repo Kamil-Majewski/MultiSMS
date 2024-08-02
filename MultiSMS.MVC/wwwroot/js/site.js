@@ -19,7 +19,7 @@ function showEyeIconOrResetPasswordField(fieldEl, eyeEl) {
         }
         else {
             if ($(fieldEl).attr('type') == "text") {
-                $(eyeEl).click().hide();
+                $(eyeEl).trigger("click").hide();
             }
             else {
                 $(eyeEl).hide();
@@ -29,7 +29,7 @@ function showEyeIconOrResetPasswordField(fieldEl, eyeEl) {
 }
 function togglePasswordVisibility(passwordInputEl, eyeIconEl) {
 
-    $(eyeIconEl).click(function () {
+    $(eyeIconEl).on('click', function () {
         if (passwordInputEl.type === 'password') {
             passwordInputEl.type = 'text';
             eyeIconEl.src = window.location.origin + "/icons/eye.png";
@@ -2843,7 +2843,7 @@ function CreateNewGroup() {
 }
 
 function TriggerFileInput() {
-    $("#import-file-input").click();
+    $("#import-file-input").trigger("click");
 }
 
 function OpenCreateTemplateWindow() {
@@ -2971,7 +2971,7 @@ function GoBackToUserList() {
 function GoBackToGroupListFromAssign() {
     $("#contact-assign-page-counter").html("0");
     $(".group-search-for-user").val("");
-    $("#search-for-assingn-contacts").submit();
+    $("#search-for-assingn-contacts").trigger("submit");
     var firstId = $("#group-table").attr("first-id")
     PaginateGroupsAndPopulateTable(firstId, null, 11, null);
     $(".groups-options-container-assign").hide();
@@ -2981,7 +2981,7 @@ function GoBackToGroupListFromAssign() {
 function GoBackToContactListFromAssign() {
     $("#group-assign-page-counter").html("0");
     $(".contact-search-for-group").val("");
-    $("#search-for-assign-groups").submit();
+    $("#search-for-assign-groups").trigger("submit");
     var firstId = $("#contacts-table").attr("first-id");
     PaginateContactsAndPopulateTable(firstId, null, 11, null);
     $(".contact-options-container-assign").hide();

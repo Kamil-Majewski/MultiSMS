@@ -7,6 +7,8 @@
 @{
     var user = SignInManager.IsSignedIn(User) ? await UserManager.GetUserAsync(User) : null;
     var roles = user != null ? await UserManager.GetRolesAsync(user) : new List<string>();
+
+    ViewBag.roles = roles;
 }
 
 
@@ -72,7 +74,7 @@
                                 <span class="text-nav" id="sms-text">Wyslij SMS</span>
                             </a>
                         </li>
-                        @if(roles.Contains("Administrator") || roles.Contains("Owner"))
+                        @if(ViewBag.roles.Contains("Administrator") || ViewBag.roles.Contains("Owner"))
                         {
                             <li class="option-list-item">
                                 <a class="link" id="templates-tab" href="#templates">

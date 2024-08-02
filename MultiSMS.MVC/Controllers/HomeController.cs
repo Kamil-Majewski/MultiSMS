@@ -38,8 +38,12 @@ namespace MultiSMS.MVC.Controllers
         }
 
         [Authorize]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var userId = User.GetLoggedInUserId<int>();
+            var role = await _userService.GetUserRoleById(userId);
+
+            ViewBag.roles = role;
             return View();
         }
 
