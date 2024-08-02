@@ -2062,5 +2062,30 @@
             getUserById(id)
 
         });
+
+        $(document).on("click", ".user-delete", function (e) {
+            e.preventDefault();
+
+            var deleteElement = $(this);
+            var tr = deleteElement.closest('tr');
+            var userId = tr.find(".id").text();
+            var userName = tr.find(".user-name").text();
+            var userSurname = tr.find(".user-surname").first().text();
+            var userType = tr.find(".user-pill").length > 0  ?  "użytkownika" : "administratora";
+
+            $("#modal-content-text").html(`Czy na pewno chcesz usunąć ${userType} <strong>${userName}</strong> <strong>${userSurname}</strong>?`);
+            $("#confirmDelete").html(`Usuń ${userType}`);
+
+            $('#deleteEntityModal').modal('show');
+
+            $('#confirmDelete').on('click', function () {
+                deleteUser(deleteElement, userId);
+                $('#deleteEntityModal').modal('hide');
+            });
+
+            $('#denyDelete').on('click', function () {
+                $('#deleteEntityModal').modal('hide');
+            });
+        });
     });
 </script>

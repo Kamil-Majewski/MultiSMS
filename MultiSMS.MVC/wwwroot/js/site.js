@@ -3054,8 +3054,8 @@ function getAllUsersAndPopulateTable() {
                 var newRow = `
                     <tr>
                         <td class="tiny-centered-cell id">${user.id}</td>
-                        <td>${user.name}</td>
-                        <td>${user.surname}</td>
+                        <td class="tiny-cell user-name">${user.name}</td>
+                        <td class="tiny-cell user-surname">${user.surname}</td>
                         <td>${user.userName}</td>
                         <td class="small-cell" style="text-align: center;">${user.phoneNumber || "Brak numeru"}</td>
                         ${roleCell}
@@ -3127,8 +3127,8 @@ function createNewUser(formData) {
 
             var newRow = `<tr>
                 <td class="tiny-centered-cell id">${user.id}</td>
-                <td class="tiny-cell">${user.name}</td>
-                <td class="tiny-cell">${user.surname}</td>
+                <td class="tiny-cell user-name">${user.name}</td>
+                <td class="tiny-cell user-surname">${user.surname}</td>
                 <td class="tiny-cell">${user.userName}</td>
                 <td class="small-cell" style="width: 150px; text-align: center;">${user.phoneNumber || "Brak numeru"}</td>
                 ${roleCell}
@@ -3250,8 +3250,8 @@ function editUser(userId, formData) {
 
             var newRow = `<tr>
                 <td class="tiny-centered-cell id">${user.id}</td>
-                <td class="tiny-cell">${user.name}</td>
-                <td class="tiny-cell">${user.surname}</td>
+                <td class="tiny-cell user-name">${user.name}</td>
+                <td class="tiny-cell user-surname">${user.surname}</td>
                 <td class="tiny-cell">${user.userName}</td>
                 <td class="small-cell" style="width: 150px; text-align: center;">${user.phoneNumber || "Brak numeru"}</td>
                 ${roleCell}
@@ -3298,6 +3298,20 @@ function editUser(userId, formData) {
 
                 $("#status-create-edit-user").html(listOfErrors).show();
             }
+        }
+    });
+}
+
+function deleteUser(deleteElement, userId) {
+    $.ajax({
+        url: `/Home/DetermineUserRoleAndDelete?userId=${userId}`,
+        type: 'DELETE',
+        contentType: 'application/json',
+        success: function () {
+            deleteElement.closest('tr').remove();
+        },
+        error: function (error) {
+            console.error(error.responseText);
         }
     });
 }
