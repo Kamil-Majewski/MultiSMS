@@ -98,7 +98,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> PaginateTemplates(int firstId, int lastId, int pageSize, bool? moveForward)
         {
             var (paginatedTemplates, hasMorePages) = await _smsTemplateService.PaginateTemplateDataAsync(firstId, lastId, pageSize, moveForward);
-            return Json(new {paginatedTemplates, hasMorePages});
+            return Json(new { paginatedTemplates, hasMorePages });
         }
 
         [Authorize(Roles = "Administrator, Owner")]
@@ -239,7 +239,7 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> PaginateContacts(int firstId, int lastId, int pageSize, bool? moveForward)
         {
-            var (paginatedContacts, hasMorePages) = await _employeeService.PaginateEmployeeDataAsync(firstId,lastId, pageSize, moveForward);
+            var (paginatedContacts, hasMorePages) = await _employeeService.PaginateEmployeeDataAsync(firstId, lastId, pageSize, moveForward);
             foreach (var contact in paginatedContacts)
             {
                 contact.EmployeeGroupNames = await _employeeGroupService.GetAllGroupNamesForEmployeeListAsync(contact.EmployeeId);
@@ -336,7 +336,7 @@ namespace MultiSMS.MVC.Controllers
             var fittingGroups = _groupService.GetAllEntries().Where(g => g.GroupName.ToLower() == searchPhrase).Select(g => g.GroupId).ToList();
             List<Employee> filteredContacts;
 
-            if(fittingGroups.Count() == 1)
+            if (fittingGroups.Count() == 1)
             {
                 filteredContacts = await _employeeGroupService.GetAllEmployeesForGroupListAsync(fittingGroups[0]);
             }
@@ -409,11 +409,11 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> PaginateGroups(int firstId, int lastId, int pageSize, bool? moveForward)
         {
             var (paginatedGroups, hasMorePages) = await _groupService.PaginateGroupDataAsync(firstId, lastId, pageSize, moveForward);
-            foreach(var group in paginatedGroups)
+            foreach (var group in paginatedGroups)
             {
                 group.MembersIds = await _employeeGroupService.GetAllEmployeesIdsForGroupListAsync(group.GroupId);
             };
-            return Json(new {paginatedGroups, hasMorePages});
+            return Json(new { paginatedGroups, hasMorePages });
         }
 
         [Authorize]
@@ -720,9 +720,11 @@ namespace MultiSMS.MVC.Controllers
                 case "Szablony":
                     var template = JsonConvert.DeserializeObject<SMSMessageTemplate>(logRelatedObjects["Templates"]);
                     return Json(new { Type = "Template", Template = template, Log = logSanitized, LogCreator = logCreator });
+
                 case "Kontakty":
                     var employee = JsonConvert.DeserializeObject<Employee>(logRelatedObjects["Employees"]);
                     return Json(new { Type = "Contact", Contact = employee, Log = logSanitized, LogCreator = logCreator });
+
                 case "Grupy":
                     var group = JsonConvert.DeserializeObject<Group>(logRelatedObjects["Groups"]);
                     try
@@ -734,6 +736,7 @@ namespace MultiSMS.MVC.Controllers
                     {
                         return Json(new { Type = "Groups", Group = group, Log = logSanitized, LogCreator = logCreator });
                     }
+
                 case "ServerSms":
                     var serverSmsDto = JsonConvert.DeserializeObject<SMSMessage>(logRelatedObjects["SmsMessages"]);
 
@@ -755,10 +758,11 @@ namespace MultiSMS.MVC.Controllers
                         var chosenGroup = JsonConvert.DeserializeObject<Group>(logRelatedObjects["Groups"]);
                         return Json(new { Type = "SMS-ServerSms-Group", Sms = serverSmsDto, Group = chosenGroup, Log = logSanitized, LogCreator = logCreator });
                     }
+
                 case "SmsApi":
                     var smsApiDto = JsonConvert.DeserializeObject<SMSMessage>(logRelatedObjects["SmsMessages"]);
 
-                    if(smsApiDto!.ServerResponse.ToJToken().SelectToken("error") != null)
+                    if (smsApiDto!.ServerResponse.ToJToken().SelectToken("error") != null)
                     {
                         smsApiDto.ServerResponse = JsonConvert.DeserializeObject<SmsApiErrorResponse>(smsApiDto.ServerResponse.ToString()!)!;
                     }
@@ -767,7 +771,7 @@ namespace MultiSMS.MVC.Controllers
                         smsApiDto.ServerResponse = JsonConvert.DeserializeObject<SmsApiSuccessResponse>(smsApiDto.ServerResponse.ToString()!)!;
                     }
 
-                    if(smsApiDto.ChosenGroupId == 0)
+                    if (smsApiDto.ChosenGroupId == 0)
                     {
                         return Json(new { Type = "SMS-SmsApi-NoGroup", Sms = smsApiDto, Log = logSanitized, LogCreator = logCreator });
                     }
@@ -779,6 +783,11 @@ namespace MultiSMS.MVC.Controllers
                 case "Import":
                     var importDto = JsonConvert.DeserializeObject<ImportResult>(logRelatedObjects["Imports"]);
                     return Json(new { Type = "Import", Import = importDto, Log = logSanitized, LogCreator = logCreator });
+
+                case "Użytkownicy":
+                    var userDto = JsonConvert.DeserializeObject<UserDTO>(logRelatedObjects["User"]);
+                    return Json(new { Type = "Users", User = userDto, LogCreator = logCreator });
+
                 default:
                     return StatusCode(500, "Unknown case of source log");
             }
@@ -797,7 +806,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> PaginateLogs(int firstId, int lastId, int pageSize, bool? moveForward)
         {
             var (paginatedLogs, hasMorePages) = await _logService.PaginateLogDataAsync(firstId, lastId, pageSize, moveForward);
-            return Json(new {paginatedLogs, hasMorePages});
+            return Json(new { paginatedLogs, hasMorePages });
         }
 
         [Authorize(Roles = "Administrator, Owner")]
@@ -813,7 +822,7 @@ namespace MultiSMS.MVC.Controllers
 
         [Authorize(Roles = "Administrator, Owner")]
         [HttpPost]
-        public IActionResult CheckIfAuthorizationSuccessful([FromBody]string password)
+        public IActionResult CheckIfAuthorizationSuccessful([FromBody] string password)
         {
             var authSuccessful = _apiSettingsService.CheckIfAuthorizationSuccessful(password);
 
@@ -842,11 +851,11 @@ namespace MultiSMS.MVC.Controllers
                                 <select class=""form-input"" id=""select-active-api"" style=""margin-bottom: 0"">
                                     <option selected value=""{activeApiSettings.ApiName}"">{activeApiSettings.ApiName}</option>";
 
-                foreach(var apiSetting in apiSettings)
+                foreach (var apiSetting in apiSettings)
                 {
                     htmlContent += $@"<option value=""{apiSetting.ApiName}"">{apiSetting.ApiName}</option>";
                 }
-                htmlContent +=$@"</select>
+                htmlContent += $@"</select>
                             </div>
                         </div>
                     </div>
@@ -895,7 +904,7 @@ namespace MultiSMS.MVC.Controllers
 
         [Authorize(Roles = "Administrator, Owner")]
         [HttpPost]
-        public async Task<IActionResult> UpdateApiSettings([FromBody]UpdateApiSettingsModel model)
+        public async Task<IActionResult> UpdateApiSettings([FromBody] UpdateApiSettingsModel model)
         {
             await _apiSettingsService.ChangeSettingsAsync(new ApiSettings
             {
@@ -1000,6 +1009,9 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateUser(string Name, string Surname, string Email, string Role, string? PhoneNumber, string Password)
         {
+            var adminId = User.GetLoggedInUserId<int>();
+            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+
             var model = new IdentityUserModel
             {
                 Name = Name,
@@ -1015,6 +1027,24 @@ namespace MultiSMS.MVC.Controllers
                 try
                 {
                     var newUser = await _userService.CreateNewIdentityUser(model);
+
+                    await _logService.AddEntityToDatabaseAsync(
+                    new Log
+                    {
+                        LogType = "Info",
+                        LogSource = "Użytkownicy",
+                        LogMessage = $"Użytkownik {newUser.Name} {newUser.Surname} został utworzony",
+                        LogCreatorId = adminId,
+                        LogCreator = admin.UserName,
+                        LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>
+                        {
+                            { "User", JsonConvert.SerializeObject(newUser) },
+                            { "Creator", JsonConvert.SerializeObject(admin) }
+
+                        })
+                    }
+                );
+
                     return Ok(newUser);
                 }
                 catch (CustomValidationException ex)
@@ -1036,6 +1066,9 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateAdmin(string Name, string Surname, string Email, string Role, string? PhoneNumber, string Password)
         {
+            var adminId = User.GetLoggedInUserId<int>();
+            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+
             var model = new IdentityUserModel
             {
                 Name = Name,
@@ -1051,6 +1084,24 @@ namespace MultiSMS.MVC.Controllers
                 try
                 {
                     var newUser = await _userService.CreateNewIdentityUser(model);
+
+                    await _logService.AddEntityToDatabaseAsync(
+                    new Log
+                    {
+                        LogType = "Info",
+                        LogSource = "Użytkownicy",
+                        LogMessage = $"Administrator {newUser.Name} {newUser.Surname} został utworzony",
+                        LogCreatorId = adminId,
+                        LogCreator = admin.UserName,
+                        LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>
+                        {
+                            { "User", JsonConvert.SerializeObject(newUser) },
+                            { "Creator", JsonConvert.SerializeObject(admin) }
+
+                        })
+                    }
+                );
+
                     return Ok(newUser);
                 }
                 catch (CustomValidationException ex)
@@ -1070,7 +1121,7 @@ namespace MultiSMS.MVC.Controllers
 
         [Authorize(Roles = "Administrator, Owner")]
         [HttpPut]
-        public async Task<IActionResult> DetermineUserRoleAndEdit([FromQuery]int userId, IdentityUserModel model)
+        public async Task<IActionResult> DetermineUserRoleAndEdit([FromQuery] int userId, IdentityUserModel model)
         {
             var userRole = await _userService.GetUserRoleById(userId);
 
@@ -1088,6 +1139,9 @@ namespace MultiSMS.MVC.Controllers
         [HttpPut]
         public async Task<IActionResult> EditUser(int userId, string Name, string Surname, string Email, string Role, string PhoneNumber)
         {
+            var adminId = User.GetLoggedInUserId<int>();
+            var admin = await _userService.GetAdministratorDtoByIdAsync(userId);
+
             IdentityUserModel model = new IdentityUserModel
             {
                 Name = Name,
@@ -1101,6 +1155,24 @@ namespace MultiSMS.MVC.Controllers
             {
                 var user = await _userService.EditIdenitityUser(userId, model);
                 user.Role = Role;
+
+                await _logService.AddEntityToDatabaseAsync(
+                    new Log
+                    {
+                        LogType = "Info",
+                        LogSource = "Użytkownicy",
+                        LogMessage = $"Użytkownik {user.Name} {user.Surname} został zedytowany",
+                        LogCreatorId = adminId,
+                        LogCreator = admin.UserName,
+                        LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>
+                        {
+                            { "User", JsonConvert.SerializeObject(user) },
+                            { "Creator", JsonConvert.SerializeObject(admin) }
+
+                        })
+                    }
+                );
+
                 return Ok(user);
             }
             catch (CustomValidationException ex)
@@ -1117,6 +1189,9 @@ namespace MultiSMS.MVC.Controllers
         [HttpPut]
         public async Task<IActionResult> EditAdmin(int userId, string Name, string Surname, string Email, string Role, string PhoneNumber)
         {
+            var adminId = User.GetLoggedInUserId<int>();
+            var admin = await _userService.GetAdministratorDtoByIdAsync(userId);
+
             var callingUserId = User.GetLoggedInUserId<int>();
             if (callingUserId == userId)
             {
@@ -1136,6 +1211,24 @@ namespace MultiSMS.MVC.Controllers
             {
                 var user = await _userService.EditIdenitityUser(userId, model);
                 user.Role = Role;
+
+                await _logService.AddEntityToDatabaseAsync(
+                    new Log
+                    {
+                        LogType = "Info",
+                        LogSource = "Użytkownicy",
+                        LogMessage = $"Administrator {user.Name} {user.Surname} został zedytowany",
+                        LogCreatorId = adminId,
+                        LogCreator = admin.UserName,
+                        LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>
+                        {
+                            { "User", JsonConvert.SerializeObject(user) },
+                            { "Creator", JsonConvert.SerializeObject(admin) }
+
+                        })
+                    }
+                );
+
                 return Ok(user);
             }
             catch (CustomValidationException ex)
@@ -1168,9 +1261,32 @@ namespace MultiSMS.MVC.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteUser(int userId)
         {
+            var adminId = User.GetLoggedInUserId<int>();
+            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+
             try
             {
+                var user = await _userService.GetAdministratorDtoByIdAsync(userId);
+
                 await _userService.DeleteIdentityUser(userId);
+
+                await _logService.AddEntityToDatabaseAsync(
+                    new Log
+                    {
+                        LogType = "Info",
+                        LogSource = "Użytkownicy",
+                        LogMessage = $"Użytkownik {user.Name} {user.Surname} został usunięty",
+                        LogCreatorId = adminId,
+                        LogCreator = admin.UserName,
+                        LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>
+                        {
+                            { "User", JsonConvert.SerializeObject(user) },
+                            { "Creator", JsonConvert.SerializeObject(admin) }
+
+                        })
+                    }
+                );
+
                 return Ok("User deleted successfully");
             }
             catch (NullReferenceException)
@@ -1184,14 +1300,37 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> DeleteAdmin(int userId)
         {
             var callingUserId = User.GetLoggedInUserId<int>();
-            if(callingUserId == userId)
+
+            if (callingUserId == userId)
             {
                 throw new Exception("Administrator cannot delete himself");
             }
 
+            var admin = await _userService.GetAdministratorDtoByIdAsync(callingUserId);
+
             try
             {
+                var user = await _userService.GetAdministratorDtoByIdAsync(userId);
+
+                await _logService.AddEntityToDatabaseAsync(
+                    new Log
+                    {
+                        LogType = "Info",
+                        LogSource = "Użytkownicy",
+                        LogMessage = $"Administrator {user.Name} {user.Surname} został usunięty",
+                        LogCreatorId = callingUserId,
+                        LogCreator = admin.UserName,
+                        LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>
+                        {
+                            { "User", JsonConvert.SerializeObject(user) },
+                            { "Creator", JsonConvert.SerializeObject(admin) }
+
+                        })
+                    }
+                );
+
                 await _userService.DeleteIdentityUser(userId);
+
                 return Ok("Admin deleted successfully");
             }
             catch (NullReferenceException)
@@ -1199,7 +1338,6 @@ namespace MultiSMS.MVC.Controllers
                 return NotFound("Could not find user with provided Id");
             }
         }
-
 
         #endregion
 
