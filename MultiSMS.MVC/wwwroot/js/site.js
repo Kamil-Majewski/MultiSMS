@@ -1795,6 +1795,67 @@ function HandleContactTypeLog(contactEntity) {
     });
 }
 
+function handleUserTypeLog(userEntity) {
+    var role = "";
+
+    if (userEntity.role == "User") {
+        role = "Użytkownik";
+    }
+    else if (userEntity.role == "Administrator") {
+        role = "Admin";
+    }
+    else {
+        role = "Właściciel";
+    }
+
+    var relatedObjects = `<span class="log-related-object-title">Użytkownik</span>
+                    <hr style="margin-top: 20px";/>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logUser-UserIdDetail">Id:</label>
+                            <span class="details-span" id="logUser-UserIdDetail">${userEntity.id}</span>
+                        </div>
+                    </div>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logUser-UserNameDetail">Imię:</label>
+                            <span class="details-span" id="logUser-UserNameDetail">${userEntity.name}</span>
+                        </div>
+                    </div>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logUser-UserSurnameDetail">Nazwisko:</label>
+                            <span class="details-span" id="logUser-UserSurnameDetail">${userEntity.surname}</span>
+                        </div>
+                    </div>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logUser-UserEmailDetail">Email:</label>
+                            <span class="details-span" id="logUser-UserEmailDetail">${userEntity.userName}</span>
+                        </div>
+                    </div>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logUser-UserPhoneDetail">Numer telefonu:</label>
+                            <span class="details-span" id="logUser-UserPhoneDetail">${userEntity.phoneNumber || "Brak danych"}</span>
+                        </div>
+                    </div>
+                        <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logUser-UserRoleDetail">Rola:</label>
+                            <span class="details-span" id="logUser-UserRoleDetail">${role}</span>
+                        </div>
+                    </div>
+                    `;
+
+    $("#log-related-objects-data-form-group").append(relatedObjects);
+
+    $(".logs-detail-label").css({
+        "min-width": "172px",
+        "max-width": "172px"
+    });
+}
+
 function SanitizePolishSymbols(inputId) {
 
     const diacriticToAsciiMap = {

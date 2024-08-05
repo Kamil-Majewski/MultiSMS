@@ -785,8 +785,8 @@ namespace MultiSMS.MVC.Controllers
                     return Json(new { Type = "Import", Import = importDto, Log = logSanitized, LogCreator = logCreator });
 
                 case "Użytkownicy":
-                    var userDto = JsonConvert.DeserializeObject<UserDTO>(logRelatedObjects["User"]);
-                    return Json(new { Type = "Users", User = userDto, LogCreator = logCreator });
+                    var userDto = JsonConvert.DeserializeObject<ManageUserDTO>(logRelatedObjects["User"]);
+                    return Json(new { Type = "Users", Log = logSanitized, User = userDto, LogCreator = logCreator });
 
                 default:
                     return StatusCode(500, "Unknown case of source log");
@@ -1266,7 +1266,7 @@ namespace MultiSMS.MVC.Controllers
 
             try
             {
-                var user = await _userService.GetAdministratorDtoByIdAsync(userId);
+                var user = await _userService.GetIdentityUserById(userId);
 
                 await _userService.DeleteIdentityUser(userId);
 
@@ -1310,7 +1310,7 @@ namespace MultiSMS.MVC.Controllers
 
             try
             {
-                var user = await _userService.GetAdministratorDtoByIdAsync(userId);
+                var user = await _userService.GetIdentityUserById(userId);
 
                 await _logService.AddEntityToDatabaseAsync(
                     new Log

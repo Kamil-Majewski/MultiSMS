@@ -1344,6 +1344,9 @@
                     else if (logEntity.type == "Import") {
                         handleImportTypeLog(logEntity.import);
                     }
+                    else if(logEntity.type == "Users") {
+                        handleUserTypeLog(logEntity.user)
+                    }
                     else {
                         console.error("Unknown log type");
                     }
