@@ -6,7 +6,6 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
 
 namespace MultiSMS.MVC.Areas.Identity.Pages.Account.Manage
@@ -15,16 +14,13 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly IUserService _adminService;
 
         public IndexModel(
             UserManager<User> userManager,
-            SignInManager<User> signInManager,
-            IUserService adminService)
+            SignInManager<User> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _adminService = adminService;
         }
 
         /// <summary>
@@ -69,19 +65,15 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account.Manage
             public string Surname { get; set; }
         }
 
-        private async Task LoadAsync(User user)
+        private void Load(User user)
         {
-            var userName = await _userManager.GetUserNameAsync(user);
-            var adminDto = await _adminService.GetAdministratorDtoByEmailAsync(userName);
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-
-            Username = userName;
+            Username = user.UserName;
 
             Input = new InputModel
             {
-                Name = adminDto.Name,
-                Surname = adminDto.Surname,
-                PhoneNumber = phoneNumber
+                Name = user.Name,
+                Surname = user.Surname,
+                PhoneNumber = user.PhoneNumber
             };
         }
 
@@ -93,7 +85,7 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            await LoadAsync(user);
+            Load(user);
             return Page();
         }
 
@@ -107,7 +99,7 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account.Manage
 
             if (!ModelState.IsValid)
             {
-                await LoadAsync(user);
+                Load(user);
                 return Page();
             }
 

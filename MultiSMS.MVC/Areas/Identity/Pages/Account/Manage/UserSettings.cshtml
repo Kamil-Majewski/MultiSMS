@@ -85,7 +85,7 @@
             window.location.replace("./Email");
         });
 
-        $("#AdminPhone").on('input', function () {
+        $("#AdminPhone").on('input', function (event) {
             var phoneInput = document.getElementById('AdminPhone');
 
             if (event.inputType === 'deleteContentBackward' || event.inputType === 'deleteContentForward') {
