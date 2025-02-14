@@ -137,9 +137,6 @@ namespace MultiSMS.MVC.Areas.Identity.Pages.Account.Manage
                 StatusMessage = "Nie zmieniono żadnych danych";
                 return RedirectToPage();
             }
-
-           
-            
         }
     }
 }
