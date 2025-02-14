@@ -49,17 +49,12 @@ namespace MultiSMS.MVC.Controllers
             _smsContext.SetSmsStrategy(new SendSmsTroughServerSms(_serverSmsSettings, _apiSettingsService));
             var response = await _smsContext.SendSMSAsync(phoneNumbersString, text, data);
 
+            string logMessage = (chosenGroupName == null && chosenGroupId == 0)
+                ? "Sms został wysłany do pojedyńczych numerów"
+                : $"Sms został wysłany do grupy {chosenGroupName}";
+
             try //try to deserialize response into entities that correspond with response structure and then act depending on the outcome
             {
-                string logMessage;
-                if (chosenGroupName == null && chosenGroupId == 0)
-                {
-                    logMessage = "Sms został wysłany do pojedyńczych numerów";
-                }
-                else
-                {
-                    logMessage = $"Sms został wysłany do grupy {chosenGroupName}";
-                }
                 ServerSmsSuccessResponse successResponse = JsonConvert.DeserializeObject<ServerSmsSuccessResponse>(response) ?? throw new Exception("Deserialization to ServerSmsSuccessResponse failed");
 
                 var smsMessage = new SMSMessage
@@ -92,15 +87,6 @@ namespace MultiSMS.MVC.Controllers
             {
                 try //deserialization into SuccessResponse failed, try to deserialize into ErrorResponse
                 {
-                    string logMessage;
-                    if (chosenGroupName == null && chosenGroupId == 0)
-                    {
-                        logMessage = "Nie udało się wysłać sms'a do pojedyńczych numerów";
-                    }
-                    else
-                    {
-                        logMessage = $"Nie udało się wysłać sms'a do grupy {chosenGroupName}";
-                    }
                     ServerSmsErrorResponse errorResponse = JsonConvert.DeserializeObject<ServerSmsErrorResponse>(response) ?? throw new Exception("Deserialization to ServerSmsErrorResponse failed");
 
                     var smsMessage = new SMSMessage
@@ -141,18 +127,12 @@ namespace MultiSMS.MVC.Controllers
             _smsContext.SetSmsStrategy(new SendSmsTroughSmsApi(_smsApiSettings, _apiSettingsService));
             var response = await _smsContext.SendSMSAsync(phoneNumbersString, text, data);
 
+            string logMessage = (chosenGroupName == null && chosenGroupId == 0)
+                ? "Sms został wysłany do pojedyńczych numerów"
+                : $"Sms został wysłany do grupy {chosenGroupName}";
+
             try //try to deserialize response into entities that correspond with response structure and then act depending on the outcome
             {
-                string logMessage;
-                if (chosenGroupName == null && chosenGroupId == 0)
-                {
-                    logMessage = "Sms został wysłany do pojedyńczych numerów";
-                }
-                else
-                {
-                    logMessage = $"Sms został wysłany do grupy {chosenGroupName}";
-                }
-
                 SmsApiSuccessResponse successResponse = JsonConvert.DeserializeObject<SmsApiSuccessResponse>(response) ?? throw new Exception("Deserialization to SmsApiSuccessResponse failed");
 
                 var smsMessage = new SMSMessage
@@ -188,15 +168,6 @@ namespace MultiSMS.MVC.Controllers
             {
                 try //deserialization into SuccessResponse failed, try to deserialize into ErrorResponse
                 {
-                    string logMessage;
-                    if (chosenGroupName == null && chosenGroupId == 0)
-                    {
-                        logMessage = "Nie udało się wysłać sms'a do pojedyńczych numerów";
-                    }
-                    else
-                    {
-                        logMessage = $"Nie udało się wysłać sms'a do grupy {chosenGroupName}";
-                    }
                     SmsApiErrorResponse errorResponse = JsonConvert.DeserializeObject<SmsApiErrorResponse>(response) ?? throw new Exception("Deserialization to SmsApiErrorResponse failed");
 
                     var smsMessage = new SMSMessage
@@ -242,7 +213,7 @@ namespace MultiSMS.MVC.Controllers
 
             var activeApiSettings = await _apiSettingsService.GetActiveSettingsAsync();
 
-            Group chosenGroup = new Group();
+            Group chosenGroup = new();
 
             if (chosenGroupId > 0)
             {

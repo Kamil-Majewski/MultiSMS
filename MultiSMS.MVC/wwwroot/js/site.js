@@ -2064,6 +2064,10 @@ function FetchAllTemplatesAndPopulateTable() {
 }
 
 function PaginateTemplatesAndPopulateTable(firstId, lastId, pageSize, moveForward) {
+
+    $("#templates-list-next-page-button, #templates-list-previous-page-button").prop("disabled", true);
+
+
     $.ajax({
         url: '/Home/PaginateTemplates',
         type: 'GET',
@@ -2132,6 +2136,10 @@ function PaginateTemplatesAndPopulateTable(firstId, lastId, pageSize, moveForwar
         },
         error: function (errorData) {
             console.error(errorData.responseText);
+        },
+        complete: function () {
+            // Re-enable pagination buttons
+            $("#templates-list-next-page-button, #templates-list-previous-page-button").prop("disabled", false);
         }
     })
 }
@@ -2177,6 +2185,9 @@ function FetchAllContactsAndPopulateTable() {
 }
 
 function PaginateContactsAndPopulateTable(firstId, lastId, pageSize, moveForward) {
+
+    $("#contacts-list-next-page-button, #contacts-list-previous-page-button").prop("disabled", true);
+
     $.ajax({
         url: 'Home/PaginateContacts',
         type: 'GET',
@@ -2255,13 +2266,18 @@ function PaginateContactsAndPopulateTable(firstId, lastId, pageSize, moveForward
         },
         error: function (error) {
             console.error(error.responseText);
+        },
+        complete: function () {
+            // Re-enable pagination buttons
+            $("#contacts-list-next-page-button, #contacts-list-previous-page-button").prop("disabled", false);
         }
     });
 }
 
-
-
 function PaginateAssignContactsAndPopulateTable(firstId, lastId, pageSize, moveForward) {
+
+    $("#contacts-assign-list-next-page-button, #contacts-assign-list-previous-page-button").prop("disabled", true);
+
     $.ajax({
         url: 'Home/PaginateContacts',
         type: 'GET',
@@ -2343,11 +2359,13 @@ function PaginateAssignContactsAndPopulateTable(firstId, lastId, pageSize, moveF
         },
         error: function (error) {
             console.error(error.responseText);
+        },
+        complete: function () {
+            // Re-enable pagination buttons
+            $("#contacts-assign-list-next-page-button, #contacts-assign-list-previous-page-button").prop("disabled", false);
         }
     });
 }
-
-
 
 function FetchAllGroupsAndPopulateTable() {
     $.ajax({
@@ -2384,6 +2402,9 @@ function FetchAllGroupsAndPopulateTable() {
 }
 
 function PaginateGroupsAndPopulateTable(firstId, lastId, pageSize, moveForward) {
+
+    $("#groups-list-next-page-button, #groups-list-previous-page-button").prop("disabled", true);
+
     $.ajax({
         url: '/Home/PaginateGroups',
         type: 'GET',
@@ -2453,11 +2474,18 @@ function PaginateGroupsAndPopulateTable(firstId, lastId, pageSize, moveForward) 
         },
         error: function (error) {
             console.error(error.responseText);
+        },
+        complete: function () {
+            // Re-enable pagination buttons
+            $("#groups-list-next-page-button, #groups-list-previous-page-button").prop("disabled", false);
         }
     });
 }
 
 function PaginateAssignGroupsAndPopulateTable(firstId, lastId, pageSize, moveForward) {
+
+    $("#groups-assign-list-next-page-button, #groups-assign-list-previous-page-button").prop("disabled", true);
+
     $.ajax({
         url: '/Home/PaginateGroups',
         type: 'GET',
@@ -2533,6 +2561,10 @@ function PaginateAssignGroupsAndPopulateTable(firstId, lastId, pageSize, moveFor
         },
         error: function (error) {
             console.error(error.responseText);
+        },
+        complete: function () {
+            // Re-enable pagination buttons
+            $("#groups-assign-list-next-page-button, #groups-assign-list-previous-page-button").prop("disabled", false);
         }
     });
 }
@@ -2571,6 +2603,9 @@ function FetchAllLogsAndPopulateTable() {
 }
 
 function PaginateLogsAndPopulateTable(firstId, lastId, pageSize, moveForward) {
+
+    $("#logs-list-next-page-button, #logs-list-previous-page-button").prop("disabled", true);
+
     $.ajax({
         url: '/Home/PaginateLogs',
         type: 'GET',
@@ -2639,6 +2674,10 @@ function PaginateLogsAndPopulateTable(firstId, lastId, pageSize, moveForward) {
         },
         error: function (error) {
             console.error(error.responseText);
+        },
+        complete: function () {
+            // Re-enable pagination buttons
+            $("#logs-list-next-page-button, #logs-list-previous-page-button").prop("disabled", false);
         }
     });
 }

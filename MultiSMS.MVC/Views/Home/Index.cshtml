@@ -1354,7 +1354,7 @@
                 }
             });
         });
-        const debouncedPaginateTemplates = debounce(PaginateTemplatesAndPopulateTable, 220);
+        const debouncedPaginateTemplates = debounce(PaginateTemplatesAndPopulateTable, 10);
 
         $(document).on('click', '#templates-list-next-page-button', function () {
             var lastId = $("#template-table").attr('last-id');
@@ -1366,7 +1366,7 @@
             debouncedPaginateTemplates(firstId, null, 11, false);
         });
 
-        var debouncedPaginateContacts = debounce(PaginateContactsAndPopulateTable, 220);
+        var debouncedPaginateContacts = debounce(PaginateContactsAndPopulateTable, 10);
 
         $(document).on('click', '#contacts-list-next-page-button', function () {
             var lastId = $("#contacts-table").attr('last-id');
@@ -1378,7 +1378,7 @@
             debouncedPaginateContacts(firstId, null, 11, false);
         });
 
-        var debouncedPaginateAssignContacts = debounce(PaginateAssignContactsAndPopulateTable, 220);
+        var debouncedPaginateAssignContacts = debounce(PaginateAssignContactsAndPopulateTable, 10);
 
         $(document).on('click', '#contacts-assign-list-next-page-button', function () {
             var lastId = $("#group-assign-contact-list-table").attr('last-id');
@@ -1390,7 +1390,7 @@
             debouncedPaginateAssignContacts(firstId, null, 7, false);
         });
 
-        var debouncedPaginateGroups = debounce(PaginateGroupsAndPopulateTable, 220);
+        var debouncedPaginateGroups = debounce(PaginateGroupsAndPopulateTable, 10);
 
         $(document).on('click', '#groups-list-next-page-button', function () {
             var lastId = $("#group-table").attr('last-id');
@@ -1402,7 +1402,7 @@
             debouncedPaginateGroups(firstId, null, 11, false);
         });
 
-        var debouncedPaginateLogs = debounce(PaginateLogsAndPopulateTable, 220);
+        var debouncedPaginateLogs = debounce(PaginateLogsAndPopulateTable, 10);
 
         $(document).on('click', '#logs-list-next-page-button', function () {
             var lastId = $("#log-table").attr('last-id');
@@ -1414,7 +1414,7 @@
             debouncedPaginateLogs(firstId, null, 11, false);
         });
 
-        var debouncedPaginateAssignGroupsToContact = debounce(PaginateAssignGroupsAndPopulateTable, 220);
+        var debouncedPaginateAssignGroupsToContact = debounce(PaginateAssignGroupsAndPopulateTable, 10);
 
         $(document).on('click', '#groups-assign-list-next-page-button', function () {
             var lastId = $("#group-assign-group-list-table").attr('last-id');
@@ -1911,7 +1911,7 @@
         OnInputFilterTable(".user-search", "#users-table");
 
 
-        $("#ContactPostalNumber").on('input', function () {
+        $("#ContactPostalNumber").on('input', function (event) {
 
             if (event.inputType === 'deleteContentBackward' || event.inputType === 'deleteContentForward') {
                 return;
