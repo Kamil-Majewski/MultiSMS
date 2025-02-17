@@ -6,7 +6,7 @@ using MultiSMS.BusinessLogic.Extensions;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.BusinessLogic.Settings;
 using MultiSMS.BusinessLogic.Strategy;
-using MultiSMS.BusinessLogic.Strategy.Intefaces;
+using MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Context.Intefaces;
 using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Entities.ServerSms;
 using MultiSMS.Interface.Entities.SmsApi;

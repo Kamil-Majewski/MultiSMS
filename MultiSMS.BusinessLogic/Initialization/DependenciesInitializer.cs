@@ -1,8 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MultiSMS.BusinessLogic.Services;
 using MultiSMS.BusinessLogic.Services.Interfaces;
-using MultiSMS.BusinessLogic.Strategy;
-using MultiSMS.BusinessLogic.Strategy.Intefaces;
+using MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Clients.Interface;
+using MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Clients;
+using MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Context;
+using MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Context.Intefaces;
+using MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Factory;
+using MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Factory.Interface;
 
 namespace MultiSMS.BusinessLogic.Initialization
 {
@@ -20,6 +24,11 @@ namespace MultiSMS.BusinessLogic.Initialization
             serviceCollection.AddScoped<IGroupService, GroupService>();
             serviceCollection.AddScoped<ILogService, LogService>();
             serviceCollection.AddScoped<ISMSMessageTemplateService, SMSMessageTemplateService>();
+            serviceCollection.AddScoped<IApiSettingsService, ApiSettingsService>();
+            serviceCollection.AddScoped<ISmsClient, ServerSmsClient>();
+            serviceCollection.AddScoped<ISmsClient, SmsApiClient>();
+            serviceCollection.AddScoped<ISmsClientFactory, SmsClientFactory>();
+            serviceCollection.AddScoped<ISendSMSContext, SendSMSContext>();
             serviceCollection.AddScoped<IApiSettingsService, ApiSettingsService>();
         }
     }
