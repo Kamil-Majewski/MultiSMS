@@ -27,6 +27,8 @@ namespace MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Factory
                     return _serviceProvider.GetRequiredService<ServerSmsClient>();
                 case 2:
                     return _serviceProvider.GetRequiredService<SmsApiClient>();
+                case 3:
+                    return _serviceProvider.GetRequiredService<MProfiClient>();
                 default:
                     throw new Exception("Unknown API");
             }

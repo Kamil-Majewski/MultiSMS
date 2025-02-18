@@ -39,6 +39,10 @@ namespace MultiSMS.BusinessLogic.Initialization
             {
                 client.BaseAddress = new Uri("https://api.smsapi.pl/");
             });
+            serviceCollection.AddHttpClient<MProfiClient>(client =>
+            {
+                client.BaseAddress = new Uri("https://api.mprofi.pl/1.0/");
+            });
         }
     }
 }
