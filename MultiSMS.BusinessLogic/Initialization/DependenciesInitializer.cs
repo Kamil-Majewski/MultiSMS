@@ -30,6 +30,15 @@ namespace MultiSMS.BusinessLogic.Initialization
             serviceCollection.AddScoped<ISmsClientFactory, SmsClientFactory>();
             serviceCollection.AddScoped<ISendSMSContext, SendSMSContext>();
             serviceCollection.AddScoped<IApiSettingsService, ApiSettingsService>();
+
+            serviceCollection.AddHttpClient<ServerSmsClient>(client =>
+            {
+                client.BaseAddress = new Uri("https://api2.serwersms.pl/");
+            });
+            serviceCollection.AddHttpClient<SmsApiClient>(client =>
+            {
+                client.BaseAddress = new Uri("https://api.smsapi.pl/");
+            });
         }
     }
 }
