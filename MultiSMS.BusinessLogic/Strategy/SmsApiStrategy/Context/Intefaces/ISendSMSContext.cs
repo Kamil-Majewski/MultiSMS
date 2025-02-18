@@ -1,7 +1,9 @@
-﻿namespace MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Context.Intefaces
+﻿using MultiSMS.BusinessLogic.Models;
+
+namespace MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Context.Intefaces
 {
     public interface ISendSMSContext
     {
-        Task<string> SendSMSAsync(string phone, string text);
+        Task<SendSmsResultModel> SendSMSAsync(string phone, string text, string senderName);
     }
 }

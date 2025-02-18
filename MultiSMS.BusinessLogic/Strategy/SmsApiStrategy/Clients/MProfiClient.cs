@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using MultiSMS.BusinessLogic.Models;
 using MultiSMS.BusinessLogic.Settings;
 using MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Clients.Interface;
 using Newtonsoft.Json;
@@ -17,7 +18,7 @@ namespace MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Clients
             _secretTokens = secretTokens.Value;
         }
 
-        public async Task<string> SendSmsAsync(string phone, string text, string senderName)
+        public async Task<SendSmsResultModel> SendSmsAsync(string phone, string text, string senderName)
         {
             if (!_secretTokens.SenderNameTokenDictionary.TryGetValue(senderName, out var token))
             {
@@ -41,7 +42,7 @@ namespace MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Clients
             using var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadAsStringAsync();
+            return new SendSmsResultModel(await response.Content.ReadAsStringAsync(), parameters);
         }
     }
 }

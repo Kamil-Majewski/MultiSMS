@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MultiSMS.Interface.Entities;
+﻿using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Repositories.Interfaces;
 
 namespace MultiSMS.Interface.Repositories

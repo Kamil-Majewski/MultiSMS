@@ -1,4 +1,5 @@
-﻿using MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Context.Intefaces;
+﻿using MultiSMS.BusinessLogic.Models;
+using MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Context.Intefaces;
 using MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Factory.Interface;
 
 namespace MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Context
@@ -12,10 +13,10 @@ namespace MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Context
             _strategyFactory = strategyFactory;
         }
 
-        public async Task<string> SendSMSAsync(string phone, string text)
+        public async Task<SendSmsResultModel> SendSMSAsync(string phone, string text, string senderName)
         {
             var client = await _strategyFactory.GetClientAsync();
-            return await client.SendSmsAsync(phone, text);
+            return await client.SendSmsAsync(phone, text, senderName);
         }
     }
 }

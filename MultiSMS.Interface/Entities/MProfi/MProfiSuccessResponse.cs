@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace MultiSMS.Interface.Entities.Comverga___MProfi
+namespace MultiSMS.Interface.Entities.MProfi
 {
-    public class ComvergaSuccessResponse
+    public class MProfiSuccessResponse
     {
         [JsonProperty(PropertyName = "result", Required = Required.Always)]
         public List<ResultItem> Result { get; set; } = new();
