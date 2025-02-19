@@ -190,26 +190,22 @@ namespace MultiSMS.MVC.Controllers
                             {
                                 { "SmsMessages", JsonConvert.SerializeObject(smsMessage) },
                                 { "Groups", JsonConvert.SerializeObject(chosenGroup) },
-                                { "Creator", JsonConvert.SerializeObject(admin) }
+                    { "Creator", JsonConvert.SerializeObject(user) }
                             })
                     });
 
                     return ("failed", errorResponse.ErrorCode, errorResponse.ErrorMessage);
 
-                }
-                catch (JsonException)
-                {
-                    throw new Exception("Error deserializing objects: response structure doesn't fit the object structure.");
-                }
-            }
+            return queued != null && unsent != null
+                ? (true, queued.Value, unsent.Value)
+                : ("failed", errorCode, errorMessage);
         }
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> SendSmsMessage(string text, int chosenGroupId, string chosenGroupName, string additionalPhoneNumbers, string additionalInfo)
+        public async Task<IActionResult> SendSmsMessage(string text, int chosenGroupId, string senderName, string additionalPhoneNumbers, string additionalInfo)
         {
-            var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var userId = User.GetLoggedInUserId<int>();
 
             var activeApiSettings = await _apiSettingsService.GetActiveSettingsAsync();
 
@@ -231,10 +227,11 @@ namespace MultiSMS.MVC.Controllers
 
             if (groupPhoneNumbers.Count < 200)
             {
-                var data = new Dictionary<string, string>();
-
                 var phoneNumbersString = string.Join(',', groupPhoneNumbers);
-                var result = activeApiSettings.ApiName == "ServerSms" ? await SendSmsMessageThroughServerSMS(chosenGroupName, chosenGroup, chosenGroupId, additionalInfo, additionalPhoneNumbers, adminId, admin, phoneNumbersString, text, data, activeApiSettings) : await SendSmsMessageThroughSmsApi(chosenGroupName, chosenGroup, chosenGroupId, additionalInfo, additionalPhoneNumbers, adminId, admin, phoneNumbersString, text, data, activeApiSettings);
+                var response = await _smsContext.SendSMSAsync(phoneNumbersString, text, senderName);
+
+                var result = await HandleApiResponse(response.ResponseContent, response.Parameters, chosenGroup,
+                                               additionalPhoneNumbers, additionalInfo, userId, activeApiSettings);
 
                 if (result is ValueTuple<bool, int, int> successTuple)
                 {
@@ -246,7 +243,7 @@ namespace MultiSMS.MVC.Controllers
                 }
                 else
                 {
-                    throw new Exception("Unknown tuple type");
+                    throw new Exception("Unknown object type");
                 }
             }
             else
@@ -262,7 +259,10 @@ namespace MultiSMS.MVC.Controllers
                     var chunk = groupPhoneNumbers.GetRange(i, Math.Min(200, groupPhoneNumbers.Count - i));
                     var phoneNumbersString = string.Join(',', chunk);
 
-                    var result = activeApiSettings.ApiName == "ServerSms" ? await SendSmsMessageThroughServerSMS(chosenGroupName, chosenGroup, chosenGroupId, additionalInfo, additionalPhoneNumbers, adminId, admin, phoneNumbersString, text, data, activeApiSettings) : await SendSmsMessageThroughSmsApi(chosenGroupName, chosenGroup, chosenGroupId, additionalInfo, additionalPhoneNumbers, adminId, admin, phoneNumbersString, text, data, activeApiSettings);
+                    var response = await _smsContext.SendSMSAsync(phoneNumbersString, text, senderName);
+
+                    var result = await HandleApiResponse(response.ResponseContent, response.Parameters, chosenGroup,
+                                               additionalPhoneNumbers, additionalInfo, userId, activeApiSettings);
 
                     if (result is ValueTuple<bool, int, int> successTuple)
                     {
@@ -275,7 +275,7 @@ namespace MultiSMS.MVC.Controllers
                     }
                     else
                     {
-                        throw new Exception("Unknown tuple type");
+                        throw new Exception("Unknown object type");
                     }
                 }
 
@@ -291,6 +291,22 @@ namespace MultiSMS.MVC.Controllers
                 {
                     return Json(new { Status = "Multiple-Partial", Queued = queued, Unsent = unsent, Errors = listOfErrors.Distinct() });
                 }
+            }
+        }
+
+        private async Task<object> HandleApiResponse(string response, Dictionary<string, string> parameters, Group chosenGroup, string additionalPhoneNumbers, string additionalInfo,
+                                               int adminId, ApiSettings activeApiSettings)
+        {
+            var user = await _userService.GetIdentityUserById(adminId);
+
+            switch (activeApiSettings.ApiSettingsId)
+            {
+                case 1:
+                    return HandleServerSmsResponse(response, parameters, chosenGroup, additionalPhoneNumbers, additionalInfo, user);
+                case 2:
+                    return HandleSmsApiResponse(response, parameters, chosenGroup, additionalPhoneNumbers, additionalInfo, user);
+                default:
+                    throw new Exception("Unknown API Id");
             }
         }
     }
