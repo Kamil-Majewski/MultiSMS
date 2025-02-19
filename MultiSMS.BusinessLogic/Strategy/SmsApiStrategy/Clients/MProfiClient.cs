@@ -40,7 +40,6 @@ namespace MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Clients
             };
 
             using var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
 
             return new SendSmsResultModel(await response.Content.ReadAsStringAsync(), parameters);
         }

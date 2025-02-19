@@ -11,6 +11,7 @@ using MultiSMS.MVC.Models;
 using MultiSMS.MVC.Areas;
 using MultiSMS.MVC.Middlewares;
 using MultiSMS.MVC.Hubs;
+using MultiSMS.BusinessLogic.MappingConfig;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,9 +31,10 @@ builder.Services.AddDbContext<MultiSMSDbContext>(options =>
 builder.Services.Configure<EmailSettings>(configuration.GetSection("MailSettings"));
 builder.Services.Configure<ServerSmsSettings>(configuration.GetSection("SMSServerSettings"));
 builder.Services.Configure<SmsApiSettings>(configuration.GetSection("SMSAPI"));
+builder.Services.Configure<MProfiSettings>(configuration.GetSection("MProfiSettings"));
 builder.Services.Configure<ApiSettingsSettings>(configuration.GetSection("ApiSettingsSettings"));
 
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddAutoMapper(typeof(AutomapperProfile).Assembly);
 
 builder.Services.AddIdentity<User, IdentityRole<int>>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<MultiSMSDbContext>()

@@ -8,13 +8,13 @@ namespace MultiSMS.Interface
 {
     public class MultiSMSDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
-        public virtual DbSet<User> AspNetUsers { get; set; }
-        public virtual DbSet<Employee> Employees { get; set; }
-        public virtual DbSet<Group> Groups { get; set; }
-        public virtual DbSet<SMSMessageTemplate> SMSMessageTemplates { get; set; }
-        public virtual DbSet<Log> Logs { get; set; }
-        public virtual DbSet<EmployeeGroup> EmployeeGroups { get; set; }
-        public virtual DbSet<ApiSettings> ApiSettings { get; set; }
+        public virtual DbSet<User> AspNetUsers { get; set; } = default!;
+        public virtual DbSet<Employee> Employees { get; set; } = default!;
+        public virtual DbSet<Group> Groups { get; set; } = default!;
+        public virtual DbSet<SMSMessageTemplate> SMSMessageTemplates { get; set; } = default!;
+        public virtual DbSet<Log> Logs { get; set; } = default!;
+        public virtual DbSet<EmployeeGroup> EmployeeGroups { get; set; } = default!;
+        public virtual DbSet<ApiSettings> ApiSettings { get; set; } = default!;
 
         public MultiSMSDbContext(DbContextOptions options) : base(options)
         {

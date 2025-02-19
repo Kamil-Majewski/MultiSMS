@@ -865,12 +865,6 @@ namespace MultiSMS.MVC.Controllers
                     <span class=""form-subtitle"">Konfiguracja API</span>
                     <div class=""form-group"" style=""margin-top:20px;"">
                         <div class=""row"" style=""margin-bottom:20px;"">
-                            <div class=""col"" style=""display: flex; justify-content: space-between; align-items:center;"">
-                                <label for=""api-sender-name"" style=""min-width:180px"" style=""display:inline;"">Nazwa nadawcy</label>
-                                <input type=""text"" value=""{activeApiSettings.SenderName}"" class=""form-input"" id=""api-sender-name"" style=""margin-bottom:0;"" required>
-                            </div>
-                        </div>
-                        <div class=""row"" style=""margin-bottom:20px;"">
                             <div class=""col"">
                                 <label style=""min-width:180px;"">Kanał priorytetowy</label>
                                 <label class=""switch"">
@@ -910,7 +904,6 @@ namespace MultiSMS.MVC.Controllers
             {
                 ApiName = model.ActiveApiName,
                 ApiActive = true,
-                SenderName = model.SenderName,
                 FastChannel = model.FastChannel,
                 TestMode = model.TestMode
             });

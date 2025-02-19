@@ -49,7 +49,6 @@ namespace MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Clients
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _secretToken.ApiToken);
 
             using var response = await _httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
 
             return new SendSmsResultModel(await response.Content.ReadAsStringAsync(), parameters);
         }
