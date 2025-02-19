@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.FlowAnalysis.DataFlow;
 using Microsoft.Extensions.Options;
 using MultiSMS.BusinessLogic.DTO;
 using MultiSMS.BusinessLogic.Extensions;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.BusinessLogic.Settings;
-using MultiSMS.BusinessLogic.Strategy;
 using MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Context.Intefaces;
 using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Entities.ServerSms;
@@ -16,8 +16,6 @@ namespace MultiSMS.MVC.Controllers
 {
     public class SmsApiController : Controller
     {
-        private readonly IOptions<ServerSmsSettings> _serverSmsSettings;
-        private readonly IOptions<SmsApiSettings> _smsApiSettings;
         private readonly ILogService _logService;
         private readonly IEmployeeGroupService _employeeGroupService;
         private readonly IUserService _userService;
@@ -34,8 +32,6 @@ namespace MultiSMS.MVC.Controllers
                                 ISendSMSContext smsContext,
                                 IApiSettingsService apiSettingsService)
         {
-            _serverSmsSettings = serverSmsSettings;
-            _smsApiSettings = smsApiSettings;
             _logService = logService;
             _employeeGroupService = employeeGroupService;
             _userService = administratorService;
@@ -44,157 +40,178 @@ namespace MultiSMS.MVC.Controllers
             _apiSettingsService = apiSettingsService;
         }
 
-        private async Task<object> SendSmsMessageThroughServerSMS(string chosenGroupName, Group chosenGroup, int chosenGroupId, string additionalInfo, string? additionalPhoneNumbers, int adminId, UserDTO admin, string phoneNumbersString, string text, Dictionary<string, string> data, ApiSettings activeApiSettings)
+        private async Task<object> HandleServerSmsResponse(string response, Dictionary<string, string> parameters, Group chosenGroup,
+                                                           string additionalPhoneNumbers, string additionalInfo, ManageUserDTO user)
         {
-            _smsContext.SetSmsStrategy(new SendSmsTroughServerSms(_serverSmsSettings, _apiSettingsService));
-            var response = await _smsContext.SendSMSAsync(phoneNumbersString, text, data);
+            ServerSmsSuccessResponse? successResponse = null;
+            ServerSmsErrorResponse? errorResponse = null;
 
-            string logMessage = (chosenGroupName == null && chosenGroupId == 0)
-                ? "Sms został wysłany do pojedyńczych numerów"
-                : $"Sms został wysłany do grupy {chosenGroupName}";
-
-            try //try to deserialize response into entities that correspond with response structure and then act depending on the outcome
+            try
             {
-                ServerSmsSuccessResponse successResponse = JsonConvert.DeserializeObject<ServerSmsSuccessResponse>(response) ?? throw new Exception("Deserialization to ServerSmsSuccessResponse failed");
-
-                var smsMessage = new SMSMessage
-                {
-                    ChosenGroupId = chosenGroupId,
-                    AdditionalPhoneNumbers = string.Join(',', additionalPhoneNumbers),
-                    AdditionalInformation = additionalInfo,
-                    Settings = data,
-                    ServerResponse = successResponse
-                };
-
-                await _logService.AddEntityToDatabaseAsync(new Log
-                {
-                    LogType = "Info",
-                    LogSource = "ServerSms",
-                    LogMessage = logMessage,
-                    LogCreator = admin.UserName,
-                    LogCreatorId = adminId,
-                    LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>()
-                        {
-                            { "SmsMessages", JsonConvert.SerializeObject(smsMessage) },
-                            { "Groups", JsonConvert.SerializeObject(chosenGroup) },
-                            { "Creator", JsonConvert.SerializeObject(admin) }
-                        })
-                });
-
-                return (successResponse.Success, successResponse.Queued, successResponse.Unsent);
+                successResponse = JsonConvert.DeserializeObject<ServerSmsSuccessResponse>(response);
             }
             catch (JsonException)
             {
-                try //deserialization into SuccessResponse failed, try to deserialize into ErrorResponse
+                // Ignore; we'll try errorResponse below.
+            }
+
+            // If successResponse is null, try deserializing as error response.
+            if (successResponse == null)
+            {
+                try
                 {
-                    ServerSmsErrorResponse errorResponse = JsonConvert.DeserializeObject<ServerSmsErrorResponse>(response) ?? throw new Exception("Deserialization to ServerSmsErrorResponse failed");
-
-                    var smsMessage = new SMSMessage
-                    {
-                        ChosenGroupId = chosenGroupId,
-                        AdditionalPhoneNumbers = string.Join(',', additionalPhoneNumbers),
-                        AdditionalInformation = additionalInfo,
-                        Settings = data,
-                        ServerResponse = errorResponse
-                    };
-
-                    await _logService.AddEntityToDatabaseAsync(new Log
-                    {
-                        LogType = "Błąd",
-                        LogSource = "ServerSms",
-                        LogMessage = logMessage,
-                        LogCreator = admin.UserName,
-                        LogCreatorId = adminId,
-                        LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>()
-                            {
-                                { "SmsMessages", JsonConvert.SerializeObject(smsMessage) },
-                                { "Groups", JsonConvert.SerializeObject(chosenGroup) },
-                                { "Creator", JsonConvert.SerializeObject(admin) }
-                            })
-                    });
-
-                    return ("failed", errorResponse.Error.Code, errorResponse.Error.Message);
+                    errorResponse = JsonConvert.DeserializeObject<ServerSmsErrorResponse>(response);
                 }
                 catch (JsonException)
                 {
                     throw new Exception("Error deserializing objects: response structure doesn't fit the expected object structure.");
                 }
             }
+
+            string logType;
+            string logMessage;
+            bool? success = null;
+            int? queued = null;
+            int? unsent = null;
+            int? errorCode = null;
+            string? errorMessage = null;
+
+            if (successResponse != null)
+            {
+                logType = "Info";
+                logMessage = string.IsNullOrEmpty(chosenGroup.GroupName) && chosenGroup.GroupId == 0
+                    ? "Sms został wysłany do pojedyńczych numerów"
+                    : $"Sms został wysłany do grupy {chosenGroup.GroupName}";
+
+                success = successResponse.Success;
+                queued = successResponse.Queued;
+                unsent = successResponse.Unsent;
+            }
+            else // errorResponse is not null
+            {
+                logType = "Błąd";
+                logMessage = string.IsNullOrEmpty(chosenGroup.GroupName) && chosenGroup.GroupId == 0
+                    ? "Wystąpił błąd podczas wysyłania Sms do pojedyńczych numerów"
+                    : $"Wystąpił błąd podczas wysyłania Sms do grupy {chosenGroup.GroupName}";
+
+                errorCode = errorResponse!.Error.Code;
+                errorMessage = errorResponse.Error.Message;
+            }
+
+            // Build the SMS message
+            var smsMessage = new SMSMessage
+            {
+                ChosenGroupId = chosenGroup.GroupId,
+                AdditionalPhoneNumbers = additionalPhoneNumbers,
+                AdditionalInformation = additionalInfo,
+                Settings = parameters,
+                ServerResponse = successResponse == null ? errorResponse! : successResponse
+            };
+
+            // Log the event.
+            var log = new Log
+            {
+                LogType = logType,
+                LogSource = "ServerSms",
+                LogMessage = logMessage,
+                LogCreator = user.UserName,
+                LogCreatorId = user.Id,
+                LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>
+                {
+                    { "SmsMessages", JsonConvert.SerializeObject(smsMessage) },
+                    { "Groups", JsonConvert.SerializeObject(chosenGroup) },
+                    { "Creator", JsonConvert.SerializeObject(user) }
+                })
+            };
+
+            await _logService.AddEntityToDatabaseAsync(log);
+
+            // Return a tuple – might want to standardize this later.
+            return success != null && queued != null && unsent != null
+                ? (success.Value, queued.Value, unsent.Value)
+                : ("failed", errorCode, errorMessage);
         }
 
-        private async Task<object> SendSmsMessageThroughSmsApi(string chosenGroupName, Group chosenGroup, int chosenGroupId, string additionalInfo, string? additionalPhoneNumbers, int adminId, UserDTO admin, string phoneNumbersString, string text, Dictionary<string, string> data, ApiSettings activeApiSettings)
+        private async Task<object> HandleSmsApiResponse(string response, Dictionary<string, string> parameters, Group chosenGroup, string additionalPhoneNumbers,
+                                                        string additionalInfo, ManageUserDTO user)
         {
-            _smsContext.SetSmsStrategy(new SendSmsTroughSmsApi(_smsApiSettings, _apiSettingsService));
-            var response = await _smsContext.SendSMSAsync(phoneNumbersString, text, data);
+            SmsApiSuccessResponse? successResponse = null;
+            SmsApiErrorResponse? errorResponse = null;
 
-            string logMessage = (chosenGroupName == null && chosenGroupId == 0)
-                ? "Sms został wysłany do pojedyńczych numerów"
-                : $"Sms został wysłany do grupy {chosenGroupName}";
-
-            try //try to deserialize response into entities that correspond with response structure and then act depending on the outcome
+            try
             {
-                SmsApiSuccessResponse successResponse = JsonConvert.DeserializeObject<SmsApiSuccessResponse>(response) ?? throw new Exception("Deserialization to SmsApiSuccessResponse failed");
-
-                var smsMessage = new SMSMessage
-                {
-                    ChosenGroupId = chosenGroupId,
-                    AdditionalPhoneNumbers = string.Join(',', additionalPhoneNumbers),
-                    AdditionalInformation = additionalInfo,
-                    Settings = data,
-                    ServerResponse = successResponse
-                };
-
-                await _logService.AddEntityToDatabaseAsync(new Log
-                {
-                    LogType = "Info",
-                    LogSource = "SmsApi",
-                    LogMessage = logMessage,
-                    LogCreator = admin.UserName,
-                    LogCreatorId = adminId,
-                    LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>()
-                        {
-                            { "SmsMessages", JsonConvert.SerializeObject(smsMessage) },
-                            { "Groups", JsonConvert.SerializeObject(chosenGroup) },
-                            { "Creator", JsonConvert.SerializeObject(admin) }
-                        })
-                });
-
-                var queued = successResponse.Details.Count(d => d.Status == "QUEUE");
-                var unsent = successResponse.Details.Count(d => d.Status != "QUEUE");
-
-                return (true, queued, unsent);
+                successResponse = JsonConvert.DeserializeObject<SmsApiSuccessResponse>(response);
             }
             catch (JsonException)
             {
-                try //deserialization into SuccessResponse failed, try to deserialize into ErrorResponse
+                // Ignore
+            }
+
+            if(successResponse == null)
+            {
+                try
                 {
-                    SmsApiErrorResponse errorResponse = JsonConvert.DeserializeObject<SmsApiErrorResponse>(response) ?? throw new Exception("Deserialization to SmsApiErrorResponse failed");
+                    errorResponse = JsonConvert.DeserializeObject<SmsApiErrorResponse>(response);
+                }
+                catch
+                {
+                    throw new Exception("Error deserializing objects: response structure doesn't fit the expected object structure.");
+                }
+            }
 
-                    var smsMessage = new SMSMessage
-                    {
-                        ChosenGroupId = chosenGroupId,
-                        AdditionalPhoneNumbers = string.Join(',', additionalPhoneNumbers),
-                        AdditionalInformation = additionalInfo,
-                        Settings = data,
-                        ServerResponse = errorResponse
-                    };
+            string logType;
+            string logMessage;
+            int? queued = null;
+            int? unsent = null;
+            int? errorCode = null;
+            string? errorMessage = null;
 
-                    await _logService.AddEntityToDatabaseAsync(new Log
-                    {
-                        LogType = "Błąd",
-                        LogSource = "SmsApi",
-                        LogMessage = logMessage,
-                        LogCreator = admin.UserName,
-                        LogCreatorId = adminId,
-                        LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>()
-                            {
-                                { "SmsMessages", JsonConvert.SerializeObject(smsMessage) },
-                                { "Groups", JsonConvert.SerializeObject(chosenGroup) },
+            if (successResponse != null)
+            {
+                logType = "Info";
+                logMessage = string.IsNullOrEmpty(chosenGroup.GroupName) && chosenGroup.GroupId == 0
+                    ? "Sms został wysłany do pojedyńczych numerów"
+                    : $"Sms został wysłany do grupy {chosenGroup.GroupName}";
+
+                queued = successResponse.Details.Count(d => d.Status == "QUEUE");
+                unsent = successResponse.Details.Count(d => d.Status != "QUEUE");
+            }
+            else
+            {
+                logType = "Błąd";
+                logMessage = string.IsNullOrEmpty(chosenGroup.GroupName) && chosenGroup.GroupId == 0
+                    ? "Wystąpił błąd podczas wysyłania Sms do pojedyńczych numerów"
+                    : $"Wystąpił błąd podczas wysyłania Sms do grupy {chosenGroup.GroupName}";
+
+                errorCode = errorResponse!.ErrorCode;
+                errorMessage = errorResponse.ErrorMessage;
+            }
+
+            var smsMessage = new SMSMessage
+            {
+                ChosenGroupId = chosenGroup.GroupId,
+                AdditionalPhoneNumbers = additionalPhoneNumbers,
+                AdditionalInformation = additionalInfo,
+                Settings = parameters,
+                ServerResponse = successResponse == null ? errorResponse! : successResponse
+            };
+
+            var log = new Log
+            {
+                LogType = logType,
+                LogSource = "SmsApi",
+                LogMessage = logMessage,
+                LogCreator = user.UserName,
+                LogCreatorId = user.Id,
+                LogRelatedObjectsDictionarySerialized = JsonConvert.SerializeObject(new Dictionary<string, string>
+                {
+                    { "SmsMessages", JsonConvert.SerializeObject(smsMessage) },
+                    { "Groups", JsonConvert.SerializeObject(chosenGroup) },
                     { "Creator", JsonConvert.SerializeObject(user) }
-                            })
-                    });
+                })
+            };
 
-                    return ("failed", errorResponse.ErrorCode, errorResponse.ErrorMessage);
+            await _logService.AddEntityToDatabaseAsync(log);
 
             return queued != null && unsent != null
                 ? (true, queued.Value, unsent.Value)
@@ -215,6 +232,7 @@ namespace MultiSMS.MVC.Controllers
             {
                 chosenGroup = await _groupService.GetByIdAsync(chosenGroupId);
                 chosenGroup.Members = await _employeeGroupService.GetAllEmployeesForGroupListAsync(chosenGroupId);
+
             }
 
             var groupPhoneNumbers = await _employeeGroupService.GetAllActiveEmployeesPhoneNumbersForGroupListAsync(chosenGroupId);
@@ -254,8 +272,6 @@ namespace MultiSMS.MVC.Controllers
 
                 for (int i = 0; i < groupPhoneNumbers.Count; i += 200)
                 {
-                    var data = new Dictionary<string, string>();
-
                     var chunk = groupPhoneNumbers.GetRange(i, Math.Min(200, groupPhoneNumbers.Count - i));
                     var phoneNumbersString = string.Join(',', chunk);
 
@@ -305,6 +321,9 @@ namespace MultiSMS.MVC.Controllers
                     return HandleServerSmsResponse(response, parameters, chosenGroup, additionalPhoneNumbers, additionalInfo, user);
                 case 2:
                     return HandleSmsApiResponse(response, parameters, chosenGroup, additionalPhoneNumbers, additionalInfo, user);
+                case 3:
+                    //return HandleMProfiApiResponse(response, parameters, chosenGroup, additionalPhoneNumbers, additionalInfo, user);
+                    throw new NotImplementedException();
                 default:
                     throw new Exception("Unknown API Id");
             }
