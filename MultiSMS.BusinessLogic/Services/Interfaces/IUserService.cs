@@ -5,13 +5,13 @@ namespace MultiSMS.BusinessLogic.Services.Interfaces
 {
     public interface IUserService
     {
-        Task<ManageUserDTO> CreateNewIdentityUser(IdentityUserModel model);
-        Task DeleteIdentityUser(int userId);
-        Task<ManageUserDTO> EditIdenitityUser(int userId, IdentityUserModel model);
-        Task<UserDTO> GetAdministratorDtoByEmailAsync(string email);
+        Task<ManageUserDTO> CreateNewUserAsync(IdentityUserModel model);
+        Task DeleteUserAsync(int userId);
+        Task<ManageUserDTO> EditUserAsync(int userId, IdentityUserModel model);
+        Task<UserDTO> GetUserDtoByEmailAsync(string email);
         Task<UserDTO> GetAdministratorDtoByIdAsync(int id);
-        Task<IEnumerable<ManageUserDTO>> GetAllIdentityUsers();
-        Task<ManageUserDTO> GetIdentityUserById(int userId);
-        Task<string> GetUserRoleById(int userId);
+        Task<IEnumerable<ManageUserDTO>> GetAllManageUserDtosAsync();
+        Task<ManageUserDTO> GetManageUserDtoByIdAsync(int userId);
+        Task<string> GetUserRoleByIdAsync(int userId);
     }
 }

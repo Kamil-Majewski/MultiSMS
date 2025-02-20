@@ -7,15 +7,11 @@ namespace MultiSMS.BusinessLogic.Services
 {
     public class LogService : GenericService<Log>, ILogService
     {
-        private readonly ILogRepository _logRepository;
-        public LogService(ILogRepository logRepository, IGenericRepository<Log> repository) : base(repository)
-        {
-            _logRepository = logRepository;
-        }
+        public LogService(IGenericRepository<Log> logRepository) : base(logRepository) { }
 
         public async Task<(List<Log>, bool)> PaginateLogDataAsync(int firstId, int lastId, int pageSize, bool? moveForward)
         {
-            IQueryable<Log> query = _logRepository.GetAllEntries().OrderByDescending(l => l.LogId);
+            IQueryable<Log> query = GetAllEntriesQueryable().OrderByDescending(l => l.LogId);
 
             List<Log> paginatedList;
             bool hasMorePages;
@@ -68,7 +64,7 @@ namespace MultiSMS.BusinessLogic.Services
         public List<Log> GetLogsBySearchPhrase(string searchPhrase)
         {
 
-            return _logRepository.GetAllEntries().Select(l => new Log{LogId = l.LogId, LogCreationDate = l.LogCreationDate, LogType = l.LogType, LogMessage = l.LogMessage, LogSource = l.LogSource })
+            return GetAllEntriesQueryable().Select(l => new Log{LogId = l.LogId, LogCreationDate = l.LogCreationDate, LogType = l.LogType, LogMessage = l.LogMessage, LogSource = l.LogSource })
                 .AsEnumerable()
                 .Where(l =>
             l.LogType.ToLower().Contains(searchPhrase) ||

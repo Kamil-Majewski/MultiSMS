@@ -5,58 +5,82 @@ using MultiSMS.Interface.Repositories.Interfaces;
 
 namespace MultiSMS.BusinessLogic.Services
 {
-    public class EmployeeGroupService : IEmployeeGroupService
+    public class EmployeeGroupService : GenericService<EmployeeGroup>, IEmployeeGroupService
     {
-        private readonly IEmployeeGroupRepository _repository;
 
-        public EmployeeGroupService(IEmployeeGroupRepository repository)
+        public EmployeeGroupService(IGenericRepository<EmployeeGroup> repository) : base(repository)
         {
-            _repository = repository;
         }
 
         public async Task AddGroupMemberAsync(int groupId, int employeeId)
         {
-            await _repository.AddGroupMemberAsync(groupId, employeeId);
+            await AddEntityToDatabaseAsync(new EmployeeGroup { EmployeeId = employeeId, GroupId = groupId });
         }
 
         public async Task<List<int>> GetAllEmployeesIdsForGroupListAsync(int groupId)
         {
-            return await _repository.GetAllEmployeesIdsForGroupQueryable(groupId).ToListAsync();
+            return await GetAllEntriesQueryable().Where(eg => eg.GroupId == groupId)
+                                        .Select(eg => eg.EmployeeId)
+                                        .ToListAsync();
         }
 
         public async Task<List<int>> GetAllGroupIdsForEmployeeListAsync(int employeeId)
         {
-            return await _repository.GetAllGroupIdsForEmployeeQueryable(employeeId).ToListAsync();
+            return await GetAllEntriesQueryable().Where(eg => eg.EmployeeId == employeeId)
+                                        .Select(eg => eg.GroupId)
+                                        .ToListAsync();
         }
 
-        public async Task RemoveGroupMember(int groupId, int employeeId)
+        public async Task RemoveGroupMemberAsync(int groupId, int employeeId)
         {
-            await _repository.RemoveGroupMember(groupId, employeeId);
+            var employeeGroup = await GetAllEntriesQueryable().FirstOrDefaultAsync(eg => eg.GroupId == groupId && eg.EmployeeId == employeeId)
+                                                     ?? throw new Exception("Could not find the group with provided id that contains employee with given id");
+
+            await DeleteEntityAsync(employeeGroup.EmployeeId);
         }
 
         public async Task<List<string>> GetAllGroupNamesForEmployeeListAsync(int employeeId)
         {
-            return await _repository.GetAllGroupNamesForEmployeeQueryable(employeeId).ToListAsync();
+            return await GetAllEntriesQueryable().Where(eg => eg.EmployeeId == employeeId)
+                                        .Include(eg => eg.Group)
+                                        .Select(g => g.Group.GroupName)
+                                        .ToListAsync();
         }
 
         public async Task<List<string>> GetAllPhoneNumbersForGroupListAsync(int groupId)
         {
-            return await _repository.GetAllPhoneNumbersForGroupQueryable(groupId).ToListAsync();
+            return await GetAllEntriesQueryable().Where(eg => eg.GroupId == groupId)
+                                        .Include(eg => eg.Employee)
+                                        .Select(e => e.Employee.PhoneNumber)
+                                        .ToListAsync();
         }
 
         public async Task<List<string>> GetAllActiveEmployeesPhoneNumbersForGroupListAsync(int groupId)
         {
-            return await _repository.GetAllActiveEmployeesPhoneNumbersForGroupQueryable(groupId).ToListAsync();
+            return await GetAllEntriesQueryable().Where(eg => eg.GroupId == groupId)
+                                        .Include(eg => eg.Employee)
+                                        .Where(e => e.Employee.IsActive == true)
+                                        .Select(e => e.Employee.PhoneNumber)
+                                        .ToListAsync();
         }
 
         public async Task<List<Employee>> GetAllEmployeesForGroupListAsync(int groupId)
         {
-            return await _repository.GetAllEmployeesForGroupQueryable(groupId).ToListAsync();
+            return await GetAllEntriesQueryable().Where(eg => eg.GroupId == groupId)
+                                        .Include(eg => eg.Employee)
+                                        .Select(e => e.Employee)
+                                        .ToListAsync();
         }
 
-        public Dictionary<int, IEnumerable<string>> GetDictionaryOfEmployeeIdAndGroupNames()
+
+        public async Task<Dictionary<int, IEnumerable<string>>> GetDictionaryOfEmployeeIdAndGroupNamesAsync()
         {
-            return _repository.GetDictionaryOfEmployeeIdAndGroupNames();
+            return await GetAllEntriesQueryable().Include(eg => eg.Group)
+                                        .GroupBy(eg => eg.EmployeeId)
+                                        .ToDictionaryAsync(
+                                            group => group.Key,
+                                            group => group.Select(eg => eg.Group.GroupName)
+                                        );
         }
     }
 }

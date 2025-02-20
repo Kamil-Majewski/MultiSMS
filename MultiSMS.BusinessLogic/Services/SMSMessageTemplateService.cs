@@ -7,21 +7,19 @@ namespace MultiSMS.BusinessLogic.Services
 {
     public class SMSMessageTemplateService : GenericService<SMSMessageTemplate>, ISMSMessageTemplateService
     {
-        private readonly IGenericRepository<SMSMessageTemplate> _repository;
 
         public SMSMessageTemplateService(IGenericRepository<SMSMessageTemplate> repository) : base(repository)
         {
-            _repository = repository;
         }
 
         public async Task<SMSMessageTemplate> GetTemplateByNameAsync(string name)
         {
-            return await _repository.GetAllEntries().FirstOrDefaultAsync(t => t.TemplateName == name) ?? throw new Exception($"Could not find template with given name: {name}");
+            return await GetAllEntriesQueryable().FirstOrDefaultAsync(t => t.TemplateName == name) ?? throw new Exception($"Could not find template with given name: {name}");
         }
 
         public async Task<(List<SMSMessageTemplate>, bool)> PaginateTemplateDataAsync(int firstId, int lastId, int pageSize, bool? moveForward)
         {
-            IQueryable<SMSMessageTemplate> query = _repository.GetAllEntries().OrderBy(t => t.TemplateId);
+            IQueryable<SMSMessageTemplate> query = GetAllEntriesQueryable().OrderBy(t => t.TemplateId);
 
             List<SMSMessageTemplate> paginatedList;
             bool hasMorePages;
@@ -50,7 +48,7 @@ namespace MultiSMS.BusinessLogic.Services
 
         public async Task<List<SMSMessageTemplate>> GetTemplatesBySearchPhraseAsync(string searchPhrase)
         {
-            return await _repository.GetAllEntries().Where(t => 
+            return await GetAllEntriesQueryable().Where(t => 
             t.TemplateName.ToLower().Contains(searchPhrase) ||
             (t.TemplateDescription == null || t.TemplateDescription.Equals(string.Empty) ? "Brak opisu" : t.TemplateDescription!).ToLower().Contains(searchPhrase) ||
             t.TemplateContent.ToLower().Contains(searchPhrase)).ToListAsync();

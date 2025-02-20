@@ -1,4 +1,5 @@
-﻿using MultiSMS.BusinessLogic.Services.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Repositories.Interfaces;
 
 namespace MultiSMS.BusinessLogic.Services
@@ -12,34 +13,21 @@ namespace MultiSMS.BusinessLogic.Services
             _repository = repository;
         }
 
-        public List<T> GetAllEntries()
-        {
-            return _repository.GetAllEntries().ToList();
-        }
+        public virtual async Task<List<T>> GetAllEntriesAsync() => await _repository.GetAllEntries().ToListAsync();
 
-        public async Task<T> GetByIdAsync(int id)
-        {
-            return await _repository.GetByIdAsync(id);
-        }
+        public virtual IQueryable<T> GetAllEntriesQueryable() => _repository.GetAllEntries();
 
-        public async Task<T> AddEntityToDatabaseAsync(T entity)
-        {
-            return await _repository.AddEntityToDatabaseAsync(entity);
-        }
+        public virtual async Task<T> GetByIdAsync(int id) => await _repository.GetByIdAsync(id);
 
-        public async Task<IEnumerable<T>> AddRangeOfEntitiesToDatabase(IEnumerable<T> entities)
-        {
-            return await _repository.AddRangeOfEntitiesToDatabaseAsync(entities);
-        }
+        public virtual async Task<T> AddEntityToDatabaseAsync(T entity) => await _repository.AddEntityToDatabaseAsync(entity);
 
-        public async Task<T> UpdateEntityAsync(T entity)
-        {
-            return await _repository.UpdateEntityAsync(entity);
-        }
+        public virtual async Task<IEnumerable<T>> AddRangeOfEntitiesToDatabaseAsync(IEnumerable<T> entities) => await _repository.AddRangeOfEntitiesToDatabaseAsync(entities);
 
-        public async Task DeleteEntityAsync(int id)
-        {
-            await _repository.DeleteEntityAsync(id);
-        }
+        public virtual async Task<T> UpdateEntityAsync(T entity) => await _repository.UpdateEntityAsync(entity);
+
+        public virtual async Task DeleteEntityAsync(int id) => await _repository.DeleteEntityAsync(id);
+
+        public virtual void DetachEntity(T entity) => _repository.DetachEntity(entity);
+
     }
 }
