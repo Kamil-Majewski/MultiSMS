@@ -11,7 +11,7 @@ namespace MultiSMS.Interface.Entities.ServerSms
     public class ErrorDetails
     {
         [JsonProperty(PropertyName = "code", Required = Required.Always)]
-        public int Code { get; set; }
+        public string Code { get; set; } = default!;
         [JsonProperty(PropertyName = "type", Required = Required.Always)]
         public string Type { get; set; } = default!;
         [JsonProperty(PropertyName = "message", Required = Required.Always)]

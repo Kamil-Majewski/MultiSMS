@@ -502,7 +502,7 @@ function SendSMS(text, chosenGroupId, chosenGroupName, additionalPhoneNumbers, a
 
                     console.error(`Operation failed, server responded with code ${response.code} - ${response.message}`);
                     $("#status-message-sms").addClass("failed-status");
-                    $("#status-message-sms").html(`Operacja zakończyła się niepowodzeniem, błąd ${response.code} - ${response.message} <button type='button' class='btn-close text-dark' aria-label='Close' onclick='CloseAlert()'></button>`);
+                    $("#status-message-sms").html(`Operacja zakończyła się niepowodzeniem. Błąd: ${response.code} - ${response.message} <button type='button' class='btn-close text-dark' aria-label='Close' onclick='CloseAlert()'></button>`);
 
                     break;
                 case "success" || "Multiple-Success":

@@ -43,7 +43,7 @@ namespace MultiSMS.MVC.Controllers
         private async Task<object> HandleApiResponse(string response, Dictionary<string, string> parameters, Group chosenGroup, string additionalPhoneNumbers, string additionalInfo,
                                                int adminId, ApiSettings activeApiSettings)
         {
-            var user = await _userService.GetIdentityUserById(adminId);
+            var user = await _userService.GetManageUserDtoByIdAsync(adminId);
 
             switch (activeApiSettings.ApiSettingsId)
             {
@@ -61,7 +61,7 @@ namespace MultiSMS.MVC.Controllers
                     return await HandleSmsResponse<MProfiSuccessResponse, MProfiErrorResponse>(response, parameters, chosenGroup, additionalPhoneNumbers,
                                                                                                      additionalInfo, user, logSource: "MProfi",
                                                                                                      getSuccessData: sr => (true, sr.Result.Count(), 0), //Dont know if this API's success response is enough to determine unsent and queued
-                                                                                                     getErrorData: er => (0, er.Detail)); //Pretty sure API docs don't mention returning an error code
+                                                                                                     getErrorData: er => ("", er.Detail)); //Pretty sure API docs don't mention returning an error code
                 default:
                     throw new Exception("Unknown API Id");
             }
@@ -71,7 +71,7 @@ namespace MultiSMS.MVC.Controllers
                                                                        string additionalPhoneNumbers, string additionalInfo, ManageUserDTO user,
                                                                        string logSource,
                                                                        Func<TSuccess, (bool success, int queued, int unsent)> getSuccessData,
-                                                                       Func<TError, (int errorCode, string errorMessage)> getErrorData)
+                                                                       Func<TError, (string errorCode, string errorMessage)> getErrorData)
         {
             TSuccess? successResponse = default;
             TError? errorResponse = default;
@@ -109,7 +109,7 @@ namespace MultiSMS.MVC.Controllers
                     : $"{logSource}: Sms został wysłany do grupy {chosenGroup.GroupName}";
 
                 var (success, queued, unsent) = getSuccessData(successResponse);
-                result = (success, queued, unsent);
+                result = (ValueTuple<bool, int, int>)(success, queued, unsent);
             }
             else
             {
@@ -119,7 +119,7 @@ namespace MultiSMS.MVC.Controllers
                     : $"{logSource}: Wystąpił błąd podczas wysyłania Sms do grupy {chosenGroup.GroupName}";
 
                 var (errorCode, errorMessage) = getErrorData(errorResponse!);
-                result = ("failed", errorCode, errorMessage);
+                result = (ValueTuple<string, string, string>)("failed", errorCode, errorMessage);
             }
 
             // Build the SMS message.
@@ -193,7 +193,7 @@ namespace MultiSMS.MVC.Controllers
                 {
                     return Json(new { Status = successTuple.Item1, Queued = successTuple.Item2, Unsent = successTuple.Item3 });
                 }
-                else if (result is ValueTuple<string, int, string> failedTuple)
+                else if (result is ValueTuple<string, string, string> failedTuple)
                 {
                     return Json(new { Status = failedTuple.Item1, Code = failedTuple.Item2, Message = failedTuple.Item3 });
                 }

@@ -11,6 +11,6 @@ namespace MultiSMS.Interface.Entities.MProfi
     public class ResultItem
     {
         [JsonProperty(PropertyName = "id", Required = Required.Always)]
-        public int Id { get; set; }
+        public string Id { get; set; } = default!;
     }
 }

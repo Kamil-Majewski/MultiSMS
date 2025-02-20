@@ -10,7 +10,7 @@ namespace MultiSMS.Interface.Entities.ServerSms
         public int Queued { get; set; }
         [JsonProperty(PropertyName = "unsent", Required = Required.Always)]
         public int Unsent { get; set; }
-        [JsonProperty(PropertyName = "items", Required = Required.AllowNull)]
+        [JsonProperty(PropertyName = "items", Required = Required.Default)]
         public Item[] Items { get; set; } = default!;
     }
 
