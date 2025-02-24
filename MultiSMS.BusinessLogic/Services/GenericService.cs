@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Repositories.Interfaces;
+using System.Linq.Expressions;
 
 namespace MultiSMS.BusinessLogic.Services
 {
@@ -24,6 +25,11 @@ namespace MultiSMS.BusinessLogic.Services
         public virtual async Task<IEnumerable<T>> AddRangeOfEntitiesToDatabaseAsync(IEnumerable<T> entities) => await _repository.AddRangeOfEntitiesToDatabaseAsync(entities);
 
         public virtual async Task<T> UpdateEntityAsync(T entity) => await _repository.UpdateEntityAsync(entity);
+
+        public virtual async Task<IEnumerable<T>> UpdateRangeAsync(IEnumerable<T> entities, IEnumerable<Expression<Func<T, object>>>? propertyExpressions = null)
+        {
+            return await _repository.UpdateRangeAsync(entities, propertyExpressions);
+        }
 
         public virtual async Task DeleteEntityAsync(int id) => await _repository.DeleteEntityAsync(id);
 

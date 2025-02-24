@@ -5,12 +5,19 @@ namespace MultiSMS.Interface
 {
     public class LocalDbContext : DbContext
     {
+        public virtual DbSet<ApiToken> ApiTokens { get; set; } = default!;
         public virtual DbSet<ApiSmsSender> ApiSmsSenders { get; set; } = default!;
 
         public LocalDbContext(DbContextOptions options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<ApiSmsSender>()
+                .HasOne(s => s.ApiToken)
+                .WithMany()
+                .HasForeignKey(s => s.ApiTokenId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             base.OnModelCreating(builder);
         }
     }

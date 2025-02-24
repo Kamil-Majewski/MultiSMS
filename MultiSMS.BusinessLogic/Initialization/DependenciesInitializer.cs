@@ -31,6 +31,7 @@ namespace MultiSMS.BusinessLogic.Initialization
             serviceCollection.AddScoped<ISendSMSContext, SendSMSContext>();
             serviceCollection.AddScoped<IApiSettingsService, ApiSettingsService>();
             serviceCollection.AddScoped<IApiSmsSenderService, ApiSmsSenderService>();
+            serviceCollection.AddScoped<IApiTokenService, ApiTokenService>();
 
             serviceCollection.AddHttpClient<ServerSmsClient>(client =>
             {

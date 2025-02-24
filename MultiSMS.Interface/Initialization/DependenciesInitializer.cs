@@ -8,7 +8,8 @@ namespace MultiSMS.Interface.Initialization
     {
         public static void InitializeInfrastructureDependencies(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            serviceCollection.AddScoped(typeof(IGenericRepository<>), typeof(MultiSmsGenericRepository<>));
+            serviceCollection.AddScoped(typeof(IGenericRepository<>), typeof(LocalGenericRepository<>));
         }
     }
 }

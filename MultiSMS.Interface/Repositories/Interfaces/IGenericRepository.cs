@@ -1,4 +1,6 @@
-﻿namespace MultiSMS.Interface.Repositories.Interfaces
+﻿using System.Linq.Expressions;
+
+namespace MultiSMS.Interface.Repositories.Interfaces
 {
     public interface IGenericRepository<T> where T : class
     {
@@ -8,6 +10,7 @@
         IQueryable<T> GetAllEntries();
         Task<T> GetByIdAsync(int id);
         Task<T> UpdateEntityAsync(T entity);
+        Task<IEnumerable<T>> UpdateRangeAsync(IEnumerable<T> entities, IEnumerable<Expression<Func<T, object>>>? propertyExpressions = null);
         void DetachEntity(T entity);
     }
 }

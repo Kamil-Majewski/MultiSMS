@@ -67,9 +67,8 @@ namespace MultiSMS.BusinessLogic.Services
         {
             ValidationHelper.ValidateString(searchPhrase, nameof(searchPhrase));
 
-            return await GetAllEntriesQueryable().Where(g =>
-            g.GroupName.ToLower().Contains(searchPhrase) ||
-            (g.GroupDescription == null || g.GroupDescription.Equals(string.Empty) ? "Brak opisu" : g.GroupDescription!).ToLower().Contains(searchPhrase)).ToListAsync();
+            return await GetAllEntriesQueryable().Where(g => g.GroupName.ToLower().Contains(searchPhrase)
+            || (string.IsNullOrEmpty(g.GroupDescription) ? "Brak opisu" : g.GroupDescription!).ToLower().Contains(searchPhrase)).ToListAsync();
         }
     }
 }

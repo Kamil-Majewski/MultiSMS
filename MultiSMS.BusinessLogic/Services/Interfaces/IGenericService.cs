@@ -1,4 +1,6 @@
-﻿namespace MultiSMS.BusinessLogic.Services.Interfaces
+﻿using System.Linq.Expressions;
+
+namespace MultiSMS.BusinessLogic.Services.Interfaces
 {
     public interface IGenericService<T> where T : class
     {
@@ -10,5 +12,6 @@
         IQueryable<T> GetAllEntriesQueryable();
         Task<T> GetByIdAsync(int id);
         Task<T> UpdateEntityAsync(T entity);
+        Task<IEnumerable<T>> UpdateRangeAsync(IEnumerable<T> entities, IEnumerable<Expression<Func<T, object>>>? propertyExpressions = null);
     }
 }

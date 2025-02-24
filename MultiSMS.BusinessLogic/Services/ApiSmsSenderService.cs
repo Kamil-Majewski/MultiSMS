@@ -1,69 +1,26 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MultiSMS.BusinessLogic.Helpers;
 using MultiSMS.BusinessLogic.Services.Interfaces;
-using MultiSMS.Interface;
 using MultiSMS.Interface.Entities;
+using MultiSMS.Interface.Repositories.Interfaces;
 
 namespace MultiSMS.BusinessLogic.Services
 {
-    public class ApiSmsSenderService : IApiSmsSenderService
+    public class ApiSmsSenderService : GenericService<ApiSmsSender>, IApiSmsSenderService
     {
-        private readonly LocalDbContext _localContext;
-
-        public ApiSmsSenderService(LocalDbContext localContext)
-        {
-            _localContext = localContext;
-        }
-
-        public async Task<IEnumerable<ApiSmsSender>> GetAllSenders()
-        {
-            return await _localContext.ApiSmsSenders.ToListAsync();
-        }
-
-        public async Task<ApiSmsSender> GetSenderById(int senderId)
-        {
-            return await _localContext.ApiSmsSenders.FindAsync(senderId) ?? throw new InvalidOperationException($"Could not find entity ApiSmsSender with given Id");
-        }
-
-        public async Task<ApiSmsSender> CreateNewSenderAsync(ApiSmsSender sender)
-        {
-            ValidationHelper.ValidateObject(sender, nameof(sender));
-
-            await _localContext.ApiSmsSenders.AddAsync(sender);
-            await _localContext.SaveChangesAsync();
-
-            return sender;
-        }
-
-        public async Task<ApiSmsSender> UpdateSenderAsync(ApiSmsSender sender)
-        {
-            ValidationHelper.ValidateObject(sender, nameof(sender));
-
-            _localContext.Entry(sender).State = EntityState.Modified;
-            await _localContext.SaveChangesAsync();
-            return sender;
-        }
-
-        public async Task DeleteSenderAsync(int senderId)
-        {
-            ValidationHelper.ValidateId(senderId, nameof(senderId));
-
-            ApiSmsSender sender = await _localContext.ApiSmsSenders.FindAsync(senderId) ?? throw new InvalidOperationException($"Could not find entity ApiSmsSender with given Id");
-            _localContext.ApiSmsSenders.Remove(sender);
-            await _localContext.SaveChangesAsync();
-        }
+        public ApiSmsSenderService(IGenericRepository<ApiSmsSender> apiSmsSenderRepository) : base(apiSmsSenderRepository) { }
 
         public async Task AssignUserToSender(int userId, int senderId)
         {
             ValidationHelper.ValidateId(userId, nameof(userId));
             ValidationHelper.ValidateId(senderId, nameof(senderId));
 
-            ApiSmsSender sender = await GetSenderById(senderId);
+            ApiSmsSender sender = await GetByIdAsync(senderId);
 
             if (!sender.AssingedUserIds.Contains(userId))
             {
                 sender.AssingedUserIds.Add(userId);
-                await UpdateSenderAsync(sender);
+                await UpdateEntityAsync(sender);
             }
         }
 
@@ -72,12 +29,12 @@ namespace MultiSMS.BusinessLogic.Services
             ValidationHelper.ValidateId(userId, nameof(userId));
             ValidationHelper.ValidateId(senderId, nameof(senderId));
 
-            ApiSmsSender sender = await GetSenderById(senderId);
+            ApiSmsSender sender = await GetByIdAsync(senderId);
 
             if (sender.AssingedUserIds.Contains(userId))
             {
                 sender.AssingedUserIds.Remove(userId);
-                await UpdateSenderAsync(sender);
+                await UpdateEntityAsync(sender);
             }
         }
 
@@ -85,8 +42,39 @@ namespace MultiSMS.BusinessLogic.Services
         {
             ValidationHelper.ValidateId(userId, nameof(userId));
 
-            return await _localContext.ApiSmsSenders.SingleOrDefaultAsync(s => s.AssingedUserIds.Contains(userId))
-                                                                        ?? throw new InvalidOperationException($"No sender assigned to User Id {userId}");
+            ApiSmsSender sender = await GetAllEntriesQueryable()
+                .Include(s => s.ApiToken)
+                .FirstOrDefaultAsync(s => s.AssingedUserIds.Contains(userId))
+                ?? throw new InvalidOperationException($"No sender assigned to User Id {userId}");
+
+            return sender;
+        }
+
+        public async Task<List<ApiSmsSender>> GetSendersBySearchPhraseAsync(string searchPhrase)
+        {
+            ValidationHelper.ValidateString(searchPhrase, nameof(searchPhrase));
+
+            return await GetAllEntriesQueryable().Where(s => s.Name.ToLower().Contains(searchPhrase)
+            || (string.IsNullOrEmpty(s.Description) ? "Brak opisu" : s.Description).ToLower().Contains(searchPhrase)).ToListAsync();
+        }
+
+        public async Task RemoveUserFromSendersAsync(int userId)
+        {
+            ValidationHelper.ValidateId(userId, nameof(userId));
+
+            var senders = await GetAllEntriesQueryable()
+                .Where(s => s.AssingedUserIds.Contains(userId))
+                .ToListAsync();
+
+            if (senders.Any())
+            {
+                foreach (var sender in senders)
+                {
+                    sender.AssingedUserIds.Remove(userId);
+                }
+
+                await UpdateRangeAsync(senders);
+            }
         }
     }
 }

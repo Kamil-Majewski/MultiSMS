@@ -1,14 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MultiSMS.Interface.Repositories.Interfaces;
+using System.Linq.Expressions;
 
 namespace MultiSMS.Interface.Repositories
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class MultiSmsGenericRepository<T> : IGenericRepository<T> where T : class
     {
         private readonly MultiSMSDbContext _dbContext;
         private readonly DbSet<T> _dbSet;
 
-        public GenericRepository(MultiSMSDbContext dbcontext)
+        public MultiSmsGenericRepository(MultiSMSDbContext dbcontext)
         {
             _dbContext = dbcontext ?? throw new ArgumentNullException(nameof(dbcontext));
             this._dbSet = dbcontext.Set<T>();
@@ -58,6 +59,35 @@ namespace MultiSMS.Interface.Repositories
             _dbContext.Entry(entity).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
             return entity;
+        }
+
+        public async Task<IEnumerable<T>> UpdateRangeAsync(IEnumerable<T> entities, IEnumerable<Expression<Func<T, object>>>? propertyExpressions = null)
+        {
+            if (entities == null || !entities.Any())
+            {
+                throw new ArgumentNullException("Provided entities collection was null or empty.");
+            }
+
+            foreach (var entity in entities)
+            {
+                _dbContext.Attach(entity);
+
+                if (propertyExpressions != null)
+                {
+                    foreach (var propertyExpression in propertyExpressions)
+                    {
+                        _dbContext.Entry(entity).Property(propertyExpression).IsModified = true;
+                    }
+                }
+                else
+                {
+                    _dbContext.Entry(entity).State = EntityState.Modified;
+                }
+            }
+
+            await _dbContext.SaveChangesAsync();
+
+            return entities;
         }
 
         public async Task DeleteEntityAsync(int id)
