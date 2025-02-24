@@ -16,7 +16,6 @@ namespace MultiSMS.BusinessLogic.Services
         private readonly UserManager<User> _userManager;
         private readonly IUserStore<User> _userStore;
         private readonly IUserEmailStore<User> _emailStore;
-        
 
         public UserService(IMapper mapper, IUserStore<User> userStore, UserManager<User> userManager)
         {
@@ -24,7 +23,6 @@ namespace MultiSMS.BusinessLogic.Services
             _userManager = userManager;
             _userStore = userStore;
             _emailStore = GetEmailStore();
-            
         }
 
         private IUserEmailStore<User> GetEmailStore()
