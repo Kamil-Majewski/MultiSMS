@@ -2,6 +2,7 @@
 using CsvHelper.Configuration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
+using MultiSMS.BusinessLogic.Helpers;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
 using OfficeOpenXml;
@@ -33,6 +34,8 @@ namespace MultiSMS.BusinessLogic.Services
 
         private bool CheckEmployeeValidity(Employee employee)
         {
+            ValidationHelper.ValidateObject(employee, nameof(employee));
+
             var phoneNumberPattern = "^(\\+[0-9]{2} )?\\d{3} \\d{3} \\d{3}$";
             Regex regex = new Regex(phoneNumberPattern);
 
@@ -53,6 +56,8 @@ namespace MultiSMS.BusinessLogic.Services
 
         private string ParsePhoneNumber(string phoneNumber)
         {
+            ValidationHelper.ValidateString(phoneNumber, nameof(phoneNumber));
+
             if (phoneNumber.Count() == 9)
             {
                 return $"+48{phoneNumber}";
@@ -69,6 +74,8 @@ namespace MultiSMS.BusinessLogic.Services
 
         private (string, string) GetNameAndSurname(string[] personField)
         {
+            ValidationHelper.ValidateCollection(personField, nameof(personField));
+
             if (personField.Length == 1)
             {
                 return (personField[0], "Nie podano");
@@ -89,6 +96,8 @@ namespace MultiSMS.BusinessLogic.Services
 
         public async Task<ImportResult> ImportContactsAsync(IFormFile file)
         {
+            ValidationHelper.ValidateObject(file, nameof(file));
+
             string[] requiredHeaders = { "osoba", "tel", "instytucja", "grupa" };
             int rows = 0;
             string[] fileHeaders;
@@ -127,6 +136,10 @@ namespace MultiSMS.BusinessLogic.Services
 
         public async Task<ImportResult> ImportContactsCsvByTypeAsync(IFormFile file, int totalRows, string type)
         {
+            ValidationHelper.ValidateObject(file, nameof(file));
+            ValidationHelper.ValidateId(totalRows, nameof(totalRows));
+            ValidationHelper.ValidateString(type, nameof(type));
+
             var phoneNumbersInDb = _employeeService.GetAllEntriesQueryable().Select(e => e.PhoneNumber);
             List<Employee> allRecords = new List<Employee>();
             List<Employee> repeatedEntries = new List<Employee>();

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MultiSMS.BusinessLogic.Helpers;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Repositories.Interfaces;
@@ -11,6 +12,10 @@ namespace MultiSMS.BusinessLogic.Services
 
         public async Task<(List<Log>, bool)> PaginateLogDataAsync(int firstId, int lastId, int pageSize, bool? moveForward)
         {
+            ValidationHelper.ValidateId(firstId, nameof(firstId));
+            ValidationHelper.ValidateId(lastId, nameof(lastId));
+            ValidationHelper.ValidateId(pageSize, nameof(pageSize));
+
             IQueryable<Log> query = GetAllEntriesQueryable().OrderByDescending(l => l.LogId);
 
             List<Log> paginatedList;
@@ -63,6 +68,7 @@ namespace MultiSMS.BusinessLogic.Services
 
         public List<Log> GetLogsBySearchPhrase(string searchPhrase)
         {
+            ValidationHelper.ValidateString(searchPhrase, nameof(searchPhrase));
 
             return GetAllEntriesQueryable().Select(l => new Log{LogId = l.LogId, LogCreationDate = l.LogCreationDate, LogType = l.LogType, LogMessage = l.LogMessage, LogSource = l.LogSource })
                 .AsEnumerable()

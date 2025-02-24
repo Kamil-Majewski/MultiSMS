@@ -30,6 +30,7 @@ namespace MultiSMS.BusinessLogic.Initialization
             serviceCollection.AddScoped<ISmsClientFactory, SmsClientFactory>();
             serviceCollection.AddScoped<ISendSMSContext, SendSMSContext>();
             serviceCollection.AddScoped<IApiSettingsService, ApiSettingsService>();
+            serviceCollection.AddScoped<IApiSmsSenderService, ApiSmsSenderService>();
 
             serviceCollection.AddHttpClient<ServerSmsClient>(client =>
             {

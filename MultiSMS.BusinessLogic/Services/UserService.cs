@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MultiSMS.BusinessLogic.DTO;
+using MultiSMS.BusinessLogic.Helpers;
 using MultiSMS.BusinessLogic.Models;
 using MultiSMS.BusinessLogic.Models.CustomException;
 using MultiSMS.BusinessLogic.Services.Interfaces;
@@ -36,13 +37,17 @@ namespace MultiSMS.BusinessLogic.Services
 
         public async Task<UserDTO> GetUserDtoByEmailAsync(string email)
         {
+            ValidationHelper.ValidateString(email, nameof(email));
+
             var user = await _userManager.FindByEmailAsync(email);
             return _mapper.Map<UserDTO>(user);
         }
 
-        public async Task<UserDTO> GetAdministratorDtoByIdAsync(int id)
+        public async Task<UserDTO> GetUserDtoByIdAsync(int userId)
         {
-            var user = await _userManager.FindByIdAsync(id.ToString());
+            ValidationHelper.ValidateId(userId, nameof(userId));
+
+            var user = await _userManager.FindByIdAsync(userId.ToString());
             return _mapper.Map<UserDTO>(user);
         }
 
@@ -60,6 +65,8 @@ namespace MultiSMS.BusinessLogic.Services
 
         public async Task<ManageUserDTO> GetManageUserDtoByIdAsync(int userId)
         {
+            ValidationHelper.ValidateId(userId, nameof(userId));
+
             var user = await _userManager.FindByIdAsync(userId.ToString()) ?? throw new Exception($"Could not find a user by provided Id {userId}");
             var roles = await _userManager.GetRolesAsync(user);
             user.Role = roles[0];
@@ -69,6 +76,8 @@ namespace MultiSMS.BusinessLogic.Services
 
         public async Task<string> GetUserRoleByIdAsync(int userId)
         {
+            ValidationHelper.ValidateId(userId, nameof(userId));
+
             var user = await _userManager.FindByIdAsync(userId.ToString()) ?? throw new Exception($"Could not find a user with provided Id {userId}");
             var roles = await _userManager.GetRolesAsync(user);
 
@@ -89,6 +98,8 @@ namespace MultiSMS.BusinessLogic.Services
 
         public async Task<ManageUserDTO> CreateNewUserAsync(IdentityUserModel model)
         {
+            ValidationHelper.ValidateObject(model, nameof(model));
+
             var user = CreateUser();
 
             await _userStore.SetUserNameAsync(user, model.Email, CancellationToken.None);
@@ -129,6 +140,9 @@ namespace MultiSMS.BusinessLogic.Services
 
         public async Task<ManageUserDTO> EditUserAsync(int userId, IdentityUserModel model)
         {
+            ValidationHelper.ValidateId(userId, nameof(userId));
+            ValidationHelper.ValidateObject(model, nameof(model));
+
             var user = await _userManager.FindByIdAsync(userId.ToString()) ?? throw new Exception($"Could not find a user with provided Id {userId}");
 
             if (user.Name != model.Name)
@@ -172,6 +186,8 @@ namespace MultiSMS.BusinessLogic.Services
 
         public async Task DeleteUserAsync(int userId)
         {
+            ValidationHelper.ValidateId(userId, nameof(userId));
+
             var user = await _userManager.FindByIdAsync(userId.ToString());
 
             if (user == null)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using MultiSMS.BusinessLogic.Helpers;
 using MultiSMS.BusinessLogic.Models;
 using MultiSMS.BusinessLogic.Settings;
 using MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Clients.Interface;
@@ -20,6 +21,10 @@ namespace MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Clients
 
         public async Task<SendSmsResultModel> SendSmsAsync(string phone, string text, string senderName)
         {
+            ValidationHelper.ValidateString(phone, nameof(phone));
+            ValidationHelper.ValidateString(text, nameof(text));
+            ValidationHelper.ValidateString(senderName, nameof(senderName));
+
             if (!_secretTokens.SenderNameTokenDictionary.TryGetValue(senderName, out var token))
             {
                 throw new Exception("Unknown sender name for MProfi API");

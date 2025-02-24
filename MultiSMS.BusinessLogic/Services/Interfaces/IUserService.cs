@@ -9,7 +9,7 @@ namespace MultiSMS.BusinessLogic.Services.Interfaces
         Task DeleteUserAsync(int userId);
         Task<ManageUserDTO> EditUserAsync(int userId, IdentityUserModel model);
         Task<UserDTO> GetUserDtoByEmailAsync(string email);
-        Task<UserDTO> GetAdministratorDtoByIdAsync(int id);
+        Task<UserDTO> GetUserDtoByIdAsync(int id);
         Task<IEnumerable<ManageUserDTO>> GetAllManageUserDtosAsync();
         Task<ManageUserDTO> GetManageUserDtoByIdAsync(int userId);
         Task<string> GetUserRoleByIdAsync(int userId);

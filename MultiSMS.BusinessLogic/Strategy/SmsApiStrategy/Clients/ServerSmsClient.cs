@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using MultiSMS.BusinessLogic.Helpers;
 using MultiSMS.BusinessLogic.Models;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.BusinessLogic.Settings;
@@ -26,6 +27,10 @@ namespace MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Clients
 
         public async Task<SendSmsResultModel> SendSmsAsync(string phone, string text, string senderName)
         {
+            ValidationHelper.ValidateString(phone, nameof(phone));
+            ValidationHelper.ValidateString(text, nameof(text));
+            ValidationHelper.ValidateString(senderName, nameof(senderName));
+
             // Fetch provider-specific settings from the database
             var apiSettings = await _settingsService.GetSettingsByNameAsync("ServerSms");
 

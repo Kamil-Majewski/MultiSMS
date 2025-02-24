@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MultiSMS.BusinessLogic.Helpers;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Repositories.Interfaces;
@@ -13,6 +14,8 @@ namespace MultiSMS.BusinessLogic.Services
 
         public async Task<Group> GetGroupByNameAsync(string groupName)
         {
+            ValidationHelper.ValidateString(groupName, nameof(groupName));
+
             return await GetAllEntriesQueryable().FirstOrDefaultAsync(g => g.GroupName == groupName) ?? throw new Exception($"Could not find group with given group name: {groupName}");
         }
 
@@ -28,6 +31,10 @@ namespace MultiSMS.BusinessLogic.Services
 
         public async Task<(List<Group>, bool)> PaginateGroupDataAsync(int firstId, int lastId, int pageSize, bool? moveForward)
         {
+            ValidationHelper.ValidateId(firstId, nameof(firstId));
+            ValidationHelper.ValidateId(lastId, nameof(lastId));
+            ValidationHelper.ValidateId(pageSize, nameof(pageSize));
+
             IQueryable<Group> query = GetAllEntriesQueryable().OrderBy(g => g.GroupId);
 
             List<Group> paginatedList;
@@ -58,6 +65,8 @@ namespace MultiSMS.BusinessLogic.Services
 
         public async Task<List<Group>> GetGroupsBySearchPhraseAsync(string searchPhrase)
         {
+            ValidationHelper.ValidateString(searchPhrase, nameof(searchPhrase));
+
             return await GetAllEntriesQueryable().Where(g =>
             g.GroupName.ToLower().Contains(searchPhrase) ||
             (g.GroupDescription == null || g.GroupDescription.Equals(string.Empty) ? "Brak opisu" : g.GroupDescription!).ToLower().Contains(searchPhrase)).ToListAsync();

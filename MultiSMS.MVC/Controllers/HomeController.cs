@@ -61,7 +61,7 @@ namespace MultiSMS.MVC.Controllers
         {
 
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             var template = new SMSMessageTemplate() { TemplateName = templateName, TemplateDescription = templateDescription, TemplateContent = templateContent };
             await _smsTemplateService.AddEntityToDatabaseAsync(template);
@@ -114,7 +114,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> EditTemplate(int id, string name, string description, string content)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             var template = new SMSMessageTemplate { TemplateId = id, TemplateName = name, TemplateDescription = description, TemplateContent = content };
 
@@ -145,7 +145,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> DeleteTemplate(int id)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             var template = await _smsTemplateService.GetByIdAsync(id);
             await _logService.AddEntityToDatabaseAsync(
@@ -185,7 +185,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> CreateNewContact(string contactName, string contactSurname, string email, string phone, string address, string zip, string city, string department, string isActive)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             bool activeValue = isActive == "yes" ? true : false;
 
@@ -261,7 +261,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> EditContact(int contactId, string contactName, string contactSurname, string email, string phone, string address, string zip, string city, string department, string isActive)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             bool activeValue = isActive == "yes" ? true : false;
 
@@ -305,7 +305,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> DeleteContact(int id)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             var contact = await _employeeService.GetByIdAsync(id);
             await _logService.AddEntityToDatabaseAsync(
@@ -368,7 +368,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> CreateNewGroup(string groupName, string groupDescription)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             var group = new Group() { GroupName = groupName, GroupDescription = groupDescription };
             await _groupService.AddEntityToDatabaseAsync(group);
@@ -465,7 +465,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> EditGroup(int id, string name, string description)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             var group = new Group { GroupId = id, GroupName = name, GroupDescription = description };
             group.Members = await _employeeGroupService.GetAllEmployeesForGroupListAsync(id);
@@ -495,7 +495,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> DeleteGroup(int id)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             var group = await _groupService.GetByIdAsync(id);
             group.Members = await _employeeGroupService.GetAllEmployeesForGroupListAsync(id);
@@ -541,7 +541,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> AddUserToGroup(int groupId, int employeeId)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             var employee = await _employeeService.GetByIdAsync(employeeId);
             var group = await _groupService.GetByIdAsync(groupId);
@@ -573,7 +573,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> RemoveUserFromGroup(int groupId, int employeeId)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             var employee = await _employeeService.GetByIdAsync(employeeId);
             var group = await _groupService.GetByIdAsync(groupId);
@@ -616,7 +616,7 @@ namespace MultiSMS.MVC.Controllers
         {
 
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             if (file == null || file.Length == 0)
             {
@@ -1004,7 +1004,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> CreateUser(string Name, string Surname, string Email, string Role, string? PhoneNumber, string Password)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             var model = new IdentityUserModel
             {
@@ -1061,7 +1061,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> CreateAdmin(string Name, string Surname, string Email, string Role, string? PhoneNumber, string Password)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             var model = new IdentityUserModel
             {
@@ -1134,7 +1134,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> EditUser(int userId, string Name, string Surname, string Email, string Role, string PhoneNumber)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(userId);
+            var admin = await _userService.GetUserDtoByIdAsync(userId);
 
             IdentityUserModel model = new IdentityUserModel
             {
@@ -1184,7 +1184,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> EditAdmin(int userId, string Name, string Surname, string Email, string Role, string PhoneNumber)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(userId);
+            var admin = await _userService.GetUserDtoByIdAsync(userId);
 
             var callingUserId = User.GetLoggedInUserId<int>();
             if (callingUserId == userId)
@@ -1256,7 +1256,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> DeleteUser(int userId)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             try
             {
@@ -1300,7 +1300,7 @@ namespace MultiSMS.MVC.Controllers
                 throw new Exception("Administrator cannot delete himself");
             }
 
-            var admin = await _userService.GetAdministratorDtoByIdAsync(callingUserId);
+            var admin = await _userService.GetUserDtoByIdAsync(callingUserId);
 
             try
             {

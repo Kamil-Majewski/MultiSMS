@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MultiSMS.BusinessLogic.Helpers;
+using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface;
 using MultiSMS.Interface.Entities;
 
 namespace MultiSMS.BusinessLogic.Services
 {
-    public class ApiSmsSenderService
+    public class ApiSmsSenderService : IApiSmsSenderService
     {
         private readonly LocalDbContext _localContext;
 
