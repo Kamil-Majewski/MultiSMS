@@ -8,6 +8,11 @@ namespace MultiSMS.BusinessLogic.Helpers
             if (id <= 0) throw new ArgumentException($"Provided {paramName} was invalid (0 or negative)", paramName);
         }
 
+        public static void ValidateNonNegativeNumber(int num, string paramName)
+        {
+            if (num < 0) throw new ArgumentException($"Provided {paramName} was invalid (negative)", paramName);
+        }
+
         public static void ValidateObject(object? obj, string paramName)
         {
             if (obj == null) throw new ArgumentException($"Provided {paramName} was null", paramName);

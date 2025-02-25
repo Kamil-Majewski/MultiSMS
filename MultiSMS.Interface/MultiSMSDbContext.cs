@@ -16,7 +16,7 @@ namespace MultiSMS.Interface
         public virtual DbSet<EmployeeGroup> EmployeeGroups { get; set; } = default!;
         public virtual DbSet<ApiSettings> ApiSettings { get; set; } = default!;
 
-        public MultiSMSDbContext(DbContextOptions options) : base(options)
+        public MultiSMSDbContext(DbContextOptions<MultiSMSDbContext> options) : base(options)
         {
         }
 

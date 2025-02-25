@@ -364,3 +364,4 @@ FodyWeavers.xsd
 /MultiSMS.MVC/appsettings.json
 /MultiSMS.MVC/appsettings.Development.json
 /MultiSMS.MVC/wwwroot/Kontakty.xlsx
+/MultiSMS.MVC/sms_senders_with_api_tokens.db

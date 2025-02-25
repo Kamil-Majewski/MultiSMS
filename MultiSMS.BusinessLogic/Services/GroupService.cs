@@ -31,8 +31,8 @@ namespace MultiSMS.BusinessLogic.Services
 
         public async Task<(List<Group>, bool)> PaginateGroupDataAsync(int firstId, int lastId, int pageSize, bool? moveForward)
         {
-            ValidationHelper.ValidateId(firstId, nameof(firstId));
-            ValidationHelper.ValidateId(lastId, nameof(lastId));
+            ValidationHelper.ValidateNonNegativeNumber(firstId, nameof(firstId));
+            ValidationHelper.ValidateNonNegativeNumber(lastId, nameof(lastId));
             ValidationHelper.ValidateId(pageSize, nameof(pageSize));
 
             IQueryable<Group> query = GetAllEntriesQueryable().OrderBy(g => g.GroupId);
