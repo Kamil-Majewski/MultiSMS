@@ -4,7 +4,7 @@
     {
         public int ChosenGroupId { get; set; }
         public string? AdditionalPhoneNumbers { get; set; } 
-        public DateTime MessageSentDate { get; set; } = DateTime.Now;
+        public DateTime MessageSentDate { get; set; } = DateTime.UtcNow;
         public string? AdditionalInformation { get; set; }
         public Dictionary<string, string> Settings { get; set; } = default!;
         public object ServerResponse { get; set; } = default!;

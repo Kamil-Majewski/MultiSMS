@@ -166,12 +166,43 @@ namespace MultiSMS.BusinessLogic.Services
 
                 while (csvReader.Read())
                 {
-                    groupIds.Add(csvReader.GetField<string>("grupa")!);
-                    var sanitizedPhoneNumber = Regex.Replace(csvReader.GetField<string>("tel")!, @"\s+", "");
+                    var groupId = csvReader.GetField<string>("grupa")?.Trim();
+                    var rawPhoneNumber = csvReader.GetField<string>("tel")?.Trim();
+                    var personRaw = csvReader.GetField<string>("osoba")?.Trim();
 
-                    var person = csvReader.GetField<string>("osoba")!.Split(" ");
+                    groupIds.Add(groupId ?? "");
 
-                    var (name, surname) = GetNameAndSurname(person);
+                    var personParts = personRaw?.Split(" ") ?? Array.Empty<string>();
+
+                    if (personParts.Length < 2)
+                    {
+                        invalidRecords.Add(new Employee
+                        {
+                            Name = personRaw ?? "",
+                            Surname = "",
+                            PhoneNumber = rawPhoneNumber ?? "",
+                            Department = csvReader.GetField<string>("instytucja")?.Trim(),
+                            IsActive = false
+                        });
+                        continue;
+                    }
+
+                    var (name, surname) = GetNameAndSurname(personParts);
+
+                    if (string.IsNullOrWhiteSpace(rawPhoneNumber))
+                    {
+                        invalidRecords.Add(new Employee
+                        {
+                            Name = name,
+                            Surname = surname,
+                            PhoneNumber = rawPhoneNumber ?? "",
+                            Department = csvReader.GetField<string>("instytucja")?.Trim(),
+                            IsActive = false
+                        });
+                        continue;
+                    }
+
+                    var sanitizedPhoneNumber = Regex.Replace(rawPhoneNumber, @"\s+", "");
                     var phoneNumber = ParsePhoneNumber(sanitizedPhoneNumber);
 
                     var record = new Employee
@@ -179,17 +210,17 @@ namespace MultiSMS.BusinessLogic.Services
                         Name = name,
                         Surname = surname,
                         PhoneNumber = Regex.Replace(phoneNumber, @"(\S{3})", "$1 ").Trim(),
-                        Department = csvReader.GetField<string>("instytucja"),
+                        Department = csvReader.GetField<string>("instytucja")?.Trim(),
                         IsActive = true
                     };
 
                     if (type == "new")
                     {
-                        record.IsActive = csvReader.GetField<string>("aktywność") == "Aktywny";
-                        record.Email = csvReader.GetField<string>("email");
-                        record.PostalNumber = csvReader.GetField<string>("kod pocztowy");
-                        record.City = csvReader.GetField<string>("miasto");
-                        record.HQAddress = csvReader.GetField<string>("adres miejsca pracy");
+                        record.IsActive = csvReader.GetField<string>("aktywność")?.Trim() == "Aktywny";
+                        record.Email = csvReader.GetField<string>("email")?.Trim();
+                        record.PostalNumber = csvReader.GetField<string>("kod pocztowy")?.Trim();
+                        record.City = csvReader.GetField<string>("miasto")?.Trim();
+                        record.HQAddress = csvReader.GetField<string>("adres miejsca pracy")?.Trim();
                     }
 
                     if (phoneNumbersInDb.Any(p => p == record.PhoneNumber) || validRecords.Any(r => r.PhoneNumber == record.PhoneNumber))
@@ -209,7 +240,6 @@ namespace MultiSMS.BusinessLogic.Services
                     processedRows++;
 
                     int progress = (int)((double)processedRows / totalRows * 70);
-
                     await _progressRelay.RelayProgressAsync("ImportContactsProgress", progress.ToString());
                 }
             }
