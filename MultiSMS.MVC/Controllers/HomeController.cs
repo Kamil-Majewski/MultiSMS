@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using MultiSMS.BusinessLogic.DTO;
 using MultiSMS.BusinessLogic.Extensions;
+using MultiSMS.BusinessLogic.Helpers;
 using MultiSMS.BusinessLogic.Models;
 using MultiSMS.BusinessLogic.Models.CustomException;
 using MultiSMS.BusinessLogic.Services.Interfaces;
@@ -25,7 +28,19 @@ namespace MultiSMS.MVC.Controllers
         private readonly IEmployeeGroupService _employeeGroupService;
         private readonly ILogService _logService;
         private readonly IApiSettingsService _apiSettingsService;
-        public HomeController(ISMSMessageTemplateService smsTemplateRepository, IEmployeeService employeeRepository, IGroupService groupRepository, IEmployeeGroupService employeeGroupRepository, ILogService logRepository, IUserService userService, IImportExportEmployeesService ieService, IApiSettingsService apiSettingsService)
+        private readonly IApiTokenService _tokenService;
+        private readonly IApiSmsSenderService _senderService;
+
+        public HomeController(ISMSMessageTemplateService smsTemplateRepository,
+                              IEmployeeService employeeRepository,
+                              IGroupService groupRepository,
+                              IEmployeeGroupService employeeGroupRepository,
+                              ILogService logRepository,
+                              IUserService userService,
+                              IImportExportEmployeesService ieService,
+                              IApiSettingsService apiSettingsService,
+                              IApiTokenService tokenService,
+                              IApiSmsSenderService senderService)
         {
             _smsTemplateService = smsTemplateRepository;
             _employeeService = employeeRepository;
@@ -35,6 +50,18 @@ namespace MultiSMS.MVC.Controllers
             _userService = userService;
             _ieService = ieService;
             _apiSettingsService = apiSettingsService;
+            _tokenService = tokenService;
+            _senderService = senderService;
+        }
+
+        private IActionResult ReturnBadRequestWithAListOfErrors(ModelStateDictionary modelState)
+        {
+            var errors = modelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+
+            return BadRequest(new { Errors = errors });
         }
 
         [Authorize]
@@ -1331,6 +1358,134 @@ namespace MultiSMS.MVC.Controllers
             {
                 return NotFound("Could not find user with provided Id");
             }
+        }
+
+        #endregion
+
+        #region ApiTokens
+
+        [Authorize(Roles = "Owner")]
+        [HttpGet]
+        public async Task<IActionResult> GetAllApiTokens()
+        {
+            return Ok(await _tokenService.GetAllEntriesAsync());
+        }
+
+        [Authorize(Roles = "Owner")]
+        [HttpGet]
+        public async Task<IActionResult> GetApiTokenById(int tokenId)
+        {
+            ValidationHelper.ValidateId(tokenId, nameof(tokenId));
+
+            return Ok(await _tokenService.GetByIdAsync(tokenId));
+        }
+
+        [Authorize(Roles = "Owner")]
+        [HttpPut]
+        public async Task<IActionResult> EditApiToken(ApiToken token)
+        {
+            if (!ModelState.IsValid)
+            {
+                return ReturnBadRequestWithAListOfErrors(ModelState);
+            }
+
+            return Ok(await _tokenService.UpdateEntityAsync(token));
+        }
+
+        [Authorize(Roles = "Owner")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteApiToken(int apiTokenId)
+        {
+            ValidationHelper.ValidateId(apiTokenId, nameof(apiTokenId));
+
+            await _tokenService.DeleteEntityAsync(apiTokenId);
+
+            return Ok();
+        }
+
+        [Authorize(Roles = "Owner")]
+        [HttpGet]
+        public async Task<IActionResult> GetApiTokensBySearchPhrase(string searchPhrase)
+        {
+            ValidationHelper.ValidateString(searchPhrase, nameof(searchPhrase));
+
+            return Ok(await _tokenService.GetApiTokensBySearchPhraseAsync(searchPhrase));
+        } 
+
+        #endregion
+
+        #region ApiSmsSender
+
+        [Authorize(Roles = "Owner")]
+        [HttpGet]
+        public async Task<IActionResult> GetAllSenders()
+        {
+            return Ok(await _senderService.GetAllEntriesAsync());
+        }
+
+        [Authorize(Roles = "Owner")]
+        [HttpGet]
+        public async Task<IActionResult> GetSenderById(int senderId)
+        {
+            ValidationHelper.ValidateId(senderId, nameof(senderId));
+
+            return Ok(await _senderService.GetByIdAsync(senderId));
+        }
+
+        [Authorize(Roles = "Owner")]
+        [HttpPut]
+        public async Task<IActionResult> EditSender(ApiSmsSender sender)
+        {
+            if (!ModelState.IsValid)
+            {
+                return ReturnBadRequestWithAListOfErrors(ModelState);
+            }
+
+            return Ok(await _senderService.UpdateEntityAsync(sender));
+        }
+
+        [Authorize(Roles = "Owner")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteSender(int senderId)
+        {
+            ValidationHelper.ValidateId(senderId, nameof(senderId));
+
+            await _senderService.DeleteEntityAsync(senderId);
+
+            return Ok();
+        }
+
+        [Authorize(Roles = "Owner")]
+        [HttpPatch]
+        public async Task<IActionResult> AssignUserToSender(int userId, int senderId)
+        {
+            ValidationHelper.ValidateId(userId, nameof(userId));
+            ValidationHelper.ValidateId(senderId, nameof(senderId));
+
+            await _senderService.AssignUserToSender(userId, senderId);
+
+            return Ok();
+        }
+
+        [Authorize(Roles = "Owner")]
+        [HttpPatch]
+        public async Task<IActionResult> UnassignUserFromSender(int userId, int senderId)
+        {
+            ValidationHelper.ValidateId(userId, nameof(userId));
+            ValidationHelper.ValidateId(senderId, nameof(senderId));
+
+            await _senderService.UnassignUserFromSender(userId, senderId);
+
+            return Ok();
+        }
+
+        [Authorize(Roles = "Owner")]
+        [HttpGet]
+        public async Task<IActionResult> GetSendersBySearchPhrase(string searchPhrase)
+        {
+            ValidationHelper.ValidateString(searchPhrase, nameof(searchPhrase));
+
+            return Ok(await _senderService.GetSendersBySearchPhraseAsync(searchPhrase));
         }
 
         #endregion

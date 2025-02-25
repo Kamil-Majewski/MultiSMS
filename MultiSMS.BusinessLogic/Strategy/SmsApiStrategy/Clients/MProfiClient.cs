@@ -3,6 +3,7 @@ using MultiSMS.BusinessLogic.Helpers;
 using MultiSMS.BusinessLogic.Models;
 using MultiSMS.BusinessLogic.Settings;
 using MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Clients.Interface;
+using MultiSMS.Interface.Entities;
 using Newtonsoft.Json;
 using System.Text;
 
@@ -11,28 +12,21 @@ namespace MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Clients
     public class MProfiClient : ISmsClient
     {
         private readonly HttpClient _httpClient;
-        private readonly MProfiSettings _secretTokens;
 
         public MProfiClient(HttpClient httpClient, IOptions<MProfiSettings> secretTokens)
         {
             _httpClient = httpClient;
-            _secretTokens = secretTokens.Value;
         }
 
-        public async Task<SendSmsResultModel> SendSmsAsync(string phone, string text, string senderName)
+        public async Task<SendSmsResultModel> SendSmsAsync(string phone, string text, ApiSmsSender sender)
         {
             ValidationHelper.ValidateString(phone, nameof(phone));
             ValidationHelper.ValidateString(text, nameof(text));
-            ValidationHelper.ValidateString(senderName, nameof(senderName));
-
-            if (!_secretTokens.SenderNameTokenDictionary.TryGetValue(senderName, out var token))
-            {
-                throw new Exception("Unknown sender name for MProfi API");
-            };
+            ValidationHelper.ValidateObject(sender, nameof(sender));
 
             var parameters = new Dictionary<string, string>()
             {
-                ["apikey"] = token,
+                ["apikey"] = sender.ApiToken.Value,
                 ["recipients"] = phone,
                 ["default_message"] = text
             };

@@ -22,6 +22,7 @@ namespace MultiSMS.MVC.Controllers
         private readonly IGroupService _groupService;
         private readonly ISendSMSContext _smsContext;
         private readonly IApiSettingsService _apiSettingsService;
+        private readonly IApiSmsSenderService _smsSenderService;
 
         public SmsApiController(IOptions<ServerSmsSettings> serverSmsSettings,
                                 IOptions<SmsApiSettings> smsApiSettings,
@@ -30,7 +31,8 @@ namespace MultiSMS.MVC.Controllers
                                 IUserService administratorService,
                                 IGroupService groupService,
                                 ISendSMSContext smsContext,
-                                IApiSettingsService apiSettingsService)
+                                IApiSettingsService apiSettingsService,
+                                IApiSmsSenderService smsSenderService)
         {
             _logService = logService;
             _employeeGroupService = employeeGroupService;
@@ -38,6 +40,7 @@ namespace MultiSMS.MVC.Controllers
             _groupService = groupService;
             _smsContext = smsContext;
             _apiSettingsService = apiSettingsService;
+            _smsSenderService = smsSenderService;
         }
 
         private async Task<object> HandleApiResponse(string response, Dictionary<string, string> parameters, Group chosenGroup, string additionalPhoneNumbers, string additionalInfo,
@@ -155,10 +158,11 @@ namespace MultiSMS.MVC.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> SendSmsMessage(string text, int chosenGroupId, string senderName, string additionalPhoneNumbers, string additionalInfo)
+        public async Task<IActionResult> SendSmsMessage(string text, int chosenGroupId, string additionalPhoneNumbers, string additionalInfo)
         {
             var userId = User.GetLoggedInUserId<int>();
             var activeApiSettings = await _apiSettingsService.GetActiveSettingsAsync();
+            var sender = await _smsSenderService.GetSenderByUserId(userId);
 
             Group chosenGroup = new();
 
@@ -184,7 +188,7 @@ namespace MultiSMS.MVC.Controllers
             if (groupPhoneNumbers.Count <= 200)
             {
                 var phoneNumbersString = string.Join(',', groupPhoneNumbers);
-                var response = await _smsContext.SendSMSAsync(phoneNumbersString, text, senderName);
+                var response = await _smsContext.SendSMSAsync(phoneNumbersString, text, sender);
 
                 var result = await HandleApiResponse(response.ResponseContent, response.Parameters, chosenGroup,
                                                additionalPhoneNumbers, additionalInfo, userId, activeApiSettings);
@@ -213,7 +217,7 @@ namespace MultiSMS.MVC.Controllers
                     var batch = groupPhoneNumbers.Skip(i).Take(200);
                     var phoneNumbersString = string.Join(',', batch);
 
-                    var response = await _smsContext.SendSMSAsync(phoneNumbersString, text, senderName);
+                    var response = await _smsContext.SendSMSAsync(phoneNumbersString, text, sender);
 
                     var result = await HandleApiResponse(response.ResponseContent, response.Parameters, chosenGroup,
                                                additionalPhoneNumbers, additionalInfo, userId, activeApiSettings);

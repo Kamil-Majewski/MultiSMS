@@ -57,24 +57,5 @@ namespace MultiSMS.BusinessLogic.Services
             return await GetAllEntriesQueryable().Where(s => s.Name.ToLower().Contains(searchPhrase)
             || (string.IsNullOrEmpty(s.Description) ? "Brak opisu" : s.Description).ToLower().Contains(searchPhrase)).ToListAsync();
         }
-
-        public async Task RemoveUserFromSendersAsync(int userId)
-        {
-            ValidationHelper.ValidateId(userId, nameof(userId));
-
-            var senders = await GetAllEntriesQueryable()
-                .Where(s => s.AssingedUserIds.Contains(userId))
-                .ToListAsync();
-
-            if (senders.Any())
-            {
-                foreach (var sender in senders)
-                {
-                    sender.AssingedUserIds.Remove(userId);
-                }
-
-                await UpdateRangeAsync(senders);
-            }
-        }
     }
 }
