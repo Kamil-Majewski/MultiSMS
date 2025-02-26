@@ -10,7 +10,7 @@ using MultiSMS.Interface;
 namespace MultiSMS.Interface.Migrations.LocalDb
 {
     [DbContext(typeof(LocalDbContext))]
-    [Migration("20250224135926_Init")]
+    [Migration("20250225101112_Init")]
     partial class Init
     {
         /// <inheritdoc />

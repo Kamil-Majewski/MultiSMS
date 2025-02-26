@@ -27,7 +27,7 @@ builder.Services.AddOptions();
 var multiSMSConnectionString = builder.Configuration.GetConnectionString("MultiSMSConnectionString") ?? throw new InvalidOperationException($"Could not get database connection string");
 
 builder.Services.AddDbContext<MultiSMSDbContext>(options =>
-    options.UseSqlServer(multiSMSConnectionString));
+    options.UseNpgsql(multiSMSConnectionString));
 
 builder.Services.AddDbContext<LocalDbContext>(options =>
     options.UseSqlite("Data Source=sms_senders_with_api_tokens.db"));
