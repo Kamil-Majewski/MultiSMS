@@ -8,46 +8,63 @@ namespace MultiSMS.BusinessLogic.Services
 {
     public class ApiSmsSenderService : GenericService<ApiSmsSender>, IApiSmsSenderService
     {
-        public ApiSmsSenderService(IGenericRepository<ApiSmsSender> apiSmsSenderRepository) : base(apiSmsSenderRepository) { }
+        private readonly IGenericRepository<ApiSmsSenderUser> _senderUserRepository;
 
-        public async Task AssignUserToSender(int userId, int senderId)
+        public ApiSmsSenderService(IGenericRepository<ApiSmsSender> apiSmsSenderRepository,
+                                   IGenericRepository<ApiSmsSenderUser> senderUserRepository) : base(apiSmsSenderRepository)
         {
-            ValidationHelper.ValidateId(userId, nameof(userId));
-            ValidationHelper.ValidateId(senderId, nameof(senderId));
-
-            ApiSmsSender sender = await GetByIdAsync(senderId);
-
-            if (!sender.AssingedUserIds.Contains(userId))
-            {
-                sender.AssingedUserIds.Add(userId);
-                await UpdateEntityAsync(sender);
-            }
+            _senderUserRepository = senderUserRepository;
         }
 
-        public async Task UnassignUserFromSender(int userId, int senderId)
+        public async Task<bool> AssignUserToSender(int userId, int senderId)
         {
             ValidationHelper.ValidateId(userId, nameof(userId));
             ValidationHelper.ValidateId(senderId, nameof(senderId));
 
-            ApiSmsSender sender = await GetByIdAsync(senderId);
+            var existingAssignment = await _senderUserRepository.GetAllEntries()
+                .FirstOrDefaultAsync(x => x.UserId == userId);
 
-            if (sender.AssingedUserIds.Contains(userId))
+            if (existingAssignment != null)
             {
-                sender.AssingedUserIds.Remove(userId);
-                await UpdateEntityAsync(sender);
+                throw new InvalidOperationException("User is already assigned to another sender.");
             }
+
+            var newAssignment = new ApiSmsSenderUser
+            {
+                ApiSmsSenderId = senderId,
+                UserId = userId
+            };
+
+            await _senderUserRepository.AddEntityToDatabaseAsync(newAssignment);
+            return true;
+        }
+
+        public async Task<bool> UnassignUserFromSender(int userId)
+        {
+            ValidationHelper.ValidateId(userId, nameof(userId));
+
+            var assignment = await _senderUserRepository.GetAllEntries()
+                .FirstOrDefaultAsync(x => x.UserId == userId);
+
+            if (assignment == null)
+            {
+                return false;
+            }
+
+            await _senderUserRepository.DeleteEntityAsync(assignment);
+            return true;
         }
 
         public async Task<ApiSmsSender> GetSenderByUserId(int userId)
         {
             ValidationHelper.ValidateId(userId, nameof(userId));
 
-            ApiSmsSender sender = await GetAllEntriesQueryable()
-                .Include(s => s.ApiToken)
-                .FirstOrDefaultAsync(s => s.AssingedUserIds.Contains(userId))
-                ?? throw new InvalidOperationException($"No sender assigned to User Id {userId}");
+            var senderUser = await _senderUserRepository.GetAllEntries()
+                .FirstOrDefaultAsync(su => su.UserId == userId) ?? throw new ArgumentNullException("User is not assigned to any senders");
 
-            return sender;
+            return await GetAllEntriesQueryable().Include(s => s.ApiToken)
+                                                 .FirstOrDefaultAsync(s => s.Id == senderUser.ApiSmsSenderId)
+                                                 ?? throw new ArgumentNullException($"Could not find sender by provided id {senderUser.ApiSmsSenderId}");
         }
 
         public async Task<List<ApiSmsSender>> GetSendersBySearchPhraseAsync(string searchPhrase)

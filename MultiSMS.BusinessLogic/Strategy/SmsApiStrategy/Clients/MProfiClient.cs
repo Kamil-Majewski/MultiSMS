@@ -24,10 +24,12 @@ namespace MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Clients
             ValidationHelper.ValidateString(text, nameof(text));
             ValidationHelper.ValidateObject(sender, nameof(sender));
 
-            var parameters = new Dictionary<string, string>()
+            var phonesParsed = phone.Contains(",") ? phone.Split(", ") : [phone];
+
+            var parameters = new Dictionary<string, object>()
             {
                 ["apikey"] = sender.ApiToken.Value,
-                ["recipients"] = phone,
+                ["recipients"] = phonesParsed,
                 ["default_message"] = text
             };
 

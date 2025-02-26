@@ -4,9 +4,9 @@ namespace MultiSMS.BusinessLogic.Services.Interfaces
 {
     public interface IApiSmsSenderService : IGenericService<ApiSmsSender>
     {
-        Task AssignUserToSender(int userId, int senderId);
+        Task<bool> AssignUserToSender(int userId, int senderId);
         Task<ApiSmsSender> GetSenderByUserId(int userId);
-        Task UnassignUserFromSender(int userId, int senderId);
         Task<List<ApiSmsSender>> GetSendersBySearchPhraseAsync(string searchPhrase);
+        Task<bool> UnassignUserFromSender(int userId);
     }
 }
