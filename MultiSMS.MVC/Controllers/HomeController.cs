@@ -192,7 +192,7 @@ namespace MultiSMS.MVC.Controllers
                 }
             );
 
-            await _smsTemplateService.DeleteEntityAsync(id);
+            await _smsTemplateService.DeleteEntityByIdAsync(id);
             return Ok("Successfully deleted template");
         }
 
@@ -350,7 +350,7 @@ namespace MultiSMS.MVC.Controllers
                    })
                }
            );
-            await _employeeService.DeleteEntityAsync(id);
+            await _employeeService.DeleteEntityByIdAsync(id);
 
             return Ok("Successfully deleted contact");
         }
@@ -541,7 +541,7 @@ namespace MultiSMS.MVC.Controllers
                    })
                }
            );
-            await _groupService.DeleteEntityAsync(id);
+            await _groupService.DeleteEntityByIdAsync(id);
             return Ok("Successfully deleted group");
         }
 
@@ -1398,7 +1398,7 @@ namespace MultiSMS.MVC.Controllers
         {
             ValidationHelper.ValidateId(apiTokenId, nameof(apiTokenId));
 
-            await _tokenService.DeleteEntityAsync(apiTokenId);
+            await _tokenService.DeleteEntityByIdAsync(apiTokenId);
 
             return Ok();
         }
@@ -1450,7 +1450,7 @@ namespace MultiSMS.MVC.Controllers
         {
             ValidationHelper.ValidateId(senderId, nameof(senderId));
 
-            await _senderService.DeleteEntityAsync(senderId);
+            await _senderService.DeleteEntityByIdAsync(senderId);
 
             return Ok();
         }
@@ -1474,7 +1474,7 @@ namespace MultiSMS.MVC.Controllers
             ValidationHelper.ValidateId(userId, nameof(userId));
             ValidationHelper.ValidateId(senderId, nameof(senderId));
 
-            await _senderService.UnassignUserFromSender(userId, senderId);
+            await _senderService.UnassignUserFromSender(userId);
 
             return Ok();
         }

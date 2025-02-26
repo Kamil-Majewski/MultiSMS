@@ -47,7 +47,7 @@ namespace MultiSMS.BusinessLogic.Services
             var employeeGroup = await GetAllEntriesQueryable().FirstOrDefaultAsync(eg => eg.GroupId == groupId && eg.EmployeeId == employeeId)
                                                      ?? throw new Exception("Could not find the group with provided id that contains employee with given id");
 
-            await DeleteEntityAsync(employeeGroup.EmployeeId);
+            await DeleteEntityByIdAsync(employeeGroup.EmployeeId);
         }
 
         public async Task<List<string>> GetAllGroupNamesForEmployeeListAsync(int employeeId)

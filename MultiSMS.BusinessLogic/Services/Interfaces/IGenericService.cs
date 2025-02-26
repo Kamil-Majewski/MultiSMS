@@ -6,7 +6,7 @@ namespace MultiSMS.BusinessLogic.Services.Interfaces
     {
         Task<T> AddEntityToDatabaseAsync(T entity);
         Task<IEnumerable<T>> AddRangeOfEntitiesToDatabaseAsync(IEnumerable<T> entities);
-        Task DeleteEntityAsync(int id);
+        Task DeleteEntityByIdAsync(int id);
         void DetachEntity(T entity);
         Task<List<T>> GetAllEntriesAsync();
         IQueryable<T> GetAllEntriesQueryable();

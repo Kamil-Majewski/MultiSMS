@@ -6,7 +6,8 @@ namespace MultiSMS.Interface.Repositories.Interfaces
     {
         Task<T> AddEntityToDatabaseAsync(T entity);
         Task<IEnumerable<T>> AddRangeOfEntitiesToDatabaseAsync(IEnumerable<T> entities);
-        Task DeleteEntityAsync(int id);
+        Task DeleteEntityByIdAsync(int id);
+        Task DeleteEntityAsync(T entity);
         IQueryable<T> GetAllEntries();
         Task<T> GetByIdAsync(int id);
         Task<T> UpdateEntityAsync(T entity);

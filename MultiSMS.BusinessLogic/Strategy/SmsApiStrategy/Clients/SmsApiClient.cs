@@ -33,7 +33,7 @@ namespace MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Clients
             // Fetch provider-specific settings from the database
             var apiSettings = await _settingsService.GetSettingsByNameAsync("ServerSms");
 
-            var parameters = new Dictionary<string, string>
+            var parameters = new Dictionary<string, object>
             {
                 ["to"] = phone,
                 ["message"] = text,

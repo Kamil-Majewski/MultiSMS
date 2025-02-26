@@ -43,7 +43,7 @@ namespace MultiSMS.MVC.Controllers
             _smsSenderService = smsSenderService;
         }
 
-        private async Task<object> HandleApiResponse(string response, Dictionary<string, string> parameters, Group chosenGroup, string additionalPhoneNumbers, string additionalInfo,
+        private async Task<object> HandleApiResponse(string response, Dictionary<string, object> parameters, Group chosenGroup, string additionalPhoneNumbers, string additionalInfo,
                                                int adminId, ApiSettings activeApiSettings)
         {
             var user = await _userService.GetManageUserDtoByIdAsync(adminId);
@@ -70,7 +70,7 @@ namespace MultiSMS.MVC.Controllers
             }
         }
 
-        private async Task<object> HandleSmsResponse<TSuccess, TError>(string response, Dictionary<string, string> parameters ,Group chosenGroup,
+        private async Task<object> HandleSmsResponse<TSuccess, TError>(string response, Dictionary<string, object> parameters ,Group chosenGroup,
                                                                        string additionalPhoneNumbers, string additionalInfo, ManageUserDTO user,
                                                                        string logSource,
                                                                        Func<TSuccess, (bool success, int queued, int unsent)> getSuccessData,
@@ -165,14 +165,14 @@ namespace MultiSMS.MVC.Controllers
             var sender = await _smsSenderService.GetSenderByUserId(userId);
 
             Group chosenGroup = new();
+            List<string> groupPhoneNumbers = new();
 
             if (chosenGroupId > 0)
             {
                 chosenGroup = await _groupService.GetByIdAsync(chosenGroupId);
                 chosenGroup.Members = await _employeeGroupService.GetAllEmployeesForGroupListAsync(chosenGroupId);
-            }
-
-            var groupPhoneNumbers = await _employeeGroupService.GetAllActiveEmployeesPhoneNumbersForGroupListAsync(chosenGroupId);
+                groupPhoneNumbers = await _employeeGroupService.GetAllActiveEmployeesPhoneNumbersForGroupListAsync(chosenGroupId);
+            }            
 
             if (!string.IsNullOrEmpty(additionalPhoneNumbers))
             {

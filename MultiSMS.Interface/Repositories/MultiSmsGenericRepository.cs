@@ -22,7 +22,7 @@ namespace MultiSMS.Interface.Repositories
 
         public async Task<T> GetByIdAsync(int id)
         {
-            return await _dbSet.FindAsync(id) ?? throw new Exception($"Could not find entity {nameof(T)} with given Id");
+            return await _dbSet.FindAsync(id) ?? throw new ArgumentNullException($"Could not find entity {nameof(T)} with given Id");
         }
 
         public async Task<T> AddEntityToDatabaseAsync(T entity)
@@ -90,9 +90,15 @@ namespace MultiSMS.Interface.Repositories
             return entities;
         }
 
-        public async Task DeleteEntityAsync(int id)
+        public async Task DeleteEntityByIdAsync(int id)
         {
-            T entity = await _dbSet.FindAsync(id) ?? throw new Exception($"Could not find entity {nameof(T)} with given Id");
+            T entity = await _dbSet.FindAsync(id) ?? throw new ArgumentNullException($"Could not find entity {nameof(T)} with given Id");
+            _dbSet.Remove(entity);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteEntityAsync(T entity)
+        {
             _dbSet.Remove(entity);
             await _dbContext.SaveChangesAsync();
         }

@@ -31,7 +31,7 @@ namespace MultiSMS.BusinessLogic.Services
             return await _repository.UpdateRangeAsync(entities, propertyExpressions);
         }
 
-        public virtual async Task DeleteEntityAsync(int id) => await _repository.DeleteEntityAsync(id);
+        public virtual async Task DeleteEntityByIdAsync(int id) => await _repository.DeleteEntityByIdAsync(id);
 
         public virtual void DetachEntity(T entity) => _repository.DetachEntity(entity);
 
