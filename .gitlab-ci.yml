@@ -1,0 +1,64 @@
+stages:
+  - test-build
+  - test-deploy
+
+variables:
+  DOTNET_VERSION: "8.0.406"
+  SOLUTION_FILE: "MultiSMS.sln"
+  WEB_PROJECT: "MultiSMS.MVC/MultiSMS.MVC.csproj"
+  ARTIFACTS_PATH: "artifacts"
+  TEST_DEPLOY_PATH: "C:\\website\\cicd\\multisms"
+
+build:
+  stage: test-build
+  tags:
+    - linux
+    - native
+    - shared
+  script:
+    - echo "Starting CI/CD pipeline..."
+    - echo "Fetching secrets..."
+    - mkdir -p multisms-secrets
+    - echo "$APPSETTINGS_JSON_BASE64" | base64 --decode > multisms-secrets/appsettings.json
+    - echo "$APPSETTINGS_DEVELOPMENT_JSON_BASE64" | base64 --decode > multisms-secrets/appsettings.Development.json
+
+    - echo "Starting docker container and building project..."
+    - docker run --rm
+      -v "$CI_PROJECT_DIR":/opt/multisms
+      -v "$CI_PROJECT_DIR/multisms-secrets/appsettings.json":/opt/multisms/MultiSMS.MVC/appsettings.json
+      -v "$CI_PROJECT_DIR/multisms-secrets/appsettings.Development.json":/opt/multisms/MultiSMS.MVC/appsettings.Development.json
+      bitnami/dotnet-sdk:"$DOTNET_VERSION"
+      /bin/sh -c "cd /opt/multisms &&
+      echo 'Restoring dependencies...' &&
+      dotnet restore \"$SOLUTION_FILE\" &&
+      echo 'Building solution...' &&
+      dotnet build \"$SOLUTION_FILE\" --configuration Release --no-restore &&
+      echo 'Publishing web project...' &&
+      dotnet publish \"$WEB_PROJECT\" -c Release -o \"$ARTIFACTS_PATH\""
+
+    - echo "Cleaning up residual files..."
+    - rm -rf ./*
+
+  artifacts:
+    paths:
+      - $ARTIFACTS_PATH
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "testing"'
+
+deploy:
+  stage: test-deploy
+  tags:
+    - iis
+    - windows
+  script:
+    - echo "Starting deploy step"
+    - echo "Stopping IIS App Pool..."
+    - Stop-WebAppPool -Name 'sms'
+    - echo "Clearing previous deployment..."
+    - Remove-Item -Recurse -Force '$TEST_DEPLOY_PATH\\*'
+    - echo "Copying new files..."
+    - Copy-Item -Path '.\\artifacts\\*' -Destination '$TEST_DEPLOY_PATH' -Recurse
+    - echo "Starting IIS App Pool..."
+    - Start-WebAppPool -Name 'sms'
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "testing"'
