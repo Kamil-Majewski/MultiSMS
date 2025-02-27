@@ -15,6 +15,9 @@ build:
     - linux
     - native
     - shared
+  hooks:
+      pre_get_sources_script:
+      - sudo chown -R gitlab-runner:gitlab-runner .
   script:
     - echo "Starting CI/CD pipeline..."
     - echo "Fetching secrets..."
@@ -35,9 +38,6 @@ build:
       dotnet build \"$SOLUTION_FILE\" --configuration Release --no-restore &&
       echo 'Publishing web project...' &&
       dotnet publish \"$WEB_PROJECT\" -c Release -o \"$ARTIFACTS_PATH\""
-
-    - echo "Cleaning up residual files..."
-    - rm -rf ./*
 
   artifacts:
     paths:
