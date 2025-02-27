@@ -51,13 +51,18 @@ deploy:
     - iis
     - windows
   script:
-    - echo "Starting deploy step"
     - echo "Stopping IIS App Pool..."
     - Stop-WebAppPool -Name 'sms'
+
+    - echo "Ensuring the deployment directory exists..."
+    - if (!(Test-Path -Path "$env:TEST_DEPLOY_PATH")) { New-Item -ItemType Directory -Path "$env:TEST_DEPLOY_PATH" }
+
     - echo "Clearing previous deployment..."
-    - Remove-Item -Recurse -Force '$TEST_DEPLOY_PATH\\*'
+    - Remove-Item -Recurse -Force "$env:TEST_DEPLOY_PATH\*"
+
     - echo "Copying new files..."
-    - Copy-Item -Path '.\\artifacts\\*' -Destination '$TEST_DEPLOY_PATH' -Recurse
+    - Copy-Item -Path ".\artifacts\*" -Destination "$env:TEST_DEPLOY_PATH" -Recurse
+
     - echo "Starting IIS App Pool..."
     - Start-WebAppPool -Name 'sms'
   rules:
