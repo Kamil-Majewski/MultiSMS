@@ -13,7 +13,7 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    var admin = await AdministratorService.GetAdministratorDtoByEmailAsync(UserManager.GetUserName(User)!);
+    var admin = await AdministratorService.GetUserDtoByEmailAsync(UserManager.GetUserName(User)!);
 
     <nav class="navbar-nav navbar-expand ml-auto">
         <div style="margin-right:30px;">
