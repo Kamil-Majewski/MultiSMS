@@ -65,7 +65,7 @@ namespace MultiSMS.MVC.Controllers
                                                                                                      additionalInfo, user, logSource: "MProfi",
                                                                                                      getSuccessData: sr => (true, sr.Result.Where(r => r.Id != null).Count(),
                                                                                                      sr.Result.Where(r => r.ErrorCode != null && r.ErrorMessage != null).Count()),
-                                                                                                     getErrorData: er => ("", er.Detail)); //Pretty sure API docs don't mention returning an error code
+                                                                                                     getErrorData: er => ("", er.Detail));
                 default:
                     throw new Exception("Unknown API Id");
             }
@@ -135,6 +135,9 @@ namespace MultiSMS.MVC.Controllers
                 Settings = parameters,
                 ServerResponse = successResponse != null ? (object)successResponse : errorResponse!
             };
+
+            // Remove vulnerable data from logs
+            smsMessage.Settings.Remove("apikey");
 
             // Log the event.
             var log = new Log

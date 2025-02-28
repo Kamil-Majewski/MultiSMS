@@ -1,8 +1,5 @@
-﻿using Microsoft.Extensions.Options;
-using MultiSMS.BusinessLogic.Helpers;
-using MultiSMS.BusinessLogic.Models;
+﻿using MultiSMS.BusinessLogic.Models;
 using MultiSMS.BusinessLogic.Services.Interfaces;
-using MultiSMS.BusinessLogic.Settings;
 using MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Clients.Interface;
 using MultiSMS.Interface.Entities;
 using Newtonsoft.Json;

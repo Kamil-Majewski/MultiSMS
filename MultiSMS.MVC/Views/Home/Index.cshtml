@@ -1329,10 +1329,10 @@
                     else if (logEntity.type == "Groups") {
                         HandleGroupsTypeLog(logEntity.group);
                     }
-                    else if (logEntity.type == "SMS-ServerSms-Group" || logEntity.type == "SMS-SmsApi-Group") {
+                    else if (logEntity.type == "SMS-ServerSms-Group" || logEntity.type == "SMS-SmsApi-Group" || logEntity.type == "SMS-MProfi-Group") {
                         handleSMSGroupTypeLog({ apiUsed: logEntity.type.split("-")[1], sms: logEntity.sms, group: logEntity.group });
                     }
-                    else if (logEntity.type == "SMS-ServerSms-NoGroup" || logEntity.type == "SMS-SmsApi-NoGroup") {
+                    else if (logEntity.type == "SMS-ServerSms-NoGroup" || logEntity.type == "SMS-SmsApi-NoGroup" || logEntity.type == "SMS-MProfi-NoGroup") {
                         handleSMSNoGroupTypeLog({ apiUsed: logEntity.type.split("-")[1], sms: logEntity.sms });
                     }
                     else if (logEntity.type == "Import") {
