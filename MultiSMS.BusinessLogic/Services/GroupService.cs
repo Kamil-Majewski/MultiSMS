@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MultiSMS.BusinessLogic.Helpers;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Repositories.Interfaces;
@@ -7,30 +8,34 @@ namespace MultiSMS.BusinessLogic.Services
 {
     public class GroupService : GenericService<Group>, IGroupService
     {
-        private readonly IGroupRepository _groupRepository;
-        public GroupService(IGenericRepository<Group> repository, IGroupRepository groupRepository) : base(repository)
+        public GroupService(IGenericRepository<Group> groupRepository) : base(groupRepository)
         {
-            _groupRepository = groupRepository;
         }
 
         public async Task<Group> GetGroupByNameAsync(string groupName)
         {
-            return await _groupRepository.GetGroupByNameAsync(groupName);
+            ValidationHelper.ValidateString(groupName, nameof(groupName));
+
+            return await GetAllEntriesQueryable().FirstOrDefaultAsync(g => g.GroupName == groupName) ?? throw new Exception($"Could not find group with given group name: {groupName}");
         }
 
-        public List<Group> GetAllGroupsWithGroupMembersList()
+        public async Task<List<Group>> GetAllGroupsWithGroupMembersListAsync()
         {
-            return _groupRepository.GetAllGroupsWithGroupMembersQueryable().ToList();
+            return await GetAllEntriesQueryable().Include(g => g.GroupMembers)!.ThenInclude(gm => gm.Employee).ToListAsync();
         }
 
-        public Dictionary<int, string> GetDictionaryWithGroupIdsAndNames()
+        public async Task<Dictionary<int, string>> GetDictionaryWithGroupIdsAndNamesAsync()
         {
-            return _groupRepository.GetDictionaryWithGroupIdsAndNames();
+            return await GetAllEntriesQueryable().ToDictionaryAsync(g => g.GroupId, g => g.GroupName);
         }
 
         public async Task<(List<Group>, bool)> PaginateGroupDataAsync(int firstId, int lastId, int pageSize, bool? moveForward)
         {
-            IQueryable<Group> query = _groupRepository.GetAllEntries().OrderBy(g => g.GroupId);
+            ValidationHelper.ValidateNonNegativeNumber(firstId, nameof(firstId));
+            ValidationHelper.ValidateNonNegativeNumber(lastId, nameof(lastId));
+            ValidationHelper.ValidateId(pageSize, nameof(pageSize));
+
+            IQueryable<Group> query = GetAllEntriesQueryable().OrderBy(g => g.GroupId);
 
             List<Group> paginatedList;
             bool hasMorePages;
@@ -38,7 +43,7 @@ namespace MultiSMS.BusinessLogic.Services
             if (moveForward == null)
             {
                 query = query.Where(g => g.GroupId >= firstId);
-                
+
             }
             else if (moveForward == true)
             {
@@ -60,9 +65,10 @@ namespace MultiSMS.BusinessLogic.Services
 
         public async Task<List<Group>> GetGroupsBySearchPhraseAsync(string searchPhrase)
         {
-            return await _groupRepository.GetAllEntries().Where(g =>
-            g.GroupName.ToLower().Contains(searchPhrase) ||
-            (g.GroupDescription == null || g.GroupDescription.Equals(string.Empty) ? "Brak opisu" : g.GroupDescription!).ToLower().Contains(searchPhrase)).ToListAsync();
+            ValidationHelper.ValidateString(searchPhrase, nameof(searchPhrase));
+
+            return await GetAllEntriesQueryable().Where(g => g.GroupName.ToLower().Contains(searchPhrase)
+            || (string.IsNullOrEmpty(g.GroupDescription) ? "Brak opisu" : g.GroupDescription!).ToLower().Contains(searchPhrase)).ToListAsync();
         }
     }
 }

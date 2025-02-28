@@ -2,11 +2,10 @@
 using CsvHelper.Configuration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
+using MultiSMS.BusinessLogic.Helpers;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
-using MultiSMS.Interface.Repositories.Interfaces;
 using OfficeOpenXml;
-using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -14,25 +13,29 @@ namespace MultiSMS.BusinessLogic.Services
 {
     public class ImportExportEmployeesService : IImportExportEmployeesService
     {
-        private readonly IEmployeeRepository _employeeRepository;
-        private readonly IGroupRepository _groupRepository;
-        private readonly IEmployeeGroupRepository _employeeGroupRepository;
+        private readonly IEmployeeService _employeeService;
+        private readonly IGroupService _groupService;
+        private readonly IEmployeeGroupService _employeeGroupService;
         private readonly IPathProvider _pathProvider;
         private readonly IProgressRelay _progressRelay;
 
-
-        public ImportExportEmployeesService(IEmployeeRepository employeeRepository, IGroupRepository groupRepository, IEmployeeGroupRepository employeeGroupRepository, IPathProvider pathProvider, IProgressRelay progressRelay)
+        public ImportExportEmployeesService(IEmployeeService employeeService,
+                                            IGroupService groupService,
+                                            IEmployeeGroupService employeeGroupService,
+                                            IPathProvider pathProvider,
+                                            IProgressRelay progressRelay)
         {
-            _employeeRepository = employeeRepository;
-            _groupRepository = groupRepository;
-            _employeeGroupRepository = employeeGroupRepository;
+            _employeeService = employeeService;
+            _groupService = groupService;
+            _employeeGroupService = employeeGroupService;
             _pathProvider = pathProvider;
             _progressRelay = progressRelay;
-
         }
 
         private bool CheckEmployeeValidity(Employee employee)
         {
+            ValidationHelper.ValidateObject(employee, nameof(employee));
+
             var phoneNumberPattern = "^(\\+[0-9]{2} )?\\d{3} \\d{3} \\d{3}$";
             Regex regex = new Regex(phoneNumberPattern);
 
@@ -53,11 +56,13 @@ namespace MultiSMS.BusinessLogic.Services
 
         private string ParsePhoneNumber(string phoneNumber)
         {
-            if(phoneNumber.Count() == 9)
+            ValidationHelper.ValidateString(phoneNumber, nameof(phoneNumber));
+
+            if (phoneNumber.Count() == 9)
             {
                 return $"+48{phoneNumber}";
             }
-            else if(phoneNumber.Count() == 11)
+            else if (phoneNumber.Count() == 11)
             {
                 return $"+{phoneNumber}";
             }
@@ -69,26 +74,30 @@ namespace MultiSMS.BusinessLogic.Services
 
         private (string, string) GetNameAndSurname(string[] personField)
         {
+            ValidationHelper.ValidateCollection(personField, nameof(personField));
+
             if (personField.Length == 1)
             {
-                return(personField[0], "Nie podano");
+                return (personField[0], "Nie podano");
             }
             else if (personField.Length == 2)
             {
-                return(personField[0], personField[1]);
+                return (personField[0], personField[1]);
             }
             else if (personField.Length == 3)
             {
-                return(personField[1], personField[2]);
+                return (personField[1], personField[2]);
             }
             else
             {
-                return("Nieprawidłowa wartosć", "");
+                return ("Nieprawidłowa wartosć", "");
             }
         }
 
         public async Task<ImportResult> ImportContactsAsync(IFormFile file)
         {
+            ValidationHelper.ValidateObject(file, nameof(file));
+
             string[] requiredHeaders = { "osoba", "tel", "instytucja", "grupa" };
             int rows = 0;
             string[] fileHeaders;
@@ -127,7 +136,11 @@ namespace MultiSMS.BusinessLogic.Services
 
         public async Task<ImportResult> ImportContactsCsvByTypeAsync(IFormFile file, int totalRows, string type)
         {
-            var phoneNumbersInDb = _employeeRepository.GetAllEntries().Select(e => e.PhoneNumber);
+            ValidationHelper.ValidateObject(file, nameof(file));
+            ValidationHelper.ValidateId(totalRows, nameof(totalRows));
+            ValidationHelper.ValidateString(type, nameof(type));
+
+            var phoneNumbersInDb = _employeeService.GetAllEntriesQueryable().Select(e => e.PhoneNumber);
             List<Employee> allRecords = new List<Employee>();
             List<Employee> repeatedEntries = new List<Employee>();
             List<Employee> validRecords = new List<Employee>();
@@ -153,12 +166,43 @@ namespace MultiSMS.BusinessLogic.Services
 
                 while (csvReader.Read())
                 {
-                    groupIds.Add(csvReader.GetField<string>("grupa")!);
-                    var sanitizedPhoneNumber = Regex.Replace(csvReader.GetField<string>("tel")!, @"\s+", "");
+                    var groupId = csvReader.GetField<string>("grupa")?.Trim();
+                    var rawPhoneNumber = csvReader.GetField<string>("tel")?.Trim();
+                    var personRaw = csvReader.GetField<string>("osoba")?.Trim();
 
-                    var person = csvReader.GetField<string>("osoba")!.Split(" ");
+                    groupIds.Add(groupId ?? "");
 
-                    var (name, surname) = GetNameAndSurname(person);
+                    var personParts = personRaw?.Split(" ") ?? Array.Empty<string>();
+
+                    if (personParts.Length < 2)
+                    {
+                        invalidRecords.Add(new Employee
+                        {
+                            Name = personRaw ?? "",
+                            Surname = "",
+                            PhoneNumber = rawPhoneNumber ?? "",
+                            Department = csvReader.GetField<string>("instytucja")?.Trim(),
+                            IsActive = false
+                        });
+                        continue;
+                    }
+
+                    var (name, surname) = GetNameAndSurname(personParts);
+
+                    if (string.IsNullOrWhiteSpace(rawPhoneNumber))
+                    {
+                        invalidRecords.Add(new Employee
+                        {
+                            Name = name,
+                            Surname = surname,
+                            PhoneNumber = rawPhoneNumber ?? "",
+                            Department = csvReader.GetField<string>("instytucja")?.Trim(),
+                            IsActive = false
+                        });
+                        continue;
+                    }
+
+                    var sanitizedPhoneNumber = Regex.Replace(rawPhoneNumber, @"\s+", "");
                     var phoneNumber = ParsePhoneNumber(sanitizedPhoneNumber);
 
                     var record = new Employee
@@ -166,17 +210,17 @@ namespace MultiSMS.BusinessLogic.Services
                         Name = name,
                         Surname = surname,
                         PhoneNumber = Regex.Replace(phoneNumber, @"(\S{3})", "$1 ").Trim(),
-                        Department = csvReader.GetField<string>("instytucja"),
+                        Department = csvReader.GetField<string>("instytucja")?.Trim(),
                         IsActive = true
                     };
 
                     if (type == "new")
                     {
-                        record.IsActive = csvReader.GetField<string>("aktywność") == "Aktywny";
-                        record.Email = csvReader.GetField<string>("email");
-                        record.PostalNumber = csvReader.GetField<string>("kod pocztowy");
-                        record.City = csvReader.GetField<string>("miasto");
-                        record.HQAddress = csvReader.GetField<string>("adres miejsca pracy");
+                        record.IsActive = csvReader.GetField<string>("aktywność")?.Trim() == "Aktywny";
+                        record.Email = csvReader.GetField<string>("email")?.Trim();
+                        record.PostalNumber = csvReader.GetField<string>("kod pocztowy")?.Trim();
+                        record.City = csvReader.GetField<string>("miasto")?.Trim();
+                        record.HQAddress = csvReader.GetField<string>("adres miejsca pracy")?.Trim();
                     }
 
                     if (phoneNumbersInDb.Any(p => p == record.PhoneNumber) || validRecords.Any(r => r.PhoneNumber == record.PhoneNumber))
@@ -195,13 +239,12 @@ namespace MultiSMS.BusinessLogic.Services
                     allRecords.Add(record);
                     processedRows++;
 
-                    int progress = (int)((double) processedRows / totalRows * 70);
-
+                    int progress = (int)((double)processedRows / totalRows * 70);
                     await _progressRelay.RelayProgressAsync("ImportContactsProgress", progress.ToString());
                 }
             }
 
-            var addedEmployees = await _employeeRepository.AddRangeOfEntitiesToDatabaseAsync(validRecords);
+            var addedEmployees = await _employeeService.AddRangeOfEntitiesToDatabaseAsync(validRecords);
             var addedEmployeesList = addedEmployees.ToList();
 
             if (addedEmployees.Count() == 0)
@@ -210,7 +253,7 @@ namespace MultiSMS.BusinessLogic.Services
                 return new ImportResult { ImportStatus = "OK", ImportMessage = "Brak nowych kontaktów w pliku csv", RepeatedEmployees = repeatedEntries, InvalidEmployees = invalidRecords };
             }
 
-            var groupIdsInDb = _groupRepository.GetDictionaryWithGroupIdsAndNames();
+            var groupIdsInDb = await _groupService.GetDictionaryWithGroupIdsAndNamesAsync();
             var nonExistentGroupIds = new List<List<string>>();
             var anyFailedAssigns = false;
 
@@ -226,7 +269,7 @@ namespace MultiSMS.BusinessLogic.Services
                 {
                     if (int.TryParse(groupId, out var groupIdInt) && groupIdsInDb.TryGetValue(groupIdInt, out var groupName))
                     {
-                        await _employeeGroupRepository.AddGroupMemberAsync(groupIdInt, employeeId);
+                        await _employeeGroupService.AddGroupMemberAsync(groupIdInt, employeeId);
                         addedEmployeesList[i].EmployeeGroupNames.Add(groupName);
 
                         if (nonExistentGroupIds.Count <= i)
@@ -266,12 +309,12 @@ namespace MultiSMS.BusinessLogic.Services
             }
         }
 
-        public string ExportContactsExcel()
+        public async Task<string> ExportContactsExcelAsync()
         {
             string wwwrootPath = _pathProvider.WwwRootPath;
             string filePath = Path.Combine(wwwrootPath, "Kontakty.xlsx");
 
-            var allEmployees = _employeeRepository.GetAllEntries().ToList();
+            var allEmployees = await _employeeService.GetAllEntriesAsync();
             var rowNumber = 2;
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -279,7 +322,6 @@ namespace MultiSMS.BusinessLogic.Services
             using (var package = new ExcelPackage())
 
             {
-
                 var sheet = package.Workbook.Worksheets.Add("Kontaky");
                 sheet.Cells["A:J"].Style.Numberformat.Format = "@";
 
@@ -296,8 +338,8 @@ namespace MultiSMS.BusinessLogic.Services
 
                 foreach (var employee in allEmployees)
                 {
-                    var groupNamesList = _employeeGroupRepository.GetAllGroupNamesForEmployeeQueryable(employee.EmployeeId).ToList();
-                    var groupIdsList = _employeeGroupRepository.GetAllGroupIdsForEmployeeQueryable(employee.EmployeeId).ToList();
+                    var groupNamesList = await _employeeGroupService.GetAllGroupNamesForEmployeeListAsync(employee.EmployeeId);
+                    var groupIdsList = await _employeeGroupService.GetAllGroupNamesForEmployeeListAsync(employee.EmployeeId);
 
                     sheet.Cells[$"A{rowNumber}"].Value = $"{employee.Name} {employee.Surname}";
                     sheet.Cells[$"B{rowNumber}"].Value = employee.PhoneNumber;

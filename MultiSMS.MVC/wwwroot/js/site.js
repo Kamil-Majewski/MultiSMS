@@ -486,7 +486,7 @@ function OnSubmitFilterLogsTable(formIdentifiaction, searchBarIdentification, ta
     });
 }
 
-function SendSMS(text, chosenGroupId, chosenGroupName, additionalPhoneNumbers, additionalInfo) {
+function SendSMS(text, chosenGroupId, additionalPhoneNumbers, additionalInfo) {
     function findUniqueErrors(value, index, array) {
         return array.indexOf(value) === index;
     }
@@ -495,17 +495,19 @@ function SendSMS(text, chosenGroupId, chosenGroupName, additionalPhoneNumbers, a
         url: '/SmsApi/SendSmsMessage',
         type: 'GET',
         contentType: 'application/json',
-        data: { text: text, chosenGroupId: chosenGroupId, chosenGroupName: chosenGroupName, additionalPhoneNumbers: additionalPhoneNumbers, additionalInfo: additionalInfo },
+        data: { text: text, chosenGroupId: chosenGroupId, additionalPhoneNumbers: additionalPhoneNumbers, additionalInfo: additionalInfo },
         success: function (response) {
             switch (response.status) {
                 case "failed":
 
                     console.error(`Operation failed, server responded with code ${response.code} - ${response.message}`);
                     $("#status-message-sms").addClass("failed-status");
-                    $("#status-message-sms").html(`Operacja zakończyła się niepowodzeniem, błąd ${response.code} - ${response.message} <button type='button' class='btn-close text-dark' aria-label='Close' onclick='CloseAlert()'></button>`);
+                    $("#status-message-sms").html(`Operacja zakończyła się niepowodzeniem. Błąd: ${response.code} - ${response.message} <button type='button' class='btn-close text-dark' aria-label='Close' onclick='CloseAlert()'></button>`);
 
                     break;
-                case "success" || "Multiple-Success":
+                case true:
+                case "Multiple-Success":
+                case false:
 
                     console.log(`Operation successful, messages queued: ${response.queued}, messages unsent: ${response.unsent}`);
                     $("#status-message-sms").addClass("success-status");
@@ -1308,17 +1310,28 @@ function HandleGroupsTypeLog(groupEntity) {
 function handleSMSGroupTypeLog(smsGroupObject) {
     var type = $("#logTypeDetail").text();
 
+    let smsMessage;
+    let responseError;
+    let senderName;
+    let fastChannel;
+
     if (smsGroupObject.apiUsed == "ServerSms") {
-        var smsMessage = smsGroupObject.sms.settings.text || "Nie wpisano treści";
-        var responseError = smsGroupObject.sms.serverResponse.error;
-        var senderName = smsGroupObject.sms.settings.sender || "Nie określono";
-        var fastChannel = smsGroupObject.sms.settings.speed;
+        smsMessage = smsGroupObject.sms.settings.text || "Nie wpisano treści";
+        responseError = smsGroupObject.sms.serverResponse.error;
+        senderName = smsGroupObject.sms.settings.sender || "Nie określono";
+        fastChannel = smsGroupObject.sms.settings.speed;
+    }
+    else if (smsGroupObject.apiUsed == "SmsApi") {
+        smsMessage = smsGroupObjectt.sms.settings.message || "Nie wpisano treści";
+        responseError = smsGroupObject.sms.serverResponse;
+        senderName = smsGroupObject.sms.settings.from || "Nie określono";
+        fastChannel = smsGroupObject.sms.settings.fast;
     }
     else {
-        var smsMessage = smsGroupObject.sms.settings.message || "Nie wpisano treści";
-        var responseError = smsGroupObject.sms.serverResponse;
-        var senderName = smsGroupObject.sms.settings.from || "Nie określono";
-        var fastChannel = smsGroupObject.sms.settings.fast;
+        smsMessage = smsGroupObject.sms.settings.default_message || "Nie wpisano treści";
+        responseError = smsGroupObject.sms.serverResponse.detail;
+        senderName = "Przypisana do tokenu";
+        fastChannel = "1";
     }
 
     var chosenGroupId = smsGroupObject.sms.chosenGroupId || "Nie wybrano grupy";
@@ -1352,7 +1365,7 @@ function handleSMSGroupTypeLog(smsGroupObject) {
                     <div class="row mb-10">
                         <div class="col d-flex">
                             <label class="logs-detail-label" for="logSMSGroup-AdditionalPhoneNumbersDetail">Dodatkowe numery:</label>
-                             <span class="details-span" id="logSMSGroup-AdditionalPhoneNumbersDetail">${additionalPhoneNumbers.length == 0 ? "Nie podano" : additionalPhoneNumbers.split(',').join(", ")}</span>
+                             <span class="details-span" id="logSMSGroup-AdditionalPhoneNumbersDetail">${additionalPhoneNumbers == null || additionalPhoneNumbers.length == 0  ? "Nie podano" : additionalPhoneNumbers.split(',').join(", ")}</span>
                         </div>
                     </div>
                     <div class="row mb-10">
@@ -1403,7 +1416,7 @@ function handleSMSGroupTypeLog(smsGroupObject) {
                     </div>
                 `;
         }
-        else {
+        else if (smsGroupObject.apiUsed == "SmsApi") {
             relatedObjects +=
                 `
                     <div class="row mb-10" style="margin-top: 20px;">
@@ -1418,6 +1431,17 @@ function handleSMSGroupTypeLog(smsGroupObject) {
                                 <span class="details-span" id="logSMSGroup-ErrorMessageDetail">${responseError.errorMessage}</span>
                         </div>
                     </div>
+                `;
+        }
+        else {
+            relatedObjects +=
+                `
+                <div class="row mb-10" style="margin-top: 20px;">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logSMSNoGroup-ErrorMessageDetail">Wiadomość błędu:</label>
+                        <span class="details-span" id="logSMSNoGroup-ErrorMessageDetail">${responseError}</span>
+                    </div>
+                </div>
                 `;
         }
 
@@ -1445,7 +1469,7 @@ function handleSMSGroupTypeLog(smsGroupObject) {
                 </div>
                 `;
         }
-        else {
+        else if (smsGroupObject.apiUsed == "SmsApi") {
             relatedObjects +=
                 `<div class="row mb-10" style="margin-top: 20px;">
                     <div class="col d-flex">
@@ -1465,6 +1489,30 @@ function handleSMSGroupTypeLog(smsGroupObject) {
                         <span class="details-span" id="logSMSGroup-UnsentDetail">${responseSuccess.details.filter(r => r.status != "QUEUE").length}</span>
                     </div>
                 </div>
+                `;
+        }
+
+        else {
+            relatedObjects +=
+                `
+                    <div class="row mb-10" style="margin-top: 20px;">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSNoGroup-StatusDetail">Status:</label>
+                            <span class="details-span" id="logSMSNoGroup-StatusDetail">Sukces</span>
+                        </div>
+                    </div>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSNoGroup-SentDetail">Wysłano:</label>
+                            <span class="details-span" id="logSMSNoGroup-SentDetail">${responseSuccess.result.filter(r => r.id != null).length}</span>
+                        </div>
+                    </div>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSNoGroup-UnsentDetail">Nie wysłano:</label>
+                            <span class="details-span" id="logSMSNoGroup-UnsentDetail">${responseSuccess.result.filter(r => r.errorCode != null && r.errorMessage != null).length}</span>
+                        </div>
+                    </div>
                 `;
         }
     }
@@ -1535,17 +1583,28 @@ function handleSMSGroupTypeLog(smsGroupObject) {
 function handleSMSNoGroupTypeLog(smsNoGroupObject) {
     var type = $("#logTypeDetail").text();
 
+    let smsMessage;
+    let responseError;
+    let senderName;
+    let fastChannel;
+
     if (smsNoGroupObject.apiUsed == "ServerSms") {
-        var smsMessage = smsNoGroupObject.sms.settings.text || "Nie wpisano treści";
-        var responseError = smsNoGroupObject.sms.serverResponse.error;
-        var senderName = smsNoGroupObject.sms.settings.sender || "Nie określono";
-        var fastChannel = smsNoGroupObject.sms.settings.speed;
+        smsMessage = smsNoGroupObject.sms.settings.text || "Nie wpisano treści";
+        responseError = smsNoGroupObject.sms.serverResponse.error;
+        senderName = smsNoGroupObject.sms.settings.sender || "Nie określono";
+        fastChannel = smsNoGroupObject.sms.settings.speed;
+    }
+    else if (smsNoGroupObject.apiUsed == "SmsApi") {
+        smsMessage = smsNoGroupObject.sms.settings.message || "Nie wpisano treści";
+        responseError = smsNoGroupObject.sms.serverResponse;
+        senderName = smsNoGroupObject.sms.settings.from || "Nie określono";
+        fastChannel = smsNoGroupObject.sms.settings.fast;
     }
     else {
-        var smsMessage = smsNoGroupObject.sms.settings.message || "Nie wpisano treści";;
-        var responseError = smsNoGroupObject.sms.serverResponse;
-        var senderName = smsNoGroupObject.sms.settings.from || "Nie określono";;
-        var fastChannel = smsNoGroupObject.sms.settings.fast;
+        smsMessage = smsNoGroupObject.sms.settings.default_message || "Nie wpisano treści";
+        responseError = smsNoGroupObject.sms.serverResponse.detail;
+        senderName = "Przypisana do tokenu";
+        fastChannel = "1";
     }
 
     var chosenGroupId = smsNoGroupObject.sms.chosenGroupId || "Nie wybrano grupy";
@@ -1580,7 +1639,7 @@ function handleSMSNoGroupTypeLog(smsNoGroupObject) {
             <div class="row mb-10">
                 <div class="col d-flex">
                     <label class="logs-detail-label" for="logSMSNoGroup-AdditionalPhoneNumbersDetail">Dodatkowe numery:</label>
-                        <span class="details-span" id="logSMSNoGroup-AdditionalPhoneNumbersDetail">${additionalPhoneNumbers.length == 0 ? "Nie podano" : additionalPhoneNumbers.split(',').join(", ")}</span>
+                        <span class="details-span" id="logSMSNoGroup-AdditionalPhoneNumbersDetail">${additionalPhoneNumbers == null || additionalPhoneNumbers.length == 0 ? "Nie podano" : additionalPhoneNumbers.split(',').join(", ")}</span>
                 </div>
             </div>
             <div class="row mb-10">
@@ -1631,7 +1690,7 @@ function handleSMSNoGroupTypeLog(smsNoGroupObject) {
                 </div>
                 `;
         }
-        else {
+        else if (smsNoGroupObject.apiUsed == "SmsApi") {
             relatedObjects +=
                 `
                 <div class="row mb-10" style="margin-top: 20px;">
@@ -1644,6 +1703,17 @@ function handleSMSNoGroupTypeLog(smsNoGroupObject) {
                     <div class="col d-flex">
                         <label class="logs-detail-label" for="logSMSNoGroup-ErrorMessageDetail">Wiadomość błędu:</label>
                         <span class="details-span" id="logSMSNoGroup-ErrorMessageDetail">${responseError.errorMessage}</span>
+                    </div>
+                </div>
+                `;
+        }
+        else {
+            relatedObjects +=
+                `
+                <div class="row mb-10" style="margin-top: 20px;">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logSMSNoGroup-ErrorMessageDetail">Wiadomość błędu:</label>
+                        <span class="details-span" id="logSMSNoGroup-ErrorMessageDetail">${responseError}</span>
                     </div>
                 </div>
                 `;
@@ -1674,7 +1744,7 @@ function handleSMSNoGroupTypeLog(smsNoGroupObject) {
                     </div>
                 `;
         }
-        else {
+        else if (smsNoGroupObject.apiUsed == "SmsApi") {
             relatedObjects +=
                 `
                     <div class="row mb-10" style="margin-top: 20px;">
@@ -1693,6 +1763,29 @@ function handleSMSNoGroupTypeLog(smsNoGroupObject) {
                         <div class="col d-flex">
                             <label class="logs-detail-label" for="logSMSNoGroup-UnsentDetail">Nie wysłano:</label>
                             <span class="details-span" id="logSMSNoGroup-UnsentDetail">${responseSuccess.details.filter(r => r.status != "QUEUE").length}</span>
+                        </div>
+                    </div>
+                `;
+        }
+        else {
+            relatedObjects +=
+                `
+                    <div class="row mb-10" style="margin-top: 20px;">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSNoGroup-StatusDetail">Status:</label>
+                            <span class="details-span" id="logSMSNoGroup-StatusDetail">Sukces</span>
+                        </div>
+                    </div>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSNoGroup-SentDetail">Wysłano:</label>
+                            <span class="details-span" id="logSMSNoGroup-SentDetail">${responseSuccess.result.filter(r => r.id != null).length}</span>
+                        </div>
+                    </div>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSNoGroup-UnsentDetail">Nie wysłano:</label>
+                            <span class="details-span" id="logSMSNoGroup-UnsentDetail">${responseSuccess.result.filter(r => r.errorCode != null && r.errorMessage != null).length}</span>
                         </div>
                     </div>
                 `;

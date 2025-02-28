@@ -6,8 +6,8 @@ namespace MultiSMS.Interface.Seeding
     {
         internal static IdentityUserRole<int>[] GrantRoles()
         {
-            return new IdentityUserRole<int>[]
-            {
+            return
+            [
                 new IdentityUserRole<int>
                 {
                     RoleId = 1,
@@ -23,7 +23,7 @@ namespace MultiSMS.Interface.Seeding
                     RoleId = 3,
                     UserId = 3
                 },
-            };
+            ];
         }
     }
 }

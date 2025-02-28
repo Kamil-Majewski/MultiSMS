@@ -10,7 +10,5 @@ namespace MultiSMS.Interface.Entities
         public bool ApiActive { get; set; } = default!;
         public bool FastChannel { get; set; }
         public bool TestMode { get; set; }
-        public string SenderName { get; set; } = default!;
-
     }
 }

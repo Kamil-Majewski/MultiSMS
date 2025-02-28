@@ -6,27 +6,33 @@ namespace MultiSMS.Interface.Seeding
     {
         internal static List<ApiSettings> GetApiSettingsSeed()
         {
-            var apiSettingsList = new List<ApiSettings>();
-
-            apiSettingsList.Add(new ApiSettings
+            var apiSettingsList = new List<ApiSettings>
             {
-                ApiSettingsId = 1,
-                ApiName = "ServerSms",
-                ApiActive = true,
-                FastChannel = true,
-                TestMode = true,
-                SenderName = "Torun WOL"
-            });
-
-            apiSettingsList.Add(new ApiSettings
-            {
-                ApiSettingsId = 2,
-                ApiName = "SmsApi",
-                ApiActive = false,
-                FastChannel = true,
-                TestMode = true,
-                SenderName = "Torun WOL"
-            });
+                new ApiSettings
+                {
+                    ApiSettingsId = 1,
+                    ApiName = "ServerSms",
+                    ApiActive = true,
+                    FastChannel = true,
+                    TestMode = true,
+                },
+                new ApiSettings
+                {
+                    ApiSettingsId = 2,
+                    ApiName = "SmsApi",
+                    ApiActive = false,
+                    FastChannel = true,
+                    TestMode = true,
+                },
+                new ApiSettings
+                {
+                    ApiSettingsId = 3,
+                    ApiName = "mProfi",
+                    ApiActive = false,
+                    FastChannel = true,
+                    TestMode = false,
+                }
+            };
 
             return apiSettingsList;
         }
