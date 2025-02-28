@@ -33,9 +33,6 @@ builder.Services.AddDbContext<LocalDbContext>(options =>
     options.UseSqlite("Data Source=sms_senders_with_api_tokens.db"));
 
 builder.Services.Configure<EmailSettings>(configuration.GetSection("MailSettings"));
-builder.Services.Configure<ServerSmsSettings>(configuration.GetSection("SMSServerSettings"));
-builder.Services.Configure<SmsApiSettings>(configuration.GetSection("SMSAPI"));
-builder.Services.Configure<MProfiSettings>(configuration.GetSection("MProfiSettings"));
 builder.Services.Configure<ApiSettingsSettings>(configuration.GetSection("ApiSettingsSettings"));
 
 builder.Services.AddAutoMapper(typeof(AutomapperProfile).Assembly);

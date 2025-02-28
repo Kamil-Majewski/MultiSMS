@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using MultiSMS.BusinessLogic.DTO;
 using MultiSMS.BusinessLogic.Extensions;
 using MultiSMS.BusinessLogic.Services.Interfaces;
-using MultiSMS.BusinessLogic.Settings;
 using MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Context.Intefaces;
 using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Entities.MProfi;
@@ -24,9 +22,7 @@ namespace MultiSMS.MVC.Controllers
         private readonly IApiSettingsService _apiSettingsService;
         private readonly IApiSmsSenderService _smsSenderService;
 
-        public SmsApiController(IOptions<ServerSmsSettings> serverSmsSettings,
-                                IOptions<SmsApiSettings> smsApiSettings,
-                                ILogService logService,
+        public SmsApiController(ILogService logService,
                                 IEmployeeGroupService employeeGroupService,
                                 IUserService administratorService,
                                 IGroupService groupService,

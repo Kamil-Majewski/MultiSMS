@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using MultiSMS.BusinessLogic.Models;
-using MultiSMS.BusinessLogic.Settings;
+﻿using MultiSMS.BusinessLogic.Models;
 using MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Clients.Interface;
 using MultiSMS.Interface.Entities;
 using Newtonsoft.Json;
@@ -12,7 +10,7 @@ namespace MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Clients
     {
         private readonly HttpClient _httpClient;
 
-        public MProfiClient(HttpClient httpClient, IOptions<MProfiSettings> secretTokens)
+        public MProfiClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
