@@ -20,11 +20,7 @@ namespace MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Clients
 
         public async Task<SendSmsResultModel> SendSmsAsync(string phone, string text, ApiSmsSender sender)
         {
-            ValidationHelper.ValidateString(phone, nameof(phone));
-            ValidationHelper.ValidateString(text, nameof(text));
-            ValidationHelper.ValidateObject(sender, nameof(sender));
-
-            var phonesParsed = phone.Contains(",") ? phone.Split(", ") : [phone];
+            var phonesParsed = phone.Contains(",") ? phone.Split(",") : [phone];
 
             var parameters = new Dictionary<string, object>()
             {

@@ -24,10 +24,6 @@ namespace MultiSMS.BusinessLogic.Strategy.SmsApiStrategy.Clients
 
         public async Task<SendSmsResultModel> SendSmsAsync(string phone, string text, ApiSmsSender sender)
         {
-            ValidationHelper.ValidateString(phone, nameof(phone));
-            ValidationHelper.ValidateString(text, nameof(text));
-            ValidationHelper.ValidateObject(sender, nameof(sender));
-
             // Fetch provider-specific settings from the database
             var apiSettings = await _settingsService.GetSettingsByNameAsync("ServerSms");
 

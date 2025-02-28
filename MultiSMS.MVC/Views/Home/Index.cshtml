@@ -1842,7 +1842,6 @@
 
             var smsText = $("#SmsText").val();
             var smsGroupId = $("#GroupOfContacts").attr("data-id");
-            var smsGroupName = $("#GroupOfContacts").val();
             var additionalPhoneNumbers = $("#AdditionalPhoneNumbers").val().replace(/[^0-9+,]/g, '');
             var smsAdditionalInfo = $("#Comment").val();
 
@@ -1854,7 +1853,7 @@
                 additionalPhoneNumbers = additionalPhoneNumbers.slice(0, -1);
             }
 
-            SendSMS(smsText, smsGroupId, smsGroupName, additionalPhoneNumbers, smsAdditionalInfo);
+            SendSMS(smsText, smsGroupId, additionalPhoneNumbers, smsAdditionalInfo);
         });
 
 

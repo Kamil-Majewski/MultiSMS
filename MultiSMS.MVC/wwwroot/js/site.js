@@ -486,7 +486,7 @@ function OnSubmitFilterLogsTable(formIdentifiaction, searchBarIdentification, ta
     });
 }
 
-function SendSMS(text, chosenGroupId, chosenGroupName, additionalPhoneNumbers, additionalInfo) {
+function SendSMS(text, chosenGroupId, additionalPhoneNumbers, additionalInfo) {
     function findUniqueErrors(value, index, array) {
         return array.indexOf(value) === index;
     }
@@ -495,7 +495,7 @@ function SendSMS(text, chosenGroupId, chosenGroupName, additionalPhoneNumbers, a
         url: '/SmsApi/SendSmsMessage',
         type: 'GET',
         contentType: 'application/json',
-        data: { text: text, chosenGroupId: chosenGroupId, chosenGroupName: chosenGroupName, additionalPhoneNumbers: additionalPhoneNumbers, additionalInfo: additionalInfo },
+        data: { text: text, chosenGroupId: chosenGroupId, additionalPhoneNumbers: additionalPhoneNumbers, additionalInfo: additionalInfo },
         success: function (response) {
             switch (response.status) {
                 case "failed":
@@ -505,7 +505,9 @@ function SendSMS(text, chosenGroupId, chosenGroupName, additionalPhoneNumbers, a
                     $("#status-message-sms").html(`Operacja zakończyła się niepowodzeniem. Błąd: ${response.code} - ${response.message} <button type='button' class='btn-close text-dark' aria-label='Close' onclick='CloseAlert()'></button>`);
 
                     break;
-                case "success" || "Multiple-Success":
+                case true:
+                case "Multiple-Success":
+                case false:
 
                     console.log(`Operation successful, messages queued: ${response.queued}, messages unsent: ${response.unsent}`);
                     $("#status-message-sms").addClass("success-status");

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace MultiSMS.Interface.Entities.MProfi
 {
@@ -10,7 +11,13 @@ namespace MultiSMS.Interface.Entities.MProfi
 
     public class ResultItem
     {
-        [JsonProperty(PropertyName = "id", Required = Required.Always)]
-        public string Id { get; set; } = default!;
+        [JsonProperty(PropertyName = "id")]
+        public string? Id { get; set; } = default!;
+
+        [JsonProperty("error_code")]
+        public string? ErrorCode { get; set; }
+
+        [JsonProperty("error_message")]
+        public string? ErrorMessage { get; set; }
     }
 }

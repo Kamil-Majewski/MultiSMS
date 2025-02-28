@@ -63,7 +63,8 @@ namespace MultiSMS.MVC.Controllers
                 case 3:
                     return await HandleSmsResponse<MProfiSuccessResponse, MProfiErrorResponse>(response, parameters, chosenGroup, additionalPhoneNumbers,
                                                                                                      additionalInfo, user, logSource: "MProfi",
-                                                                                                     getSuccessData: sr => (true, sr.Result.Count(), 0), //Dont know if this API's success response is enough to determine unsent and queued
+                                                                                                     getSuccessData: sr => (true, sr.Result.Where(r => r.Id != null).Count(),
+                                                                                                     sr.Result.Where(r => r.ErrorCode != null && r.ErrorMessage != null).Count()),
                                                                                                      getErrorData: er => ("", er.Detail)); //Pretty sure API docs don't mention returning an error code
                 default:
                     throw new Exception("Unknown API Id");
