@@ -37,7 +37,7 @@ build:
       echo 'Building solution...' &&
       dotnet build \"$SOLUTION_FILE\" --configuration Release --no-restore &&
       echo 'Publishing web project...' &&
-      dotnet publish \"$WEB_PROJECT\" -c Release -o \"$ARTIFACTS_PATH\" --self-contained true --runtime win-x64"
+      dotnet publish \"$WEB_PROJECT\" -c Release -o \"$ARTIFACTS_PATH\""
 
   artifacts:
     paths:
