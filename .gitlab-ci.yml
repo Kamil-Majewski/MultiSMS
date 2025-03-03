@@ -51,19 +51,18 @@ deploy:
     - iis
     - windows
   script:
-    - echo "Stopping IIS App Pool..."
-    - Stop-WebAppPool -Name 'sms'
-
-    - echo "Ensuring the deployment directory exists..."
-    - if (!(Test-Path -Path "$env:TEST_DEPLOY_PATH")) { New-Item -ItemType Directory -Path "$env:TEST_DEPLOY_PATH" }
-
+    - echo "Checking if IIS App Pool is running..."
+    - if ((Get-WebAppPoolState -Name 'cicd').Value -eq 'Started') { 
+        echo "Stopping IIS App Pool...";
+        Stop-WebAppPool -Name 'cicd' 
+      } else { 
+        echo "IIS App Pool is not running, skipping stop step."
+      }
     - echo "Clearing previous deployment..."
-    - Remove-Item -Recurse -Force "$env:TEST_DEPLOY_PATH\*"
-
+    - Remove-Item -Recurse -Force "$TEST_DEPLOY_PATH\*"
     - echo "Copying new files..."
-    - Copy-Item -Path ".\artifacts\*" -Destination "$env:TEST_DEPLOY_PATH" -Recurse
-
+    - Copy-Item -Path ".\artifacts\*" -Destination "$TEST_DEPLOY_PATH" -Recurse
     - echo "Starting IIS App Pool..."
-    - Start-WebAppPool -Name 'sms'
+    - Start-WebAppPool -Name 'cicd'
   rules:
     - if: '$CI_COMMIT_BRANCH == "testing"'
