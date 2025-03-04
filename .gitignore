@@ -367,3 +367,5 @@ FodyWeavers.xsd
 /MultiSMS.MVC/sms_senders_with_api_tokens.db
 /MultiSMS.MVC/sms_senders_with_api_tokens.db-shm
 /MultiSMS.MVC/sms_senders_with_api_tokens.db-wal
+/efbundle-LocalDb.exe
+/efbundle-MultiSms.exe

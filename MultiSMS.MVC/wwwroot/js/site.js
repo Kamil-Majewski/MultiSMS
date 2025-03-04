@@ -1,4 +1,6 @@
-﻿function debounce(func, timeout = 300) {
+﻿var basePath = window.location.pathname.split('/').slice(0, 2).join('/') + '/';
+
+function debounce(func, timeout = 300) {
     let timer;
     return (...args) => {
         if (!timer) {
@@ -107,7 +109,7 @@ function OnSubmitFilterTemplatesTable(formIdentifiaction, searchBarIdentificatio
         }
 
         $.ajax({
-            url: `/Home/GetTemplatesBySeachPhrase`,
+            url: basePath + `Home/GetTemplatesBySeachPhrase`,
             type: 'GET',
             contentType: 'application/json',
             data: { searchPhrase },
@@ -173,7 +175,7 @@ function OnSubmitFilterContactsTable(formIdentifiaction, searchBarIdentification
         }
 
         $.ajax({
-            url: `/Home/GetContactsBySearchPhrase`,
+            url: basePath + `Home/GetContactsBySearchPhrase`,
             type: 'GET',
             contentType: 'application/json',
             data: { searchPhrase },
@@ -244,7 +246,7 @@ function OnSubmitFilterAssignContactsTable(formIdentifiaction, searchBarIdentifi
         }
 
         $.ajax({
-            url: `/Home/GetContactsBySearchPhrase`,
+            url: basePath + `Home/GetContactsBySearchPhrase`,
             type: 'GET',
             contentType: 'application/json',
             data: { searchPhrase },
@@ -315,7 +317,7 @@ function OnSubmitFilterAssignGroupsTable(formIdentifiaction, searchBarIdentifica
         }
 
         $.ajax({
-            url: `/Home/GetGroupsBySearchPhrase`,
+            url: basePath + `Home/GetGroupsBySearchPhrase`,
             type: 'GET',
             contentType: 'application/json',
             data: { searchPhrase },
@@ -382,7 +384,7 @@ function OnSubmitFilterGroupsTable(formIdentifiaction, searchBarIdentification, 
         }
 
         $.ajax({
-            url: `/Home/GetGroupsBySearchPhrase`,
+            url: basePath + `Home/GetGroupsBySearchPhrase`,
             type: 'GET',
             contentType: 'application/json',
             data: { searchPhrase },
@@ -451,7 +453,7 @@ function OnSubmitFilterLogsTable(formIdentifiaction, searchBarIdentification, ta
         }
 
         $.ajax({
-            url: `/Home/GetLogsBySearchPhrase`,
+            url: basePath + `Home/GetLogsBySearchPhrase`,
             type: 'GET',
             contentType: 'application/json',
             data: { searchPhrase },
@@ -492,7 +494,7 @@ function SendSMS(text, chosenGroupId, additionalPhoneNumbers, additionalInfo) {
     }
 
     $.ajax({
-        url: '/SmsApi/SendSmsMessage',
+        url: basePath + 'SmsApi/SendSmsMessage',
         type: 'GET',
         contentType: 'application/json',
         data: { text: text, chosenGroupId: chosenGroupId, additionalPhoneNumbers: additionalPhoneNumbers, additionalInfo: additionalInfo },
@@ -561,7 +563,7 @@ function SendSMS(text, chosenGroupId, additionalPhoneNumbers, additionalInfo) {
 
 function checkIfAuthorizationSuccessful(password) {
     $.ajax({
-        url: '/Home/CheckIfAuthorizationSuccessful',
+        url: 'Home/CheckIfAuthorizationSuccessful',
         type: 'POST',
         data: JSON.stringify(password),
         contentType: 'application/json; charset=utf-8',
@@ -592,7 +594,7 @@ function updateApiSettings() {
     var testMode = $("#test-mode-checkbox").prop("checked") ? true : false;
 
     $.ajax({
-        url: '/Home/UpdateApiSettings',
+        url: 'Home/UpdateApiSettings',
         type: 'POST',
         data: JSON.stringify({ ActiveApiName: activeApi, SenderName: senderName, FastChannel: fastChannel, TestMode: testMode }),
         contentType: 'application/json; charset=utf-8',
@@ -612,7 +614,7 @@ function updateApiSettings() {
 
 function fetchApiSettingsByName(apiName) {
     $.ajax({
-        url: '/Home/FetchApiSettingsByName',
+        url: 'Home/FetchApiSettingsByName',
         type: 'GET',
         data: { apiName: apiName },
         contentType: 'application/json',
@@ -629,7 +631,7 @@ function fetchApiSettingsByName(apiName) {
 
 function addUserToGroup(link, assignContactIdGroupId) {
     $.ajax({
-        url: '/Home/AddUserToGroup',
+        url: 'Home/AddUserToGroup',
         type: 'GET',
         data: { groupId: assignContactIdGroupId[2], employeeId: assignContactIdGroupId[1] },
         contentType: 'application/json',
@@ -653,7 +655,7 @@ function addUserToGroup(link, assignContactIdGroupId) {
 
 function assignGroupToUser(link, assignContactIdGroupId) {
     $.ajax({
-        url: '/Home/AddUserToGroup',
+        url: 'Home/AddUserToGroup',
         type: 'GET',
         data: { groupId: assignContactIdGroupId[2], employeeId: assignContactIdGroupId[1] },
         contentType: 'application/json',
@@ -681,7 +683,7 @@ function assignGroupToUser(link, assignContactIdGroupId) {
 
 function removeUserFromGroup(link, assignContactIdGroupId) {
     $.ajax({
-        url: '/Home/RemoveUserFromGroup',
+        url: 'Home/RemoveUserFromGroup',
         type: 'GET',
         data: { groupId: assignContactIdGroupId[2], employeeId: assignContactIdGroupId[1] },
         contentType: 'application/json',
@@ -707,7 +709,7 @@ function removeUserFromGroup(link, assignContactIdGroupId) {
 
 function unassignGroupFromUser(link, assignContactIdGroupId) {
     $.ajax({
-        url: '/Home/RemoveUserFromGroup',
+        url: 'Home/RemoveUserFromGroup',
         type: 'GET',
         data: { groupId: assignContactIdGroupId[2], employeeId: assignContactIdGroupId[1] },
         contentType: 'application/json',
@@ -796,7 +798,7 @@ function importContacts() {
         var formData = createFormData(file);
 
         $.ajax({
-            url: '/Home/ImportContacts',
+            url: 'Home/ImportContacts',
             type: 'POST',
             data: formData,
             contentType: false,
@@ -939,7 +941,7 @@ function importContacts() {
 
 function ExportContactsAndDownloadExcel() {
     $.ajax({
-        url: '/Home/DownloadExcelWithContacts',
+        url: 'Home/DownloadExcelWithContacts',
         type: 'GET',
         contentType: 'application/json',
         xhrFields: {
@@ -1981,7 +1983,7 @@ function SanitizePolishSymbols(inputId) {
 function DeleteTemplate(templateId) {
 
     $.ajax({
-        url: '/Home/DeleteTemplate',
+        url: 'Home/DeleteTemplate',
         type: 'GET',
         contentType: 'application/json',
         data: { id: templateId },
@@ -2007,7 +2009,7 @@ function CloseSettingsAlert() {
 function DeleteContact(contactId) {
 
     $.ajax({
-        url: '/Home/DeleteContact',
+        url: 'Home/DeleteContact',
         type: 'GET',
         contentType: 'application/json',
         data: { id: contactId },
@@ -2026,7 +2028,7 @@ function DeleteContact(contactId) {
 function DeleteGroup(groupId) {
 
     $.ajax({
-        url: '/Home/DeleteGroup',
+        url: 'Home/DeleteGroup',
         type: 'GET',
         contentType: 'application/json',
         data: { id: groupId },
@@ -2047,7 +2049,7 @@ function EditTemplate() {
     var templateContent = $("#templateContentInput").val();
     var templateDescription = $("#templateDescriptionInput").val();
     $.ajax({
-        url: '/Home/EditTemplate',
+        url: 'Home/EditTemplate',
         type: 'GET',
         contentType: 'application/json',
         data: { id: templateId, name: templateName, description: templateDescription, content: templateContent },
@@ -2076,7 +2078,7 @@ function EditContact() {
     let isActive = document.querySelector('input[name="isActive?"]:checked').value;
 
     $.ajax({
-        url: '/Home/EditContact',
+        url: 'Home/EditContact',
         type: 'GET',
         contentType: 'application/json',
         data: { contactId: contactId, contactName: name, contactSurname: surname, email: email, phone: phoneNumber, address: address, zip: zip, city: city, department: department, isActive: isActive },
@@ -2105,7 +2107,7 @@ function EditGroup() {
     var groupName = $("#groupNameInput").val();
     var groupDescription = $("#groupDescriptionInput").val();
     $.ajax({
-        url: '/Home/EditGroup',
+        url: 'Home/EditGroup',
         type: 'GET',
         contentType: 'application/json',
         data: { id: groupId, name: groupName, description: groupDescription },
@@ -2122,7 +2124,7 @@ function EditGroup() {
 
 function FetchAllTemplatesAndPopulateTable() {
     $.ajax({
-        url: '/Home/FetchAllTemplates',
+        url: 'Home/FetchAllTemplates',
         type: 'GET',
         contentType: 'application/json',
         success: function (listOfTemplates) {
@@ -2162,7 +2164,7 @@ function PaginateTemplatesAndPopulateTable(firstId, lastId, pageSize, moveForwar
 
 
     $.ajax({
-        url: '/Home/PaginateTemplates',
+        url: 'Home/PaginateTemplates',
         type: 'GET',
         data: {firstId, lastId, pageSize, moveForward },
         contentType: 'application/json',
@@ -2239,7 +2241,7 @@ function PaginateTemplatesAndPopulateTable(firstId, lastId, pageSize, moveForwar
 
 function FetchAllContactsAndPopulateTable() {
     $.ajax({
-        url: '/Home/FetchAllContacts',
+        url: 'Home/FetchAllContacts',
         type: 'GET',
         contentType: 'application/json',
         success: function (listOfContacts) {
@@ -2462,7 +2464,7 @@ function PaginateAssignContactsAndPopulateTable(firstId, lastId, pageSize, moveF
 
 function FetchAllGroupsAndPopulateTable() {
     $.ajax({
-        url: '/Home/FetchAllGroups',
+        url: 'Home/FetchAllGroups',
         type: 'GET',
         contentType: 'application/json',
         success: function (listOfGroups) {
@@ -2499,7 +2501,7 @@ function PaginateGroupsAndPopulateTable(firstId, lastId, pageSize, moveForward) 
     $("#groups-list-next-page-button, #groups-list-previous-page-button").prop("disabled", true);
 
     $.ajax({
-        url: '/Home/PaginateGroups',
+        url: 'Home/PaginateGroups',
         type: 'GET',
         data: {firstId, lastId, pageSize, moveForward },
         contentType: 'application/json',
@@ -2580,7 +2582,7 @@ function PaginateAssignGroupsAndPopulateTable(firstId, lastId, pageSize, moveFor
     $("#groups-assign-list-next-page-button, #groups-assign-list-previous-page-button").prop("disabled", true);
 
     $.ajax({
-        url: '/Home/PaginateGroups',
+        url: 'Home/PaginateGroups',
         type: 'GET',
         data: { firstId, lastId, pageSize, moveForward },
         contentType: 'application/json',
@@ -2664,7 +2666,7 @@ function PaginateAssignGroupsAndPopulateTable(firstId, lastId, pageSize, moveFor
 
 function FetchAllLogsAndPopulateTable() {
     $.ajax({
-        url: '/Home/FetchAllLogs',
+        url: 'Home/FetchAllLogs',
         type: 'GET',
         contentType: 'application/json',
         success: function (listOfLogs) {
@@ -2700,7 +2702,7 @@ function PaginateLogsAndPopulateTable(firstId, lastId, pageSize, moveForward) {
     $("#logs-list-next-page-button, #logs-list-previous-page-button").prop("disabled", true);
 
     $.ajax({
-        url: '/Home/PaginateLogs',
+        url: 'Home/PaginateLogs',
         type: 'GET',
         data: {firstId, lastId, pageSize, moveForward },
         contentType: 'application/json',
@@ -2777,7 +2779,7 @@ function PaginateLogsAndPopulateTable(firstId, lastId, pageSize, moveForward) {
 
 function PopulateTableForChooseGroupForSMS() {
     $.ajax({
-        url: '/Home/FetchAllValidGroups',
+        url: 'Home/FetchAllValidGroups',
         type: 'GET',
         contentType: 'application/json',
         success: function (listOfGroups) {
@@ -2808,7 +2810,7 @@ function PopulateTableForChooseGroupForSMS() {
 
 function PopulateTableForChooseTemplateForSMS() {
     $.ajax({
-        url: '/Home/FetchAllTemplates',
+        url: 'Home/FetchAllTemplates',
         type: 'GET',
         contentType: 'application/json',
         success: function (listOfTemplates) {
@@ -2846,7 +2848,7 @@ function PopulateTablesForAssigningUsersToGroups(groupId) {
     grouAssignGroupId = groupId;
 
     $.ajax({
-        url: '/Home/GetGroupById',
+        url: 'Home/GetGroupById',
         type: 'GET',
         data: { id: groupId },
 
@@ -2881,7 +2883,7 @@ function PopulateTablesForAssigningGroupsToUsers(contactId) {
     groupAssignContactId = contactId;
 
     $.ajax({
-        url: '/Home/GetContactById',
+        url: 'Home/GetContactById',
         type: 'GET',
         data: { id: contactId },
         contentType: 'application/json',
@@ -2917,7 +2919,7 @@ function CreateNewTemplate() {
     let content = $("#templateContentInput").val();
 
     $.ajax({
-        url: '/Home/CreateNewTemplate',
+        url: 'Home/CreateNewTemplate',
         type: 'GET',
         contentType: 'application/json',
         data: { templateName: name, templateDescription: description, templateContent: content },
@@ -2960,7 +2962,7 @@ function CreateNewContact() {
     let isActive = document.querySelector('input[name="isActive?"]:checked').value;
 
     $.ajax({
-        url: '/Home/CreateNewContact',
+        url: 'Home/CreateNewContact',
         type: 'GET',
         contentType: 'application/json',
         data: { contactName: name, contactSurname: surname, email: email, phone: phoneNumber, address: address, zip: zip, city: city, department: department, isActive: isActive },
@@ -3001,7 +3003,7 @@ function CreateNewGroup() {
     let description = $("#groupDescriptionInput").val();
 
     $.ajax({
-        url: '/Home/CreateNewGroup',
+        url: 'Home/CreateNewGroup',
         type: 'GET',
         contentType: 'application/json',
         data: { groupName: name, groupDescription: description },
@@ -3301,7 +3303,7 @@ function formatPhoneNumber(phoneInput, event) {
 function createNewUser(formData) {
 
     $.ajax({
-        url: `/Home/DetermineUserRoleAndCreate`,
+        url: basePath + `Home/DetermineUserRoleAndCreate`,
         type: 'POST',
         dataType: "json",
         data: formData,
@@ -3377,7 +3379,7 @@ function createNewUser(formData) {
 
 function getUserById(userId) {
     $.ajax({
-        url: `Home/DetermineUserRoleAndGetById`,
+        url: basePath + `Home/DetermineUserRoleAndGetById`,
         type: 'GET',
         contentType: 'application/json',
         data: { userId: userId },
@@ -3420,7 +3422,7 @@ function CloseUserAlert() {
 
 function editUser(userId, formData) {
     $.ajax({
-        url: `/Home/DetermineUserRoleAndEdit?userId=${userId}`,
+        url: basePath + `Home/DetermineUserRoleAndEdit?userId=${userId}`,
         type: 'PUT',
         dataType: "json",
         data: formData,
@@ -3497,7 +3499,7 @@ function editUser(userId, formData) {
 
 function deleteUser(deleteElement, userId) {
     $.ajax({
-        url: `/Home/DetermineUserRoleAndDelete?userId=${userId}`,
+        url: basePath + `Home/DetermineUserRoleAndDelete?userId=${userId}`,
         type: 'DELETE',
         contentType: 'application/json',
         success: function () {
