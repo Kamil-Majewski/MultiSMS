@@ -61,7 +61,7 @@ deploy:
     - echo "Waiting for 10 seconds before clearing previous deployment..."
     - Start-Sleep -Seconds 10
     - echo "Clearing previous deployment..."
-    - Remove-Item -Recurse -Force "$TEST_DEPLOY_PATH\*"
+    - Get-ChildItem "$TEST_DEPLOY_PATH" | Where-Object { $_.Name -ne "sms_senders_with_api_tokens.db" } | Remove-Item -Recurse -Force
     - echo "Copying new files..."
     - Copy-Item -Path ".\artifacts\*" -Destination "$TEST_DEPLOY_PATH" -Recurse
     - echo "Starting IIS App Pool..."
