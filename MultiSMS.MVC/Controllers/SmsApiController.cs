@@ -227,7 +227,7 @@ namespace MultiSMS.MVC.Controllers
                         queued += successTuple.Item2;
                         unsent += successTuple.Item3;
                     }
-                    else if (result is ValueTuple<string, int, string> failedTuple)
+                    else if (result is ValueTuple<string, string, string> failedTuple)
                     {
                         listOfErrors.Add(failedTuple.Item3);
                     }
