@@ -34,10 +34,10 @@ function togglePasswordVisibility(passwordInputEl, eyeIconEl) {
     $(eyeIconEl).on('click', function () {
         if (passwordInputEl.type === 'password') {
             passwordInputEl.type = 'text';
-            eyeIconEl.src = window.location.origin + "/icons/eye.png";
+            eyeIconEl.src = window.location.origin + "icons/eye.png";
         } else {
             passwordInputEl.type = 'password';
-            eyeIconEl.src = window.location.origin + "/icons/closed-eye.png";
+            eyeIconEl.src = window.location.origin + "icons/closed-eye.png";
         }
     });
 }
@@ -126,13 +126,13 @@ function OnSubmitFilterTemplatesTable(formIdentifiaction, searchBarIdentificatio
                             <td class="big-cell template-content">${template.templateContent}</td>
                             <td class="centered-cell">
                                 <a href="#details-${template.templateId}" class="icon-list template-details">
-                                    <img src="/icons/view-doc.png" title="Szczegóły">
+                                    <img src="icons/view-doc.png" title="Szczegóły">
                                 </a>
                                 <a href="#edit-${template.templateId}" class="icon-list template-edit">
-                                    <img src="/icons/edit.png" title="Edytuj">
+                                    <img src="icons/edit.png" title="Edytuj">
                                 </a>
                                 <a href="#delete-${template.templateId}" class="icon-list template-delete">
-                                    <img src="/icons/trash.png" title="Usuń">
+                                    <img src="icons/trash.png" title="Usuń">
                                 </a>
                             </td>
                         </tr>
@@ -197,13 +197,13 @@ function OnSubmitFilterContactsTable(formIdentifiaction, searchBarIdentification
                             <td class="centered-cell contact-groups">${(contact.employeeGroupNames == null || contact.employeeGroupNames.length == 0) ? "Nie przypisano" : contact.employeeGroupNames.join(", ")}</td>
                             <td class="centered-cell">
                                 <a href="#details-${contact.employeeId}" class="icon-list contact-details">
-                                    <img src="/icons/view-doc.png" title="Szczegóły">
+                                    <img src="icons/view-doc.png" title="Szczegóły">
                                 </a>
                                 <a href="#edit-${contact.employeeId}" class="icon-list contact-edit">
-                                    <img src="/icons/edit.png" title="Edytuj">
+                                    <img src="icons/edit.png" title="Edytuj">
                                 </a>
                                 <a href="#delete-${contact.employeeId}" class="icon-list contact-delete">
-                                    <img src="/icons/trash.png" title="Usuń">
+                                    <img src="icons/trash.png" title="Usuń">
                                 </a>
                             </td>
                         </tr>
@@ -270,12 +270,12 @@ function OnSubmitFilterAssignContactsTable(formIdentifiaction, searchBarIdentifi
 
                     if (groupAssignMembersIds.includes(contact.employeeId)) {
 
-                        newRow += `<a href="#unassign-${contact.employeeId}-${grouAssignGroupId}" class="icon-list contact-unassign"><img src="/icons/unassign-user.png" title="Wypisz z grupy"/></a>
+                        newRow += `<a href="#unassign-${contact.employeeId}-${grouAssignGroupId}" class="icon-list contact-unassign"><img src="icons/unassign-user.png" title="Wypisz z grupy"/></a>
                                         </td>
                                         </tr>`;
                     }
                     else {
-                        newRow += `<a href="#assign-${contact.employeeId}-${grouAssignGroupId}" class="icon-list contact-assign"><img src="/icons/assign-user.png" title="Dopisz do grupy" /></a>
+                        newRow += `<a href="#assign-${contact.employeeId}-${grouAssignGroupId}" class="icon-list contact-assign"><img src="icons/assign-user.png" title="Dopisz do grupy" /></a>
                                         </td>
                                         </tr>`;
                     }
@@ -337,12 +337,12 @@ function OnSubmitFilterAssignGroupsTable(formIdentifiaction, searchBarIdentifica
 
                     if (group.membersIds.includes(parseInt(groupAssignContactId))) {
 
-                        newRow += `<a href="#unassign-${groupAssignContactId}-${group.groupId}" class="icon-list contact-group-unassign"><img src="/icons/unassign-user.png" title="Wypisz z grupy"/></a>
+                        newRow += `<a href="#unassign-${groupAssignContactId}-${group.groupId}" class="icon-list contact-group-unassign"><img src="icons/unassign-user.png" title="Wypisz z grupy"/></a>
                                         </td>
                                         </tr>`;
                     }
                     else {
-                        newRow += `<a href="#assign-${groupAssignContactId}-${group.groupId}" class="icon-list contact-group-assign"><img src="/icons/assign-user.png" title="Dopisz do grupy"/></a>
+                        newRow += `<a href="#assign-${groupAssignContactId}-${group.groupId}" class="icon-list contact-group-assign"><img src="icons/assign-user.png" title="Dopisz do grupy"/></a>
                                         </td>
                                         </tr>`;
                     }
@@ -401,16 +401,16 @@ function OnSubmitFilterGroupsTable(formIdentifiaction, searchBarIdentification, 
                             <td class="tiny-centered-cell contact-email">${group.membersIds.length}</td>
                             <td class="centered-cell" style="min-width:205px !important;">
                                 <a href="#assign-${group.groupId}" class="icon-list group-assign">
-                                    <img src="/icons/assign-users.png" title="Przypisz użytkowników">
+                                    <img src="icons/assign-users.png" title="Przypisz użytkowników">
                                 </a>
                                 <a href="#details-${group.groupId}" class="icon-list group-details">
-                                    <img src="/icons/view-doc.png" title="Szczegóły">
+                                    <img src="icons/view-doc.png" title="Szczegóły">
                                 </a>
                                 <a href="#edit-${group.groupId}" class="icon-list group-edit">
-                                    <img src="/icons/edit.png" title="Edytuj">
+                                    <img src="icons/edit.png" title="Edytuj">
                                 </a>
                                 <a href="#delete-${group.groupId}" class="icon-list group-delete">
-                                    <img src="/icons/trash.png" title="Usuń">
+                                    <img src="icons/trash.png" title="Usuń">
                                 </a>
                             </td>
                         </tr>
@@ -474,7 +474,7 @@ function OnSubmitFilterLogsTable(formIdentifiaction, searchBarIdentification, ta
                             <td class="big-cell">${log.logMessage}</td>
                             <td class="centered-cell" style="min-width:105px;">${new Date(log.logCreationDate).toLocaleString('pl-PL')}</td>
                             <td class="tiny-centered-cell">
-                                <a href="#details-${log.logId}" class="icon-list log-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
+                                <a href="#details-${log.logId}" class="icon-list log-details"><img src="icons/view-doc.png" title="Szczegóły"/></a>
                             </td>
                         </tr>                        
                     `;
@@ -640,7 +640,7 @@ function addUserToGroup(link, assignContactIdGroupId) {
             $("#group-members-count").html(parseInt(groupMembersCount) + 1);
             link.removeClass("contact-assign").addClass("contact-unassign");
             link.attr("href", `#unassign-${assignContactIdGroupId[1]}-${assignContactIdGroupId[2]}`)
-            link.children("img").attr("src", "/icons/unassign-user.png").attr("title", "Wypisz z grupy");
+            link.children("img").attr("src", "icons/unassign-user.png").attr("title", "Wypisz z grupy");
 
             var nearestRow = link.closest('tr');
             var assignedGroups = nearestRow.find('td.centered-cell').html() == "Nie przypisano" ? [] : nearestRow.find('td.centered-cell').html().split(", ");
@@ -662,7 +662,7 @@ function assignGroupToUser(link, assignContactIdGroupId) {
         success: function () {
             link.removeClass("contact-group-assign").addClass("contact-group-unassign");
             link.attr("href", `#unassign-${assignContactIdGroupId[1]}-${assignContactIdGroupId[2]}`)
-            link.children("img").attr("src", "/icons/unassign-user.png").attr("title", "Wypisz z grupy");
+            link.children("img").attr("src", "icons/unassign-user.png").attr("title", "Wypisz z grupy");
             var nearestRow = link.closest('tr');
 
             var groupMembersElement = nearestRow.find('.group-members');
@@ -692,7 +692,7 @@ function removeUserFromGroup(link, assignContactIdGroupId) {
             $("#group-members-count").html(parseInt(groupMembersCount) - 1);
             link.removeClass("contact-unassign").addClass("contact-assign");
             link.attr("href", `#assign-${assignContactIdGroupId[1]}-${assignContactIdGroupId[2]}`)
-            link.children("img").attr("src", "/icons/assign-user.png").attr("title", "Dopisz do grupy");
+            link.children("img").attr("src", "icons/assign-user.png").attr("title", "Dopisz do grupy");
 
             var nearestRow = link.closest('tr');
             var assignedGroups = nearestRow.find('td.centered-cell').html().split(", ");
@@ -716,7 +716,7 @@ function unassignGroupFromUser(link, assignContactIdGroupId) {
         success: function () {
             link.removeClass("contact-group-unassign").addClass("contact-group-assign");
             link.attr("href", `#assign-${assignContactIdGroupId[1]}-${assignContactIdGroupId[2]}`)
-            link.children("img").attr("src", "/icons/assign-user.png").attr("title", "Dopisz do grupy");
+            link.children("img").attr("src", "icons/assign-user.png").attr("title", "Dopisz do grupy");
 
             var nearestRow = link.closest('tr');
 
@@ -2141,9 +2141,9 @@ function FetchAllTemplatesAndPopulateTable() {
                             <td class="medium-cell template-description">${description}</td>
                             <td class="big-cell template-content">${item.templateContent}</td>
                             <td class="centered-cell">
-                            <a href="#details-${item.templateId}" class="icon-list template-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
-                            <a href="#edit-${item.templateId}" class="icon-list template-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
-                            <a href="#delete-${item.templateId}" class="icon-list template-delete"><img src="/icons/trash.png" title="Usuń"/></a>
+                            <a href="#details-${item.templateId}" class="icon-list template-details"><img src="icons/view-doc.png" title="Szczegóły"/></a>
+                            <a href="#edit-${item.templateId}" class="icon-list template-edit"><img src="icons/edit.png" title="Edytuj"/></a>
+                            <a href="#delete-${item.templateId}" class="icon-list template-delete"><img src="icons/trash.png" title="Usuń"/></a>
                             </td>
                             </tr>`;
 
@@ -2189,9 +2189,9 @@ function PaginateTemplatesAndPopulateTable(firstId, lastId, pageSize, moveForwar
                         <td class="medium-cell template-description">${description}</td>
                         <td class="big-cell template-content">${template.templateContent}</td>
                         <td class="centered-cell">
-                            <a href="#details-${template.templateId}" class="icon-list template-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
-                            <a href="#edit-${template.templateId}" class="icon-list template-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
-                            <a href="#delete-${template.templateId}" class="icon-list template-delete"><img src="/icons/trash.png" title="Usuń"/></a>
+                            <a href="#details-${template.templateId}" class="icon-list template-details"><img src="icons/view-doc.png" title="Szczegóły"/></a>
+                            <a href="#edit-${template.templateId}" class="icon-list template-edit"><img src="icons/edit.png" title="Edytuj"/></a>
+                            <a href="#delete-${template.templateId}" class="icon-list template-delete"><img src="icons/trash.png" title="Usuń"/></a>
                         </td>
                     </tr>
                 `;
@@ -2203,7 +2203,7 @@ function PaginateTemplatesAndPopulateTable(firstId, lastId, pageSize, moveForwar
                 templateNextButtonContainer.append(`
                     <button class="arrow-button" id="templates-list-next-page-button" type="button">
                         <span class="list-arrow-forward">
-                            <img src="/icons/arrow-next.png" />
+                            <img src="icons/arrow-next.png" />
                         </span>
                     </button>`);
                 templatePageCounter.show();
@@ -2219,7 +2219,7 @@ function PaginateTemplatesAndPopulateTable(firstId, lastId, pageSize, moveForwar
                 templatePreviousButtonContainer.append(`
                     <button class="arrow-button" id="templates-list-previous-page-button" type="button">
                         <span class="list-arrow-back">
-                            <img src="/icons/arrow-previous.png"/>
+                            <img src="icons/arrow-previous.png"/>
                         </span>
                     </button>
                 `);
@@ -2263,9 +2263,9 @@ function FetchAllContactsAndPopulateTable() {
                             ${isActiveRow}
                             <td class="centered-cell contact-groups">${groupNames}</td>
                             <td class="centered-cell">
-                            <a href="#details-${item.employeeId}" class="icon-list contact-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
-                            <a href="#edit-${item.employeeId}" class="icon-list contact-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
-                            <a href="#delete-${item.employeeId}" class="icon-list contact-delete"><img src="/icons/trash.png" title="Usuń"/></a>
+                            <a href="#details-${item.employeeId}" class="icon-list contact-details"><img src="icons/view-doc.png" title="Szczegóły"/></a>
+                            <a href="#edit-${item.employeeId}" class="icon-list contact-edit"><img src="icons/edit.png" title="Edytuj"/></a>
+                            <a href="#delete-${item.employeeId}" class="icon-list contact-delete"><img src="icons/trash.png" title="Usuń"/></a>
                             </td>
                             </tr>`;
 
@@ -2318,10 +2318,10 @@ function PaginateContactsAndPopulateTable(firstId, lastId, pageSize, moveForward
                         ${isActiveRow}
                         <td class="centered-cell contact-groups">${groupNames}</td>
                         <td class="centered-cell" style="min-width: 163px;">
-                            <a href="#assign-${contact.employeeId}" class="icon-list contact-assign-groups"><img src="/icons/assign-users.png" title="Przypisz grupy"/></a>
-                            <a href="#details-${contact.employeeId}" class="icon-list contact-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
-                            <a href="#edit-${contact.employeeId}" class="icon-list contact-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
-                            <a href="#delete-${contact.employeeId}" class="icon-list contact-delete"><img src="/icons/trash.png" title="Usuń"/></a>
+                            <a href="#assign-${contact.employeeId}" class="icon-list contact-assign-groups"><img src="icons/assign-users.png" title="Przypisz grupy"/></a>
+                            <a href="#details-${contact.employeeId}" class="icon-list contact-details"><img src="icons/view-doc.png" title="Szczegóły"/></a>
+                            <a href="#edit-${contact.employeeId}" class="icon-list contact-edit"><img src="icons/edit.png" title="Edytuj"/></a>
+                            <a href="#delete-${contact.employeeId}" class="icon-list contact-delete"><img src="icons/trash.png" title="Usuń"/></a>
                         </td>
                     </tr>
                 `;
@@ -2333,7 +2333,7 @@ function PaginateContactsAndPopulateTable(firstId, lastId, pageSize, moveForward
                 contactNextButtonContainer.append(`
                     <button class="arrow-button" id="contacts-list-next-page-button" type="button">
                         <span class="list-arrow-forward">
-                            <img src="/icons/arrow-next.png" />
+                            <img src="icons/arrow-next.png" />
                         </span>
                     </button>`
                 );
@@ -2349,7 +2349,7 @@ function PaginateContactsAndPopulateTable(firstId, lastId, pageSize, moveForward
                 contactPreviousButtonContainer.append(`
                     <button class="arrow-button" id="contacts-list-previous-page-button" type="button">
                         <span class="list-arrow-back">
-                            <img src="/icons/arrow-previous.png"/>
+                            <img src="icons/arrow-previous.png"/>
                         </span>
                     </button>
                 `);
@@ -2409,12 +2409,12 @@ function PaginateAssignContactsAndPopulateTable(firstId, lastId, pageSize, moveF
 
                 if (groupAssignMembersIds.includes(contact.employeeId)) {
 
-                    newRow += `<a href="#unassign-${contact.employeeId}-${grouAssignGroupId}" class="icon-list contact-unassign"><img src="/icons/unassign-user.png" title="Wypisz z grupy"/></a>
+                    newRow += `<a href="#unassign-${contact.employeeId}-${grouAssignGroupId}" class="icon-list contact-unassign"><img src="icons/unassign-user.png" title="Wypisz z grupy"/></a>
                                         </td>
                                         </tr>`;
                 }
                 else {
-                    newRow += `<a href="#assign-${contact.employeeId}-${grouAssignGroupId}" class="icon-list contact-assign"><img src="/icons/assign-user.png" title="Dopisz do grupy" /></a>
+                    newRow += `<a href="#assign-${contact.employeeId}-${grouAssignGroupId}" class="icon-list contact-assign"><img src="icons/assign-user.png" title="Dopisz do grupy" /></a>
                                         </td>
                                         </tr>`;
                 }
@@ -2426,7 +2426,7 @@ function PaginateAssignContactsAndPopulateTable(firstId, lastId, pageSize, moveF
                 contactNextButtonContainer.append(`
                     <button class="arrow-button" id="contacts-assign-list-next-page-button" type="button">
                         <span class="list-arrow-forward">
-                            <img src="/icons/arrow-next.png" />
+                            <img src="icons/arrow-next.png" />
                         </span>
                     </button>`
                 );
@@ -2442,7 +2442,7 @@ function PaginateAssignContactsAndPopulateTable(firstId, lastId, pageSize, moveF
                 contactPreviousButtonContainer.append(`
                     <button class="arrow-button" id="contacts-assign-list-previous-page-button" type="button">
                         <span class="list-arrow-back">
-                            <img src="/icons/arrow-previous.png"/>
+                            <img src="icons/arrow-previous.png"/>
                         </span>
                     </button>
                 `);
@@ -2479,10 +2479,10 @@ function FetchAllGroupsAndPopulateTable() {
                         <td class="big-cell group-description">${groupDescription}</td>
                         <td class="tiny-centered-cell">${item.membersIds.length}</td>
                         <td class="centered-cell" id="group-options-container" style="min-width: 205px;">
-                            <a href="#assign-${item.groupId}" class="icon-list group-assign"><img src="/icons/assign-users.png" title="Przypisz użytkowników"/></a>
-                            <a href="#details-${item.groupId}" class="icon-list group-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
-                            <a href="#edit-${item.groupId}" class="icon-list group-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
-                            <a href="#delete-${item.groupId}" class="icon-list group-delete"><img src="/icons/trash.png" title="Usuń"/></a>
+                            <a href="#assign-${item.groupId}" class="icon-list group-assign"><img src="icons/assign-users.png" title="Przypisz użytkowników"/></a>
+                            <a href="#details-${item.groupId}" class="icon-list group-details"><img src="icons/view-doc.png" title="Szczegóły"/></a>
+                            <a href="#edit-${item.groupId}" class="icon-list group-edit"><img src="icons/edit.png" title="Edytuj"/></a>
+                            <a href="#delete-${item.groupId}" class="icon-list group-delete"><img src="icons/trash.png" title="Usuń"/></a>
                         </td>
                     </tr>`
                 ;
@@ -2526,10 +2526,10 @@ function PaginateGroupsAndPopulateTable(firstId, lastId, pageSize, moveForward) 
                         <td class="big-cell group-description">${description}</td>
                         <td class="tiny-centered-cell">${group.membersIds.length}</td>
                         <td class="centered-cell" id="group-options-container" style="min-width: 205px !important;">
-                            <a href="#assign-${group.groupId}" class="icon-list group-assign"><img src="/icons/assign-users.png" title="Przypisz użytkowników"/></a>
-                            <a href="#details-${group.groupId}" class="icon-list group-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
-                            <a href="#edit-${group.groupId}" class="icon-list group-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
-                            <a href="#delete-${group.groupId}" class="icon-list group-delete"><img src="/icons/trash.png" title="Usuń"/></a>
+                            <a href="#assign-${group.groupId}" class="icon-list group-assign"><img src="icons/assign-users.png" title="Przypisz użytkowników"/></a>
+                            <a href="#details-${group.groupId}" class="icon-list group-details"><img src="icons/view-doc.png" title="Szczegóły"/></a>
+                            <a href="#edit-${group.groupId}" class="icon-list group-edit"><img src="icons/edit.png" title="Edytuj"/></a>
+                            <a href="#delete-${group.groupId}" class="icon-list group-delete"><img src="icons/trash.png" title="Usuń"/></a>
                         </td>
                     </tr>
                 `;
@@ -2541,7 +2541,7 @@ function PaginateGroupsAndPopulateTable(firstId, lastId, pageSize, moveForward) 
                 groupNextButtonContainer.append(`
                     <button class="arrow-button" id="groups-list-next-page-button" type="button">
                         <span class="list-arrow-forward">
-                            <img src="/icons/arrow-next.png" />
+                            <img src="icons/arrow-next.png" />
                         </span>
                     </button>`
                 );
@@ -2557,7 +2557,7 @@ function PaginateGroupsAndPopulateTable(firstId, lastId, pageSize, moveForward) 
                 groupPreviousButtonContainer.append(`
                     <button class="arrow-button" id="groups-list-previous-page-button" type="button">
                         <span class="list-arrow-back">
-                            <img src="/icons/arrow-previous.png"/>
+                            <img src="icons/arrow-previous.png"/>
                         </span>
                     </button>
                 `);
@@ -2611,12 +2611,12 @@ function PaginateAssignGroupsAndPopulateTable(firstId, lastId, pageSize, moveFor
 
                 if (group.membersIds.includes(parseInt(groupAssignContactId))) {
 
-                    newRow += `<a href="#unassign-${groupAssignContactId}-${group.groupId}" class="icon-list contact-group-unassign"><img src="/icons/unassign-user.png" title="Wypisz z grupy"/></a>
+                    newRow += `<a href="#unassign-${groupAssignContactId}-${group.groupId}" class="icon-list contact-group-unassign"><img src="icons/unassign-user.png" title="Wypisz z grupy"/></a>
                                         </td>
                                         </tr>`;
                 }
                 else {
-                    newRow += `<a href="#assign-${groupAssignContactId}-${group.groupId}" class="icon-list contact-group-assign"><img src="/icons/assign-user.png" title="Dopisz do grupy"/></a>
+                    newRow += `<a href="#assign-${groupAssignContactId}-${group.groupId}" class="icon-list contact-group-assign"><img src="icons/assign-user.png" title="Dopisz do grupy"/></a>
                                         </td>
                                         </tr>`;
                 }
@@ -2628,7 +2628,7 @@ function PaginateAssignGroupsAndPopulateTable(firstId, lastId, pageSize, moveFor
                 groupNextButtonContainer.append(`
                     <button class="arrow-button" id="groups-assign-list-next-page-button" type="button">
                         <span class="list-arrow-forward">
-                            <img src="/icons/arrow-next.png" />
+                            <img src="icons/arrow-next.png" />
                         </span>
                     </button>`
                 );
@@ -2644,7 +2644,7 @@ function PaginateAssignGroupsAndPopulateTable(firstId, lastId, pageSize, moveFor
                 groupPreviousButtonContainer.append(`
                     <button class="arrow-button" id="groups-assign-list-previous-page-button" type="button">
                         <span class="list-arrow-back">
-                            <img src="/icons/arrow-previous.png"/>
+                            <img src="icons/arrow-previous.png"/>
                         </span>
                     </button>
                 `);
@@ -2682,7 +2682,7 @@ function FetchAllLogsAndPopulateTable() {
                             <td class="big-cell">${item.logMessage}</td>
                             <td class="centered-cell" style="min-width:105px;">${new Date(item.logCreationDate).toLocaleString('en-GB')}</td>
                             <td class="tiny-centered-cell">
-                            <a href="#details-${item.logId}" class="icon-list log-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
+                            <a href="#details-${item.logId}" class="icon-list log-details"><img src="icons/view-doc.png" title="Szczegóły"/></a>
                             </td>
                             </tr>`;
 
@@ -2728,7 +2728,7 @@ function PaginateLogsAndPopulateTable(firstId, lastId, pageSize, moveForward) {
                         <td class="big-cell">${log.logMessage}</td>
                         <td class="centered-cell" style="min-width:105px;">${new Date(log.logCreationDate).toLocaleString('pl-PL')}</td>
                         <td class="tiny-centered-cell">
-                            <a href="#details-${log.logId}" class="icon-list log-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
+                            <a href="#details-${log.logId}" class="icon-list log-details"><img src="icons/view-doc.png" title="Szczegóły"/></a>
                         </td>
                     </tr>`
                     ;
@@ -2740,7 +2740,7 @@ function PaginateLogsAndPopulateTable(firstId, lastId, pageSize, moveForward) {
                 logNextButtonContainer.append(`
                     <button class="arrow-button" id="logs-list-next-page-button" type="button">
                         <span class="list-arrow-forward">
-                            <img src="/icons/arrow-next.png" />
+                            <img src="icons/arrow-next.png" />
                         </span>
                     </button>`
                 );
@@ -2756,7 +2756,7 @@ function PaginateLogsAndPopulateTable(firstId, lastId, pageSize, moveForward) {
                 logPreviousButtonContainer.append(`
                     <button class="arrow-button" id="logs-list-previous-page-button" type="button">
                         <span class="list-arrow-back">
-                            <img src="/icons/arrow-previous.png"/>
+                            <img src="icons/arrow-previous.png"/>
                         </span>
                     </button>`
                 );
@@ -2794,7 +2794,7 @@ function PopulateTableForChooseGroupForSMS() {
                             <td class="big-cell">${description}</td>
                             <td class="tiny-centered-cell">${item.membersIds.length}</td>
                             <td class="tiny-centered-cell">
-                            <a href="#pick-${item.groupId}" class="icon-list group-pick-me"><img src="/icons/pick-me.png" title="Wybierz grupę"/></a>
+                            <a href="#pick-${item.groupId}" class="icon-list group-pick-me"><img src="icons/pick-me.png" title="Wybierz grupę"/></a>
                             </td>
                             </tr>`;
 
@@ -2825,7 +2825,7 @@ function PopulateTableForChooseTemplateForSMS() {
                             <td class="medium-cell">${templateDescription}</td>
                             <td class="big-cell">${item.templateContent}</td>
                             <td class="tiny-centered-cell">
-                            <a href="#pick-${item.templateId}" class="icon-list template-pick-me"><img src="/icons/pick-me.png" title="Wybierz szablon"/></a>
+                            <a href="#pick-${item.templateId}" class="icon-list template-pick-me"><img src="icons/pick-me.png" title="Wybierz szablon"/></a>
                             </td>
                             </tr>`;
 
@@ -2931,13 +2931,13 @@ function CreateNewTemplate() {
                 <td class="big-cell template-content">${template.templateContent}</td>
                 <td class=centered-cell>
                     <a href="#details-${template.templateId}" class="icon-list template-details">
-                        <img src="/icons/view-doc.png" title="Szczegóły">
+                        <img src="icons/view-doc.png" title="Szczegóły">
                     </a>
                     <a href="#edit-${template.templateId}" class="icon-list template-edit">
-                        <img src="/icons/edit.png" title="Edytuj">
+                        <img src="icons/edit.png" title="Edytuj">
                     </a>
                     <a href="#delete-${template.templateId}" class="icon-list template-delete">
-                        <img src="/icons/trash.png" title="Usuń">
+                        <img src="icons/trash.png" title="Usuń">
                     </a>
                 </td>
             </tr>
@@ -2979,13 +2979,13 @@ function CreateNewContact() {
                 <td class="centered-cell contact-groups">Nie przypisano</td>
                 <td class="centered-cell">
                     <a href="#details-${contact.employeeId}" class="icon-list contact-details">
-                        <img src="/icons/view-doc.png" title="Szczegóły">
+                        <img src="icons/view-doc.png" title="Szczegóły">
                     </a>
                     <a href="#edit-${contact.employeeId}" class="icon-list contact-edit">
-                        <img src="/icons/edit.png" title="Edytuj">
+                        <img src="icons/edit.png" title="Edytuj">
                     </a>
                     <a href="#delete-${contact.employeeId}" class="icon-list contact-delete">
-                        <img src="/icons/trash.png" title="Usuń">
+                        <img src="icons/trash.png" title="Usuń">
                     </a>
                 </td>
             </tr>
@@ -3015,16 +3015,16 @@ function CreateNewGroup() {
                 <td class="tiny-centered-cell">0</td>
                 <td class="centered-cell" style="minwidth: 205px;">
                     <a href="#assign-${group.groupId}" class="icon-list group-assign">
-                        <img src="/icons/assign-users.png" title="Przypisz użytkowników">
+                        <img src="icons/assign-users.png" title="Przypisz użytkowników">
                     </a>
                     <a href="#details-${group.groupId}" class="icon-list group-details">
-                        <img src="/icons/view-doc.png" title="Szczegóły">
+                        <img src="icons/view-doc.png" title="Szczegóły">
                     </a>
                     <a href="#edit-${group.groupId}" class="icon-list group-edit">
-                        <img src="/icons/edit.png" title="Edytuj">
+                        <img src="icons/edit.png" title="Edytuj">
                     </a>
                     <a href="#delete-${group.groupId}" class="icon-list group-delete">
-                        <img src="/icons/trash.png" title="Usuń">
+                        <img src="icons/trash.png" title="Usuń">
                     </a>
                 </td>
             </tr>
@@ -3235,10 +3235,10 @@ function getAllUsersAndPopulateTable() {
                     optionsCell = `
                             <td class="tiny-centered-cell row-options">
                                 <a href="#edit" class="icon-list user-edit">
-                                    <img src="/icons/edit.png" title="Edytuj">
+                                    <img src="icons/edit.png" title="Edytuj">
                                 </a>
                                 <a href="#delete" class="icon-list user-delete">
-                                    <img src="/icons/trash.png" title="Usuń">
+                                    <img src="icons/trash.png" title="Usuń">
                                 </a>
                             </td>`;
                 }
@@ -3329,10 +3329,10 @@ function createNewUser(formData) {
                 ${roleCell}
                  <td class="tiny-centered-cell row-options">
                     <a href="#edit" class="icon-list user-edit">
-                        <img src="/icons/edit.png" title="Edytuj">
+                        <img src="icons/edit.png" title="Edytuj">
                     </a>
                     <a href="#delete" class="icon-list user-delete">
-                        <img src="/icons/trash.png" title="Usuń">
+                        <img src="icons/trash.png" title="Usuń">
                     </a>
                 </td>
             </tr>`;
@@ -3452,10 +3452,10 @@ function editUser(userId, formData) {
                 ${roleCell}
                  <td class="tiny-centered-cell row-options">
                     <a href="#edit" class="icon-list user-edit">
-                        <img src="/icons/edit.png" title="Edytuj">
+                        <img src="icons/edit.png" title="Edytuj">
                     </a>
                     <a href="#delete" class="icon-list user-delete">
-                        <img src="/icons/trash.png" title="Usuń">
+                        <img src="icons/trash.png" title="Usuń">
                     </a>
                 </td>
             </tr>`;

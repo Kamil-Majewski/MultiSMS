@@ -58,6 +58,8 @@ deploy:
       } else { 
         echo "IIS App Pool is not running, skipping stop step."
       }
+    - echo "Waiting for 10 seconds before clearing previous deployment..."
+    - Start-Sleep -Seconds 10
     - echo "Clearing previous deployment..."
     - Remove-Item -Recurse -Force "$TEST_DEPLOY_PATH\*"
     - echo "Copying new files..."
