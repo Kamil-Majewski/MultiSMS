@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using MultiSMS.BusinessLogic.DTO;
 using MultiSMS.BusinessLogic.Extensions;
+using MultiSMS.BusinessLogic.Helpers;
 using MultiSMS.BusinessLogic.Models;
 using MultiSMS.BusinessLogic.Models.CustomException;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.Interface.Entities;
+using MultiSMS.Interface.Entities.MProfi;
 using MultiSMS.Interface.Entities.ServerSms;
 using MultiSMS.Interface.Entities.SmsApi;
 using MultiSMS.MVC.Models;
@@ -25,7 +28,19 @@ namespace MultiSMS.MVC.Controllers
         private readonly IEmployeeGroupService _employeeGroupService;
         private readonly ILogService _logService;
         private readonly IApiSettingsService _apiSettingsService;
-        public HomeController(ISMSMessageTemplateService smsTemplateRepository, IEmployeeService employeeRepository, IGroupService groupRepository, IEmployeeGroupService employeeGroupRepository, ILogService logRepository, IUserService userService, IImportExportEmployeesService ieService, IApiSettingsService apiSettingsService)
+        private readonly IApiTokenService _tokenService;
+        private readonly IApiSmsSenderService _senderService;
+
+        public HomeController(ISMSMessageTemplateService smsTemplateRepository,
+                              IEmployeeService employeeRepository,
+                              IGroupService groupRepository,
+                              IEmployeeGroupService employeeGroupRepository,
+                              ILogService logRepository,
+                              IUserService userService,
+                              IImportExportEmployeesService ieService,
+                              IApiSettingsService apiSettingsService,
+                              IApiTokenService tokenService,
+                              IApiSmsSenderService senderService)
         {
             _smsTemplateService = smsTemplateRepository;
             _employeeService = employeeRepository;
@@ -35,13 +50,25 @@ namespace MultiSMS.MVC.Controllers
             _userService = userService;
             _ieService = ieService;
             _apiSettingsService = apiSettingsService;
+            _tokenService = tokenService;
+            _senderService = senderService;
+        }
+
+        private IActionResult ReturnBadRequestWithAListOfErrors(ModelStateDictionary modelState)
+        {
+            var errors = modelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+
+            return BadRequest(new { Errors = errors });
         }
 
         [Authorize]
         public async Task<IActionResult> Index()
         {
             var userId = User.GetLoggedInUserId<int>();
-            var role = await _userService.GetUserRoleById(userId);
+            var role = await _userService.GetUserRoleByIdAsync(userId);
 
             ViewBag.roles = role;
             return View();
@@ -61,7 +88,7 @@ namespace MultiSMS.MVC.Controllers
         {
 
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             var template = new SMSMessageTemplate() { TemplateName = templateName, TemplateDescription = templateDescription, TemplateContent = templateContent };
             await _smsTemplateService.AddEntityToDatabaseAsync(template);
@@ -89,7 +116,7 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> FetchAllTemplates()
         {
-            var templates = await Task.FromResult(_smsTemplateService.GetAllEntries());
+            var templates = await Task.FromResult(_smsTemplateService.GetAllEntriesAsync());
             return Json(templates);
         }
 
@@ -114,7 +141,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> EditTemplate(int id, string name, string description, string content)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             var template = new SMSMessageTemplate { TemplateId = id, TemplateName = name, TemplateDescription = description, TemplateContent = content };
 
@@ -145,7 +172,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> DeleteTemplate(int id)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             var template = await _smsTemplateService.GetByIdAsync(id);
             await _logService.AddEntityToDatabaseAsync(
@@ -165,7 +192,7 @@ namespace MultiSMS.MVC.Controllers
                 }
             );
 
-            await _smsTemplateService.DeleteEntityAsync(id);
+            await _smsTemplateService.DeleteEntityByIdAsync(id);
             return Ok("Successfully deleted template");
         }
 
@@ -185,7 +212,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> CreateNewContact(string contactName, string contactSurname, string email, string phone, string address, string zip, string city, string department, string isActive)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             bool activeValue = isActive == "yes" ? true : false;
 
@@ -227,7 +254,7 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> FetchAllContacts()
         {
-            var contacts = await Task.FromResult(_employeeService.GetAllEntries());
+            var contacts = await _employeeService.GetAllEntriesAsync();
             foreach (var contact in contacts)
             {
                 contact.EmployeeGroupNames = await _employeeGroupService.GetAllGroupNamesForEmployeeListAsync(contact.EmployeeId);
@@ -261,7 +288,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> EditContact(int contactId, string contactName, string contactSurname, string email, string phone, string address, string zip, string city, string department, string isActive)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             bool activeValue = isActive == "yes" ? true : false;
 
@@ -305,7 +332,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> DeleteContact(int id)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             var contact = await _employeeService.GetByIdAsync(id);
             await _logService.AddEntityToDatabaseAsync(
@@ -323,7 +350,7 @@ namespace MultiSMS.MVC.Controllers
                    })
                }
            );
-            await _employeeService.DeleteEntityAsync(id);
+            await _employeeService.DeleteEntityByIdAsync(id);
 
             return Ok("Successfully deleted contact");
         }
@@ -332,8 +359,9 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> GetContactsBySearchPhrase(string searchPhrase)
         {
-            var contacts = await Task.FromResult(_employeeService.GetAllEntries());
-            var fittingGroups = _groupService.GetAllEntries().Where(g => g.GroupName.ToLower() == searchPhrase).Select(g => g.GroupId).ToList();
+            var contacts = await _employeeService.GetAllEntriesAsync();
+            var fittingGroups = _groupService.GetAllEntriesQueryable().Where(g => g.GroupName.ToLower() == searchPhrase).Select(g => g.GroupId).ToList();
+
             List<Employee> filteredContacts;
 
             if (fittingGroups.Count() == 1)
@@ -367,7 +395,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> CreateNewGroup(string groupName, string groupDescription)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             var group = new Group() { GroupName = groupName, GroupDescription = groupDescription };
             await _groupService.AddEntityToDatabaseAsync(group);
@@ -396,7 +424,7 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> FetchAllGroups()
         {
-            var groups = await Task.FromResult(_groupService.GetAllEntries().ToList());
+            var groups = await _groupService.GetAllEntriesAsync();
             foreach (var group in groups)
             {
                 group.MembersIds = await _employeeGroupService.GetAllEmployeesIdsForGroupListAsync(group.GroupId);
@@ -420,7 +448,7 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> FetchAllValidGroups()
         {
-            var groups = await Task.FromResult(_groupService.GetAllGroupsWithGroupMembersList());
+            var groups = await _groupService.GetAllGroupsWithGroupMembersListAsync();
             int amountOfInactives = 0;
             List<Group> validGroups = new List<Group>();
             foreach (var group in groups)
@@ -464,7 +492,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> EditGroup(int id, string name, string description)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             var group = new Group { GroupId = id, GroupName = name, GroupDescription = description };
             group.Members = await _employeeGroupService.GetAllEmployeesForGroupListAsync(id);
@@ -494,7 +522,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> DeleteGroup(int id)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             var group = await _groupService.GetByIdAsync(id);
             group.Members = await _employeeGroupService.GetAllEmployeesForGroupListAsync(id);
@@ -513,7 +541,7 @@ namespace MultiSMS.MVC.Controllers
                    })
                }
            );
-            await _groupService.DeleteEntityAsync(id);
+            await _groupService.DeleteEntityByIdAsync(id);
             return Ok("Successfully deleted group");
         }
 
@@ -540,7 +568,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> AddUserToGroup(int groupId, int employeeId)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             var employee = await _employeeService.GetByIdAsync(employeeId);
             var group = await _groupService.GetByIdAsync(groupId);
@@ -572,12 +600,12 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> RemoveUserFromGroup(int groupId, int employeeId)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             var employee = await _employeeService.GetByIdAsync(employeeId);
             var group = await _groupService.GetByIdAsync(groupId);
 
-            await _employeeGroupService.RemoveGroupMember(groupId, employeeId);
+            await _employeeGroupService.RemoveGroupMemberAsync(groupId, employeeId);
 
             await _logService.AddEntityToDatabaseAsync(
                 new Log
@@ -615,7 +643,7 @@ namespace MultiSMS.MVC.Controllers
         {
 
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             if (file == null || file.Length == 0)
             {
@@ -669,9 +697,9 @@ namespace MultiSMS.MVC.Controllers
 
 
         [Authorize]
-        public IActionResult DownloadExcelWithContacts()
+        public async Task<IActionResult> DownloadExcelWithContacts()
         {
-            var fileDirectory = _ieService.ExportContactsExcel();
+            var fileDirectory = await _ieService.ExportContactsExcelAsync();
 
             if (System.IO.File.Exists(fileDirectory))
             {
@@ -695,6 +723,36 @@ namespace MultiSMS.MVC.Controllers
 
         #region Logs
 
+        private JsonResult ProcessSmsLog<TErrorResponse, TSuccessResponse>(string smsMessageJson, string errorToken,
+                                                                           string groupsJson, string logSource,
+                                                                           Log logSanitized, UserDTO? logCreator)
+            where TErrorResponse : class
+            where TSuccessResponse : class
+        {
+            var smsDto = JsonConvert.DeserializeObject<SMSMessage>(smsMessageJson);
+
+            var serverResponseToken = smsDto!.ServerResponse.ToJToken().SelectToken(errorToken);
+
+            if (serverResponseToken != null)
+            {
+                smsDto.ServerResponse = JsonConvert.DeserializeObject<TErrorResponse>(smsDto.ServerResponse.ToString()!)!;
+            }
+            else
+            {
+                smsDto.ServerResponse = JsonConvert.DeserializeObject<TSuccessResponse>(smsDto.ServerResponse.ToString()!)!;
+            }
+
+            if (smsDto.ChosenGroupId == 0)
+            {
+                return Json(new { Type = $"SMS-{logSource}-NoGroup", Sms = smsDto, Log = logSanitized, LogCreator = logCreator });
+            }
+            else
+            {
+                var chosenGroup = JsonConvert.DeserializeObject<Group>(groupsJson);
+                return Json(new { Type = $"SMS-{logSource}-Group", Sms = smsDto, Group = chosenGroup, Log = logSanitized, LogCreator = logCreator });
+            }
+        }
+
         [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> GetLog(int logId)
@@ -702,7 +760,7 @@ namespace MultiSMS.MVC.Controllers
             Dictionary<string, string> logRelatedObjects;
 
             var log = await _logService.GetByIdAsync(logId);
-            var logSanitized = new { LogType = log.LogType, LogSource = log.LogSource, LogMessage = log.LogMessage, LogCreationDate = log.LogCreationDate };
+            var logSanitized = new Log{ LogType = log.LogType, LogSource = log.LogSource, LogMessage = log.LogMessage, LogCreationDate = log.LogCreationDate };
 
             if (log.LogRelatedObjectsDictionarySerialized == null)
             {
@@ -738,48 +796,32 @@ namespace MultiSMS.MVC.Controllers
                     }
 
                 case "ServerSms":
-                    var serverSmsDto = JsonConvert.DeserializeObject<SMSMessage>(logRelatedObjects["SmsMessages"]);
-
-                    if (serverSmsDto!.ServerResponse.ToJToken().SelectToken("error") != null)
-                    {
-                        serverSmsDto.ServerResponse = JsonConvert.DeserializeObject<ServerSmsErrorResponse>(serverSmsDto.ServerResponse.ToString()!)!;
-                    }
-                    else
-                    {
-                        serverSmsDto.ServerResponse = JsonConvert.DeserializeObject<ServerSmsSuccessResponse>(serverSmsDto.ServerResponse.ToString()!)!;
-                    }
-
-                    if (serverSmsDto!.ChosenGroupId == 0)
-                    {
-                        return Json(new { Type = "SMS-ServerSms-NoGroup", Sms = serverSmsDto, Log = logSanitized, LogCreator = logCreator });
-                    }
-                    else
-                    {
-                        var chosenGroup = JsonConvert.DeserializeObject<Group>(logRelatedObjects["Groups"]);
-                        return Json(new { Type = "SMS-ServerSms-Group", Sms = serverSmsDto, Group = chosenGroup, Log = logSanitized, LogCreator = logCreator });
-                    }
+                    return ProcessSmsLog<ServerSmsErrorResponse, ServerSmsSuccessResponse>(
+                        logRelatedObjects["SmsMessages"],
+                        "error",
+                        logRelatedObjects["Groups"],
+                        log.LogSource,
+                        logSanitized,
+                        logCreator);
 
                 case "SmsApi":
-                    var smsApiDto = JsonConvert.DeserializeObject<SMSMessage>(logRelatedObjects["SmsMessages"]);
+                    return ProcessSmsLog<SmsApiErrorResponse, SmsApiSuccessResponse>(
+                       logRelatedObjects["SmsMessages"],
+                       "error",
+                       logRelatedObjects["Groups"],
+                       log.LogSource,
+                       logSanitized,
+                       logCreator);
 
-                    if (smsApiDto!.ServerResponse.ToJToken().SelectToken("error") != null)
-                    {
-                        smsApiDto.ServerResponse = JsonConvert.DeserializeObject<SmsApiErrorResponse>(smsApiDto.ServerResponse.ToString()!)!;
-                    }
-                    else
-                    {
-                        smsApiDto.ServerResponse = JsonConvert.DeserializeObject<SmsApiSuccessResponse>(smsApiDto.ServerResponse.ToString()!)!;
-                    }
+                case "MProfi":
+                    return ProcessSmsLog<MProfiErrorResponse, MProfiSuccessResponse>(
+                       logRelatedObjects["SmsMessages"],
+                       "detail",
+                       logRelatedObjects["Groups"],
+                       log.LogSource,
+                       logSanitized,
+                       logCreator);
 
-                    if (smsApiDto.ChosenGroupId == 0)
-                    {
-                        return Json(new { Type = "SMS-SmsApi-NoGroup", Sms = smsApiDto, Log = logSanitized, LogCreator = logCreator });
-                    }
-                    else
-                    {
-                        var chosenGroup = JsonConvert.DeserializeObject<Group>(logRelatedObjects["Groups"]);
-                        return Json(new { Type = "SMS-SmsApi-Group", Sms = smsApiDto, Group = chosenGroup, Log = logSanitized, LogCreator = logCreator });
-                    }
                 case "Import":
                     var importDto = JsonConvert.DeserializeObject<ImportResult>(logRelatedObjects["Imports"]);
                     return Json(new { Type = "Import", Import = importDto, Log = logSanitized, LogCreator = logCreator });
@@ -797,7 +839,7 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> FetchAllLogs()
         {
-            var logs = await Task.FromResult(_logService.GetAllEntries());
+            var logs = await Task.FromResult(_logService.GetAllEntriesAsync());
             return Json(logs);
         }
 
@@ -822,13 +864,13 @@ namespace MultiSMS.MVC.Controllers
 
         [Authorize(Roles = "Administrator, Owner")]
         [HttpPost]
-        public IActionResult CheckIfAuthorizationSuccessful([FromBody] string password)
+        public async Task<IActionResult> CheckIfAuthorizationSuccessful([FromBody] string password)
         {
             var authSuccessful = _apiSettingsService.CheckIfAuthorizationSuccessful(password);
 
             if (authSuccessful)
             {
-                var apiSettings = _apiSettingsService.GetAllEntries();
+                var apiSettings = await _apiSettingsService.GetAllEntriesAsync();
                 ApiSettings activeApiSettings = null!;
 
                 try
@@ -864,12 +906,6 @@ namespace MultiSMS.MVC.Controllers
                 <div class=""active-api-settings"" style=""margin-bottom:20px;"">
                     <span class=""form-subtitle"">Konfiguracja API</span>
                     <div class=""form-group"" style=""margin-top:20px;"">
-                        <div class=""row"" style=""margin-bottom:20px;"">
-                            <div class=""col"" style=""display: flex; justify-content: space-between; align-items:center;"">
-                                <label for=""api-sender-name"" style=""min-width:180px"" style=""display:inline;"">Nazwa nadawcy</label>
-                                <input type=""text"" value=""{activeApiSettings.SenderName}"" class=""form-input"" id=""api-sender-name"" style=""margin-bottom:0;"" required>
-                            </div>
-                        </div>
                         <div class=""row"" style=""margin-bottom:20px;"">
                             <div class=""col"">
                                 <label style=""min-width:180px;"">Kanał priorytetowy</label>
@@ -910,7 +946,6 @@ namespace MultiSMS.MVC.Controllers
             {
                 ApiName = model.ActiveApiName,
                 ApiActive = true,
-                SenderName = model.SenderName,
                 FastChannel = model.FastChannel,
                 TestMode = model.TestMode
             });
@@ -931,7 +966,7 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllIdentityUsers()
         {
-            var users = await _userService.GetAllIdentityUsers();
+            var users = await _userService.GetAllManageUserDtosAsync();
 
             string role;
             if (User.IsInRole("Owner"))
@@ -965,7 +1000,7 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> DetermineUserRoleAndGetById(int userId)
         {
-            var userRole = await _userService.GetUserRoleById(userId);
+            var userRole = await _userService.GetUserRoleByIdAsync(userId);
 
             if (userRole == "Administrator" || userRole == "Owner")
             {
@@ -981,14 +1016,14 @@ namespace MultiSMS.MVC.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAdminById(int userId)
         {
-            return Json(await _userService.GetIdentityUserById(userId));
+            return Json(await _userService.GetManageUserDtoByIdAsync(userId));
         }
 
         [Authorize(Roles = "Administrator, Owner")]
         [HttpGet]
         public async Task<IActionResult> GetUserById(int userId)
         {
-            return Json(await _userService.GetIdentityUserById(userId));
+            return Json(await _userService.GetManageUserDtoByIdAsync(userId));
         }
 
         [Authorize(Roles = "Administrator, Owner")]
@@ -1010,7 +1045,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> CreateUser(string Name, string Surname, string Email, string Role, string? PhoneNumber, string Password)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             var model = new IdentityUserModel
             {
@@ -1026,7 +1061,7 @@ namespace MultiSMS.MVC.Controllers
             {
                 try
                 {
-                    var newUser = await _userService.CreateNewIdentityUser(model);
+                    var newUser = await _userService.CreateNewUserAsync(model);
 
                     await _logService.AddEntityToDatabaseAsync(
                     new Log
@@ -1067,7 +1102,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> CreateAdmin(string Name, string Surname, string Email, string Role, string? PhoneNumber, string Password)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             var model = new IdentityUserModel
             {
@@ -1083,7 +1118,7 @@ namespace MultiSMS.MVC.Controllers
             {
                 try
                 {
-                    var newUser = await _userService.CreateNewIdentityUser(model);
+                    var newUser = await _userService.CreateNewUserAsync(model);
 
                     await _logService.AddEntityToDatabaseAsync(
                     new Log
@@ -1123,7 +1158,7 @@ namespace MultiSMS.MVC.Controllers
         [HttpPut]
         public async Task<IActionResult> DetermineUserRoleAndEdit([FromQuery] int userId, IdentityUserModel model)
         {
-            var userRole = await _userService.GetUserRoleById(userId);
+            var userRole = await _userService.GetUserRoleByIdAsync(userId);
 
             if (userRole == "Administrator" || userRole == "Owner" || model.Role == "Owner" || model.Role == "Administrator")
             {
@@ -1140,7 +1175,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> EditUser(int userId, string Name, string Surname, string Email, string Role, string PhoneNumber)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(userId);
+            var admin = await _userService.GetUserDtoByIdAsync(userId);
 
             IdentityUserModel model = new IdentityUserModel
             {
@@ -1153,7 +1188,7 @@ namespace MultiSMS.MVC.Controllers
 
             try
             {
-                var user = await _userService.EditIdenitityUser(userId, model);
+                var user = await _userService.EditUserAsync(userId, model);
                 user.Role = Role;
 
                 await _logService.AddEntityToDatabaseAsync(
@@ -1190,7 +1225,7 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> EditAdmin(int userId, string Name, string Surname, string Email, string Role, string PhoneNumber)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(userId);
+            var admin = await _userService.GetUserDtoByIdAsync(userId);
 
             var callingUserId = User.GetLoggedInUserId<int>();
             if (callingUserId == userId)
@@ -1209,7 +1244,7 @@ namespace MultiSMS.MVC.Controllers
 
             try
             {
-                var user = await _userService.EditIdenitityUser(userId, model);
+                var user = await _userService.EditUserAsync(userId, model);
                 user.Role = Role;
 
                 await _logService.AddEntityToDatabaseAsync(
@@ -1245,7 +1280,7 @@ namespace MultiSMS.MVC.Controllers
         [HttpDelete]
         public async Task<IActionResult> DetermineUserRoleAndDelete(int userId)
         {
-            var userRole = await _userService.GetUserRoleById(userId);
+            var userRole = await _userService.GetUserRoleByIdAsync(userId);
 
             if (userRole == "Administrator" || userRole == "Owner")
             {
@@ -1262,13 +1297,13 @@ namespace MultiSMS.MVC.Controllers
         public async Task<IActionResult> DeleteUser(int userId)
         {
             var adminId = User.GetLoggedInUserId<int>();
-            var admin = await _userService.GetAdministratorDtoByIdAsync(adminId);
+            var admin = await _userService.GetUserDtoByIdAsync(adminId);
 
             try
             {
-                var user = await _userService.GetIdentityUserById(userId);
+                var user = await _userService.GetManageUserDtoByIdAsync(userId);
 
-                await _userService.DeleteIdentityUser(userId);
+                await _userService.DeleteUserAsync(userId);
 
                 await _logService.AddEntityToDatabaseAsync(
                     new Log
@@ -1306,11 +1341,11 @@ namespace MultiSMS.MVC.Controllers
                 throw new Exception("Administrator cannot delete himself");
             }
 
-            var admin = await _userService.GetAdministratorDtoByIdAsync(callingUserId);
+            var admin = await _userService.GetUserDtoByIdAsync(callingUserId);
 
             try
             {
-                var user = await _userService.GetIdentityUserById(userId);
+                var user = await _userService.GetManageUserDtoByIdAsync(userId);
 
                 await _logService.AddEntityToDatabaseAsync(
                     new Log
@@ -1329,7 +1364,7 @@ namespace MultiSMS.MVC.Controllers
                     }
                 );
 
-                await _userService.DeleteIdentityUser(userId);
+                await _userService.DeleteUserAsync(userId);
 
                 return Ok("Admin deleted successfully");
             }
@@ -1337,6 +1372,134 @@ namespace MultiSMS.MVC.Controllers
             {
                 return NotFound("Could not find user with provided Id");
             }
+        }
+
+        #endregion
+
+        #region ApiTokens
+
+        [Authorize(Roles = "Owner")]
+        [HttpGet]
+        public async Task<IActionResult> GetAllApiTokens()
+        {
+            return Ok(await _tokenService.GetAllEntriesAsync());
+        }
+
+        [Authorize(Roles = "Owner")]
+        [HttpGet]
+        public async Task<IActionResult> GetApiTokenById(int tokenId)
+        {
+            ValidationHelper.ValidateId(tokenId, nameof(tokenId));
+
+            return Ok(await _tokenService.GetByIdAsync(tokenId));
+        }
+
+        [Authorize(Roles = "Owner")]
+        [HttpPut]
+        public async Task<IActionResult> EditApiToken(ApiToken token)
+        {
+            if (!ModelState.IsValid)
+            {
+                return ReturnBadRequestWithAListOfErrors(ModelState);
+            }
+
+            return Ok(await _tokenService.UpdateEntityAsync(token));
+        }
+
+        [Authorize(Roles = "Owner")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteApiToken(int apiTokenId)
+        {
+            ValidationHelper.ValidateId(apiTokenId, nameof(apiTokenId));
+
+            await _tokenService.DeleteEntityByIdAsync(apiTokenId);
+
+            return Ok();
+        }
+
+        [Authorize(Roles = "Owner")]
+        [HttpGet]
+        public async Task<IActionResult> GetApiTokensBySearchPhrase(string searchPhrase)
+        {
+            ValidationHelper.ValidateString(searchPhrase, nameof(searchPhrase));
+
+            return Ok(await _tokenService.GetApiTokensBySearchPhraseAsync(searchPhrase));
+        } 
+
+        #endregion
+
+        #region ApiSmsSender
+
+        [Authorize(Roles = "Owner")]
+        [HttpGet]
+        public async Task<IActionResult> GetAllSenders()
+        {
+            return Ok(await _senderService.GetAllEntriesAsync());
+        }
+
+        [Authorize(Roles = "Owner")]
+        [HttpGet]
+        public async Task<IActionResult> GetSenderById(int senderId)
+        {
+            ValidationHelper.ValidateId(senderId, nameof(senderId));
+
+            return Ok(await _senderService.GetByIdAsync(senderId));
+        }
+
+        [Authorize(Roles = "Owner")]
+        [HttpPut]
+        public async Task<IActionResult> EditSender(ApiSmsSender sender)
+        {
+            if (!ModelState.IsValid)
+            {
+                return ReturnBadRequestWithAListOfErrors(ModelState);
+            }
+
+            return Ok(await _senderService.UpdateEntityAsync(sender));
+        }
+
+        [Authorize(Roles = "Owner")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteSender(int senderId)
+        {
+            ValidationHelper.ValidateId(senderId, nameof(senderId));
+
+            await _senderService.DeleteEntityByIdAsync(senderId);
+
+            return Ok();
+        }
+
+        [Authorize(Roles = "Owner")]
+        [HttpPatch]
+        public async Task<IActionResult> AssignUserToSender(int userId, int senderId)
+        {
+            ValidationHelper.ValidateId(userId, nameof(userId));
+            ValidationHelper.ValidateId(senderId, nameof(senderId));
+
+            await _senderService.AssignUserToSender(userId, senderId);
+
+            return Ok();
+        }
+
+        [Authorize(Roles = "Owner")]
+        [HttpPatch]
+        public async Task<IActionResult> UnassignUserFromSender(int userId, int senderId)
+        {
+            ValidationHelper.ValidateId(userId, nameof(userId));
+            ValidationHelper.ValidateId(senderId, nameof(senderId));
+
+            await _senderService.UnassignUserFromSender(userId);
+
+            return Ok();
+        }
+
+        [Authorize(Roles = "Owner")]
+        [HttpGet]
+        public async Task<IActionResult> GetSendersBySearchPhrase(string searchPhrase)
+        {
+            ValidationHelper.ValidateString(searchPhrase, nameof(searchPhrase));
+
+            return Ok(await _senderService.GetSendersBySearchPhraseAsync(searchPhrase));
         }
 
         #endregion

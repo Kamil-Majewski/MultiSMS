@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using MultiSMS.Interface.Entities;
 using MultiSMS.Interface.Repositories;
 using MultiSMS.Interface.Repositories.Interfaces;
 
@@ -8,17 +9,10 @@ namespace MultiSMS.Interface.Initialization
     {
         public static void InitializeInfrastructureDependencies(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            serviceCollection.AddScoped<IEmployeeRepository, EmployeeRepository>();
-            serviceCollection.AddScoped<IAdministratorRepository, AdministratorRepository>();
-            serviceCollection.AddScoped<IGroupRepository, GroupRepository>();
-            serviceCollection.AddScoped<ISMSMessageTemplateRepository, SMSMessageTemplateRepository>();
-            serviceCollection.AddScoped<IEmployeeGroupRepository, EmployeeGroupRepository>();
-            serviceCollection.AddScoped<ILogRepository, LogRepository>();
-            serviceCollection.AddScoped<ISMSMessageRepository, SMSMessageRepository>();
-            serviceCollection.AddScoped<IImportResultRepository, ImportResultRepository>();
-            serviceCollection.AddScoped<IApiSettingsRepository, ApiSettingsRepository>();
-
+            serviceCollection.AddScoped(typeof(IGenericRepository<>), typeof(MultiSmsGenericRepository<>));
+            serviceCollection.AddScoped(typeof(IGenericRepository<ApiToken>), typeof(LocalGenericRepository<ApiToken>));
+            serviceCollection.AddScoped(typeof(IGenericRepository<ApiSmsSender>), typeof(LocalGenericRepository<ApiSmsSender>));
+            serviceCollection.AddScoped(typeof(IGenericRepository<ApiSmsSenderUser>), typeof(LocalGenericRepository<ApiSmsSenderUser>));
         }
     }
 }

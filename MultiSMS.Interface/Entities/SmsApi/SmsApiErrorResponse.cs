@@ -5,13 +5,16 @@ namespace MultiSMS.Interface.Entities.SmsApi
     public class SmsApiErrorResponse
     {
         [JsonProperty(PropertyName = "invalid_numbers", Required = Required.Default)]
-        public List<InvalidNumber>? InvalidNumbers { get; set; } = new List<InvalidNumber>();
+        public List<InvalidNumber>? InvalidNumbers { get; set; } = new();
 
         [JsonProperty(PropertyName = "error", Required = Required.Always)]
-        public int ErrorCode { get; set; }
+        public string ErrorCode { get; set; } = default!;
 
         [JsonProperty(PropertyName = "message", Required = Required.Always)]
         public string ErrorMessage { get; set; } = default!;
+
+        [JsonProperty(PropertyName = "errors", Required = Required.Default)]
+        public List<Error> Errors { get; set; } = new();
     }
 
     public class InvalidNumber
@@ -24,5 +27,13 @@ namespace MultiSMS.Interface.Entities.SmsApi
 
         [JsonProperty(PropertyName = "message", Required = Required.Always)]
         public string Message { get; set; } = default!;
+    }
+
+    public class Error
+    {
+        [JsonProperty(PropertyName = "error", Required = Required.Always)]
+        public string ErrorType { get; set; } = default!;
+        [JsonProperty(PropertyName = "message", Required = Required.Always)]
+        public string ErrorMessage { get; set; } = default!;
     }
 }

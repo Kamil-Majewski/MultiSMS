@@ -13,7 +13,7 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    var admin = await AdministratorService.GetAdministratorDtoByEmailAsync(UserManager.GetUserName(User)!);
+    var admin = await AdministratorService.GetUserDtoByEmailAsync(UserManager.GetUserName(User)!);
 
     <nav class="navbar-nav navbar-expand ml-auto">
         <div style="margin-right:30px;">
@@ -21,7 +21,7 @@
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
                         <a class="profile-settings dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="user-picture" style="width:30px;"><img src="~/icons/toolbar-user.png" /></span><span style="margin-left:9px;" id="@admin.UserName">@admin.Name @admin.Surname</span>
+                            <span class="user-picture" style="width:30px;"><img src="icons/toolbar-user.png" /></span><span style="margin-left:9px;" id="@admin.UserName">@admin.Name @admin.Surname</span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/UserSettings">Profil użytkownika</a></li>

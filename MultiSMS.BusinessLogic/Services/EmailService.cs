@@ -1,6 +1,7 @@
 ﻿using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
+using MultiSMS.BusinessLogic.Helpers;
 using MultiSMS.BusinessLogic.Services.Interfaces;
 using MultiSMS.BusinessLogic.Settings;
 using MultiSMS.Interface.Entities;
@@ -17,6 +18,8 @@ namespace MultiSMS.BusinessLogic.Services
 
         public void SendEmail(Message message)
         {
+            ValidationHelper.ValidateObject(message, nameof(message));
+
             var emailMessage = CreateEmailMessage(message);
 
             Send(emailMessage);
@@ -24,6 +27,8 @@ namespace MultiSMS.BusinessLogic.Services
 
         public MimeMessage CreateEmailMessage(Message message)
         {
+            ValidationHelper.ValidateObject(message, nameof(message));
+
             var emailMessage = new MimeMessage();
             emailMessage.From.Add(MailboxAddress.Parse(_mailSettings.MailAddress));
             var mailboxAddresses = new List<MailboxAddress>();
@@ -40,6 +45,8 @@ namespace MultiSMS.BusinessLogic.Services
         }
         public void Send(MimeMessage mailMessage)
         {
+            ValidationHelper.ValidateObject(_mailSettings, nameof(mailMessage));
+
             using (var client = new MailKit.Net.Smtp.SmtpClient())
             {
                 try

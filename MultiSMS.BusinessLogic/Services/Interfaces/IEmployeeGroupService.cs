@@ -2,7 +2,7 @@
 
 namespace MultiSMS.BusinessLogic.Services.Interfaces
 {
-    public interface IEmployeeGroupService
+    public interface IEmployeeGroupService : IGenericService<EmployeeGroup>
     {
         Task AddGroupMemberAsync(int groupId, int employeeId);
         Task<List<string>> GetAllActiveEmployeesPhoneNumbersForGroupListAsync(int groupId);
@@ -11,7 +11,7 @@ namespace MultiSMS.BusinessLogic.Services.Interfaces
         Task<List<int>> GetAllGroupIdsForEmployeeListAsync(int employeeId);
         Task<List<string>> GetAllGroupNamesForEmployeeListAsync(int employeeId);
         Task<List<string>> GetAllPhoneNumbersForGroupListAsync(int groupId);
-        Task RemoveGroupMember(int groupId, int employeeId);
-        Dictionary<int, IEnumerable<string>> GetDictionaryOfEmployeeIdAndGroupNames();
+        Task<Dictionary<int, IEnumerable<string>>> GetDictionaryOfEmployeeIdAndGroupNamesAsync();
+        Task RemoveGroupMemberAsync(int groupId, int employeeId);
     }
 }

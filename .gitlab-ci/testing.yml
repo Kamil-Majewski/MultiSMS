@@ -1,0 +1,61 @@
+test-build:
+  stage: test-build
+  tags:
+    - linux
+    - native
+    - shared
+  hooks:
+      pre_get_sources_script:
+      - sudo chown -R gitlab-runner:gitlab-runner .
+  script:
+    - echo "Starting CI/CD pipeline..."
+    - echo "Fetching secrets..."
+    - mkdir -p multisms-secrets
+    - echo "$APPSETTINGS_JSON_BASE64" | base64 --decode > multisms-secrets/appsettings.json
+    - echo "$APPSETTINGS_DEVELOPMENT_JSON_BASE64" | base64 --decode > multisms-secrets/appsettings.Development.json
+
+    - echo "Starting docker container and building project..."
+    - docker run --rm
+      -v "$CI_PROJECT_DIR":/opt/multisms
+      -v "$CI_PROJECT_DIR/multisms-secrets/appsettings.json":/opt/multisms/MultiSMS.MVC/appsettings.json
+      -v "$CI_PROJECT_DIR/multisms-secrets/appsettings.Development.json":/opt/multisms/MultiSMS.MVC/appsettings.Development.json
+      bitnami/dotnet-sdk:"$DOTNET_VERSION"
+      /bin/sh -c "cd /opt/multisms &&
+      echo 'Restoring dependencies...' &&
+      dotnet restore \"$SOLUTION_FILE\" &&
+      echo 'Building solution...' &&
+      dotnet build \"$SOLUTION_FILE\" --configuration Release --no-restore &&
+      echo 'Publishing web project...' &&
+      dotnet publish \"$WEB_PROJECT\" -c Release -o \"$ARTIFACTS_PATH\""
+
+  artifacts:
+    paths:
+      - $ARTIFACTS_PATH
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "testing"'
+
+test-deploy:
+  stage: test-deploy
+  tags:
+    - iis
+    - windows
+  dependencies:
+    - test-build
+  script:
+    - echo "Checking if IIS App Pool is running..."
+    - if ((Get-WebAppPoolState -Name 'cicd').Value -eq 'Started') { 
+        echo "Stopping IIS App Pool...";
+        Stop-WebAppPool -Name 'cicd' 
+      } else { 
+        echo "IIS App Pool is not running, skipping stop step."
+      }
+    - echo "Waiting for 10 seconds before clearing previous deployment..."
+    - Start-Sleep -Seconds 10
+    - echo "Clearing previous deployment..."
+    - Get-ChildItem "$TEST_DEPLOY_PATH" | Where-Object { $_.Name -notin "sms_senders_with_api_tokens.db", "web.config" } | Remove-Item -Recurse -Force
+    - echo "Copying new files..."
+    - Copy-Item -Path ".\artifacts\*" -Destination "$TEST_DEPLOY_PATH" -Recurse -Exclude "web.config"
+    - echo "Starting IIS App Pool..."
+    - Start-WebAppPool -Name 'cicd'
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "testing"'

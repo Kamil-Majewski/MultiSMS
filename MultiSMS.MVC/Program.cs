@@ -11,6 +11,7 @@ using MultiSMS.MVC.Models;
 using MultiSMS.MVC.Areas;
 using MultiSMS.MVC.Middlewares;
 using MultiSMS.MVC.Hubs;
+using MultiSMS.BusinessLogic.MappingConfig;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,15 +25,17 @@ var configuration = new ConfigurationBuilder()
 builder.Services.AddOptions();
 
 var multiSMSConnectionString = builder.Configuration.GetConnectionString("MultiSMSConnectionString") ?? throw new InvalidOperationException($"Could not get database connection string");
+
 builder.Services.AddDbContext<MultiSMSDbContext>(options =>
-    options.UseSqlServer(multiSMSConnectionString));
+    options.UseNpgsql(multiSMSConnectionString));
+
+builder.Services.AddDbContext<LocalDbContext>(options =>
+    options.UseSqlite("Data Source=sms_senders_with_api_tokens.db"));
 
 builder.Services.Configure<EmailSettings>(configuration.GetSection("MailSettings"));
-builder.Services.Configure<ServerSmsSettings>(configuration.GetSection("SMSServerSettings"));
-builder.Services.Configure<SmsApiSettings>(configuration.GetSection("SMSAPI"));
 builder.Services.Configure<ApiSettingsSettings>(configuration.GetSection("ApiSettingsSettings"));
 
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddAutoMapper(typeof(AutomapperProfile).Assembly);
 
 builder.Services.AddIdentity<User, IdentityRole<int>>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<MultiSMSDbContext>()

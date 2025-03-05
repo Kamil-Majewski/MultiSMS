@@ -1,4 +1,6 @@
-﻿function debounce(func, timeout = 300) {
+﻿var basePath = window.location.pathname.split('/').slice(0, 2).join('/') + '/';
+
+function debounce(func, timeout = 300) {
     let timer;
     return (...args) => {
         if (!timer) {
@@ -32,10 +34,10 @@ function togglePasswordVisibility(passwordInputEl, eyeIconEl) {
     $(eyeIconEl).on('click', function () {
         if (passwordInputEl.type === 'password') {
             passwordInputEl.type = 'text';
-            eyeIconEl.src = window.location.origin + "/icons/eye.png";
+            eyeIconEl.src = window.location.origin + "icons/eye.png";
         } else {
             passwordInputEl.type = 'password';
-            eyeIconEl.src = window.location.origin + "/icons/closed-eye.png";
+            eyeIconEl.src = window.location.origin + "icons/closed-eye.png";
         }
     });
 }
@@ -107,7 +109,7 @@ function OnSubmitFilterTemplatesTable(formIdentifiaction, searchBarIdentificatio
         }
 
         $.ajax({
-            url: `/Home/GetTemplatesBySeachPhrase`,
+            url: basePath + `Home/GetTemplatesBySeachPhrase`,
             type: 'GET',
             contentType: 'application/json',
             data: { searchPhrase },
@@ -124,13 +126,13 @@ function OnSubmitFilterTemplatesTable(formIdentifiaction, searchBarIdentificatio
                             <td class="big-cell template-content">${template.templateContent}</td>
                             <td class="centered-cell">
                                 <a href="#details-${template.templateId}" class="icon-list template-details">
-                                    <img src="/icons/view-doc.png" title="Szczegóły">
+                                    <img src="icons/view-doc.png" title="Szczegóły">
                                 </a>
                                 <a href="#edit-${template.templateId}" class="icon-list template-edit">
-                                    <img src="/icons/edit.png" title="Edytuj">
+                                    <img src="icons/edit.png" title="Edytuj">
                                 </a>
                                 <a href="#delete-${template.templateId}" class="icon-list template-delete">
-                                    <img src="/icons/trash.png" title="Usuń">
+                                    <img src="icons/trash.png" title="Usuń">
                                 </a>
                             </td>
                         </tr>
@@ -173,7 +175,7 @@ function OnSubmitFilterContactsTable(formIdentifiaction, searchBarIdentification
         }
 
         $.ajax({
-            url: `/Home/GetContactsBySearchPhrase`,
+            url: basePath + `Home/GetContactsBySearchPhrase`,
             type: 'GET',
             contentType: 'application/json',
             data: { searchPhrase },
@@ -195,13 +197,13 @@ function OnSubmitFilterContactsTable(formIdentifiaction, searchBarIdentification
                             <td class="centered-cell contact-groups">${(contact.employeeGroupNames == null || contact.employeeGroupNames.length == 0) ? "Nie przypisano" : contact.employeeGroupNames.join(", ")}</td>
                             <td class="centered-cell">
                                 <a href="#details-${contact.employeeId}" class="icon-list contact-details">
-                                    <img src="/icons/view-doc.png" title="Szczegóły">
+                                    <img src="icons/view-doc.png" title="Szczegóły">
                                 </a>
                                 <a href="#edit-${contact.employeeId}" class="icon-list contact-edit">
-                                    <img src="/icons/edit.png" title="Edytuj">
+                                    <img src="icons/edit.png" title="Edytuj">
                                 </a>
                                 <a href="#delete-${contact.employeeId}" class="icon-list contact-delete">
-                                    <img src="/icons/trash.png" title="Usuń">
+                                    <img src="icons/trash.png" title="Usuń">
                                 </a>
                             </td>
                         </tr>
@@ -244,7 +246,7 @@ function OnSubmitFilterAssignContactsTable(formIdentifiaction, searchBarIdentifi
         }
 
         $.ajax({
-            url: `/Home/GetContactsBySearchPhrase`,
+            url: basePath + `Home/GetContactsBySearchPhrase`,
             type: 'GET',
             contentType: 'application/json',
             data: { searchPhrase },
@@ -268,12 +270,12 @@ function OnSubmitFilterAssignContactsTable(formIdentifiaction, searchBarIdentifi
 
                     if (groupAssignMembersIds.includes(contact.employeeId)) {
 
-                        newRow += `<a href="#unassign-${contact.employeeId}-${grouAssignGroupId}" class="icon-list contact-unassign"><img src="/icons/unassign-user.png" title="Wypisz z grupy"/></a>
+                        newRow += `<a href="#unassign-${contact.employeeId}-${grouAssignGroupId}" class="icon-list contact-unassign"><img src="icons/unassign-user.png" title="Wypisz z grupy"/></a>
                                         </td>
                                         </tr>`;
                     }
                     else {
-                        newRow += `<a href="#assign-${contact.employeeId}-${grouAssignGroupId}" class="icon-list contact-assign"><img src="/icons/assign-user.png" title="Dopisz do grupy" /></a>
+                        newRow += `<a href="#assign-${contact.employeeId}-${grouAssignGroupId}" class="icon-list contact-assign"><img src="icons/assign-user.png" title="Dopisz do grupy" /></a>
                                         </td>
                                         </tr>`;
                     }
@@ -315,7 +317,7 @@ function OnSubmitFilterAssignGroupsTable(formIdentifiaction, searchBarIdentifica
         }
 
         $.ajax({
-            url: `/Home/GetGroupsBySearchPhrase`,
+            url: basePath + `Home/GetGroupsBySearchPhrase`,
             type: 'GET',
             contentType: 'application/json',
             data: { searchPhrase },
@@ -335,12 +337,12 @@ function OnSubmitFilterAssignGroupsTable(formIdentifiaction, searchBarIdentifica
 
                     if (group.membersIds.includes(parseInt(groupAssignContactId))) {
 
-                        newRow += `<a href="#unassign-${groupAssignContactId}-${group.groupId}" class="icon-list contact-group-unassign"><img src="/icons/unassign-user.png" title="Wypisz z grupy"/></a>
+                        newRow += `<a href="#unassign-${groupAssignContactId}-${group.groupId}" class="icon-list contact-group-unassign"><img src="icons/unassign-user.png" title="Wypisz z grupy"/></a>
                                         </td>
                                         </tr>`;
                     }
                     else {
-                        newRow += `<a href="#assign-${groupAssignContactId}-${group.groupId}" class="icon-list contact-group-assign"><img src="/icons/assign-user.png" title="Dopisz do grupy"/></a>
+                        newRow += `<a href="#assign-${groupAssignContactId}-${group.groupId}" class="icon-list contact-group-assign"><img src="icons/assign-user.png" title="Dopisz do grupy"/></a>
                                         </td>
                                         </tr>`;
                     }
@@ -382,7 +384,7 @@ function OnSubmitFilterGroupsTable(formIdentifiaction, searchBarIdentification, 
         }
 
         $.ajax({
-            url: `/Home/GetGroupsBySearchPhrase`,
+            url: basePath + `Home/GetGroupsBySearchPhrase`,
             type: 'GET',
             contentType: 'application/json',
             data: { searchPhrase },
@@ -399,16 +401,16 @@ function OnSubmitFilterGroupsTable(formIdentifiaction, searchBarIdentification, 
                             <td class="tiny-centered-cell contact-email">${group.membersIds.length}</td>
                             <td class="centered-cell" style="min-width:205px !important;">
                                 <a href="#assign-${group.groupId}" class="icon-list group-assign">
-                                    <img src="/icons/assign-users.png" title="Przypisz użytkowników">
+                                    <img src="icons/assign-users.png" title="Przypisz użytkowników">
                                 </a>
                                 <a href="#details-${group.groupId}" class="icon-list group-details">
-                                    <img src="/icons/view-doc.png" title="Szczegóły">
+                                    <img src="icons/view-doc.png" title="Szczegóły">
                                 </a>
                                 <a href="#edit-${group.groupId}" class="icon-list group-edit">
-                                    <img src="/icons/edit.png" title="Edytuj">
+                                    <img src="icons/edit.png" title="Edytuj">
                                 </a>
                                 <a href="#delete-${group.groupId}" class="icon-list group-delete">
-                                    <img src="/icons/trash.png" title="Usuń">
+                                    <img src="icons/trash.png" title="Usuń">
                                 </a>
                             </td>
                         </tr>
@@ -451,7 +453,7 @@ function OnSubmitFilterLogsTable(formIdentifiaction, searchBarIdentification, ta
         }
 
         $.ajax({
-            url: `/Home/GetLogsBySearchPhrase`,
+            url: basePath + `Home/GetLogsBySearchPhrase`,
             type: 'GET',
             contentType: 'application/json',
             data: { searchPhrase },
@@ -472,7 +474,7 @@ function OnSubmitFilterLogsTable(formIdentifiaction, searchBarIdentification, ta
                             <td class="big-cell">${log.logMessage}</td>
                             <td class="centered-cell" style="min-width:105px;">${new Date(log.logCreationDate).toLocaleString('pl-PL')}</td>
                             <td class="tiny-centered-cell">
-                                <a href="#details-${log.logId}" class="icon-list log-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
+                                <a href="#details-${log.logId}" class="icon-list log-details"><img src="icons/view-doc.png" title="Szczegóły"/></a>
                             </td>
                         </tr>                        
                     `;
@@ -486,26 +488,28 @@ function OnSubmitFilterLogsTable(formIdentifiaction, searchBarIdentification, ta
     });
 }
 
-function SendSMS(text, chosenGroupId, chosenGroupName, additionalPhoneNumbers, additionalInfo) {
+function SendSMS(text, chosenGroupId, additionalPhoneNumbers, additionalInfo) {
     function findUniqueErrors(value, index, array) {
         return array.indexOf(value) === index;
     }
 
     $.ajax({
-        url: '/SmsApi/SendSmsMessage',
+        url: basePath + 'SmsApi/SendSmsMessage',
         type: 'GET',
         contentType: 'application/json',
-        data: { text: text, chosenGroupId: chosenGroupId, chosenGroupName: chosenGroupName, additionalPhoneNumbers: additionalPhoneNumbers, additionalInfo: additionalInfo },
+        data: { text: text, chosenGroupId: chosenGroupId, additionalPhoneNumbers: additionalPhoneNumbers, additionalInfo: additionalInfo },
         success: function (response) {
             switch (response.status) {
                 case "failed":
 
                     console.error(`Operation failed, server responded with code ${response.code} - ${response.message}`);
                     $("#status-message-sms").addClass("failed-status");
-                    $("#status-message-sms").html(`Operacja zakończyła się niepowodzeniem, błąd ${response.code} - ${response.message} <button type='button' class='btn-close text-dark' aria-label='Close' onclick='CloseAlert()'></button>`);
+                    $("#status-message-sms").html(`Operacja zakończyła się niepowodzeniem. Błąd: ${response.code} - ${response.message} <button type='button' class='btn-close text-dark' aria-label='Close' onclick='CloseAlert()'></button>`);
 
                     break;
-                case "success" || "Multiple-Success":
+                case true:
+                case "Multiple-Success":
+                case false:
 
                     console.log(`Operation successful, messages queued: ${response.queued}, messages unsent: ${response.unsent}`);
                     $("#status-message-sms").addClass("success-status");
@@ -559,7 +563,7 @@ function SendSMS(text, chosenGroupId, chosenGroupName, additionalPhoneNumbers, a
 
 function checkIfAuthorizationSuccessful(password) {
     $.ajax({
-        url: '/Home/CheckIfAuthorizationSuccessful',
+        url: 'Home/CheckIfAuthorizationSuccessful',
         type: 'POST',
         data: JSON.stringify(password),
         contentType: 'application/json; charset=utf-8',
@@ -590,7 +594,7 @@ function updateApiSettings() {
     var testMode = $("#test-mode-checkbox").prop("checked") ? true : false;
 
     $.ajax({
-        url: '/Home/UpdateApiSettings',
+        url: 'Home/UpdateApiSettings',
         type: 'POST',
         data: JSON.stringify({ ActiveApiName: activeApi, SenderName: senderName, FastChannel: fastChannel, TestMode: testMode }),
         contentType: 'application/json; charset=utf-8',
@@ -610,7 +614,7 @@ function updateApiSettings() {
 
 function fetchApiSettingsByName(apiName) {
     $.ajax({
-        url: '/Home/FetchApiSettingsByName',
+        url: 'Home/FetchApiSettingsByName',
         type: 'GET',
         data: { apiName: apiName },
         contentType: 'application/json',
@@ -627,7 +631,7 @@ function fetchApiSettingsByName(apiName) {
 
 function addUserToGroup(link, assignContactIdGroupId) {
     $.ajax({
-        url: '/Home/AddUserToGroup',
+        url: 'Home/AddUserToGroup',
         type: 'GET',
         data: { groupId: assignContactIdGroupId[2], employeeId: assignContactIdGroupId[1] },
         contentType: 'application/json',
@@ -636,7 +640,7 @@ function addUserToGroup(link, assignContactIdGroupId) {
             $("#group-members-count").html(parseInt(groupMembersCount) + 1);
             link.removeClass("contact-assign").addClass("contact-unassign");
             link.attr("href", `#unassign-${assignContactIdGroupId[1]}-${assignContactIdGroupId[2]}`)
-            link.children("img").attr("src", "/icons/unassign-user.png").attr("title", "Wypisz z grupy");
+            link.children("img").attr("src", "icons/unassign-user.png").attr("title", "Wypisz z grupy");
 
             var nearestRow = link.closest('tr');
             var assignedGroups = nearestRow.find('td.centered-cell').html() == "Nie przypisano" ? [] : nearestRow.find('td.centered-cell').html().split(", ");
@@ -651,14 +655,14 @@ function addUserToGroup(link, assignContactIdGroupId) {
 
 function assignGroupToUser(link, assignContactIdGroupId) {
     $.ajax({
-        url: '/Home/AddUserToGroup',
+        url: 'Home/AddUserToGroup',
         type: 'GET',
         data: { groupId: assignContactIdGroupId[2], employeeId: assignContactIdGroupId[1] },
         contentType: 'application/json',
         success: function () {
             link.removeClass("contact-group-assign").addClass("contact-group-unassign");
             link.attr("href", `#unassign-${assignContactIdGroupId[1]}-${assignContactIdGroupId[2]}`)
-            link.children("img").attr("src", "/icons/unassign-user.png").attr("title", "Wypisz z grupy");
+            link.children("img").attr("src", "icons/unassign-user.png").attr("title", "Wypisz z grupy");
             var nearestRow = link.closest('tr');
 
             var groupMembersElement = nearestRow.find('.group-members');
@@ -679,7 +683,7 @@ function assignGroupToUser(link, assignContactIdGroupId) {
 
 function removeUserFromGroup(link, assignContactIdGroupId) {
     $.ajax({
-        url: '/Home/RemoveUserFromGroup',
+        url: 'Home/RemoveUserFromGroup',
         type: 'GET',
         data: { groupId: assignContactIdGroupId[2], employeeId: assignContactIdGroupId[1] },
         contentType: 'application/json',
@@ -688,7 +692,7 @@ function removeUserFromGroup(link, assignContactIdGroupId) {
             $("#group-members-count").html(parseInt(groupMembersCount) - 1);
             link.removeClass("contact-unassign").addClass("contact-assign");
             link.attr("href", `#assign-${assignContactIdGroupId[1]}-${assignContactIdGroupId[2]}`)
-            link.children("img").attr("src", "/icons/assign-user.png").attr("title", "Dopisz do grupy");
+            link.children("img").attr("src", "icons/assign-user.png").attr("title", "Dopisz do grupy");
 
             var nearestRow = link.closest('tr');
             var assignedGroups = nearestRow.find('td.centered-cell').html().split(", ");
@@ -705,14 +709,14 @@ function removeUserFromGroup(link, assignContactIdGroupId) {
 
 function unassignGroupFromUser(link, assignContactIdGroupId) {
     $.ajax({
-        url: '/Home/RemoveUserFromGroup',
+        url: 'Home/RemoveUserFromGroup',
         type: 'GET',
         data: { groupId: assignContactIdGroupId[2], employeeId: assignContactIdGroupId[1] },
         contentType: 'application/json',
         success: function () {
             link.removeClass("contact-group-unassign").addClass("contact-group-assign");
             link.attr("href", `#assign-${assignContactIdGroupId[1]}-${assignContactIdGroupId[2]}`)
-            link.children("img").attr("src", "/icons/assign-user.png").attr("title", "Dopisz do grupy");
+            link.children("img").attr("src", "icons/assign-user.png").attr("title", "Dopisz do grupy");
 
             var nearestRow = link.closest('tr');
 
@@ -794,7 +798,7 @@ function importContacts() {
         var formData = createFormData(file);
 
         $.ajax({
-            url: '/Home/ImportContacts',
+            url: 'Home/ImportContacts',
             type: 'POST',
             data: formData,
             contentType: false,
@@ -937,7 +941,7 @@ function importContacts() {
 
 function ExportContactsAndDownloadExcel() {
     $.ajax({
-        url: '/Home/DownloadExcelWithContacts',
+        url: 'Home/DownloadExcelWithContacts',
         type: 'GET',
         contentType: 'application/json',
         xhrFields: {
@@ -1308,17 +1312,28 @@ function HandleGroupsTypeLog(groupEntity) {
 function handleSMSGroupTypeLog(smsGroupObject) {
     var type = $("#logTypeDetail").text();
 
+    let smsMessage;
+    let responseError;
+    let senderName;
+    let fastChannel;
+
     if (smsGroupObject.apiUsed == "ServerSms") {
-        var smsMessage = smsGroupObject.sms.settings.text || "Nie wpisano treści";
-        var responseError = smsGroupObject.sms.serverResponse.error;
-        var senderName = smsGroupObject.sms.settings.sender || "Nie określono";
-        var fastChannel = smsGroupObject.sms.settings.speed;
+        smsMessage = smsGroupObject.sms.settings.text || "Nie wpisano treści";
+        responseError = smsGroupObject.sms.serverResponse.error;
+        senderName = smsGroupObject.sms.settings.sender || "Nie określono";
+        fastChannel = smsGroupObject.sms.settings.speed;
+    }
+    else if (smsGroupObject.apiUsed == "SmsApi") {
+        smsMessage = smsGroupObjectt.sms.settings.message || "Nie wpisano treści";
+        responseError = smsGroupObject.sms.serverResponse;
+        senderName = smsGroupObject.sms.settings.from || "Nie określono";
+        fastChannel = smsGroupObject.sms.settings.fast;
     }
     else {
-        var smsMessage = smsGroupObject.sms.settings.message || "Nie wpisano treści";
-        var responseError = smsGroupObject.sms.serverResponse;
-        var senderName = smsGroupObject.sms.settings.from || "Nie określono";
-        var fastChannel = smsGroupObject.sms.settings.fast;
+        smsMessage = smsGroupObject.sms.settings.default_message || "Nie wpisano treści";
+        responseError = smsGroupObject.sms.serverResponse.detail;
+        senderName = "Przypisana do tokenu";
+        fastChannel = "1";
     }
 
     var chosenGroupId = smsGroupObject.sms.chosenGroupId || "Nie wybrano grupy";
@@ -1352,7 +1367,7 @@ function handleSMSGroupTypeLog(smsGroupObject) {
                     <div class="row mb-10">
                         <div class="col d-flex">
                             <label class="logs-detail-label" for="logSMSGroup-AdditionalPhoneNumbersDetail">Dodatkowe numery:</label>
-                             <span class="details-span" id="logSMSGroup-AdditionalPhoneNumbersDetail">${additionalPhoneNumbers.length == 0 ? "Nie podano" : additionalPhoneNumbers.split(',').join(", ")}</span>
+                             <span class="details-span" id="logSMSGroup-AdditionalPhoneNumbersDetail">${additionalPhoneNumbers == null || additionalPhoneNumbers.length == 0  ? "Nie podano" : additionalPhoneNumbers.split(',').join(", ")}</span>
                         </div>
                     </div>
                     <div class="row mb-10">
@@ -1403,7 +1418,7 @@ function handleSMSGroupTypeLog(smsGroupObject) {
                     </div>
                 `;
         }
-        else {
+        else if (smsGroupObject.apiUsed == "SmsApi") {
             relatedObjects +=
                 `
                     <div class="row mb-10" style="margin-top: 20px;">
@@ -1418,6 +1433,17 @@ function handleSMSGroupTypeLog(smsGroupObject) {
                                 <span class="details-span" id="logSMSGroup-ErrorMessageDetail">${responseError.errorMessage}</span>
                         </div>
                     </div>
+                `;
+        }
+        else {
+            relatedObjects +=
+                `
+                <div class="row mb-10" style="margin-top: 20px;">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logSMSNoGroup-ErrorMessageDetail">Wiadomość błędu:</label>
+                        <span class="details-span" id="logSMSNoGroup-ErrorMessageDetail">${responseError}</span>
+                    </div>
+                </div>
                 `;
         }
 
@@ -1445,7 +1471,7 @@ function handleSMSGroupTypeLog(smsGroupObject) {
                 </div>
                 `;
         }
-        else {
+        else if (smsGroupObject.apiUsed == "SmsApi") {
             relatedObjects +=
                 `<div class="row mb-10" style="margin-top: 20px;">
                     <div class="col d-flex">
@@ -1465,6 +1491,30 @@ function handleSMSGroupTypeLog(smsGroupObject) {
                         <span class="details-span" id="logSMSGroup-UnsentDetail">${responseSuccess.details.filter(r => r.status != "QUEUE").length}</span>
                     </div>
                 </div>
+                `;
+        }
+
+        else {
+            relatedObjects +=
+                `
+                    <div class="row mb-10" style="margin-top: 20px;">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSNoGroup-StatusDetail">Status:</label>
+                            <span class="details-span" id="logSMSNoGroup-StatusDetail">Sukces</span>
+                        </div>
+                    </div>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSNoGroup-SentDetail">Wysłano:</label>
+                            <span class="details-span" id="logSMSNoGroup-SentDetail">${responseSuccess.result.filter(r => r.id != null).length}</span>
+                        </div>
+                    </div>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSNoGroup-UnsentDetail">Nie wysłano:</label>
+                            <span class="details-span" id="logSMSNoGroup-UnsentDetail">${responseSuccess.result.filter(r => r.errorCode != null && r.errorMessage != null).length}</span>
+                        </div>
+                    </div>
                 `;
         }
     }
@@ -1535,17 +1585,28 @@ function handleSMSGroupTypeLog(smsGroupObject) {
 function handleSMSNoGroupTypeLog(smsNoGroupObject) {
     var type = $("#logTypeDetail").text();
 
+    let smsMessage;
+    let responseError;
+    let senderName;
+    let fastChannel;
+
     if (smsNoGroupObject.apiUsed == "ServerSms") {
-        var smsMessage = smsNoGroupObject.sms.settings.text || "Nie wpisano treści";
-        var responseError = smsNoGroupObject.sms.serverResponse.error;
-        var senderName = smsNoGroupObject.sms.settings.sender || "Nie określono";
-        var fastChannel = smsNoGroupObject.sms.settings.speed;
+        smsMessage = smsNoGroupObject.sms.settings.text || "Nie wpisano treści";
+        responseError = smsNoGroupObject.sms.serverResponse.error;
+        senderName = smsNoGroupObject.sms.settings.sender || "Nie określono";
+        fastChannel = smsNoGroupObject.sms.settings.speed;
+    }
+    else if (smsNoGroupObject.apiUsed == "SmsApi") {
+        smsMessage = smsNoGroupObject.sms.settings.message || "Nie wpisano treści";
+        responseError = smsNoGroupObject.sms.serverResponse;
+        senderName = smsNoGroupObject.sms.settings.from || "Nie określono";
+        fastChannel = smsNoGroupObject.sms.settings.fast;
     }
     else {
-        var smsMessage = smsNoGroupObject.sms.settings.message || "Nie wpisano treści";;
-        var responseError = smsNoGroupObject.sms.serverResponse;
-        var senderName = smsNoGroupObject.sms.settings.from || "Nie określono";;
-        var fastChannel = smsNoGroupObject.sms.settings.fast;
+        smsMessage = smsNoGroupObject.sms.settings.default_message || "Nie wpisano treści";
+        responseError = smsNoGroupObject.sms.serverResponse.detail;
+        senderName = "Przypisana do tokenu";
+        fastChannel = "1";
     }
 
     var chosenGroupId = smsNoGroupObject.sms.chosenGroupId || "Nie wybrano grupy";
@@ -1580,7 +1641,7 @@ function handleSMSNoGroupTypeLog(smsNoGroupObject) {
             <div class="row mb-10">
                 <div class="col d-flex">
                     <label class="logs-detail-label" for="logSMSNoGroup-AdditionalPhoneNumbersDetail">Dodatkowe numery:</label>
-                        <span class="details-span" id="logSMSNoGroup-AdditionalPhoneNumbersDetail">${additionalPhoneNumbers.length == 0 ? "Nie podano" : additionalPhoneNumbers.split(',').join(", ")}</span>
+                        <span class="details-span" id="logSMSNoGroup-AdditionalPhoneNumbersDetail">${additionalPhoneNumbers == null || additionalPhoneNumbers.length == 0 ? "Nie podano" : additionalPhoneNumbers.split(',').join(", ")}</span>
                 </div>
             </div>
             <div class="row mb-10">
@@ -1631,7 +1692,7 @@ function handleSMSNoGroupTypeLog(smsNoGroupObject) {
                 </div>
                 `;
         }
-        else {
+        else if (smsNoGroupObject.apiUsed == "SmsApi") {
             relatedObjects +=
                 `
                 <div class="row mb-10" style="margin-top: 20px;">
@@ -1644,6 +1705,17 @@ function handleSMSNoGroupTypeLog(smsNoGroupObject) {
                     <div class="col d-flex">
                         <label class="logs-detail-label" for="logSMSNoGroup-ErrorMessageDetail">Wiadomość błędu:</label>
                         <span class="details-span" id="logSMSNoGroup-ErrorMessageDetail">${responseError.errorMessage}</span>
+                    </div>
+                </div>
+                `;
+        }
+        else {
+            relatedObjects +=
+                `
+                <div class="row mb-10" style="margin-top: 20px;">
+                    <div class="col d-flex">
+                        <label class="logs-detail-label" for="logSMSNoGroup-ErrorMessageDetail">Wiadomość błędu:</label>
+                        <span class="details-span" id="logSMSNoGroup-ErrorMessageDetail">${responseError}</span>
                     </div>
                 </div>
                 `;
@@ -1674,7 +1746,7 @@ function handleSMSNoGroupTypeLog(smsNoGroupObject) {
                     </div>
                 `;
         }
-        else {
+        else if (smsNoGroupObject.apiUsed == "SmsApi") {
             relatedObjects +=
                 `
                     <div class="row mb-10" style="margin-top: 20px;">
@@ -1693,6 +1765,29 @@ function handleSMSNoGroupTypeLog(smsNoGroupObject) {
                         <div class="col d-flex">
                             <label class="logs-detail-label" for="logSMSNoGroup-UnsentDetail">Nie wysłano:</label>
                             <span class="details-span" id="logSMSNoGroup-UnsentDetail">${responseSuccess.details.filter(r => r.status != "QUEUE").length}</span>
+                        </div>
+                    </div>
+                `;
+        }
+        else {
+            relatedObjects +=
+                `
+                    <div class="row mb-10" style="margin-top: 20px;">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSNoGroup-StatusDetail">Status:</label>
+                            <span class="details-span" id="logSMSNoGroup-StatusDetail">Sukces</span>
+                        </div>
+                    </div>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSNoGroup-SentDetail">Wysłano:</label>
+                            <span class="details-span" id="logSMSNoGroup-SentDetail">${responseSuccess.result.filter(r => r.id != null).length}</span>
+                        </div>
+                    </div>
+                    <div class="row mb-10">
+                        <div class="col d-flex">
+                            <label class="logs-detail-label" for="logSMSNoGroup-UnsentDetail">Nie wysłano:</label>
+                            <span class="details-span" id="logSMSNoGroup-UnsentDetail">${responseSuccess.result.filter(r => r.errorCode != null && r.errorMessage != null).length}</span>
                         </div>
                     </div>
                 `;
@@ -1888,7 +1983,7 @@ function SanitizePolishSymbols(inputId) {
 function DeleteTemplate(templateId) {
 
     $.ajax({
-        url: '/Home/DeleteTemplate',
+        url: 'Home/DeleteTemplate',
         type: 'GET',
         contentType: 'application/json',
         data: { id: templateId },
@@ -1914,7 +2009,7 @@ function CloseSettingsAlert() {
 function DeleteContact(contactId) {
 
     $.ajax({
-        url: '/Home/DeleteContact',
+        url: 'Home/DeleteContact',
         type: 'GET',
         contentType: 'application/json',
         data: { id: contactId },
@@ -1933,7 +2028,7 @@ function DeleteContact(contactId) {
 function DeleteGroup(groupId) {
 
     $.ajax({
-        url: '/Home/DeleteGroup',
+        url: 'Home/DeleteGroup',
         type: 'GET',
         contentType: 'application/json',
         data: { id: groupId },
@@ -1954,7 +2049,7 @@ function EditTemplate() {
     var templateContent = $("#templateContentInput").val();
     var templateDescription = $("#templateDescriptionInput").val();
     $.ajax({
-        url: '/Home/EditTemplate',
+        url: 'Home/EditTemplate',
         type: 'GET',
         contentType: 'application/json',
         data: { id: templateId, name: templateName, description: templateDescription, content: templateContent },
@@ -1983,7 +2078,7 @@ function EditContact() {
     let isActive = document.querySelector('input[name="isActive?"]:checked').value;
 
     $.ajax({
-        url: '/Home/EditContact',
+        url: 'Home/EditContact',
         type: 'GET',
         contentType: 'application/json',
         data: { contactId: contactId, contactName: name, contactSurname: surname, email: email, phone: phoneNumber, address: address, zip: zip, city: city, department: department, isActive: isActive },
@@ -2012,7 +2107,7 @@ function EditGroup() {
     var groupName = $("#groupNameInput").val();
     var groupDescription = $("#groupDescriptionInput").val();
     $.ajax({
-        url: '/Home/EditGroup',
+        url: 'Home/EditGroup',
         type: 'GET',
         contentType: 'application/json',
         data: { id: groupId, name: groupName, description: groupDescription },
@@ -2029,7 +2124,7 @@ function EditGroup() {
 
 function FetchAllTemplatesAndPopulateTable() {
     $.ajax({
-        url: '/Home/FetchAllTemplates',
+        url: 'Home/FetchAllTemplates',
         type: 'GET',
         contentType: 'application/json',
         success: function (listOfTemplates) {
@@ -2046,9 +2141,9 @@ function FetchAllTemplatesAndPopulateTable() {
                             <td class="medium-cell template-description">${description}</td>
                             <td class="big-cell template-content">${item.templateContent}</td>
                             <td class="centered-cell">
-                            <a href="#details-${item.templateId}" class="icon-list template-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
-                            <a href="#edit-${item.templateId}" class="icon-list template-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
-                            <a href="#delete-${item.templateId}" class="icon-list template-delete"><img src="/icons/trash.png" title="Usuń"/></a>
+                            <a href="#details-${item.templateId}" class="icon-list template-details"><img src="icons/view-doc.png" title="Szczegóły"/></a>
+                            <a href="#edit-${item.templateId}" class="icon-list template-edit"><img src="icons/edit.png" title="Edytuj"/></a>
+                            <a href="#delete-${item.templateId}" class="icon-list template-delete"><img src="icons/trash.png" title="Usuń"/></a>
                             </td>
                             </tr>`;
 
@@ -2069,7 +2164,7 @@ function PaginateTemplatesAndPopulateTable(firstId, lastId, pageSize, moveForwar
 
 
     $.ajax({
-        url: '/Home/PaginateTemplates',
+        url: 'Home/PaginateTemplates',
         type: 'GET',
         data: {firstId, lastId, pageSize, moveForward },
         contentType: 'application/json',
@@ -2094,9 +2189,9 @@ function PaginateTemplatesAndPopulateTable(firstId, lastId, pageSize, moveForwar
                         <td class="medium-cell template-description">${description}</td>
                         <td class="big-cell template-content">${template.templateContent}</td>
                         <td class="centered-cell">
-                            <a href="#details-${template.templateId}" class="icon-list template-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
-                            <a href="#edit-${template.templateId}" class="icon-list template-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
-                            <a href="#delete-${template.templateId}" class="icon-list template-delete"><img src="/icons/trash.png" title="Usuń"/></a>
+                            <a href="#details-${template.templateId}" class="icon-list template-details"><img src="icons/view-doc.png" title="Szczegóły"/></a>
+                            <a href="#edit-${template.templateId}" class="icon-list template-edit"><img src="icons/edit.png" title="Edytuj"/></a>
+                            <a href="#delete-${template.templateId}" class="icon-list template-delete"><img src="icons/trash.png" title="Usuń"/></a>
                         </td>
                     </tr>
                 `;
@@ -2108,7 +2203,7 @@ function PaginateTemplatesAndPopulateTable(firstId, lastId, pageSize, moveForwar
                 templateNextButtonContainer.append(`
                     <button class="arrow-button" id="templates-list-next-page-button" type="button">
                         <span class="list-arrow-forward">
-                            <img src="/icons/arrow-next.png" />
+                            <img src="icons/arrow-next.png" />
                         </span>
                     </button>`);
                 templatePageCounter.show();
@@ -2124,7 +2219,7 @@ function PaginateTemplatesAndPopulateTable(firstId, lastId, pageSize, moveForwar
                 templatePreviousButtonContainer.append(`
                     <button class="arrow-button" id="templates-list-previous-page-button" type="button">
                         <span class="list-arrow-back">
-                            <img src="/icons/arrow-previous.png"/>
+                            <img src="icons/arrow-previous.png"/>
                         </span>
                     </button>
                 `);
@@ -2146,7 +2241,7 @@ function PaginateTemplatesAndPopulateTable(firstId, lastId, pageSize, moveForwar
 
 function FetchAllContactsAndPopulateTable() {
     $.ajax({
-        url: '/Home/FetchAllContacts',
+        url: 'Home/FetchAllContacts',
         type: 'GET',
         contentType: 'application/json',
         success: function (listOfContacts) {
@@ -2168,9 +2263,9 @@ function FetchAllContactsAndPopulateTable() {
                             ${isActiveRow}
                             <td class="centered-cell contact-groups">${groupNames}</td>
                             <td class="centered-cell">
-                            <a href="#details-${item.employeeId}" class="icon-list contact-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
-                            <a href="#edit-${item.employeeId}" class="icon-list contact-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
-                            <a href="#delete-${item.employeeId}" class="icon-list contact-delete"><img src="/icons/trash.png" title="Usuń"/></a>
+                            <a href="#details-${item.employeeId}" class="icon-list contact-details"><img src="icons/view-doc.png" title="Szczegóły"/></a>
+                            <a href="#edit-${item.employeeId}" class="icon-list contact-edit"><img src="icons/edit.png" title="Edytuj"/></a>
+                            <a href="#delete-${item.employeeId}" class="icon-list contact-delete"><img src="icons/trash.png" title="Usuń"/></a>
                             </td>
                             </tr>`;
 
@@ -2223,10 +2318,10 @@ function PaginateContactsAndPopulateTable(firstId, lastId, pageSize, moveForward
                         ${isActiveRow}
                         <td class="centered-cell contact-groups">${groupNames}</td>
                         <td class="centered-cell" style="min-width: 163px;">
-                            <a href="#assign-${contact.employeeId}" class="icon-list contact-assign-groups"><img src="/icons/assign-users.png" title="Przypisz grupy"/></a>
-                            <a href="#details-${contact.employeeId}" class="icon-list contact-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
-                            <a href="#edit-${contact.employeeId}" class="icon-list contact-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
-                            <a href="#delete-${contact.employeeId}" class="icon-list contact-delete"><img src="/icons/trash.png" title="Usuń"/></a>
+                            <a href="#assign-${contact.employeeId}" class="icon-list contact-assign-groups"><img src="icons/assign-users.png" title="Przypisz grupy"/></a>
+                            <a href="#details-${contact.employeeId}" class="icon-list contact-details"><img src="icons/view-doc.png" title="Szczegóły"/></a>
+                            <a href="#edit-${contact.employeeId}" class="icon-list contact-edit"><img src="icons/edit.png" title="Edytuj"/></a>
+                            <a href="#delete-${contact.employeeId}" class="icon-list contact-delete"><img src="icons/trash.png" title="Usuń"/></a>
                         </td>
                     </tr>
                 `;
@@ -2238,7 +2333,7 @@ function PaginateContactsAndPopulateTable(firstId, lastId, pageSize, moveForward
                 contactNextButtonContainer.append(`
                     <button class="arrow-button" id="contacts-list-next-page-button" type="button">
                         <span class="list-arrow-forward">
-                            <img src="/icons/arrow-next.png" />
+                            <img src="icons/arrow-next.png" />
                         </span>
                     </button>`
                 );
@@ -2254,7 +2349,7 @@ function PaginateContactsAndPopulateTable(firstId, lastId, pageSize, moveForward
                 contactPreviousButtonContainer.append(`
                     <button class="arrow-button" id="contacts-list-previous-page-button" type="button">
                         <span class="list-arrow-back">
-                            <img src="/icons/arrow-previous.png"/>
+                            <img src="icons/arrow-previous.png"/>
                         </span>
                     </button>
                 `);
@@ -2314,12 +2409,12 @@ function PaginateAssignContactsAndPopulateTable(firstId, lastId, pageSize, moveF
 
                 if (groupAssignMembersIds.includes(contact.employeeId)) {
 
-                    newRow += `<a href="#unassign-${contact.employeeId}-${grouAssignGroupId}" class="icon-list contact-unassign"><img src="/icons/unassign-user.png" title="Wypisz z grupy"/></a>
+                    newRow += `<a href="#unassign-${contact.employeeId}-${grouAssignGroupId}" class="icon-list contact-unassign"><img src="icons/unassign-user.png" title="Wypisz z grupy"/></a>
                                         </td>
                                         </tr>`;
                 }
                 else {
-                    newRow += `<a href="#assign-${contact.employeeId}-${grouAssignGroupId}" class="icon-list contact-assign"><img src="/icons/assign-user.png" title="Dopisz do grupy" /></a>
+                    newRow += `<a href="#assign-${contact.employeeId}-${grouAssignGroupId}" class="icon-list contact-assign"><img src="icons/assign-user.png" title="Dopisz do grupy" /></a>
                                         </td>
                                         </tr>`;
                 }
@@ -2331,7 +2426,7 @@ function PaginateAssignContactsAndPopulateTable(firstId, lastId, pageSize, moveF
                 contactNextButtonContainer.append(`
                     <button class="arrow-button" id="contacts-assign-list-next-page-button" type="button">
                         <span class="list-arrow-forward">
-                            <img src="/icons/arrow-next.png" />
+                            <img src="icons/arrow-next.png" />
                         </span>
                     </button>`
                 );
@@ -2347,7 +2442,7 @@ function PaginateAssignContactsAndPopulateTable(firstId, lastId, pageSize, moveF
                 contactPreviousButtonContainer.append(`
                     <button class="arrow-button" id="contacts-assign-list-previous-page-button" type="button">
                         <span class="list-arrow-back">
-                            <img src="/icons/arrow-previous.png"/>
+                            <img src="icons/arrow-previous.png"/>
                         </span>
                     </button>
                 `);
@@ -2369,7 +2464,7 @@ function PaginateAssignContactsAndPopulateTable(firstId, lastId, pageSize, moveF
 
 function FetchAllGroupsAndPopulateTable() {
     $.ajax({
-        url: '/Home/FetchAllGroups',
+        url: 'Home/FetchAllGroups',
         type: 'GET',
         contentType: 'application/json',
         success: function (listOfGroups) {
@@ -2384,10 +2479,10 @@ function FetchAllGroupsAndPopulateTable() {
                         <td class="big-cell group-description">${groupDescription}</td>
                         <td class="tiny-centered-cell">${item.membersIds.length}</td>
                         <td class="centered-cell" id="group-options-container" style="min-width: 205px;">
-                            <a href="#assign-${item.groupId}" class="icon-list group-assign"><img src="/icons/assign-users.png" title="Przypisz użytkowników"/></a>
-                            <a href="#details-${item.groupId}" class="icon-list group-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
-                            <a href="#edit-${item.groupId}" class="icon-list group-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
-                            <a href="#delete-${item.groupId}" class="icon-list group-delete"><img src="/icons/trash.png" title="Usuń"/></a>
+                            <a href="#assign-${item.groupId}" class="icon-list group-assign"><img src="icons/assign-users.png" title="Przypisz użytkowników"/></a>
+                            <a href="#details-${item.groupId}" class="icon-list group-details"><img src="icons/view-doc.png" title="Szczegóły"/></a>
+                            <a href="#edit-${item.groupId}" class="icon-list group-edit"><img src="icons/edit.png" title="Edytuj"/></a>
+                            <a href="#delete-${item.groupId}" class="icon-list group-delete"><img src="icons/trash.png" title="Usuń"/></a>
                         </td>
                     </tr>`
                 ;
@@ -2406,7 +2501,7 @@ function PaginateGroupsAndPopulateTable(firstId, lastId, pageSize, moveForward) 
     $("#groups-list-next-page-button, #groups-list-previous-page-button").prop("disabled", true);
 
     $.ajax({
-        url: '/Home/PaginateGroups',
+        url: 'Home/PaginateGroups',
         type: 'GET',
         data: {firstId, lastId, pageSize, moveForward },
         contentType: 'application/json',
@@ -2431,10 +2526,10 @@ function PaginateGroupsAndPopulateTable(firstId, lastId, pageSize, moveForward) 
                         <td class="big-cell group-description">${description}</td>
                         <td class="tiny-centered-cell">${group.membersIds.length}</td>
                         <td class="centered-cell" id="group-options-container" style="min-width: 205px !important;">
-                            <a href="#assign-${group.groupId}" class="icon-list group-assign"><img src="/icons/assign-users.png" title="Przypisz użytkowników"/></a>
-                            <a href="#details-${group.groupId}" class="icon-list group-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
-                            <a href="#edit-${group.groupId}" class="icon-list group-edit"><img src="/icons/edit.png" title="Edytuj"/></a>
-                            <a href="#delete-${group.groupId}" class="icon-list group-delete"><img src="/icons/trash.png" title="Usuń"/></a>
+                            <a href="#assign-${group.groupId}" class="icon-list group-assign"><img src="icons/assign-users.png" title="Przypisz użytkowników"/></a>
+                            <a href="#details-${group.groupId}" class="icon-list group-details"><img src="icons/view-doc.png" title="Szczegóły"/></a>
+                            <a href="#edit-${group.groupId}" class="icon-list group-edit"><img src="icons/edit.png" title="Edytuj"/></a>
+                            <a href="#delete-${group.groupId}" class="icon-list group-delete"><img src="icons/trash.png" title="Usuń"/></a>
                         </td>
                     </tr>
                 `;
@@ -2446,7 +2541,7 @@ function PaginateGroupsAndPopulateTable(firstId, lastId, pageSize, moveForward) 
                 groupNextButtonContainer.append(`
                     <button class="arrow-button" id="groups-list-next-page-button" type="button">
                         <span class="list-arrow-forward">
-                            <img src="/icons/arrow-next.png" />
+                            <img src="icons/arrow-next.png" />
                         </span>
                     </button>`
                 );
@@ -2462,7 +2557,7 @@ function PaginateGroupsAndPopulateTable(firstId, lastId, pageSize, moveForward) 
                 groupPreviousButtonContainer.append(`
                     <button class="arrow-button" id="groups-list-previous-page-button" type="button">
                         <span class="list-arrow-back">
-                            <img src="/icons/arrow-previous.png"/>
+                            <img src="icons/arrow-previous.png"/>
                         </span>
                     </button>
                 `);
@@ -2487,7 +2582,7 @@ function PaginateAssignGroupsAndPopulateTable(firstId, lastId, pageSize, moveFor
     $("#groups-assign-list-next-page-button, #groups-assign-list-previous-page-button").prop("disabled", true);
 
     $.ajax({
-        url: '/Home/PaginateGroups',
+        url: 'Home/PaginateGroups',
         type: 'GET',
         data: { firstId, lastId, pageSize, moveForward },
         contentType: 'application/json',
@@ -2516,12 +2611,12 @@ function PaginateAssignGroupsAndPopulateTable(firstId, lastId, pageSize, moveFor
 
                 if (group.membersIds.includes(parseInt(groupAssignContactId))) {
 
-                    newRow += `<a href="#unassign-${groupAssignContactId}-${group.groupId}" class="icon-list contact-group-unassign"><img src="/icons/unassign-user.png" title="Wypisz z grupy"/></a>
+                    newRow += `<a href="#unassign-${groupAssignContactId}-${group.groupId}" class="icon-list contact-group-unassign"><img src="icons/unassign-user.png" title="Wypisz z grupy"/></a>
                                         </td>
                                         </tr>`;
                 }
                 else {
-                    newRow += `<a href="#assign-${groupAssignContactId}-${group.groupId}" class="icon-list contact-group-assign"><img src="/icons/assign-user.png" title="Dopisz do grupy"/></a>
+                    newRow += `<a href="#assign-${groupAssignContactId}-${group.groupId}" class="icon-list contact-group-assign"><img src="icons/assign-user.png" title="Dopisz do grupy"/></a>
                                         </td>
                                         </tr>`;
                 }
@@ -2533,7 +2628,7 @@ function PaginateAssignGroupsAndPopulateTable(firstId, lastId, pageSize, moveFor
                 groupNextButtonContainer.append(`
                     <button class="arrow-button" id="groups-assign-list-next-page-button" type="button">
                         <span class="list-arrow-forward">
-                            <img src="/icons/arrow-next.png" />
+                            <img src="icons/arrow-next.png" />
                         </span>
                     </button>`
                 );
@@ -2549,7 +2644,7 @@ function PaginateAssignGroupsAndPopulateTable(firstId, lastId, pageSize, moveFor
                 groupPreviousButtonContainer.append(`
                     <button class="arrow-button" id="groups-assign-list-previous-page-button" type="button">
                         <span class="list-arrow-back">
-                            <img src="/icons/arrow-previous.png"/>
+                            <img src="icons/arrow-previous.png"/>
                         </span>
                     </button>
                 `);
@@ -2571,7 +2666,7 @@ function PaginateAssignGroupsAndPopulateTable(firstId, lastId, pageSize, moveFor
 
 function FetchAllLogsAndPopulateTable() {
     $.ajax({
-        url: '/Home/FetchAllLogs',
+        url: 'Home/FetchAllLogs',
         type: 'GET',
         contentType: 'application/json',
         success: function (listOfLogs) {
@@ -2587,7 +2682,7 @@ function FetchAllLogsAndPopulateTable() {
                             <td class="big-cell">${item.logMessage}</td>
                             <td class="centered-cell" style="min-width:105px;">${new Date(item.logCreationDate).toLocaleString('en-GB')}</td>
                             <td class="tiny-centered-cell">
-                            <a href="#details-${item.logId}" class="icon-list log-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
+                            <a href="#details-${item.logId}" class="icon-list log-details"><img src="icons/view-doc.png" title="Szczegóły"/></a>
                             </td>
                             </tr>`;
 
@@ -2607,7 +2702,7 @@ function PaginateLogsAndPopulateTable(firstId, lastId, pageSize, moveForward) {
     $("#logs-list-next-page-button, #logs-list-previous-page-button").prop("disabled", true);
 
     $.ajax({
-        url: '/Home/PaginateLogs',
+        url: 'Home/PaginateLogs',
         type: 'GET',
         data: {firstId, lastId, pageSize, moveForward },
         contentType: 'application/json',
@@ -2633,7 +2728,7 @@ function PaginateLogsAndPopulateTable(firstId, lastId, pageSize, moveForward) {
                         <td class="big-cell">${log.logMessage}</td>
                         <td class="centered-cell" style="min-width:105px;">${new Date(log.logCreationDate).toLocaleString('pl-PL')}</td>
                         <td class="tiny-centered-cell">
-                            <a href="#details-${log.logId}" class="icon-list log-details"><img src="/icons/view-doc.png" title="Szczegóły"/></a>
+                            <a href="#details-${log.logId}" class="icon-list log-details"><img src="icons/view-doc.png" title="Szczegóły"/></a>
                         </td>
                     </tr>`
                     ;
@@ -2645,7 +2740,7 @@ function PaginateLogsAndPopulateTable(firstId, lastId, pageSize, moveForward) {
                 logNextButtonContainer.append(`
                     <button class="arrow-button" id="logs-list-next-page-button" type="button">
                         <span class="list-arrow-forward">
-                            <img src="/icons/arrow-next.png" />
+                            <img src="icons/arrow-next.png" />
                         </span>
                     </button>`
                 );
@@ -2661,7 +2756,7 @@ function PaginateLogsAndPopulateTable(firstId, lastId, pageSize, moveForward) {
                 logPreviousButtonContainer.append(`
                     <button class="arrow-button" id="logs-list-previous-page-button" type="button">
                         <span class="list-arrow-back">
-                            <img src="/icons/arrow-previous.png"/>
+                            <img src="icons/arrow-previous.png"/>
                         </span>
                     </button>`
                 );
@@ -2684,7 +2779,7 @@ function PaginateLogsAndPopulateTable(firstId, lastId, pageSize, moveForward) {
 
 function PopulateTableForChooseGroupForSMS() {
     $.ajax({
-        url: '/Home/FetchAllValidGroups',
+        url: 'Home/FetchAllValidGroups',
         type: 'GET',
         contentType: 'application/json',
         success: function (listOfGroups) {
@@ -2699,7 +2794,7 @@ function PopulateTableForChooseGroupForSMS() {
                             <td class="big-cell">${description}</td>
                             <td class="tiny-centered-cell">${item.membersIds.length}</td>
                             <td class="tiny-centered-cell">
-                            <a href="#pick-${item.groupId}" class="icon-list group-pick-me"><img src="/icons/pick-me.png" title="Wybierz grupę"/></a>
+                            <a href="#pick-${item.groupId}" class="icon-list group-pick-me"><img src="icons/pick-me.png" title="Wybierz grupę"/></a>
                             </td>
                             </tr>`;
 
@@ -2715,7 +2810,7 @@ function PopulateTableForChooseGroupForSMS() {
 
 function PopulateTableForChooseTemplateForSMS() {
     $.ajax({
-        url: '/Home/FetchAllTemplates',
+        url: 'Home/FetchAllTemplates',
         type: 'GET',
         contentType: 'application/json',
         success: function (listOfTemplates) {
@@ -2730,7 +2825,7 @@ function PopulateTableForChooseTemplateForSMS() {
                             <td class="medium-cell">${templateDescription}</td>
                             <td class="big-cell">${item.templateContent}</td>
                             <td class="tiny-centered-cell">
-                            <a href="#pick-${item.templateId}" class="icon-list template-pick-me"><img src="/icons/pick-me.png" title="Wybierz szablon"/></a>
+                            <a href="#pick-${item.templateId}" class="icon-list template-pick-me"><img src="icons/pick-me.png" title="Wybierz szablon"/></a>
                             </td>
                             </tr>`;
 
@@ -2753,7 +2848,7 @@ function PopulateTablesForAssigningUsersToGroups(groupId) {
     grouAssignGroupId = groupId;
 
     $.ajax({
-        url: '/Home/GetGroupById',
+        url: 'Home/GetGroupById',
         type: 'GET',
         data: { id: groupId },
 
@@ -2788,7 +2883,7 @@ function PopulateTablesForAssigningGroupsToUsers(contactId) {
     groupAssignContactId = contactId;
 
     $.ajax({
-        url: '/Home/GetContactById',
+        url: 'Home/GetContactById',
         type: 'GET',
         data: { id: contactId },
         contentType: 'application/json',
@@ -2824,7 +2919,7 @@ function CreateNewTemplate() {
     let content = $("#templateContentInput").val();
 
     $.ajax({
-        url: '/Home/CreateNewTemplate',
+        url: 'Home/CreateNewTemplate',
         type: 'GET',
         contentType: 'application/json',
         data: { templateName: name, templateDescription: description, templateContent: content },
@@ -2836,13 +2931,13 @@ function CreateNewTemplate() {
                 <td class="big-cell template-content">${template.templateContent}</td>
                 <td class=centered-cell>
                     <a href="#details-${template.templateId}" class="icon-list template-details">
-                        <img src="/icons/view-doc.png" title="Szczegóły">
+                        <img src="icons/view-doc.png" title="Szczegóły">
                     </a>
                     <a href="#edit-${template.templateId}" class="icon-list template-edit">
-                        <img src="/icons/edit.png" title="Edytuj">
+                        <img src="icons/edit.png" title="Edytuj">
                     </a>
                     <a href="#delete-${template.templateId}" class="icon-list template-delete">
-                        <img src="/icons/trash.png" title="Usuń">
+                        <img src="icons/trash.png" title="Usuń">
                     </a>
                 </td>
             </tr>
@@ -2867,7 +2962,7 @@ function CreateNewContact() {
     let isActive = document.querySelector('input[name="isActive?"]:checked').value;
 
     $.ajax({
-        url: '/Home/CreateNewContact',
+        url: 'Home/CreateNewContact',
         type: 'GET',
         contentType: 'application/json',
         data: { contactName: name, contactSurname: surname, email: email, phone: phoneNumber, address: address, zip: zip, city: city, department: department, isActive: isActive },
@@ -2884,13 +2979,13 @@ function CreateNewContact() {
                 <td class="centered-cell contact-groups">Nie przypisano</td>
                 <td class="centered-cell">
                     <a href="#details-${contact.employeeId}" class="icon-list contact-details">
-                        <img src="/icons/view-doc.png" title="Szczegóły">
+                        <img src="icons/view-doc.png" title="Szczegóły">
                     </a>
                     <a href="#edit-${contact.employeeId}" class="icon-list contact-edit">
-                        <img src="/icons/edit.png" title="Edytuj">
+                        <img src="icons/edit.png" title="Edytuj">
                     </a>
                     <a href="#delete-${contact.employeeId}" class="icon-list contact-delete">
-                        <img src="/icons/trash.png" title="Usuń">
+                        <img src="icons/trash.png" title="Usuń">
                     </a>
                 </td>
             </tr>
@@ -2908,7 +3003,7 @@ function CreateNewGroup() {
     let description = $("#groupDescriptionInput").val();
 
     $.ajax({
-        url: '/Home/CreateNewGroup',
+        url: 'Home/CreateNewGroup',
         type: 'GET',
         contentType: 'application/json',
         data: { groupName: name, groupDescription: description },
@@ -2920,16 +3015,16 @@ function CreateNewGroup() {
                 <td class="tiny-centered-cell">0</td>
                 <td class="centered-cell" style="minwidth: 205px;">
                     <a href="#assign-${group.groupId}" class="icon-list group-assign">
-                        <img src="/icons/assign-users.png" title="Przypisz użytkowników">
+                        <img src="icons/assign-users.png" title="Przypisz użytkowników">
                     </a>
                     <a href="#details-${group.groupId}" class="icon-list group-details">
-                        <img src="/icons/view-doc.png" title="Szczegóły">
+                        <img src="icons/view-doc.png" title="Szczegóły">
                     </a>
                     <a href="#edit-${group.groupId}" class="icon-list group-edit">
-                        <img src="/icons/edit.png" title="Edytuj">
+                        <img src="icons/edit.png" title="Edytuj">
                     </a>
                     <a href="#delete-${group.groupId}" class="icon-list group-delete">
-                        <img src="/icons/trash.png" title="Usuń">
+                        <img src="icons/trash.png" title="Usuń">
                     </a>
                 </td>
             </tr>
@@ -3140,10 +3235,10 @@ function getAllUsersAndPopulateTable() {
                     optionsCell = `
                             <td class="tiny-centered-cell row-options">
                                 <a href="#edit" class="icon-list user-edit">
-                                    <img src="/icons/edit.png" title="Edytuj">
+                                    <img src="icons/edit.png" title="Edytuj">
                                 </a>
                                 <a href="#delete" class="icon-list user-delete">
-                                    <img src="/icons/trash.png" title="Usuń">
+                                    <img src="icons/trash.png" title="Usuń">
                                 </a>
                             </td>`;
                 }
@@ -3208,7 +3303,7 @@ function formatPhoneNumber(phoneInput, event) {
 function createNewUser(formData) {
 
     $.ajax({
-        url: `/Home/DetermineUserRoleAndCreate`,
+        url: basePath + `Home/DetermineUserRoleAndCreate`,
         type: 'POST',
         dataType: "json",
         data: formData,
@@ -3234,10 +3329,10 @@ function createNewUser(formData) {
                 ${roleCell}
                  <td class="tiny-centered-cell row-options">
                     <a href="#edit" class="icon-list user-edit">
-                        <img src="/icons/edit.png" title="Edytuj">
+                        <img src="icons/edit.png" title="Edytuj">
                     </a>
                     <a href="#delete" class="icon-list user-delete">
-                        <img src="/icons/trash.png" title="Usuń">
+                        <img src="icons/trash.png" title="Usuń">
                     </a>
                 </td>
             </tr>`;
@@ -3284,7 +3379,7 @@ function createNewUser(formData) {
 
 function getUserById(userId) {
     $.ajax({
-        url: `Home/DetermineUserRoleAndGetById`,
+        url: basePath + `Home/DetermineUserRoleAndGetById`,
         type: 'GET',
         contentType: 'application/json',
         data: { userId: userId },
@@ -3327,7 +3422,7 @@ function CloseUserAlert() {
 
 function editUser(userId, formData) {
     $.ajax({
-        url: `/Home/DetermineUserRoleAndEdit?userId=${userId}`,
+        url: basePath + `Home/DetermineUserRoleAndEdit?userId=${userId}`,
         type: 'PUT',
         dataType: "json",
         data: formData,
@@ -3357,10 +3452,10 @@ function editUser(userId, formData) {
                 ${roleCell}
                  <td class="tiny-centered-cell row-options">
                     <a href="#edit" class="icon-list user-edit">
-                        <img src="/icons/edit.png" title="Edytuj">
+                        <img src="icons/edit.png" title="Edytuj">
                     </a>
                     <a href="#delete" class="icon-list user-delete">
-                        <img src="/icons/trash.png" title="Usuń">
+                        <img src="icons/trash.png" title="Usuń">
                     </a>
                 </td>
             </tr>`;
@@ -3404,7 +3499,7 @@ function editUser(userId, formData) {
 
 function deleteUser(deleteElement, userId) {
     $.ajax({
-        url: `/Home/DetermineUserRoleAndDelete?userId=${userId}`,
+        url: basePath + `Home/DetermineUserRoleAndDelete?userId=${userId}`,
         type: 'DELETE',
         contentType: 'application/json',
         success: function () {
