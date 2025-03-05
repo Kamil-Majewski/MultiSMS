@@ -61,9 +61,9 @@ deploy:
     - echo "Waiting for 10 seconds before clearing previous deployment..."
     - Start-Sleep -Seconds 10
     - echo "Clearing previous deployment..."
-    - Get-ChildItem "$TEST_DEPLOY_PATH" | Where-Object { $_.Name -ne "sms_senders_with_api_tokens.db" } | Remove-Item -Recurse -Force
+    - Get-ChildItem "$TEST_DEPLOY_PATH" | Where-Object { $_.Name -notin "sms_senders_with_api_tokens.db", "web.config" } | Remove-Item -Recurse -Force
     - echo "Copying new files..."
-    - Copy-Item -Path ".\artifacts\*" -Destination "$TEST_DEPLOY_PATH" -Recurse
+    - Copy-Item -Path ".\artifacts\*" -Destination "$TEST_DEPLOY_PATH" -Recurse -Exclude "web.config"
     - echo "Starting IIS App Pool..."
     - Start-WebAppPool -Name 'cicd'
   rules:
