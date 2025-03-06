@@ -1,4 +1,4 @@
-﻿var basePath = window.location.pathname.split('/').slice(0, 2).join('/') + '/';
+﻿const basePath = window.location.pathname.split('/').slice(0, 2).join('/') + '/';
 
 function debounce(func, timeout = 300) {
     let timer;
@@ -67,10 +67,10 @@ function CalculateHeaderWidthAndToolbarHeight() {
 function OnInputFilterTable(searchBarIdentification, tableIdentification) {
     $(searchBarIdentification).on('input', function () {
 
-        var filterText = $(this).val().toLowerCase();
+        const filterText = $(this).val().toLowerCase();
 
         $(`${tableIdentification} tbody tr`).each(function () {
-            var rowHit = false;
+            let rowHit = false;
             $(this).find('td').each(function () {
                 if ($(this).text().toLowerCase().includes(filterText)) {
                     rowHit = true;
@@ -95,11 +95,11 @@ function OnSubmitFilterTemplatesTable(formIdentifiaction, searchBarIdentificatio
         templateNextButtonContainer.hide();
         templatePreviousButtonContainer.hide();
 
-        var searchPhrase = $(searchBarIdentification).val().toLowerCase();
+        const searchPhrase = $(searchBarIdentification).val().toLowerCase();
 
         if (searchPhrase == "") {
 
-            var firstId = $(tableIdentification).attr("first-id");
+            const firstId = $(tableIdentification).attr("first-id");
 
             PaginateTemplatesAndPopulateTable(firstId, null, 11, null);
 
@@ -119,7 +119,7 @@ function OnSubmitFilterTemplatesTable(formIdentifiaction, searchBarIdentificatio
                 templateListBody.empty();
 
                 listOfTemplates.forEach(template => {
-                    var newRow = `
+                    let newRow = `
                         <tr>
                             <td class="small-cell template-name">${template.templateName}</td>
                             <td class="medium-cell template-description">${template.templateDescription}</td>
@@ -160,11 +160,11 @@ function OnSubmitFilterContactsTable(formIdentifiaction, searchBarIdentification
         contactNextButtonContainer.hide();
         contactPreviousButtonContainer.hide();
 
-        var searchPhrase = $(searchBarIdentification).val().toLowerCase();
+        let searchPhrase = $(searchBarIdentification).val().toLowerCase();
 
         if (searchPhrase == "") {
 
-            var firstId = $(tableIdentification).attr("first-id");
+            const firstId = $(tableIdentification).attr("first-id");
 
             PaginateContactsAndPopulateTable(firstId, null, 11, null);
 
@@ -185,7 +185,7 @@ function OnSubmitFilterContactsTable(formIdentifiaction, searchBarIdentification
                 contactListBody.empty();
                  
                 listOfContacts.forEach(contact => {
-                    var newRow = `
+                    let newRow = `
                         <tr>
                             <td class="tiny-cell contact-name">${contact.name}</td>
                             <td class="tiny-cell contact-surname">${contact.surname}</td>
@@ -231,11 +231,11 @@ function OnSubmitFilterAssignContactsTable(formIdentifiaction, searchBarIdentifi
         contactNextButtonContainer.hide();
         contactPreviousButtonContainer.hide();
 
-        var searchPhrase = $(searchBarIdentification).val().toLowerCase();
+        const searchPhrase = $(searchBarIdentification).val().toLowerCase();
 
         if (searchPhrase == "") {
 
-            var firstId = $(tableIdentification).attr("first-id");
+            const firstId = $(tableIdentification).attr("first-id");
 
             PaginateAssignContactsAndPopulateTable(firstId, null, 7, null);
 
@@ -256,7 +256,7 @@ function OnSubmitFilterAssignContactsTable(formIdentifiaction, searchBarIdentifi
                 contactListBody.empty();
 
                 listOfContacts.forEach(contact => {
-                    var newRow = `
+                    let newRow = `
                         <tr>
                             <td class="tiny-cell contact-name">${contact.name}</td>
                             <td class="tiny-cell contact-surname">${contact.surname}</td>
@@ -302,11 +302,11 @@ function OnSubmitFilterAssignGroupsTable(formIdentifiaction, searchBarIdentifica
         groupNextButtonContainer.hide();
         groupPreviousButtonContainer.hide();
 
-        var searchPhrase = $(searchBarIdentification).val().toLowerCase();
+        const searchPhrase = $(searchBarIdentification).val().toLowerCase();
 
         if (searchPhrase == "") {
 
-            var firstId = $(tableIdentification).attr("first-id");
+            const firstId = $(tableIdentification).attr("first-id");
 
             PaginateAssignGroupsAndPopulateTable(firstId, null, 7, null);
 
@@ -327,7 +327,7 @@ function OnSubmitFilterAssignGroupsTable(formIdentifiaction, searchBarIdentifica
                 groupListBody.empty();
 
                 listOfGroups.forEach(group => {
-                    var newRow = `
+                    let newRow = `
                         <tr>
                             <td class="small-cell group-name">${group.groupName}</td>
                             <td class="big-cell group-description">${group.groupDescription || "Brak opisu"}</td>
@@ -369,11 +369,11 @@ function OnSubmitFilterGroupsTable(formIdentifiaction, searchBarIdentification, 
         groupNextButtonContainer.hide();
         groupPreviousButtonContainer.hide();
 
-        var searchPhrase = $(searchBarIdentification).val().toLowerCase();
+        const searchPhrase = $(searchBarIdentification).val().toLowerCase();
 
         if (searchPhrase == "") {
 
-            var firstId = $(tableIdentification).attr("first-id");
+            const firstId = $(tableIdentification).attr("first-id");
 
             PaginateGroupsAndPopulateTable(firstId, null, 11, null);
 
@@ -394,7 +394,7 @@ function OnSubmitFilterGroupsTable(formIdentifiaction, searchBarIdentification, 
                 groupListBody.empty();
 
                 listOfGroups.forEach(group => {
-                    var newRow = `
+                    let newRow = `
                         <tr>
                             <td class="small-cell group-name">${group.groupName}</td>
                             <td class="big-cell group-description">${group.groupDescription}</td>
@@ -438,11 +438,11 @@ function OnSubmitFilterLogsTable(formIdentifiaction, searchBarIdentification, ta
         logNextButtonContainer.hide();
         logPreviousButtonContainer.hide();
 
-        var searchPhrase = $(searchBarIdentification).val().toLowerCase();
+        const searchPhrase = $(searchBarIdentification).val().toLowerCase();
 
         if (searchPhrase == "") {
 
-            var firstId = $(tableIdentification).attr("first-id");
+            const firstId = $(tableIdentification).attr("first-id");
 
             PaginateLogsAndPopulateTable(firstId, null, 11, null);
 
@@ -464,9 +464,9 @@ function OnSubmitFilterLogsTable(formIdentifiaction, searchBarIdentification, ta
 
                 listOfLogs.forEach(log => {
 
-                    var logTypeRow = log.logType == "Błąd" ? `<td class="tiny-centered-cell"><span class="error-pill">${log.logType}</span></td>` : `<td class="tiny-centered-cell"><span class="info-pill">${log.logType}</span></td>`;
+                    const logTypeRow = log.logType == "Błąd" ? `<td class="tiny-centered-cell"><span class="error-pill">${log.logType}</span></td>` : `<td class="tiny-centered-cell"><span class="info-pill">${log.logType}</span></td>`;
 
-                    var newRow = `
+                    let newRow = `
                         <tr>
                             
                             ${logTypeRow}
@@ -525,7 +525,7 @@ function SendSMS(text, chosenGroupId, additionalPhoneNumbers, additionalInfo) {
 
                     const uniqueErrors = response.errors.filter(findUniqueErrors);
 
-                    var newList = `<ul style="margin-top: 8px; margin-bottom: 0;">`;
+                    let newList = `<ul style="margin-top: 8px; margin-bottom: 0;">`;
                     uniqueErrors.forEach((error) => {
                         newList += `<li>${error}</li>`;
                     })
@@ -540,7 +540,7 @@ function SendSMS(text, chosenGroupId, additionalPhoneNumbers, additionalInfo) {
 
                     const uniquePartialErrors = response.errors.filter(findUniqueErrors);
 
-                    var newPartialList = `<ul style="margin-top: 8px; margin-bottom: 0;">`;
+                    let newPartialList = `<ul style="margin-top: 8px; margin-bottom: 0;">`;
                     uniquePartialErrors.forEach((error) => {
                         newPartialList += `<li>${error}</li>`;
                     })
@@ -588,10 +588,10 @@ function checkIfAuthorizationSuccessful(password) {
 }
 
 function updateApiSettings() {
-    var activeApi = $("#select-active-api").val();
-    var senderName = $("#api-sender-name").val();
-    var fastChannel = $("#fast-channel-checkbox").prop("checked") ? true : false;
-    var testMode = $("#test-mode-checkbox").prop("checked") ? true : false;
+    const activeApi = $("#select-active-api").val();
+    const senderName = $("#api-sender-name").val();
+    const fastChannel = $("#fast-channel-checkbox").prop("checked") ? true : false;
+    const testMode = $("#test-mode-checkbox").prop("checked") ? true : false;
 
     $.ajax({
         url: 'Home/UpdateApiSettings',
@@ -636,14 +636,14 @@ function addUserToGroup(link, assignContactIdGroupId) {
         data: { groupId: assignContactIdGroupId[2], employeeId: assignContactIdGroupId[1] },
         contentType: 'application/json',
         success: function () {
-            var groupMembersCount = $("#group-members-count").html();
+            const groupMembersCount = $("#group-members-count").html();
             $("#group-members-count").html(parseInt(groupMembersCount) + 1);
             link.removeClass("contact-assign").addClass("contact-unassign");
             link.attr("href", `#unassign-${assignContactIdGroupId[1]}-${assignContactIdGroupId[2]}`)
             link.children("img").attr("src", "icons/unassign-user.png").attr("title", "Wypisz z grupy");
 
-            var nearestRow = link.closest('tr');
-            var assignedGroups = nearestRow.find('td.centered-cell').html() == "Nie przypisano" ? [] : nearestRow.find('td.centered-cell').html().split(", ");
+            const nearestRow = link.closest('tr');
+            let nearestRow = nearestRow.find('td.centered-cell').html() == "Nie przypisano" ? [] : nearestRow.find('td.centered-cell').html().split(", ");
             assignedGroups.push($("#group-name").html());
             nearestRow.find('td.centered-cell').html(assignedGroups.join(", "));
         },
@@ -663,15 +663,15 @@ function assignGroupToUser(link, assignContactIdGroupId) {
             link.removeClass("contact-group-assign").addClass("contact-group-unassign");
             link.attr("href", `#unassign-${assignContactIdGroupId[1]}-${assignContactIdGroupId[2]}`)
             link.children("img").attr("src", "icons/unassign-user.png").attr("title", "Wypisz z grupy");
-            var nearestRow = link.closest('tr');
+            const nearestRow = link.closest('tr');
 
-            var groupMembersElement = nearestRow.find('.group-members');
-            var currentHtml = groupMembersElement.html();
-            var currentValue = parseInt(currentHtml);
+            const groupMembersElement = nearestRow.find('.group-members');
+            const currentHtml = groupMembersElement.html();
+            const currentValue = parseInt(currentHtml);
             groupMembersElement.html(currentValue + 1);
 
 
-            var assignedGroups = $("#groups-assigned-to-user").html() == "Nie przypisano" ? [] : $("#groups-assigned-to-user").html().split(", ");
+            let nearestRow = $("#groups-assigned-to-user").html() == "Nie przypisano" ? [] : $("#groups-assigned-to-user").html().split(", ");
             assignedGroups.push(nearestRow.find(".small-cell").html());
             $("#groups-assigned-to-user").html(assignedGroups.join(", "));
         },
@@ -688,16 +688,16 @@ function removeUserFromGroup(link, assignContactIdGroupId) {
         data: { groupId: assignContactIdGroupId[2], employeeId: assignContactIdGroupId[1] },
         contentType: 'application/json',
         success: function () {
-            var groupMembersCount = $("#group-members-count").html();
+            const groupMembersCount = $("#group-members-count").html();
             $("#group-members-count").html(parseInt(groupMembersCount) - 1);
             link.removeClass("contact-unassign").addClass("contact-assign");
             link.attr("href", `#assign-${assignContactIdGroupId[1]}-${assignContactIdGroupId[2]}`)
             link.children("img").attr("src", "icons/assign-user.png").attr("title", "Dopisz do grupy");
 
-            var nearestRow = link.closest('tr');
-            var assignedGroups = nearestRow.find('td.centered-cell').html().split(", ");
+            const nearestRow = link.closest('tr');
+            let nearestRow = nearestRow.find('td.centered-cell').html().split(", ");
             console.log($("#group-name").html());
-            var index = assignedGroups.indexOf($("#group-name").html());
+            const index = assignedGroups.indexOf($("#group-name").html());
             assignedGroups.splice(index, 1);
             nearestRow.find('td.centered-cell').html(assignedGroups.join(", ") == "" ? "Nie przypisano" : assignedGroups.join(", "));
         },
@@ -718,15 +718,15 @@ function unassignGroupFromUser(link, assignContactIdGroupId) {
             link.attr("href", `#assign-${assignContactIdGroupId[1]}-${assignContactIdGroupId[2]}`)
             link.children("img").attr("src", "icons/assign-user.png").attr("title", "Dopisz do grupy");
 
-            var nearestRow = link.closest('tr');
+            const nearestRow = link.closest('tr');
 
-            var groupMembersElement = nearestRow.find('.group-members');
-            var currentHtml = groupMembersElement.html();
-            var currentValue = parseInt(currentHtml);
+            const groupMembersElement = nearestRow.find('.group-members');
+            const currentHtml = groupMembersElement.html();
+            const currentValue = parseInt(currentHtml);
             groupMembersElement.html(currentValue - 1);
 
-            var assignedGroups = $("#groups-assigned-to-user").html().split(", ");
-            var index = assignedGroups.indexOf(nearestRow.find(".group-name").html());
+            let nearestRow = $("#groups-assigned-to-user").html().split(", ");
+            const index = assignedGroups.indexOf(nearestRow.find(".group-name").html());
             assignedGroups.splice(index, 1);
             $("#groups-assigned-to-user").html(assignedGroups.join(", ") || "Nie przypisano");
         },
@@ -740,15 +740,15 @@ function importContacts() {
 
     function IterateOverListOfObjectsAndAppendToTable(object, tableId) {
         $.each(object.ListOfEmployees, function (index, employee) {
-            var group = employee.employeeGroupNames;
-            var email = employee.email || "Brak danych";
+            let group = employee.employeeGroupNames;
+            const email = employee.email || "Brak danych";
 
             group = (group == null || group.length === 0) ? "Nie przypisano" : group.join(", ");
 
-            var statusClass = employee.isActive ? 'active-pill' : 'inactive-pill';
-            var statusText = employee.isActive ? 'Aktywny' : 'Nieaktywny';
+            const statusClass = employee.isActive ? 'active-pill' : 'inactive-pill';
+            const statusText = employee.isActive ? 'Aktywny' : 'Nieaktywny';
 
-            var newRow = `<tr>
+            let newRow = `<tr>
                         <td class="tiny-cell">${employee.name}</td>
                         <td class="tiny-cell">${employee.surname}</td>
                         <td class="small-cell">${email}</td>
@@ -761,8 +761,8 @@ function importContacts() {
                             </tr>`;
             }
             else if (typeof object.ListOfNonExistantGroupIds != 'undefined') {
-                var nonExistantGroups = object.ListOfNonExistantGroupIds;
-                var nonExistentGroupsForContact = nonExistantGroups[index];
+                const nonExistantGroups = object.ListOfNonExistantGroupIds;
+                const nonExistentGroupsForContact = nonExistantGroups[index];
 
                 newRow += `<td class="centered-cell">${group}</td>`;
 
@@ -780,22 +780,22 @@ function importContacts() {
     }
 
     function importFile() {
-        var fileInput = document.getElementById('import-file-input');
-        var file = fileInput.files[0];
+        const fileInput = document.getElementById('import-file-input');
+        const file = fileInput.files[0];
 
         if (!file) {
             resetFileInput();
             return;
         }
 
-        var fileName = file.name;
+        const filename = file.name;
 
         if (!isValidFileExtension(fileName, '.csv')) {
             handleInvalidFileType();
             return;
         }
 
-        var formData = createFormData(file);
+        const formData = createFormData(file);
 
         $.ajax({
             url: 'Home/ImportContacts',
@@ -813,12 +813,12 @@ function importContacts() {
     }
 
     function resetFileInput() {
-        var fileInput = document.getElementById('import-file-input');
+        const fileInput = document.getElementById('import-file-input');
         fileInput.value = null;
     }
 
     function createFormData(file) {
-        var formData = new FormData();
+        const formData = new FormData();
         formData.append('file', file);
         return formData;
     }
@@ -837,7 +837,7 @@ function importContacts() {
     }
 
     function handleImportSuccess(responseObject) {
-        var addedLength;
+        let addedLength;
 
         clearTableRows(['repeated-contacts-table', 'invalid-contacts-table', 'added-contacts-table']);
 
@@ -892,7 +892,7 @@ function importContacts() {
     }
 
     function handleAddedContacts(status, addedEmployees, nonExistantGroupIds) {
-        var addedLength = addedEmployees ? addedEmployees.length : 0;
+        const addedLength = addedEmployees ? addedEmployees.length : 0;
 
         if (addedLength == 0) {
             $("#import-added-contacts-container").hide();
@@ -948,8 +948,8 @@ function ExportContactsAndDownloadExcel() {
             responseType: 'blob'
         },
         success: function (responseFileData) {
-            var blob = new Blob([responseFileData], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
-            var downloadLink = document.createElement('a');
+            const blob = new Blob([responseFileData], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+            const downloadLink = document.createElement('a');
             downloadLink.href = window.URL.createObjectURL(blob);
             downloadLink.download = "Multi-SMS Kontakty.xlsx"
 
@@ -965,7 +965,7 @@ function ExportContactsAndDownloadExcel() {
 
 function HandleTemplateTypeLog(templateEntity) {
 
-    var relatedObjects =
+    const relatedObjects =
         `<span class="log-related-object-title">Szablon</span>
                 <hr style="margin-top: 20px";/>
                 <span class="form-subtitle">Informacje</span>
@@ -1000,15 +1000,15 @@ function HandleTemplateTypeLog(templateEntity) {
 
 function HandleGroupsAssignTypeLog(groupAssignObject) {
 
-    var groupDescription = groupAssignObject.group.groupDescription || "Brak opisu";
+    const groupDescription = groupAssignObject.group.groupDescription || "Brak opisu";
 
-    var email = groupAssignObject.contact.email || "Brak danych";
-    var hqAddress = groupAssignObject.contact.hqAddress || "Brak danych";
-    var postalNumber = groupAssignObject.contact.postalNumber || "Brak danych";
-    var city = groupAssignObject.contact.city || "Brak danych";
-    var department = groupAssignObject.contact.department || "Brak danych";
+    const email = groupAssignObject.contact.email || "Brak danych";
+    const hqAddress = groupAssignObject.contact.hqAddress || "Brak danych";
+    const postalNumber = groupAssignObject.contact.postalNumber || "Brak danych";
+    const city = groupAssignObject.contact.city || "Brak danych";
+    const department = groupAssignObject.contact.department || "Brak danych";
 
-    var relatedObjects =
+    const relatedObjects =
         `<span class="log-related-object-title">Grupa</span>
                 <hr style="margin-top: 20px";/>
                 <span class="form-subtitle">Informacje</span>
@@ -1110,7 +1110,7 @@ function HandleGroupsAssignTypeLog(groupAssignObject) {
 }
 
 function handleImportTypeLog(importEntity) {
-    var importStatus;
+    let importStatus;
 
     if (importEntity.importStatus == "Success") {
         importStatus = "Sukces";
@@ -1122,7 +1122,7 @@ function handleImportTypeLog(importEntity) {
         importStatus = "Niepowodzenie";
     }
 
-    var relatedObjects =
+    const relatedObjects =
         `<span class="log-related-object-title">Import</span>
             <hr style="margin-top: 20px";/>
             <span class="form-subtitle">Informacje</span>
@@ -1205,10 +1205,10 @@ function handleImportTypeLog(importEntity) {
 
         $.each(importEntity.addedEmployees, function (index, employee) {
 
-            var statusClass = employee.isActive ? 'active-pill' : 'inactive-pill';
-            var statusText = employee.isActive ? 'Aktywny' : 'Nieaktywny';
+            const statusClass = employee.isActive ? 'active-pill' : 'inactive-pill';
+            const statusText = employee.isActive ? 'Aktywny' : 'Nieaktywny';
 
-            var newRow = `<tr>
+            let newRow = `<tr>
                                 <td class="tiny-cell">${employee.name}</td>
                                 <td class="tiny-cell">${employee.surname}</td>
                                 <td class="small-cell">${employee.phoneNumber}</td>
@@ -1228,10 +1228,10 @@ function handleImportTypeLog(importEntity) {
 
         $.each(importEntity.repeatedEmployees, function (index, employee) {
 
-            var statusClass = employee.isActive ? 'active-pill' : 'inactive-pill';
-            var statusText = employee.isActive ? 'Aktywny' : 'Nieaktywny';
+            const statusClass = employee.isActive ? 'active-pill' : 'inactive-pill';
+            const statusText = employee.isActive ? 'Aktywny' : 'Nieaktywny';
 
-            var newRow = `<tr>
+            let newRow = `<tr>
                                     <td class="tiny-cell">${employee.name}</td>
                                     <td class="tiny-cell">${employee.surname}</td>
                                     <td class="small-cell">${employee.phoneNumber}</td>
@@ -1250,10 +1250,10 @@ function handleImportTypeLog(importEntity) {
 
         $.each(importEntity.invalidEmployees, function (index, employee) {
 
-            var statusClass = employee.isActive ? 'active-pill' : 'inactive-pill';
-            var statusText = employee.isActive ? 'Aktywny' : 'Nieaktywny';
+            const statusClass = employee.isActive ? 'active-pill' : 'inactive-pill';
+            const statusText = employee.isActive ? 'Aktywny' : 'Nieaktywny';
 
-            var newRow = `<tr>
+            let newRow = `<tr>
                                         <td class="tiny-cell">${employee.name}</td>
                                         <td class="tiny-cell">${employee.surname}</td>
                                         <td class="small-cell">${employee.phoneNumber}</td>
@@ -1276,9 +1276,9 @@ function handleImportTypeLog(importEntity) {
 
 function HandleGroupsTypeLog(groupEntity) {
 
-    var groupDescription = groupEntity.groupDescription || "Brak opisu";
+    const groupDescription = groupEntity.groupDescription || "Brak opisu";
 
-    var relatedObjects =
+    const relatedObjects =
         `<span class="log-related-object-title">Grupa</span>
                 <hr style="margin-top: 20px";/>
                 <span class="form-subtitle">Informacje</span>
@@ -1310,7 +1310,7 @@ function HandleGroupsTypeLog(groupEntity) {
 }
 
 function handleSMSGroupTypeLog(smsGroupObject) {
-    var type = $("#logTypeDetail").text();
+    const type = $("#logTypeDetail").text();
 
     let smsMessage;
     let responseError;
@@ -1336,13 +1336,13 @@ function handleSMSGroupTypeLog(smsGroupObject) {
         fastChannel = "1";
     }
 
-    var chosenGroupId = smsGroupObject.sms.chosenGroupId || "Nie wybrano grupy";
-    var additionalPhoneNumbers = smsGroupObject.sms.additionalPhoneNumbers;
-    var additionalInformation = smsGroupObject.sms.additionalInformation || "Brak";
-    var responseSuccess = smsGroupObject.sms.serverResponse;
-    var groupDescription = smsGroupObject.group.groupDescription || "Brak opisu";
+    const chosenGroupId = smsGroupObject.sms.chosenGroupId || "Nie wybrano grupy";
+    const additionalPhoneNumbers = smsGroupObject.sms.additionalPhoneNumbers;
+    const additionalInformation = smsGroupObject.sms.additionalInformation || "Brak";
+    const responseSuccess = smsGroupObject.sms.serverResponse;
+    const groupDescription = smsGroupObject.group.groupDescription || "Brak opisu";
 
-    var relatedObjects =
+    let relatedObjects =
         `<span class="log-related-object-title">Wiadomość SMS</span>
                 <hr style="margin-top: 20px";/>
                 <span class="form-subtitle">Informacje</span>
@@ -1563,10 +1563,10 @@ function handleSMSGroupTypeLog(smsGroupObject) {
 
     $.each(smsGroupObject.group.members, function (index, employee) {
 
-        var statusClass = employee.isActive ? 'active-pill' : 'inactive-pill';
-        var statusText = employee.isActive ? 'Aktywny' : 'Nieaktywny';
+        const statusClass = employee.isActive ? 'active-pill' : 'inactive-pill';
+        const statusText = employee.isActive ? 'Aktywny' : 'Nieaktywny';
 
-        var newRow = `<tr>
+        let newRow = `<tr>
                         <td class="tiny-cell">${employee.name}</td>
                         <td class="tiny-cell">${employee.surname}</td>
                         <td class="small-cell">${employee.phoneNumber}</td>
@@ -1583,7 +1583,7 @@ function handleSMSGroupTypeLog(smsGroupObject) {
 }
 
 function handleSMSNoGroupTypeLog(smsNoGroupObject) {
-    var type = $("#logTypeDetail").text();
+    const type = $("#logTypeDetail").text();
 
     let smsMessage;
     let responseError;
@@ -1609,12 +1609,12 @@ function handleSMSNoGroupTypeLog(smsNoGroupObject) {
         fastChannel = "1";
     }
 
-    var chosenGroupId = smsNoGroupObject.sms.chosenGroupId || "Nie wybrano grupy";
-    var additionalPhoneNumbers = smsNoGroupObject.sms.additionalPhoneNumbers;
-    var additionalInformation = smsNoGroupObject.sms.additionalInformation || "Brak";
-    var responseSuccess = smsNoGroupObject.sms.serverResponse;
+    const chosenGroupId = smsNoGroupObject.sms.chosenGroupId || "Nie wybrano grupy";
+    const additionalPhoneNumbers = smsNoGroupObject.sms.additionalPhoneNumbers;
+    const additionalInformation = smsNoGroupObject.sms.additionalInformation || "Brak";
+    const responseSuccess = smsNoGroupObject.sms.serverResponse;
 
-    var relatedObjects =
+    let relatedObjects =
         `
             <span class="log-related-object-title">Wiadomość SMS</span>
             <hr style="margin-top: 20px";/>
@@ -1804,14 +1804,14 @@ function handleSMSNoGroupTypeLog(smsNoGroupObject) {
 
 function HandleContactTypeLog(contactEntity) {
 
-    var email = contactEntity.email || "Brak danych";
-    var hqAddress = contactEntity.hqAddress || "Brak danych";
-    var postalNumber = contactEntity.postalNumber || "Brak danych";
-    var city = contactEntity.city || "Brak danych";
-    var department = contactEntity.department || "Brak danych";
+    const email = contactEntity.email || "Brak danych";
+    const hqAddress = contactEntity.hqAddress || "Brak danych";
+    const postalNumber = contactEntity.postalNumber || "Brak danych";
+    const city = contactEntity.city || "Brak danych";
+    const department = contactEntity.department || "Brak danych";
 
 
-    var relatedObjects =
+    const relatedObjects =
         `       <span class="log-related-object-title">Kontakt</span>
                     <hr style="margin-top: 20px";/>
                     <span class="form-subtitle">Dane personalne</span>
@@ -1891,7 +1891,7 @@ function HandleContactTypeLog(contactEntity) {
 }
 
 function handleUserTypeLog(userEntity) {
-    var role = "";
+    let role = "";
 
     if (userEntity.role == "User") {
         role = "Użytkownik";
@@ -1903,7 +1903,7 @@ function handleUserTypeLog(userEntity) {
         role = "Właściciel";
     }
 
-    var relatedObjects = `<span class="log-related-object-title">Użytkownik</span>
+    const relatedObjects = `<span class="log-related-object-title">Użytkownik</span>
                     <hr style="margin-top: 20px";/>
                     <div class="row mb-10">
                         <div class="col d-flex">
@@ -1974,9 +1974,9 @@ function SanitizePolishSymbols(inputId) {
         'Ż': 'Z'
     };
 
-    var input = document.getElementById(inputId);
-    var inputValue = input.value;
-    var sanitizedValue = inputValue.replace(/[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g, match => diacriticToAsciiMap[match] || match);
+    const input = document.getElementById(inputId);
+    let inputValue = input.value;
+    const sanitizedValue = inputValue.replace(/[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g, match => diacriticToAsciiMap[match] || match);
     input.value = sanitizedValue;
 }
 
@@ -1988,8 +1988,8 @@ function DeleteTemplate(templateId) {
         contentType: 'application/json',
         data: { id: templateId },
         success: function () {
-            var lastId = $("#template-table").attr('last-id');
-            var firstId = $("#template-table").attr('first-id');
+            const lastId = $("#template-table").attr('last-id');
+            const firstId = $("#template-table").attr('first-id');
             PaginateTemplatesAndPopulateTable(firstId, lastId, 11, null);
         },
         error: function (error) {
@@ -2014,8 +2014,8 @@ function DeleteContact(contactId) {
         contentType: 'application/json',
         data: { id: contactId },
         success: function () {
-            var lastId = $("#contacts-table").attr('last-id');
-            var firstId = $("#contacts-table").attr('first-id');
+            const lastId = $("#contacts-table").attr('last-id');
+            const firstId = $("#contacts-table").attr('first-id');
             PaginateContactsAndPopulateTable(firstId, lastId, 11, null);
 
         },
@@ -2033,8 +2033,8 @@ function DeleteGroup(groupId) {
         contentType: 'application/json',
         data: { id: groupId },
         success: function () {
-            var lastId = $("#group-table").attr('last-id');
-            var firstId = $("#group-table").attr('first-id');
+            const lastId = $("#group-table").attr('last-id');
+            const firstId = $("#group-table").attr('first-id');
             PaginateGroupsAndPopulateTable(firstId, lastId, 11, null);
         },
         error: function (error) {
@@ -2044,17 +2044,17 @@ function DeleteGroup(groupId) {
 }
 
 function EditTemplate() {
-    var templateId = $("#createOrEditButtonTemplates").attr('data-id');
-    var templateName = $("#templateNameInput").val();
-    var templateContent = $("#templateContentInput").val();
-    var templateDescription = $("#templateDescriptionInput").val();
+    const templateId = $("#createOrEditButtonTemplates").attr('data-id');
+    const templateName = $("#templateNameInput").val();
+    const templateContent = $("#templateContentInput").val();
+    const templateDescription = $("#templateDescriptionInput").val();
     $.ajax({
         url: 'Home/EditTemplate',
         type: 'GET',
         contentType: 'application/json',
         data: { id: templateId, name: templateName, description: templateDescription, content: templateContent },
         success: function () {
-            var affectedRow = $("#template-table tr").find(`a[href="#details-${templateId}"]`).closest("tr");
+            const affectedRow = $("#template-table tr").find(`a[href="#details-${templateId}"]`).closest("tr");
             affectedRow.find(".template-name").html(templateName);
             affectedRow.find(".template-description").html(templateDescription || "Brak opisu");
             affectedRow.find(".template-content").html(templateContent);
@@ -2066,16 +2066,16 @@ function EditTemplate() {
 }
 
 function EditContact() {
-    var contactId = $("#createOrEditButtonContacts").attr('data-id');
-    let name = $("#contactNameInput").val();
-    let surname = $("#contactSurnameInput").val();
-    let email = $("#contactEmail").val();
-    let phoneNumber = $("#contactPhoneNumber").val();
-    let address = $("#contactHQAddress").val();
-    let zip = $("#ContactPostalNumber").val();
-    let city = $("#ContactCity").val();
-    let department = $("#contactDepartment").val();
-    let isActive = document.querySelector('input[name="isActive?"]:checked').value;
+    const contactId = $("#createOrEditButtonContacts").attr('data-id');
+    const name = $("#contactNameInput").val();
+    const surname = $("#contactSurnameInput").val();
+    const email = $("#contactEmail").val();
+    const phoneNumber = $("#contactPhoneNumber").val();
+    const address = $("#contactHQAddress").val();
+    const zip = $("#ContactPostalNumber").val();
+    const city = $("#ContactCity").val();
+    const department = $("#contactDepartment").val();
+    const isActive = document.querySelector('input[name="isActive?"]:checked').value;
 
     $.ajax({
         url: 'Home/EditContact',
@@ -2083,7 +2083,7 @@ function EditContact() {
         contentType: 'application/json',
         data: { contactId: contactId, contactName: name, contactSurname: surname, email: email, phone: phoneNumber, address: address, zip: zip, city: city, department: department, isActive: isActive },
         success: function () {
-            var affectedRow = $("#contacts-table tr").find(`a[href="#details-${contactId}"]`).closest("tr");
+            const affectedRow = $("#contacts-table tr").find(`a[href="#details-${contactId}"]`).closest("tr");
             affectedRow.find(".contact-name").html(name);
             affectedRow.find(".contact-surname").html(surname);
             affectedRow.find(".contact-email").html(email || "Brak danych");
@@ -2103,16 +2103,16 @@ function EditContact() {
 }
 
 function EditGroup() {
-    var groupId = $("#createOrEditButtonGroups").attr('data-id');
-    var groupName = $("#groupNameInput").val();
-    var groupDescription = $("#groupDescriptionInput").val();
+    const groupId = $("#createOrEditButtonGroups").attr('data-id');
+    const groupName = $("#groupNameInput").val();
+    const groupDescription = $("#groupDescriptionInput").val();
     $.ajax({
         url: 'Home/EditGroup',
         type: 'GET',
         contentType: 'application/json',
         data: { id: groupId, name: groupName, description: groupDescription },
         success: function () {
-            var affectedRow = $("#group-table tr").find(`a[href="#details-${groupId}"]`).closest("tr");
+            const affectedRow = $("#group-table tr").find(`a[href="#details-${groupId}"]`).closest("tr");
             affectedRow.find(".group-name").html(groupName);
             affectedRow.find(".group-description").html(groupDescription || "Brak opisu");
         },
@@ -2131,12 +2131,12 @@ function FetchAllTemplatesAndPopulateTable() {
             $('.template-list tbody').empty();
 
             $.each(listOfTemplates, function (index, item) {
-                var description = item.templateDescription;
+                let description = item.templateDescription;
                 if (description == null) {
                     description = "Brak opisu"
                 }
 
-                var newRow = `<tr>
+                let newRow = `<tr>
                             <td class="small-cell template-name">${item.templateName}</td>
                             <td class="medium-cell template-description">${description}</td>
                             <td class="big-cell template-content">${item.templateContent}</td>
@@ -2183,7 +2183,7 @@ function PaginateTemplatesAndPopulateTable(firstId, lastId, pageSize, moveForwar
             paginatedTemplates.forEach(template => {
                 const description = template.templateDescription || "Brak opisu";
 
-                var newRow = `
+                let newRow = `
                     <tr>
                         <td class="small-cell template-name">${template.templateName}</td>
                         <td class="medium-cell template-description">${description}</td>
@@ -2248,14 +2248,14 @@ function FetchAllContactsAndPopulateTable() {
             $('.contacts-list tbody').empty();
             $.each(listOfContacts, function (index, item) {
 
-                var groupNames = item.employeeGroupNames;
-                var email = item.email || "Brak danych";
+                let groupNames = item.employeeGroupNames;
+                const email = item.email || "Brak danych";
 
                 groupNames = (groupNames == null || groupNames.length == 0) ? "Nie przypisano" : groupNames.join(", ")
 
                 var isActiveRow = item.isActive ? '<td class="centered-cell contact-activity"><span class="active-pill">Aktywny<span></td>' : '<td class="centered-cell contact-activity"><span class="inactive-pill">Nieaktywny<span></td>'
 
-                var newRow = `<tr>
+                let newRow = `<tr>
                             <td class="tiny-cell contact-name">${item.name}</td>
                             <td class="tiny-cell contact-surname">${item.surname}</td>
                             <td class="small-cell contact-email">${email}</td>
@@ -2304,12 +2304,12 @@ function PaginateContactsAndPopulateTable(firstId, lastId, pageSize, moveForward
             paginatedContacts.forEach(contact => {
 
                 var groupNames = contact.employeeGroupNames;
-                var email = contact.email || "Brak danych";
+                const email = contact.email || "Brak danych";
 
                 groupNames = (groupNames == null || groupNames.length == 0) ? "Nie przypisano" : groupNames.join(", ")
                 var isActiveRow = contact.isActive ? '<td class="centered-cell contact-activity"><span class="active-pill">Aktywny<span></td>' : '<td class="centered-cell contact-activity"><span class="inactive-pill">Nieaktywny<span></td>'
 
-                var newRow = `
+                let newRow = `
                     <tr>
                         <td class="tiny-cell contact-name">${contact.name}</td>
                         <td class="tiny-cell contact-surname">${contact.surname}</td>
@@ -2397,7 +2397,7 @@ function PaginateAssignContactsAndPopulateTable(firstId, lastId, pageSize, moveF
                 groupNames = (groupNames == null || groupNames.length == 0) ? "Nie przypisano" : groupNames.join(", ")
                 var isActiveRow = contact.isActive ? '<td class="tiny-centered-cell contact-activity"><span class="active-pill">Aktywny<span></td>' : '<td class="tiny-centered-cell contact-activity"><span class="inactive-pill">Nieaktywny<span></td>'
 
-                var newRow = `
+                let newRow = `
                     <tr>
                         <td class="tiny-cell contact-name">${contact.name}</td>
                         <td class="tiny-cell contact-surname">${contact.surname}</td>
@@ -2471,9 +2471,9 @@ function FetchAllGroupsAndPopulateTable() {
             $('.group-list tbody').empty();
 
             $.each(listOfGroups, function (index, item) {
-                var groupDescription = item.groupDescription || "Brak opisu";
+                const groupDescription = item.groupDescription || "Brak opisu";
 
-                var newRow = `
+                let newRow = `
                     <tr>
                         <td class="small-cell group-name">${item.groupName}</td>
                         <td class="big-cell group-description">${groupDescription}</td>
@@ -2520,7 +2520,7 @@ function PaginateGroupsAndPopulateTable(firstId, lastId, pageSize, moveForward) 
             paginatedGroups.forEach(group => {
                 const description = group.groupDescription || "Brak opisu"
 
-                var newRow = `
+                let newRow = `
                     <tr>
                         <td class="small-cell group-name">${group.groupName}</td>
                         <td class="big-cell group-description">${description}</td>
@@ -2601,7 +2601,7 @@ function PaginateAssignGroupsAndPopulateTable(firstId, lastId, pageSize, moveFor
             paginatedGroups.forEach(group => {
                 const description = group.groupDescription || "Brak opisu"
 
-                var newRow = `
+                let newRow = `
                     <tr>
                         <td class="small-cell group-name">${group.groupName}</td>
                         <td class="big-cell group-description">${description}</td>
@@ -2674,9 +2674,9 @@ function FetchAllLogsAndPopulateTable() {
 
             $.each(listOfLogs, function (index, item) {
 
-                var logTypeRow = item.logType == "Błąd" ? `<td class="tiny-centered-cell"><span class="error-pill">${item.logType}</span></td>` : `<td class="tiny-centered-cell"><span class="info-pill">${item.logType}</span></td>`
+                const logTypeRow = item.logType == "Błąd" ? `<td class="tiny-centered-cell"><span class="error-pill">${item.logType}</span></td>` : `<td class="tiny-centered-cell"><span class="info-pill">${item.logType}</span></td>`
 
-                var newRow = `<tr>
+                let newRow = `<tr>
                             ${logTypeRow}
                             <td class="tiny-cell">${item.logSource}</td>
                             <td class="big-cell">${item.logMessage}</td>
@@ -2719,9 +2719,9 @@ function PaginateLogsAndPopulateTable(firstId, lastId, pageSize, moveForward) {
             logPreviousButtonContainer.empty();
 
             paginatedLogs.forEach(log => {
-                var logTypeRow = log.logType == "Błąd" ? `<td class="tiny-centered-cell"><span class="error-pill">${log.logType}</span></td>` : `<td class="tiny-centered-cell"><span class="info-pill">${log.logType}</span></td>`;
+                const logTypeRow = log.logType == "Błąd" ? `<td class="tiny-centered-cell"><span class="error-pill">${log.logType}</span></td>` : `<td class="tiny-centered-cell"><span class="info-pill">${log.logType}</span></td>`;
 
-                var newRow = `
+                let newRow = `
                     <tr>
                         ${logTypeRow}
                         <td class="tiny-cell">${log.logSource}</td>
@@ -2789,7 +2789,7 @@ function PopulateTableForChooseGroupForSMS() {
 
                 var description = item.groupDescription || "Brak opisu";
 
-                var newRow = `<tr>
+                let newRow = `<tr>
                             <td class="small-cell">${item.groupName}</td>
                             <td class="big-cell">${description}</td>
                             <td class="tiny-centered-cell">${item.membersIds.length}</td>
@@ -2820,7 +2820,7 @@ function PopulateTableForChooseTemplateForSMS() {
 
                 var templateDescription = item.templateDescription || "Brak opisu";
 
-                var newRow = `<tr>
+                let newRow = `<tr>
                             <td class="small-cell">${item.templateName}</td>
                             <td class="medium-cell">${templateDescription}</td>
                             <td class="big-cell">${item.templateContent}</td>
@@ -2857,10 +2857,10 @@ function PopulateTablesForAssigningUsersToGroups(groupId) {
 
             groupAssignMembersIds = groupEntity.membersIds;
 
-            var groupDescription = groupEntity.groupDescription || "Brak opisu";
+            const groupDescription = groupEntity.groupDescription || "Brak opisu";
             $("#group-assign-chosen-group-table tbody").empty();
 
-            var newRow = `<tr>
+            let newRow = `<tr>
                         <td class="small-cell" id="group-name">${groupEntity.groupName}</td>
                         <td class="big-cell">${groupDescription}</td>
                         <td class="tiny-centered-cell" id="group-members-count">${groupEntity.membersIds.length}</td>
@@ -2890,7 +2890,7 @@ function PopulateTablesForAssigningGroupsToUsers(contactId) {
 
         success: function (contactEntity) {
             $("#group-assign-chosen-contact-table tbody").empty();
-            var newRow = `<tr>
+            let newRow = `<tr>
                         <td class="tiny-cell">${contactEntity.name}</td>
                         <td class="tiny-cell">${contactEntity.surname}</td>
                         <td class="small-cell">${contactEntity.phoneNumber}</td>
@@ -2924,7 +2924,7 @@ function CreateNewTemplate() {
         contentType: 'application/json',
         data: { templateName: name, templateDescription: description, templateContent: content },
         success: function (template) {
-            var newRow = `
+            let newRow = `
             <tr>
                 <td class="small-cell template-name">${template.templateName}</td>
                 <td class="medium-cell template-description">${template.templateDescription || "Brak opisu"}</td>
@@ -2967,7 +2967,7 @@ function CreateNewContact() {
         contentType: 'application/json',
         data: { contactName: name, contactSurname: surname, email: email, phone: phoneNumber, address: address, zip: zip, city: city, department: department, isActive: isActive },
         success: function (contact) {
-            var newRow = `
+            let newRow = `
             <tr>
                 <td class="tiny-cell contact-name">${contact.name}</td>
                 <td class="tiny-cell contact-surname">${contact.surname}</td>
@@ -3008,7 +3008,7 @@ function CreateNewGroup() {
         contentType: 'application/json',
         data: { groupName: name, groupDescription: description },
         success: function (group) {
-            var newRow = `
+            let newRow = `
             <tr>
                 <td class="small-cell group-name">${group.groupName}</td>
                 <td class="big-cell group-description">${group.groupDescription || "Brak danych"}</td>
@@ -3246,7 +3246,7 @@ function getAllUsersAndPopulateTable() {
                     optionsCell = `<td></td>`
                 }
 
-                var newRow = `
+                let newRow = `
                     <tr>
                         <td class="tiny-centered-cell id">${user.id}</td>
                         <td class="tiny-cell user-name">${user.name}</td>
@@ -3320,7 +3320,7 @@ function createNewUser(formData) {
                 roleCell = `<td class="centered-cell"><span class="user-pill">Użytkownik</span></td>`;
             }
 
-            var newRow = `<tr>
+            let newRow = `<tr>
                 <td class="tiny-centered-cell id">${user.id}</td>
                 <td class="tiny-cell user-name">${user.name}</td>
                 <td class="tiny-cell user-surname">${user.surname}</td>
@@ -3443,7 +3443,7 @@ function editUser(userId, formData) {
                 roleCell = `<td class="centered-cell"><span class="user-pill">Użytkownik</span></td>`;
             }
 
-            var newRow = `<tr>
+            let newRow = `<tr>
                 <td class="tiny-centered-cell id">${user.id}</td>
                 <td class="tiny-cell user-name">${user.name}</td>
                 <td class="tiny-cell user-surname">${user.surname}</td>
