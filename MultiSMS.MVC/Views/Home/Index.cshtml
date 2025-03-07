@@ -1100,11 +1100,11 @@
 
     $(document).ready(function () {
 
-        var passwordInput = document.getElementById("settings-password-input");
-        var eyeIcon = document.getElementById("settings-eye-icon");
+        const passwordInput = document.getElementById("settings-password-input");
+        const eyeIcon = document.getElementById("settings-eye-icon");
 
-        var oneTimeUserPassword = document.getElementById('userPassword');
-        var userEyeIcon = document.getElementById('user-eye-icon');
+        const oneTimeUserPassword = document.getElementById('userPassword');
+        const userEyeIcon = document.getElementById('user-eye-icon');
 
         if(passwordInput != null) {
             togglePasswordVisibility(passwordInput, eyeIcon);
@@ -1164,8 +1164,8 @@
 
         resizeObserver.observe($("#content-render")[0]);
 
-        var initialToolboxContextWidthInPx = 50;
-        var hoveredWidthInPx = 201;
+        const initialToolboxContextWidthInPx = 50;
+        const hoveredWidthInPx = 201;
 
         $(".option-list-item").hover(
             function () {
@@ -1176,7 +1176,7 @@
             }
         );
 
-        var connection = null;
+        let connection = null;
 
         $('#import-file-input').on("change", function () {
             $("#viewReportModal").modal("show");

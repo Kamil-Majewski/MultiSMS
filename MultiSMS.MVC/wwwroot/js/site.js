@@ -19,13 +19,11 @@ function showEyeIconOrResetPasswordField(fieldEl, eyeEl) {
         if ($(fieldEl).val().length > 0) {
             $(eyeEl).css('display', 'block')
         }
+        else if ($(fieldEl).attr('type') == "text") {
+            $(eyeEl).trigger("click").hide();
+        }
         else {
-            if ($(fieldEl).attr('type') == "text") {
-                $(eyeEl).trigger("click").hide();
-            }
-            else {
-                $(eyeEl).hide();
-            }
+            $(eyeEl).hide();
         }
     });
 }
@@ -270,12 +268,12 @@ function OnSubmitFilterAssignContactsTable(formIdentifiaction, searchBarIdentifi
 
                     if (groupAssignMembersIds.includes(contact.employeeId)) {
 
-                        newRow += `<a href="#unassign-${contact.employeeId}-${grouAssignGroupId}" class="icon-list contact-unassign"><img src="icons/unassign-user.png" title="Wypisz z grupy"/></a>
+                        newRow += `<a href="#unassign-${contact.employeeId}-${groupAssignGroupId}" class="icon-list contact-unassign"><img src="icons/unassign-user.png" title="Wypisz z grupy"/></a>
                                         </td>
                                         </tr>`;
                     }
                     else {
-                        newRow += `<a href="#assign-${contact.employeeId}-${grouAssignGroupId}" class="icon-list contact-assign"><img src="icons/assign-user.png" title="Dopisz do grupy" /></a>
+                        newRow += `<a href="#assign-${contact.employeeId}-${groupAssignGroupId}" class="icon-list contact-assign"><img src="icons/assign-user.png" title="Dopisz do grupy" /></a>
                                         </td>
                                         </tr>`;
                     }
@@ -520,7 +518,7 @@ function SendSMS(text, chosenGroupId, additionalPhoneNumbers, additionalInfo) {
                     $(".input-icons").hide();
 
                     break;
-                case "Multiple-Failure":
+                case "Multiple-Failure": {
                     console.log(`Operation failed, errors detected!`);
 
                     const uniqueErrors = response.errors.filter(findUniqueErrors);
@@ -535,7 +533,8 @@ function SendSMS(text, chosenGroupId, additionalPhoneNumbers, additionalInfo) {
                     $("#status-message-sms").html(`Operacja zakończyła się niepowodzeniem, wszystkie próby wysłania wiadomości zakończyły się poniższymi błędami: ${newList} <button type='button' class='btn-close text-dark' aria-label='Close' onclick='CloseAlert()'></button>`);
 
                     break;
-                case "Multiple-Partial":
+                }
+                case "Multiple-Partial": { 
                     console.log(`Operation partially successful - errors detected!`);
 
                     const uniquePartialErrors = response.errors.filter(findUniqueErrors);
@@ -549,6 +548,7 @@ function SendSMS(text, chosenGroupId, additionalPhoneNumbers, additionalInfo) {
                     $("#status-message-sms").addClass("failed-status");
                     $("#status-message-sms").html(`Operacja zakończyła się częściowym powodzeniem (zakolejkowane: ${response.queued}, niewysłane: ${response.unsent}), Niektóre próby wysłania sms-a zakończyły się poniższymi błędami: ${newPartialList} <button type='button' class='btn-close text-dark' aria-label='Close' onclick='CloseAlert()'></button>`);
                     break;
+                }
             }       
             $("#status-message-sms").show();
         },
@@ -591,7 +591,7 @@ function updateApiSettings() {
     const activeApi = $("#select-active-api").val();
     const senderName = $("#api-sender-name").val();
     const fastChannel = $("#fast-channel-checkbox").prop("checked") ? true : false;
-    const testMode = $("#test-mode-checkbox").prop("checked") ? true : false;
+    const testMode = $("#test-mode-checkbox").prop("checked");
 
     $.ajax({
         url: 'Home/UpdateApiSettings',
@@ -2253,7 +2253,7 @@ function FetchAllContactsAndPopulateTable() {
 
                 groupNames = (groupNames == null || groupNames.length == 0) ? "Nie przypisano" : groupNames.join(", ")
 
-                var isActiveRow = item.isActive ? '<td class="centered-cell contact-activity"><span class="active-pill">Aktywny<span></td>' : '<td class="centered-cell contact-activity"><span class="inactive-pill">Nieaktywny<span></td>'
+                const isActiveRow = item.isActive ? '<td class="centered-cell contact-activity"><span class="active-pill">Aktywny<span></td>' : '<td class="centered-cell contact-activity"><span class="inactive-pill">Nieaktywny<span></td>'
 
                 let newRow = `<tr>
                             <td class="tiny-cell contact-name">${item.name}</td>
@@ -2303,11 +2303,11 @@ function PaginateContactsAndPopulateTable(firstId, lastId, pageSize, moveForward
 
             paginatedContacts.forEach(contact => {
 
-                var groupNames = contact.employeeGroupNames;
+                let groupNames = contact.employeeGroupNames;
                 const email = contact.email || "Brak danych";
 
                 groupNames = (groupNames == null || groupNames.length == 0) ? "Nie przypisano" : groupNames.join(", ")
-                var isActiveRow = contact.isActive ? '<td class="centered-cell contact-activity"><span class="active-pill">Aktywny<span></td>' : '<td class="centered-cell contact-activity"><span class="inactive-pill">Nieaktywny<span></td>'
+                const isActiveRow = contact.isActive ? '<td class="centered-cell contact-activity"><span class="active-pill">Aktywny<span></td>' : '<td class="centered-cell contact-activity"><span class="inactive-pill">Nieaktywny<span></td>'
 
                 let newRow = `
                     <tr>
@@ -2392,10 +2392,10 @@ function PaginateAssignContactsAndPopulateTable(firstId, lastId, pageSize, moveF
 
             paginatedContacts.forEach(contact => {
 
-                var groupNames = contact.employeeGroupNames;
+                let groupNames = contact.employeeGroupNames;
 
                 groupNames = (groupNames == null || groupNames.length == 0) ? "Nie przypisano" : groupNames.join(", ")
-                var isActiveRow = contact.isActive ? '<td class="tiny-centered-cell contact-activity"><span class="active-pill">Aktywny<span></td>' : '<td class="tiny-centered-cell contact-activity"><span class="inactive-pill">Nieaktywny<span></td>'
+                const isActiveRow = contact.isActive ? '<td class="tiny-centered-cell contact-activity"><span class="active-pill">Aktywny<span></td>' : '<td class="tiny-centered-cell contact-activity"><span class="inactive-pill">Nieaktywny<span></td>'
 
                 let newRow = `
                     <tr>
@@ -2409,12 +2409,12 @@ function PaginateAssignContactsAndPopulateTable(firstId, lastId, pageSize, moveF
 
                 if (groupAssignMembersIds.includes(contact.employeeId)) {
 
-                    newRow += `<a href="#unassign-${contact.employeeId}-${grouAssignGroupId}" class="icon-list contact-unassign"><img src="icons/unassign-user.png" title="Wypisz z grupy"/></a>
+                    newRow += `<a href="#unassign-${contact.employeeId}-${groupAssignGroupId}" class="icon-list contact-unassign"><img src="icons/unassign-user.png" title="Wypisz z grupy"/></a>
                                         </td>
                                         </tr>`;
                 }
                 else {
-                    newRow += `<a href="#assign-${contact.employeeId}-${grouAssignGroupId}" class="icon-list contact-assign"><img src="icons/assign-user.png" title="Dopisz do grupy" /></a>
+                    newRow += `<a href="#assign-${contact.employeeId}-${groupAssignGroupId}" class="icon-list contact-assign"><img src="icons/assign-user.png" title="Dopisz do grupy" /></a>
                                         </td>
                                         </tr>`;
                 }
@@ -2787,7 +2787,7 @@ function PopulateTableForChooseGroupForSMS() {
 
             $.each(listOfGroups, function (index, item) {
 
-                var description = item.groupDescription || "Brak opisu";
+                const description = item.groupDescription || "Brak opisu";
 
                 let newRow = `<tr>
                             <td class="small-cell">${item.groupName}</td>
@@ -2818,7 +2818,7 @@ function PopulateTableForChooseTemplateForSMS() {
 
             $.each(listOfTemplates, function (index, item) {
 
-                var templateDescription = item.templateDescription || "Brak opisu";
+                const templateDescription = item.templateDescription || "Brak opisu";
 
                 let newRow = `<tr>
                             <td class="small-cell">${item.templateName}</td>
@@ -2845,7 +2845,7 @@ let groupAssignContactId;
 let groupAssignGroupId;
 
 function PopulateTablesForAssigningUsersToGroups(groupId) {
-    grouAssignGroupId = groupId;
+    groupAssignGroupId = groupId;
 
     $.ajax({
         url: 'Home/GetGroupById',
@@ -3093,7 +3093,7 @@ function OpenChooseTemplateForSMS() {
 }
 
 function FinishBrowsingImportReport() {
-    var firstId = $("contacts-table").attr("first-id");
+    const firstId = $("contacts-table").attr("first-id");
     PaginateContactsAndPopulateTable(firstId, null, 11, null);
     $(".import-report-container").hide();
     $("#import-repeated-contacts-container").show();
@@ -3167,7 +3167,7 @@ function GoBackToGroupListFromAssign() {
     $("#contact-assign-page-counter").html("0");
     $(".group-search-for-user").val("");
     $("#search-for-assingn-contacts").trigger("submit");
-    var firstId = $("#group-table").attr("first-id")
+    const firstId = $("#group-table").attr("first-id")
     PaginateGroupsAndPopulateTable(firstId, null, 11, null);
     $(".groups-options-container-assign").hide();
     $(".groups-list-container").show();
@@ -3177,7 +3177,7 @@ function GoBackToContactListFromAssign() {
     $("#group-assign-page-counter").html("0");
     $(".contact-search-for-group").val("");
     $("#search-for-assign-groups").trigger("submit");
-    var firstId = $("#contacts-table").attr("first-id");
+    const firstId = $("#contacts-table").attr("first-id");
     PaginateContactsAndPopulateTable(firstId, null, 11, null);
     $(".contact-options-container-assign").hide();
     $(".contacts-list-container").show();
@@ -3227,7 +3227,7 @@ function getAllUsersAndPopulateTable() {
                     roleCell = `<td class="centered-cell"><span class="user-pill">Użytkownik</span></td>`;
                 }
 
-                var isUserCallingAdmin = document.getElementById(user.userName);
+                const isUserCallingAdmin = document.getElementById(user.userName);
 
                 let optionsCell
 
@@ -3281,19 +3281,19 @@ function getRolesForUserCreation() {
 }
 
 function formatPhoneNumber(phoneInput, event) {
-    var phoneInputEl = document.getElementById(phoneInput);
+    const phoneInputEl = document.getElementById(phoneInput);
 
     if (event.inputType === 'deleteContentBackward' || event.inputType === 'deleteContentForward') {
         return;
     }
 
-    var inputValue = phoneInputEl.value;
-    var cursorPosition = phoneInputEl.selectionStart;
+    const inputValue = phoneInputEl.value;
+    const cursorPosition = phoneInputEl.selectionStart;
 
-    var sanitizedValue = inputValue.replace(/[^0-9+]/g, '');
+    const sanitizedValue = inputValue.replace(/[^0-9+]/g, '');
 
-    var formattedValue = sanitizedValue.replace(/(\S{3})/g, '$1 ').trim();
-    var lengthDiff = formattedValue.length - inputValue.length;
+    const formattedValue = sanitizedValue.replace(/(\S{3})/g, '$1 ').trim();
+    const lengthDiff = formattedValue.length - inputValue.length;
 
     phoneInputEl.value = formattedValue;
 
@@ -3338,18 +3338,15 @@ function createNewUser(formData) {
             </tr>`;
 
             $("#users-table tbody").append(newRow);
-            var desiredRow = $("#users-tabletbody tr").filter(function () {
-                return $(this).find('td.id').text().trim() == user.id;
-            });
 
             $("#user-edit-create-previous-button").trigger("click");
         },
         error: function (error) {
-            var listOfErrors = `<ul style="margin: 0; padding-left: 25px; font-size: 17px; font-weight: 500;">`;
+            let listOfErrors = `<ul style="margin: 0; padding-left: 25px; font-size: 17px; font-weight: 500;">`;
 
             if (typeof error.responseJSON === 'object') {
                 Object.keys(error.responseJSON).forEach(function (key) {
-                    var errors = error.responseJSON[key];
+                    const errors = error.responseJSON[key];
                     errors.forEach(function (errorMessage) {
                         listOfErrors += `<li>${errorMessage}</li>`;
                     });
@@ -3427,7 +3424,7 @@ function editUser(userId, formData) {
         dataType: "json",
         data: formData,
         success: function (user) {
-            var tr = $('#users-table tbody tr').filter(function () {
+            const tr = $('#users-table tbody tr').filter(function () {
                 return $(this).find('td.id').html() == user.id;
             });
 
@@ -3465,11 +3462,11 @@ function editUser(userId, formData) {
             $("#user-edit-create-previous-button").trigger("click");
         },
         error: function (error) {
-            var listOfErrors = `<ul style="margin: 0; padding-left: 25px; font-size: 17px; font-weight: 500;">`;
+            let listOfErrors = `<ul style="margin: 0; padding-left: 25px; font-size: 17px; font-weight: 500;">`;
 
             if (typeof error.responseJSON === 'object') {
                 Object.keys(error.responseJSON).forEach(function (key) {
-                    var errors = error.responseJSON[key];
+                    const errors = error.responseJSON[key];
                     errors.forEach(function (errorMessage) {
                         listOfErrors += `<li>${errorMessage}</li>`;
                     });
