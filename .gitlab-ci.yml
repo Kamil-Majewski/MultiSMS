@@ -1,0 +1,13 @@
+include:
+  - local: '.gitlab-ci/testing.yml'
+
+variables:
+  DOTNET_VERSION: "8.0.406"
+  SOLUTION_FILE: "MultiSMS.sln"
+  WEB_PROJECT: "MultiSMS.MVC/MultiSMS.MVC.csproj"
+  ARTIFACTS_PATH: "artifacts"
+  TEST_DEPLOY_PATH: "C:\\website\\cicd\\multisms"
+
+stages:
+  - test-build
+  - test-deploy
